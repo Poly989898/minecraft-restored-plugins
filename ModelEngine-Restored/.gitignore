@@ -1,0 +1,8 @@
+# Build outputs and downloaded dependencies (never committed)
+/.work/
+/build/
+/dist/
+/testserver/
+*.jar
+*.class
+__pycache__/
