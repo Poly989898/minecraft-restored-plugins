@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+    id 'io.papermc.paperweight.userdev' version '2.0.0-beta.24'
+}
+java { toolchain { languageVersion = JavaLanguageVersion.of(25) } }
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.papermc.io/repository/maven-public/' }
+    maven { url 'https://jitpack.io' }
+}
+dependencies {
+    paperweight.paperDevBundle('26.1.2.build.74-stable')
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    compileOnly 'org.jetbrains:annotations:24.1.0'
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+    compileOnly files("$rootDir/../plugin/build/classes/java/main", "$rootDir/../plugin/libs/shaded.jar")
+}
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['--release', '21', '-Xmaxerrs', '100000', '-proc:none', '-nowarn']
+}
+
+// Bytecode is emitted for Java 21 (--release 21) but dependencies (Paper 26.x API) need JVM 25 metadata:
+import org.gradle.api.attributes.java.TargetJvmVersion
+configurations.matching { it.name.toLowerCase().endsWith('compileclasspath') }.configureEach {
+    attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
+}

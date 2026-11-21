@@ -1,0 +1,20 @@
+plugins { id 'java' }
+java { toolchain { languageVersion = JavaLanguageVersion.of(25) } }
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'https://libraries.minecraft.net/' }
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url 'https://repo.papermc.io/repository/maven-public/' }
+}
+dependencies {
+    compileOnly 'org.spigotmc:spigot:1.19.3-R0.1-SNAPSHOT'
+    compileOnly files("$rootDir/../plugin/build/classes/java/main", "$rootDir/../plugin/libs/shaded.jar")
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    compileOnly 'org.jetbrains:annotations:24.1.0'
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+}
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['--release', '8', '-Xmaxerrs', '100000', '-proc:none', '-nowarn']
+}

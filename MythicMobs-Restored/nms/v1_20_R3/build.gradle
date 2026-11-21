@@ -1,0 +1,32 @@
+plugins { id 'java' }
+java { toolchain { languageVersion = JavaLanguageVersion.of(25) } }
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'https://repo.papermc.io/repository/maven-public/' }
+    maven { url 'https://libraries.minecraft.net/' }
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+}
+dependencies {
+    // order matters: shimmed server jar first, then the matching Paper API (no Spigot API: it conflicts with it)
+    compileOnly files("$rootDir/shim/1.20.4.jar")
+    compileOnly('org.spigotmc:spigot:1.20.4-R0.1-SNAPSHOT') { exclude group: 'org.spigotmc', module: 'spigot-api' }
+    compileOnly 'io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT'
+    compileOnly files("$rootDir/shim/1.20.4-extra-api.jar")   // only classes missing from the Paper API (e.g. org.bukkit.registry.RegistryAware); files() sort before modules, so it must not overlap
+    compileOnly files("$rootDir/../plugin/build/classes/java/main", "$rootDir/../plugin/libs/shaded.jar")
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    compileOnly 'org.jetbrains:annotations:24.1.0'
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+}
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['--release', '21', '-Xmaxerrs', '100000', '-proc:none', '-nowarn']
+}
+def unrename = tasks.register('unrenameKeywords', Exec) {
+    commandLine 'java', "$rootDir/tools/Unrename.java", "${layout.buildDirectory.get()}/classes/java/main"
+}
+tasks.named('compileJava') { finalizedBy unrename }
+import org.gradle.api.attributes.java.TargetJvmVersion
+configurations.matching { it.name.toLowerCase().endsWith('compileclasspath') }.configureEach {
+    attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
+}

@@ -1,0 +1,29 @@
+package io.lumine.mythic.core.volatilecode.v26_1.ai.targeters;
+
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.core.mobs.ai.WrappedPathfindingGoal;
+import io.lumine.mythic.core.utils.annotations.MythicAIGoal;
+import io.lumine.mythic.core.volatilecode.v26_1.ai.PathfinderHolder;
+import net.minecraft.world.entity.ai.goal.Goal;
+
+@MythicAIGoal(
+   name = "hurtByTarget",
+   aliases = {"attacker", "damager"},
+   description = "Target an attacker"
+)
+public class HurtByTargetGoal extends WrappedPathfindingGoal implements PathfinderHolder {
+   public HurtByTargetGoal(AbstractEntity entity, String line, MythicLineConfig mlc) {
+      super(entity, line, mlc);
+   }
+
+   @Override
+   public boolean isValid() {
+      return this.entity.isCreature();
+   }
+
+   @Override
+   public Goal create() {
+      return new net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal(PathfinderHolder.getNMSEntity(this.entity), new Class[0]);
+   }
+}

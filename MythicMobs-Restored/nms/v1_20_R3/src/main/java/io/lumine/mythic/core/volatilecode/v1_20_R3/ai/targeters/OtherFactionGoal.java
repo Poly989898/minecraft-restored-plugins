@@ -1,0 +1,74 @@
+package io.lumine.mythic.core.volatilecode.v1_20_R3.ai.targeters;
+
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.bukkit.BukkitAdapter;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.mobs.ai.WrappedPathfindingGoal;
+import io.lumine.mythic.core.utils.annotations.MythicAIGoal;
+import io.lumine.mythic.core.volatilecode.v1_20_R3.ai.PathfinderHolder;
+import io.lumine.mythic.core.volatilecode.v1_20_R3.ai.pathfinding.AsyncNearestAttackableTargetGoal;
+import java.util.Optional;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.ai.goal.PathfinderGoal;
+
+@MythicAIGoal(
+   name = "nearestOtherFaction",
+   aliases = {"otherFaction"},
+   description = "Target a nearby entity that is in a different faction"
+)
+public class OtherFactionGoal extends WrappedPathfindingGoal implements PathfinderHolder {
+   public OtherFactionGoal(AbstractEntity entity, String line, MythicLineConfig mlc) {
+      super(entity, line, mlc);
+   }
+
+   @Override
+   public boolean isValid() {
+      return this.entity.isCreature();
+   }
+
+   @Override
+   public PathfinderGoal create() {
+      return new AsyncNearestAttackableTargetGoal<EntityLiving>(
+         PathfinderHolder.getNMSEntity(this.entity),
+         EntityLiving.class,
+         0,
+         true,
+         false,
+         () -> {
+            ActiveMob mob;
+            try {
+               mob = getPlugin().getMobManager().getMythicMobInstance(this.getEntity());
+            } catch (Exception var3) {
+               var3.printStackTrace();
+               return targetEntity -> false;
+            }
+
+            return targetEntity -> {
+               try {
+                  AbstractEntity target = BukkitAdapter.adapt(targetEntity.getBukkitEntity());
+                  if (getPlugin().getCompatibility().getModelEngine().isPresent()
+                     && getPlugin().getCompatibility().getModelEngine().get().isSubHitbox(target.getUniqueId())) {
+                     return false;
+                  } else if (mob == null || !mob.hasFaction()) {
+                     return true;
+                  } else if (target.isPlayer()) {
+                     return !getPlugin().getPlayerManager().getFactionProvider().isInFaction(target.asPlayer(), mob.getFaction());
+                  } else {
+                     Optional<ActiveMob> maybeTargetAM = getPlugin().getMobManager().getActiveMob(target.getUniqueId());
+                     if (!maybeTargetAM.isPresent()) {
+                        return true;
+                     } else {
+                        ActiveMob targetAM = maybeTargetAM.get();
+                        return targetAM.hasFaction() ? !mob.getFaction().equals(targetAM.getFaction()) : true;
+                     }
+                  }
+               } catch (Exception var5) {
+                  var5.printStackTrace();
+                  return false;
+               }
+            };
+         }
+      );
+   }
+}

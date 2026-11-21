@@ -1,0 +1,1 @@
+X	org/bukkit/craftbukkit/{MOD}/attribute/CraftAttributeInstance	addTransientModifier	(Lorg/bukkit/attribute/AttributeModifier;)V

@@ -1,0 +1,103 @@
+plugins { id 'java' }
+java { toolchain { languageVersion = JavaLanguageVersion.of(25) } }
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.papermc.io/repository/maven-public/' }
+    maven { url 'https://maven.enginehub.org/repo/' }
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://nexus.neetgames.com/repository/maven-public/' }
+    maven { url 'https://nexus.hc.to/content/repositories/pub_releases/' }
+    maven { url 'https://repo.inventivetalent.org/repository/public/' }
+    maven { url 'https://repo.md-5.net/content/repositories/snapshots/' }
+    maven { url 'https://nexus.phoenixdevt.fr/repository/maven-public/' }
+    maven { url 'https://repo.md-5.net/content/repositories/releases/' }
+    maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+}
+sourceSets {
+    stubs { java.srcDir 'src/stubs/java' }
+}
+dependencies {
+    stubsCompileOnly 'io.papermc.paper:paper-api:26.3.build.254-stable'
+    stubsCompileOnly files('libs/original.jar')
+    compileOnly sourceSets.stubs.output
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.254-stable'
+    compileOnly 'org.projectlombok:lombok:1.18.42'
+    annotationProcessor 'org.projectlombok:lombok:1.18.42'   // sources use Lombok annotations again (1.18.34 does not support JDK 25)
+    compileOnly 'org.jetbrains:annotations:24.1.0'
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+    compileOnly 'io.netty:netty-buffer:4.1.115.Final'
+    compileOnly 'io.netty:netty-codec:4.1.115.Final'
+    compileOnly 'net.kyori:adventure-text-serializer-bungeecord:4.4.1'
+    compileOnly('com.sk89q.worldedit:worldedit-bukkit:7.3.9') { transitive = false }
+    compileOnly('com.sk89q.worldedit:worldedit-core:7.3.9') { transitive = false }
+    compileOnly('com.sk89q.worldguard:worldguard-core:7.0.12') { transitive = false }
+    compileOnly('com.sk89q.worldguard:worldguard-bukkit:7.0.12') { transitive = false }
+    compileOnly('com.github.MilkBowl:VaultAPI:1.7') { transitive = false }
+    compileOnly('me.clip:placeholderapi:2.11.6') { transitive = false }
+    compileOnly 'io.dropwizard.metrics:metrics-core:4.2.30'
+    compileOnly 'io.dropwizard.metrics:metrics-healthchecks:4.2.30'
+    compileOnly 'org.javassist:javassist:3.30.2-GA'
+    compileOnly 'net.luckperms:api:5.4'
+    compileOnly 'org.checkerframework:checker-qual:3.42.0'
+    compileOnly 'com.google.inject:guice:7.0.0'
+    // real third-party plugin APIs (replacing generated stubs where they resolve)
+    compileOnly('com.gmail.nossr50.mcMMO:mcMMO:2.3.002') { transitive = false }
+    compileOnly('fr.neatmonster:nocheatplus:3.16.0-RC') { transitive = false }
+    compileOnly('com.intellectualsites.plotsquared:plotsquared-core:7.6.0') { transitive = false }
+    compileOnly('com.intellectualsites.plotsquared:plotsquared-bukkit:7.6.0') { transitive = false }
+    compileOnly('com.herocraftonline.heroes:Heroes:1.10.7-RELEASE') { transitive = false }
+    compileOnly('org.inventivetalent:glowapi:1.5.7-SNAPSHOT') { transitive = false }
+    compileOnly('org.inventivetalent.packetlistenerapi:api:3.9.9-SNAPSHOT') { transitive = false }
+    compileOnly('com.github.angeschossen:LandsAPI:7.25.4') { transitive = false }
+    compileOnly 'org.hibernate.orm:hibernate-core:6.6.4.Final'
+    compileOnly('LibsDisguises:LibsDisguises:10.0.44') { transitive = false }
+    compileOnly('net.Indyuce:MMOItems-API:6.10.1-SNAPSHOT') { transitive = false }
+    compileOnly('io.lumine:MythicLib-dist:1.7.1-SNAPSHOT') { transitive = false }
+    compileOnly('com.github.GriefPrevention:GriefPrevention:16.18.4') { transitive = false }
+    compileOnly('com.github.Zrips:Residence:6.0.2.3') { transitive = false }
+    compileOnly('io.pixeloutlaw.mythicdrops:mythicdrops:7.0.4') { transitive = false }
+    compileOnly files('libs/shaded.jar')   // third-party only; no own classes, so missing sources can't hide
+}
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['--release', '21', '-Xmaxerrs', '100000', '-nowarn']
+}
+
+tasks.register('printCp') {
+    doLast { configurations.compileClasspath.files.each { println "CP:" + it } }
+}
+
+// Hybrid jar: our rebuilt classes first, everything not yet rebuilt (shaded libs, NMS modules) from the original jar
+tasks.named('jar') {
+    archiveFileName = 'MythicMobs-5.14.0-rebuilt.jar'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from sourceSets.main.output
+    // rebuilt NMS modules (paperweight project in ../nms)
+    ['v26_1','v26_2','v26_3'].each { v -> from("../nms/${v}/build/classes/java/main") }
+    ['w1_18_R2','w1_19_R2','w1_19_R3','w1_20_R1','w1_20_R2','w1_20_R3'].each { w -> from("../nms/${w}/build/classes/java/main") }
+    ['v1_20_R1','v1_20_R3','v1_21_R1','v1_21_R3','v1_21_R4','v1_21_R5','v1_21_R6','v1_21_R7'].each { v -> from("../nms/${v}/build/classes/java/main") }
+    from(zipTree('libs/original.jar')) {
+        exclude { fte ->
+            def p = fte.relativePath.pathString
+            if (p.startsWith('META-INF/') && (p.endsWith('.SF') || p.endsWith('.RSA') || p.endsWith('.DSA'))) return true
+            def own = p.startsWith('io/lumine/mythic/api/') || p.startsWith('io/lumine/mythic/core/') || p.startsWith('io/lumine/mythic/bukkit/')
+            if (!own) return false
+            if (p.startsWith('io/lumine/mythic/bukkit/utils/lib/') || p.startsWith('io/lumine/mythic/bukkit/utils/caffeine/') || p.startsWith('io/lumine/mythic/bukkit/utils/redis/')) return false
+            if (p.startsWith('io/lumine/mythic/core/volatilecode/v26_') || p.startsWith('io/lumine/mythic/core/volatilecode/VolatileCodeEnabled_v26_')) return p.endsWith('.class') // rebuilt
+            if (p.startsWith('io/lumine/mythic/core/volatilecode/v1_') || p.startsWith('io/lumine/mythic/core/volatilecode/VolatileCodeEnabled_v1_')) return p.endsWith('.class') // rebuilt legacy NMS
+            if (p.startsWith('io/lumine/mythic/bukkit/utils/version/wrappers/v1_') || p.startsWith('io/lumine/mythic/bukkit/utils/version/wrappers/VersionWrapper_v')) return p.endsWith('.class') // rebuilt version wrappers
+            if (p.startsWith('io/lumine/mythic/core/volatilecode/') || p.startsWith('io/lumine/mythic/bukkit/utils/version/')) {
+                // keep the NMS-dependent parts from the original; interfaces are rebuilt
+                return p.endsWith('/wrappers/VersionWrapper.class') || p.endsWith('/wrappers/VersionItemHandler.class') || p.contains('/version/MinecraftVersion') || p.endsWith('/version/NMSVersion.class')
+            }
+            return p.endsWith('.class') // drop original own classes (keep resources)
+        }
+    }
+    manifest { attributes 'Implementation-Title': 'MythicMobs (rebuilt)' }
+}
+
+// Bytecode is emitted for Java 21 (--release 21) but dependencies (Paper 26.x API) need JVM 25 metadata:
+import org.gradle.api.attributes.java.TargetJvmVersion
+configurations.matching { it.name.toLowerCase().endsWith('compileclasspath') }.configureEach {
+    attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
+}

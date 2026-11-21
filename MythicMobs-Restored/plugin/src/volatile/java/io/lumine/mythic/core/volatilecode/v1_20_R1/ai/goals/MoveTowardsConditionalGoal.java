@@ -1,0 +1,136 @@
+package io.lumine.mythic.core.volatilecode.v1_20_R1.ai.goals;
+
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.config.MythicLineConfig;
+import io.lumine.mythic.core.mobs.ai.WrappedPathfindingGoal;
+import io.lumine.mythic.core.skills.SkillCondition;
+import io.lumine.mythic.core.utils.annotations.MythicAIGoal;
+import io.lumine.mythic.core.volatilecode.v1_20_R1.ai.PathfinderHolder;
+import java.util.EnumSet;
+import java.util.List;
+import net.minecraft.world.entity.EntityCreature;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.ai.goal.PathfinderGoal;
+import net.minecraft.world.entity.ai.goal.PathfinderGoal.Type;
+
+@MythicAIGoal(
+   name = "moveTowardsTargetConditional",
+   aliases = {"moveTowardsTargetCond"},
+   description = "Path to the current target"
+)
+public class MoveTowardsConditionalGoal extends WrappedPathfindingGoal implements PathfinderHolder {
+   private double speedModifier;
+   private float minRange;
+   private float maxRange;
+   protected List<SkillCondition> targetConditions = null;
+   protected List<SkillCondition> mobConditions = null;
+
+   public MoveTowardsConditionalGoal(AbstractEntity entity, String line, MythicLineConfig mlc) {
+      super(entity, line, mlc);
+      this.speedModifier = mlc.getDouble(new String[]{"speed", "s"}, 1.0);
+      this.minRange = mlc.getFloat(new String[]{"minrange", "minr", "mr"}, 0.0F);
+      this.maxRange = mlc.getFloat(new String[]{"maxrange", "range", "r"}, 32.0F);
+      String targetConditionString = mlc.getString(new String[]{"targetconditions", "conditions", "cond", "c"}, "null");
+      if (targetConditionString != null) {
+         this.targetConditions = getPlugin().getSkillManager().getConditions(targetConditionString);
+      }
+
+      String mobConditionString = mlc.getString(new String[]{"mobconditions", "mconditions", "mcond", "mc"}, "null");
+      if (mobConditionString != null) {
+         this.mobConditions = getPlugin().getSkillManager().getConditions(mobConditionString);
+      }
+   }
+
+   @Override
+   public boolean isValid() {
+      return this.entity.isCreature();
+   }
+
+   @Override
+   public PathfinderGoal create() {
+      return new MoveTowardsConditionalGoal.PathfinderGoalMoveTowardsTargetIf(
+         PathfinderHolder.getNMSEntity(this.entity), this.speedModifier, this.minRange, this.maxRange
+      );
+   }
+
+   public class PathfinderGoalMoveTowardsTargetIf extends PathfinderGoal {
+      private final EntityCreature mob;
+      private final double speedModifier;
+      private final float minRange;
+      private final float maxRange;
+      private EntityLiving target;
+      private int repathDelay;
+
+      public PathfinderGoalMoveTowardsTargetIf(EntityCreature mob, double speedModifier, float minRange, float maxRange) {
+         this.mob = mob;
+         this.speedModifier = speedModifier;
+         this.minRange = minRange;
+         this.maxRange = maxRange;
+         this.a(EnumSet.of(Type.a));
+      }
+
+      public boolean a() {
+         this.target = this.mob.j();
+         if (this.target != null && this.target.bs()) {
+            double distSq = this.target.f(this.mob);
+            return !(distSq < this.minRange * this.minRange) && !(distSq > this.maxRange * this.maxRange) ? this.evaluateConditions() : false;
+         } else {
+            return false;
+         }
+      }
+
+      public void c() {
+         this.repathDelay = 10;
+         this.mob.J().a(this.target, this.speedModifier);
+      }
+
+      public void d() {
+         this.target = null;
+         this.mob.J().n();
+      }
+
+      public boolean K_() {
+         return true;
+      }
+
+      public void e() {
+         if (--this.repathDelay <= 0) {
+            this.repathDelay = 10;
+            this.mob.J().a(this.target, this.speedModifier);
+         }
+      }
+
+      private boolean evaluateConditions() {
+         if (MoveTowardsConditionalGoal.this.targetConditions == null && MoveTowardsConditionalGoal.this.mobConditions == null) {
+            return true;
+         } else {
+            try {
+               AbstractEntity target = MoveTowardsConditionalGoal.this.entity.getTarget();
+               if (target == null) {
+                  return false;
+               }
+
+               if (MoveTowardsConditionalGoal.this.targetConditions != null) {
+                  for (SkillCondition cond : MoveTowardsConditionalGoal.this.targetConditions) {
+                     if (!cond.evaluateToEntity(MoveTowardsConditionalGoal.this.entity, target)) {
+                        return false;
+                     }
+                  }
+               }
+
+               if (MoveTowardsConditionalGoal.this.mobConditions != null) {
+                  for (SkillCondition condx : MoveTowardsConditionalGoal.this.mobConditions) {
+                     if (!condx.evaluateEntity(MoveTowardsConditionalGoal.this.entity)) {
+                        return false;
+                     }
+                  }
+               }
+            } catch (Error | Exception var4) {
+               var4.printStackTrace();
+            }
+
+            return true;
+         }
+      }
+   }
+}
