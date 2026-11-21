@@ -1,0 +1,10 @@
+# pending
+M PunishmentRequest.l_6() isTemporary
+M PunishmentRequest.l(boolean) setTemporary
+M PunishmentRequest.o_4() getDuration
+M PunishmentRequest.a_4(long) setDuration
+M BroadcastModule.j_17() getNotifyMode
+M BroadcastModule.a_46(int) setNotifyMode
+M SyncModule.a(LiteAInterface) addListener
+M SyncModule.b(LiteAInterface) removeListener
+M SyncModule.a(DatabaseSession,int) selectRecentNames

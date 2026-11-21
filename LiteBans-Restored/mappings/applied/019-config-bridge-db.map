@@ -1,0 +1,37 @@
+# pending renames (Renamer applies this file; applied ones are archived in mappings/applied/)
+# ---- ConfigFile / ConfigValueReader
+M ConfigFile.c_1(File) load
+M ConfigFile.a_1(InputStream) load
+M ConfigFile.f_34() reload
+M ConfigFile.h_21() save
+M ConfigFile.a_2(File) save
+M ConfigFile.a_127() clear
+M ConfigKeyReader.a_29(String) getSection
+M ConfigValueReader.a_6(boolean) getKeys
+M ConfigValueReader.b(String,Object) set
+M ConfigValueReader.b_14(String) get
+M ConfigValueReader.a_4(String,Object) get
+M ConfigValueReader.a_30(String) getBoolean
+M ConfigValueReader.a_1(String,boolean) getBoolean
+M ConfigValueReader.d_6(String) getDouble
+M ConfigValueReader.a_4(String,int) getInt
+M ConfigValueReader.a(String,long) getLong
+M ConfigValueReader.e_6(String) getString
+M ConfigValueReader.a(String,String) getString
+M ConfigValueReader.g_1(String) getStringList
+M ConfigValueReader.f_3(String) isSet
+# ---- PlatformBridge
+M PlatformBridge.c_7() getPlatform
+M PlatformBridge.c_1(String) getPlugin
+M PlatformBridge.b_1(String) findPlugins
+M PlatformBridge.b_11() getServerVersion
+M PlatformBridge.a(Object,CharSequence,String,boolean,String) disallowLogin
+M PlatformBridge.a(Object,boolean) getPlayerInfo
+# ---- DatabaseSession (high-confidence ones)
+M DatabaseSession.b_44() isClosed
+M DatabaseSession.e_19() getPlatform
+M DatabaseSession.d_24() getDatabaseModule
+M DatabaseSession.b_7(CharSequence) tableExists
+M DatabaseSession.c_1(CharSequence) prepare
+# ---- LiteCommand
+M LiteCommand.a(LiteSender,String[]) execute

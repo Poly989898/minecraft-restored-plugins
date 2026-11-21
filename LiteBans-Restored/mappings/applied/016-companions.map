@@ -1,0 +1,11 @@
+# pending renames (Renamer applies this file; applied ones are archived in mappings/applied/)
+C KotlinHelper15 KotlinData12Companion
+C KotlinHelper27 KotlinData5Companion
+C KotlinHelper34 KotlinUtil2Companion
+C KotlinHelper35 KotlinUtil32Companion
+C LiteHelper22 CommandQueueModuleCompanion
+C LiteHelper23 EntryQueueModuleCompanion
+C LiteHelper27 UpdateModuleCompanion
+C LiteHelper28 TemplateCompanion
+C LiteHelper6 BanCommandCompanion
+C PoolHelper3 PoolHelperCompanion

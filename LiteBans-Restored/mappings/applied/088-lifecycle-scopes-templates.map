@@ -1,0 +1,22 @@
+# lifecycle flags, server scopes, template groups
+F PluginLifecycle.atomicBoolean enabled
+F PluginLifecycle.atomicBoolean2 loading
+F PluginLifecycle.atomicBoolean3 disabling
+F PluginLifecycle.flag2 started
+F ServerScopes.text2 scope
+F ServerScopes.return2 WILDCARD
+F ServerScopes.return3 EMPTY
+M ServerScopes.getText2() getScope
+M ServerScopes.obtainText() getWildcard
+M ServerScopes.obtainServerScopes() getEmpty
+F TemplateGroup.text2 name
+F TemplateGroup.longValue escalationWindow
+M TemplateGroup.getText2() getName
+M TemplateGroup.getList2() getLevels
+M TemplateGroup.getLongValue() getEscalationWindow
+F Template.longValue escalationWindow
+F Template.return2 EMPTY_INFO
+F Template.return3 NONE
+M Template.getLongValue() getEscalationWindow
+M Template.obtainTemplateInfo() getEmptyInfo
+M Template.obtainTemplate() getNone

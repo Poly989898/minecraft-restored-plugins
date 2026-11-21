@@ -1,0 +1,23 @@
+# pending renames (HikariConfig)
+M HikariConfig.c_8() getConnectionTimeout
+M HikariConfig.d(long) setConnectionTimeout
+M HikariConfig.a_17() getIdleTimeout
+M HikariConfig.e(long) setIdleTimeout
+M HikariConfig.g_5() getInitializationFailTimeout
+M HikariConfig.b(long) setInitializationFailTimeout
+M HikariConfig.b_13() getMaxLifetime
+M HikariConfig.c(long) setMaxLifetime
+M HikariConfig.f_4() getMaximumPoolSize
+M HikariConfig.b(int) setMaximumPoolSize
+M HikariConfig.i_3() getMinimumIdle
+M HikariConfig.a_1(int) setMinimumIdle
+M HikariConfig.h_3() getValidationTimeout
+M HikariConfig.a(long) setValidationTimeout
+M HikariConfig.y_1() checkIfSealed
+M HikariConfig.e_7() seal
+M HikariConfig.a(HikariConfig) copyStateTo
+M HikariConfig.o_2() generatePoolName
+M HikariConfig.r_2() validatePoolName
+M HikariConfig.n_2() validateMaxLifetime
+M HikariConfig.g_6() logConfiguration
+M HikariConfig.e(String) loadFromPropertiesFile

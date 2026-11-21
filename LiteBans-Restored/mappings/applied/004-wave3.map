@@ -1,0 +1,43 @@
+# pending renames (Renamer applies this file; applied ones are archived in mappings/applied/)
+# ---- infrastructure
+C iG FileDownloader
+C eq BuildInfo
+C ah UpdateQuery
+C z UpdateModule
+C i3 DiscordWebhook
+C fv GeoIpLookup
+C fu TemplateManager
+C d6 FileUtils
+C h1 TextUtil
+C jj TargetParser
+C gq ColorTranslator
+C cz PunishmentRequest
+C jp PunishmentTarget
+C j0 DupeIpResult
+C jJ ServerScopeClause
+C jr SchemaBuilder
+C Z ServerListPlusBanProvider
+# ---- chat events
+C hm ClickAction
+C kF ChatClickEvent
+C ei ChatText
+# ---- platform-specific modules (by @PlatformMarker: 0 Bukkit, 1 Bungee, 2 Velocity, 3 Fabric)
+C B BukkitLiteCommandManager
+C F FabricLiteCommandManager
+C K BukkitPlayerModule
+C L BungeePlayerModule
+C O VelocityPlayerModule
+C e1 VaultBridge
+# ---- Hikari proxies
+C kp ProxyResultSet
+C lV ProxyPreparedStatement
+C lJ ProxyStatement
+# ---- Kotlin / Commons Compress details
+C l4 LazyThreadSafetyMode
+C cu InitializedLazyImpl
+C ao SegmentType
+C kw ZipArchiveEntry
+C i7 TarArchiveStructSparse
+C iw ZipEightByteInteger
+C fl ZipFeature
+C aj X0017StrongEncryptionExtraField

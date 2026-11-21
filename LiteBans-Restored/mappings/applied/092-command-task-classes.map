@@ -1,0 +1,13 @@
+# CommandTask subclasses named by the /litebans subcommand or message they implement
+C KotlinCommandTaskSub AllowTask
+C KotlinCommandTaskSub2 ExpiryUpdateTask
+C KotlinCommandTaskSub3 ResetDatabaseTask
+C KotlinCommandTaskSub4 RevealTask
+C KotlinCommandTaskSub5 PunishmentAnnounceTask
+C KotlinCommandTaskSub6 BenchJoinTask
+C KotlinCommandTaskSub7 CacheSyncTask
+C KotlinCommandTaskSub8 QueueCommandTask
+C KotlinCommandTaskSub9 BroadcastCommandTask
+C KotlinCommandTaskSub10 BannedJoinBroadcastTask
+C KotlinCommandTaskSub11 BenchGenTask
+C KotlinCommandTaskSub12 DupeIpAlertTask

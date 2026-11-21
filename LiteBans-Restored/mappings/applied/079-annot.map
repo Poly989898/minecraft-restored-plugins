@@ -1,0 +1,9 @@
+# fallback
+M AdventureConversion.a_20(CharSequence) computeTextComponent
+M LiteCommandManager.a(String) computeLiteCommand
+M LiteHelper9.a_63(String) computeBytes
+M Message.a(PunishmentType) computeMessage
+M Message.a(CharSequence,boolean) computeText
+M Message.a(Message,CharSequence) computeText
+M Message.a(CharSequence,Object) computeText
+M PluginLifecycle.d_15() getThreadFactoryBuilder

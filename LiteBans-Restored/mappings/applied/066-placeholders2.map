@@ -1,0 +1,21 @@
+# pending
+M VaultBridge.a_13(Object) getPrefix
+M VaultBridge.b_4(Object) getSuffix
+M Placeholders.a(DatabaseSession,CharSequence,PunishmentRequest) replacePlaceholders
+M Placeholders.a(DatabaseSession,CharSequence,Template,int) replaceTemplatePlaceholders
+M Placeholders.a(DatabaseSession,Punishment,LiteSender,CharSequence,long) replacePunishmentPlaceholdersFor
+M Placeholders.a(DatabaseSession,Punishment,LiteSender,CharSequence,long,int,Object) replacePunishmentPlaceholdersForWithDefaults
+M Placeholders.a(DatabaseSession,Punishment,CharSequence,long,boolean) replacePunishmentPlaceholders
+M Placeholders.a(DatabaseSession,Punishment,CharSequence,long,boolean,int,Object) replacePunishmentPlaceholdersWithDefaults
+M Placeholders.a(DatabaseSession,LoginRecord,CharSequence,boolean) replacePlaceholders
+M Placeholders.a(DatabaseSession,LiteSender,CharSequence,boolean) replacePlaceholders
+M Placeholders.a(DatabaseSession,LiteSender,CharSequence,boolean,int,Object) replacePlaceholdersWithDefaults
+M Placeholders.a(ConfigModule,Punishment) getCountry
+M Placeholders.b(ConfigModule,Punishment) getObscuredId
+M Placeholders.a(VaultBridge,LiteSender) getSenderPrefix
+M Placeholders.b(VaultBridge,LiteSender) getSenderSuffix
+M Placeholders.a(VaultBridge,UUID) getPrefixByUuid
+M Placeholders.b(VaultBridge,UUID) getSuffixByUuid
+M Placeholders.a(Pair) getFirst
+M Placeholders.b(Pair) getSecond
+M Placeholders.a(DatabaseSession,java.util.Date) formatDateOrZero

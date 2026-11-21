@@ -1,0 +1,24 @@
+# lazy module references, DatabaseModule/SyncModule/HistoryQuery fields named by use
+F BroadcastModule.lazy10 databaseModuleLazy
+F BroadcastModule.lazy11 configModuleLazy
+F BroadcastModule.lazy12 loginHandlerLazy
+F ConfigModule.lazy9 authMeInstalled
+F EntryQueueModule.lazy8 commandQueueModuleLazy
+F PeriodicTaskModule.lazy7 databaseModuleLazy
+F SyncModule.lazy3 configModuleLazy
+F SyncModule.lazy4 databaseModuleLazy
+F SyncModule.lazy5 broadcastModuleLazy
+F SyncModule.lazy6 punishmentLookupModuleLazy
+F ThrottleModule.lazy2 configModuleLazy
+F SyncModule.copyOnWriteArrayList2 listeners
+F DatabaseModule.atomicBoolean4 initialized
+F DatabaseModule.atomicBoolean6 transientErrorSeen
+F DatabaseModule.return3 PROXY_STATEMENT_FRAME
+F DatabaseModule.return4 HIKARI_PROXY_STATEMENT_FRAME
+F DatabaseModule.return5 PREPARED_QUERY_FRAME
+F HistoryQuery.databaseSession2 databaseSession
+F HistoryQuery.executorSource2 executorSource
+F HistoryQuery.serverScopeClause2 serverScopeClause
+F HistoryQuery.text4 orderColumn
+F HistoryQuery.flag4 descending
+M DatabaseModule.access$atomicBoolean4(DatabaseModule) access$initialized

@@ -1,0 +1,10 @@
+# platform listeners named by the events they handle
+C LiteBukkitListenerImpl BukkitPreLoginListener
+C LiteBukkitListenerImpl2 BukkitLoginListener
+C LiteBukkitListenerImpl3 BukkitJoinListener
+C LiteBukkitListenerImpl4 AuthMeLoginListener
+C LiteBungeeListenerImpl BungeeLoginListener
+C LiteVelocityListenerImpl VelocityConnectListener
+C LiteVelocityListenerImpl2 VelocityChatListener
+C LiteVelocityListenerImpl3 VelocityLockdownConnectListener
+C LiteCommandTaskSub2 ActiveMuteNoticeTask

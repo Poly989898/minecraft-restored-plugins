@@ -1,0 +1,7 @@
+# last manual
+M AddLoginTask.b_85() sendLoginRecordsAdded
+M BukkitCommandManagerImpl.g_2() registerCommandExecutors
+M PunishmentType.a_3(int) getCharAt
+M Placeholders.a(DatabaseSession,String,String,String,String,String,Date,CharSequence,boolean) replaceDetailPlaceholders
+M Placeholders.a(DatabaseSession,String,String,String,String,String,Date,CharSequence,boolean,int,Object) replaceDetailPlaceholdersWithDefaults
+M PunishCommandBase.a(PunishCommandBase,DatabaseSession,String,String,long,long,String,UUID,UUID,String,AtomicLong,PunishmentType,int,Object) importPunishmentWithDefaults

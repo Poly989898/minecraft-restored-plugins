@@ -1,0 +1,9 @@
+# pending renames
+F Settings.a_f sqlDriver
+F Settings.aU_f sqlUsername
+F Settings.aM_f sqlPassword
+F Settings.aC_f sqlTablePrefix
+F Settings.al_f sqlEngine
+F Settings.a__f sqlOptions
+F Settings.aK_f consoleSenderName
+M Settings.aN() getSqlOptions

@@ -1,0 +1,22 @@
+# pending
+F Settings.c_f databaseTimeOffset
+F Settings.as_f sqlDrivers
+F Settings.L_f sqlPoolKeepalive
+F Settings.i_f sqlPoolTimeout
+F Settings.ak_f sqlPoolIdleTimeout
+F Settings.x_f sqlPoolMaxLifetime
+F Settings.a3_f durationsConsoleCooldown
+F Settings.E_f durationsEffectiveIpbanDuration
+F Settings.B_f mutesCommandBlacklist
+F Settings.v_f warningsActions
+F Settings.F_f notifyDupeipScanFilterDuration
+F Settings.a0_f exemptExemptGroups
+F Settings.ao_f exemptExemptPlayers
+F Settings.az_f geoipBlacklist
+F Settings.y_f geoipWhitelist
+F Settings.aZ_f geoipDownloadApi
+F Settings.aB_f ipreportMinimumAccounts
+F Settings.av_f hiddenDupeipPlayers
+F Settings.j_f ignoredKickMessages
+F Settings.z_f ignoredIphistoryServers
+F Settings.P_f disableLoginBanCheckServers

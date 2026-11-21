@@ -1,0 +1,6 @@
+# pending renames (Renamer applies this file; applied ones are archived in mappings/applied/)
+M PluginModule.e_2() enable
+M PluginModule.c_2() disable
+M PluginModule.a_1() load
+M PluginLifecycle.i_7() shutdown
+M PluginLifecycle.a_4(boolean) startModules

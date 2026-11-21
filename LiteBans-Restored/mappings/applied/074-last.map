@@ -1,0 +1,4 @@
+# last multiline
+M Placeholders.a(DatabaseSession,String,String,String,String,String,Date,CharSequence,boolean) replaceDetailPlaceholders
+M Placeholders.a(DatabaseSession,String,String,String,String,String,Date,CharSequence,boolean,int,Object) replaceDetailPlaceholdersWithDefaults
+M PunishCommandBase.a(PunishCommandBase,DatabaseSession,String,String,long,long,String,UUID,UUID,String,AtomicLong,PunishmentType,int,Object) importPunishmentWithDefaults

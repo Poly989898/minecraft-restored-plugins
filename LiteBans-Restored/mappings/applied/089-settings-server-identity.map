@@ -1,0 +1,22 @@
+# Settings: server identity, limit groups, flags
+F Settings.configFile3 config
+F Settings.text56 serverUuid
+F Settings.text57 serverName
+F Settings.text58 geoipDownloadDb
+F Settings.list2 mutesCommandPrefixes
+F Settings.list3 limitGroups
+F Settings.flag3 suppressGetAddressWarning
+F Settings.flag4 ipHistoryIgnored
+M Settings.getConfigFile3() getConfig
+M Settings.getText56() getServerUuid
+M Settings.getText57() getServerName
+M Settings.getText58() getGeoipDownloadDb
+M Settings.getList2() getMutesCommandPrefixes
+M Settings.getList3() getLimitGroups
+M Settings.isFlag3() isSuppressGetAddressWarning
+M Settings.isFlag4() isIpHistoryIgnored
+M Settings.computePair(boolean) loadServerIdentity
+M Settings.computePair(Settings,boolean,int,Object) loadServerIdentityWithDefaults
+F ConfigModule.flag12 serverUuidPersisted
+M ConfigModule.isFlag12() isServerUuidPersisted
+M ConfigModule.setFlag12(boolean) setServerUuidPersisted

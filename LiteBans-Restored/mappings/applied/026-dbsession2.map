@@ -1,0 +1,17 @@
+# pending renames
+M DatabaseSessionImpl.a_64() isOpen
+M DatabaseSessionImpl.a(LoginRecord,PunishmentType,String,boolean,int) getHistory
+M DatabaseSessionImpl.a(Punishment,int) getHistory
+M DatabaseSessionImpl.a(LiteSender,PunishmentType,boolean,int) getHistory
+M DatabaseSessionImpl.b(ResultSet,PunishmentType) readPunishments
+M DatabaseSessionImpl.a(LiteSender) getStaffName
+M DatabaseSessionImpl.b(CharSequence,LiteSender) replacePlaceholdersNullable
+M DatabaseSessionImpl.a(CharSequence,String,String,boolean) replacePlaceholders
+M DatabaseSessionImpl.a_9(CharSequence) replacePlaceholders
+M DatabaseSessionImpl.a(CharSequence,LoginRecord,boolean) replacePlaceholders
+M DatabaseSessionImpl.a(CharSequence,LiteSender) replacePlaceholders
+M DatabaseSessionImpl.a(CharSequence,KotlinHelper13) replacePlaceholders
+M DatabaseSessionImpl.a(CharSequence,Punishment,boolean) replacePlaceholders
+M DatabaseSessionImpl.a(CharSequence,Punishment,LoginRecord,boolean) replacePlaceholders
+M DatabaseSessionImpl.a(Punishment,LiteSender) isAffecting
+M DatabaseSessionImpl.a_1(Punishment) isAffecting

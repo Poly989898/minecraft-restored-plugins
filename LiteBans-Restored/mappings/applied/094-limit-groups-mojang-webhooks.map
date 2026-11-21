@@ -1,0 +1,7 @@
+# duration limit groups, Mojang lookups, Discord webhooks
+C KotlinData6 DurationLimitGroup
+C KotlinData2 DurationLimits
+C KotlinData CommandCooldowns
+C KotlinData3 MojangProfileLookup
+C KotlinData4 DiscordWebhookNotifier
+C KotlinData8 WebhookConfig

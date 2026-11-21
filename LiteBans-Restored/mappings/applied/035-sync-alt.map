@@ -1,0 +1,24 @@
+# pending renames (SyncModule, AltAccountPunisher)
+M SyncModule.a_221() getConfigModule
+M SyncModule.d_79() getDatabaseModule
+M SyncModule.b_166() getBroadcastModule
+M SyncModule.g_35() getLookupModule
+M SyncModule.d_1(DatabaseSession) checkDuplicateServer
+M SyncModule.b_4(DatabaseSession) handleDuplicateServer
+M SyncModule.a(SyncMessageType,DatabaseSession,CharSequence,int) sendSyncMessage
+M SyncModule.a(DatabaseSession,String,String,SyncMessageType,Set) handleSyncMessage
+M SyncModule.a(DatabaseSession,Collection,long) processSyncMessages
+M SyncModule.a_7(DatabaseSession) selectCacheEntries
+M SyncModule.c_2(DatabaseSession) clearCacheEntries
+M AltAccountPunisher.a(CommandTask,CharSequence) sendMessage
+M AltAccountPunisher.a(CommandTask,LiteSender,String[],String) getReasonArgument
+M AltAccountPunisher.a(DatabaseSession,Punishment,boolean,boolean) savePunishment
+M AltAccountPunisher.a(DatabaseSession,SyncMessageType,CharSequence,PunishmentType,String) sendSync
+M AltAccountPunisher.a(DatabaseSession,Punishment,int) notifyPunishment
+M AltAccountPunisher.a(DatabaseSession,Punishment,LiteSender) isAllowedFor
+M AltAccountPunisher.a(Punishment,long,long) isWithinWindow
+M AltAccountPunisher.b(Punishment,long,long) getTimeDelta
+M AltAccountPunisher.a(CommandTask,String) resolveName
+M AltAccountPunisher.b(CommandTask,String) findTargetSender
+M AltAccountPunisher.a(DatabaseSession,String) requireLoginRecord
+M AltAccountPunisher.a(DatabaseSession,String,boolean) parseTargetRecord

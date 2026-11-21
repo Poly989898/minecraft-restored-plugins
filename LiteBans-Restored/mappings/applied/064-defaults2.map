@@ -1,0 +1,7 @@
+# pending renames
+M AltAccountPunisher.a(CommandTask,LiteSender,String[],String,int,Object) getReasonArgumentWithDefaults
+M AltAccountPunisher.a(DatabaseSession,Punishment,boolean,boolean,int,Object) savePunishmentWithDefaults
+M AltAccountPunisher.a(DatabaseSession,SyncMessageType,CharSequence,PunishmentType,String,int,Object) sendSyncWithDefaults
+M AltAccountPunisher.a(DatabaseSession,Punishment,int,int,Object) notifyPunishmentWithDefaults
+M AltAccountPunisher.a(DatabaseSession,String,boolean,int,Object) parseTargetRecordWithDefaults
+M Placeholders.a(DatabaseSession,Punishment,int,int,int,Object) getBanScreenMessageWithDefaults

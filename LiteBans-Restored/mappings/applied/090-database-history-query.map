@@ -1,0 +1,13 @@
+F DatabaseModule.flag10 disclaimerAccepted
+M DatabaseModule.isFlag10() isDisclaimerAccepted
+M DatabaseModule.setFlag10(boolean) setDisclaimerAccepted
+F DatabaseModule.flag8 convertSqlite
+M DatabaseModule.setFlag8(boolean) setConvertSqlite
+F DatabaseModule.longValue3 lastExpiredUpdate
+M DatabaseModule.getLongValue3() getLastExpiredUpdate
+M DatabaseModule.setLongValue3(long) setLastExpiredUpdate
+F HistoryQuery.text3 target
+F HistoryQuery.flag3 activeOnly
+F HistoryQuery.number3 limit
+F HistoryQuery.number4 offset
+M HistoryQuery.obtainText() getTarget

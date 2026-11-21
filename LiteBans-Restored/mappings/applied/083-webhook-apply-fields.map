@@ -1,0 +1,13 @@
+# DiscordWebhook payload fields, PunishmentApplyTask, ConfigModule, ClassUtil
+F DiscordWebhook.text6 url
+F DiscordWebhook.text7 content
+F DiscordWebhook.text8 username
+F DiscordWebhook.text9 avatarUrl
+F DiscordWebhook.flag2 tts
+F DiscordWebhook.list3 embeds
+F ConfigModule.templateManager4 templateManager
+F ConfigModule.obj18 serverListPlusBanProvider
+F PunishmentApplyTask.databaseSession3 databaseSession
+F PunishmentApplyTask.liteSender14 sender
+F PunishmentApplyTask.text43 ip
+F ClassUtil.platform2 platform

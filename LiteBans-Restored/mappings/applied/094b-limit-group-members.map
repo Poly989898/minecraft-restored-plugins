@@ -1,0 +1,8 @@
+F DurationLimitGroup.text2 name
+F DurationLimitGroup.kotlinData durations
+F DurationLimitGroup.kotlinData2 cooldowns
+M DurationLimitGroup.getText2() getName
+M DurationLimitGroup.getKotlinData() getDurations
+M DurationLimitGroup.getKotlinData3() getDurationsAlias
+M DurationLimitGroup.getKotlinData2() getCooldowns
+M DurationLimitGroup.getKotlinData22() getCooldownsAlias

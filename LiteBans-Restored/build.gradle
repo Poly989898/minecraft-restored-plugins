@@ -1,0 +1,43 @@
+plugins { id 'java' }
+java { toolchain { languageVersion = JavaLanguageVersion.of(25) } }
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.papermc.io/repository/maven-public/' }
+    maven { url 'https://repo.dmulloy2.net/repository/public/' }   // ProtocolLib
+    maven { url 'https://jitpack.io' }   // VaultAPI
+    maven { url 'https://repo.codemc.io/repository/maven-public/' }   // AuthMe
+    maven { url 'https://repo.minecrell.net/releases' }   // ServerListPlus
+}
+dependencies {
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.254-stable'
+    compileOnly 'net.md-5:bungeecord-api:1.21-R0.2'
+    compileOnly 'com.velocitypowered:velocity-api:3.4.0-SNAPSHOT'
+    compileOnly 'net.luckperms:api:5.4'
+    compileOnly 'com.comphenix.protocol:ProtocolLib:5.1.0'
+    compileOnly 'com.mojang:brigadier:1.3.10'
+    compileOnly 'org.yaml:snakeyaml:2.2'
+    compileOnly 'com.google.code.gson:gson:2.11.0'
+    compileOnly 'com.google.guava:guava:33.3.1-jre'
+    compileOnly 'org.projectlombok:lombok:1.18.42'
+    annotationProcessor 'org.projectlombok:lombok:1.18.42'
+    compileOnly 'org.jetbrains:annotations:24.1.0'
+    compileOnly 'org.jetbrains.kotlin:kotlin-stdlib:2.0.21'
+    compileOnly 'com.github.MilkBowl:VaultAPI:1.7.1'
+    compileOnly 'fr.xephi:authme:5.6.0-SNAPSHOT'
+}
+// compile-only stubs of third-party APIs without a public Maven artifact (never packaged)
+sourceSets { stubs { java.srcDir 'stubs' } }
+dependencies { compileOnly sourceSets.stubs.output }
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['-Xmaxerrs', '100000', '-proc:none']
+}
+// Fabric/Mixin platform needs Minecraft (intermediary) + Fabric jars; not part of the Paper/Bungee/Velocity build for now.
+// tools/fabric-files.txt lists the decompiled files that reference Fabric/Minecraft internals.
+sourceSets.main.java {
+    exclude 'litebans/mixin/**'
+    file('tools/fabric-files.txt').eachLine { if (it.trim()) exclude "litebans/${it.trim()}" }
+}
+
+// classpath for the source-level tools (tools/Fixer.java)
+tasks.register('printCp') { doLast { file('.work/cp.txt').text = sourceSets.main.compileClasspath.asPath } }

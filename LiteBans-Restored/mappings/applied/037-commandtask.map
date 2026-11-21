@@ -1,0 +1,22 @@
+# pending renames (CommandTask, CommandOutput, TemplateManager, PunishCommandBase)
+M CommandTask.h_16() getPlatform
+M CommandTask.b_84() getConfigModule
+M CommandTask.e_32() getLookupModule
+M CommandTask.a_114() getBroadcastModule
+M CommandTask.g_21() getDatabaseModule
+M CommandTask.d_41() getSender
+M CommandTask.c_62() getSenderHolder
+M CommandOutput.b_88() getSenderHolder
+M CommandOutput.a_16(Object) returnResult
+M CommandOutput.a_1(LiteSender,CharSequence,Platform) send
+M TemplateManager.c_65() getPlatform
+M TemplateManager.b_89() getFolder
+M TemplateManager.d_44() getTemplates
+M TemplateManager.e_35() getGroups
+M TemplateManager.a_3(List) setGroups
+M TemplateManager.a_119() getConfig
+M TemplateManager.a(ConfigFile) setConfig
+M TemplateManager.a_4(Punishment) findTemplate
+M TemplateManager.a_4(PunishmentType) getTemplatesFor
+M PunishCommandBase.m_8() getLogger
+M PunishCommandBase.c_15(String) isSource

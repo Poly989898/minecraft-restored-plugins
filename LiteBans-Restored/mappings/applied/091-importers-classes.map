@@ -1,0 +1,11 @@
+# PunishCommandBase is the base of the punishment importers (sources: BungeeAdminTools, Ultrabans, MaxBans, BanManager, BanHammer, vanilla, LibertyBans, AdvancedBan)
+C PunishCommandBase ImportSource
+C KotlinPunishCommandBaseSub BungeeAdminToolsImport
+C KotlinPunishCommandBaseSub2 UltrabansImport
+C KotlinPunishCommandBaseSub3 MaxBansImport
+C KotlinPunishCommandBaseSub4 BanManagerV5Import
+C KotlinPunishCommandBaseSub5 BanHammerImport
+C KotlinPunishCommandBaseSub6 VanillaImport
+C KotlinPunishCommandBaseSub7 BanManagerV4Import
+C KotlinPunishCommandBaseSub8 LibertyBansImport
+C KotlinPunishCommandBaseSub9 AdvancedBanImport

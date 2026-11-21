@@ -1,0 +1,15 @@
+# pending
+M AltAccountPunisher.a(DatabaseSession,DupeIpResult,Punishment,String,String,String,String,boolean) createDupePunishment
+M BroadcastModule.a(DatabaseSession,CharSequence,SyncMessageType,PunishmentType,String,boolean,boolean,LiteSender) broadcast
+M BroadcastModule.a(DatabaseSession,CharSequence,String,PunishmentType,String,boolean,boolean,LiteSender) broadcast
+M HistoryQueryFactory.a(DatabaseSession,String,String,ExecutorSource,boolean,String,boolean,Number,Number) createQuery
+M HistoryQueryFactory.a(HistoryQueryFactory,DatabaseSession,String,String,ExecutorSource,boolean,String,boolean,Number,Number,int,Object) createQueryWithDefaults
+M LoginHandler.a(DatabaseSession,Object,String,String,CharSequence,Punishment,String,boolean) disallowIfPunished
+M LoginHandler.a(LoginHandler,DatabaseSession,Object,String,String,CharSequence,Punishment,String,boolean,int,Object) disallowIfPunishedWithDefaults
+M LoginHandler.a(DatabaseSession,Object,String,String,String,String,Punishment) checkGeoipBlock
+M Placeholders.a(DatabaseSession,Punishment,String,String,String,String,int) replaceTargetPlaceholders
+M Placeholders.a(DatabaseSession,String,String,String,String,String,java.util.Date,CharSequence,boolean) replaceDetailPlaceholders
+M Placeholders.a(DatabaseSession,String,String,String,String,String,java.util.Date,CharSequence,boolean,int,Object) replaceDetailPlaceholdersWithDefaults
+M PunishCommandBase.a(DatabaseSession,String,String,long,long,String,UUID,UUID,String,AtomicLong,PunishmentType) importPunishment
+M PunishmentQueries.a(DatabaseSession,CharSequence,String,String,String,String,String) replacePlaceholders
+M KotlinData4.a(DatabaseSession,DiscordWebhook,CharSequence,CharSequence,int,String,Pair[],boolean) sendWebhook

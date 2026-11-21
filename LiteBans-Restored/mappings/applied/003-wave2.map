@@ -1,0 +1,21 @@
+# pending renames (Renamer applies this file; applied ones are archived in mappings/applied/)
+C ai PlatformMarker
+C eC PlatformBridge
+C aO BukkitBridge
+C k1 BungeeBridge
+C A LiteCommandManager
+C D BungeeLiteCommandManager
+C H VelocityLiteCommandManager
+C J PlayerModule
+C y JsonMessageModule
+C v ThrottleModule
+C aa AltAccountPunisher
+C kR PunishmentQueries
+C dB Durations
+C hb ClassUtil
+C gN ConfigFile
+C gG LockdownHandler
+C bd PluginLifecycle
+C jG ServerScope
+C g8 GameVersion
+C bK UsernameValidator

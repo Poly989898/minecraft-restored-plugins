@@ -1,0 +1,22 @@
+# pending
+M DatabaseSession.a(CharSequence,String,String,String,String,String) replacePlaceholders
+M PunishmentQueries.a(DatabaseSession,CharSequence,LiteSender) replacePlaceholders
+M PunishmentQueries.a(DatabaseSession,CharSequence,String,String,boolean) replacePlaceholders
+M PunishmentQueries.a(DatabaseSession,CharSequence,LoginRecord,boolean) replacePlaceholders
+M PunishmentQueries.b(DatabaseSession,CharSequence,LiteSender) replacePlaceholdersNullable
+M PunishmentQueries.a_1(DatabaseSession,CharSequence,KotlinHelper13) replacePlaceholders
+M PunishmentQueries.a(DatabaseSession,CharSequence,Punishment,boolean) replacePlaceholders
+M PunishmentQueries.b_2(DatabaseSession) isOpen
+M PunishmentQueries.a_3(DatabaseSession,CharSequence) replaceStatistics
+M MuteChatTask.b_81() getMutedPlayers
+M MuteChatTask.a(ConcurrentHashMap) setMutedPlayers
+M MuteChatTask.a_52(String) stripNamespace
+M PunishmentLookupModule.a_216() getMuteChatTask
+M PunishmentLookupModule.a(MuteChatTask) setMuteChatTask
+M PunishmentLookupModule.a(UUID,String,String) findPunishment
+M PunishmentLookupModule.a_6(Punishment) isMutedInChat
+M LockdownHandler.c_67() getKickMessage
+M LockdownHandler.a_128() getReason
+M LockdownHandler.a_2(String,boolean) formatKickMessage
+M KotlinHelper13.d_30() getTarget
+M KotlinHelper13.f_21() getExecutor

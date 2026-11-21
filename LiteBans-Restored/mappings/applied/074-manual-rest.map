@@ -1,0 +1,21 @@
+# pending
+M AbstractCommand.b_82() isAsync
+M AbstractCommand.a_112() requiresArguments
+M ArArchiveInputStream.c_4(long) advanceRead
+M ArchiveInputStream.a_3(int) count
+M ArchiveInputStream.b_6(long) count
+M ChatBaseComponent.t_1() getRgb
+M CommandTask.i_14() start
+M CpioArchiveInputStream.b_5(int) advanceRead
+M KotlinAInterface.a_77() getName
+M KotlinCollectionImpl2.a_126() getSize
+M KotlinListImpl3.a_126() getSize
+M KotlinCommandTaskSub7.d_48() clearQueue
+M KotlinUtil34.b_1(List) reverse
+M KotlinUtil39.a_9(List) sort
+M KotlinUtil39.a(List,Comparator) sortWith
+M LeakTask.a_172() cancel
+M LiteCommandManager.f() setup
+M AltAccountPunisher.a(DatabaseSession,DupeIpResult,Punishment,String,String,String,String,boolean,int,Object) createDupePunishmentWithDefaults
+M BroadcastModule.a(BroadcastModule,DatabaseSession,CharSequence,SyncMessageType,PunishmentType,String,boolean,boolean,LiteSender,int,Object) broadcastWithDefaults
+M BroadcastModule.a(BroadcastModule,DatabaseSession,CharSequence,String,PunishmentType,String,boolean,boolean,LiteSender,int,Object) broadcastWithDefaults

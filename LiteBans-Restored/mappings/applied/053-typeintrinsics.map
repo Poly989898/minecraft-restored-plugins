@@ -1,0 +1,21 @@
+# pending
+M KotlinUtil30.a_4(Throwable) sanitizeStackTrace
+M KotlinUtil30.a_5(Object,String) throwCce
+M KotlinUtil30.a_92(String) throwCceMessage
+M KotlinUtil30.a(ClassCastException) castException
+M KotlinUtil30.a_21(Object) asMutableIterable
+M KotlinUtil30.e_1(Object) castToIterable
+M KotlinUtil30.b_8(Object) asMutableCollection
+M KotlinUtil30.d_2(Object) castToCollection
+M KotlinUtil30.c_4(Object) asMutableList
+M KotlinUtil30.f(Object) castToList
+M ChatTextComponent.a_3(String) fromLegacyText
+M ChatTextComponent.a(String,ColorTranslator) fromLegacyText
+M ChatTextComponent.a(String,ColorTranslator,Consumer) parseLegacyText
+M ChatTextComponent.a(String,int) indexOfUrlEnd
+M ChatTextComponent.c_4() duplicate
+M ArchiveHelper5.a(String,InputStream) createArchiveInputStream
+M ArchiveHelper5.a(String,InputStream,String) createArchiveInputStream
+M ArchiveHelper5.a_86() getInputStreamArchiveNames
+M ArchiveHelper5.e_30() getDefault
+M ArchiveHelper5.f_28() createProviderIterator
