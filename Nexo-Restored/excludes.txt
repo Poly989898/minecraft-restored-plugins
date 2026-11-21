@@ -1,0 +1,4 @@
+com/nexomc/nexo/nms/commons/EntityUtils.java
+com/nexomc/nexo/nms/commons/EntityUtils$*.java
+com/nexomc/nexo/nms/commons/PlayerUtils.java
+com/nexomc/nexo/nms/commons/PlayerUtils$*.java

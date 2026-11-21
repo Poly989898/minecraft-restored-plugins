@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Built-By: sivert
+Version: 1.26
+Created-By: Gradle 9.5.0
+Build-Jdk: 21.0.10 JetBrains s.r.o. 21.0.10+7-b1163.110
+Compiled: false
+CI: false
+Multi-Release: true
+
