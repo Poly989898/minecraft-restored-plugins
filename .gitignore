@@ -1,0 +1,18 @@
+# Only source, scripts and docs live here. Everything below is regenerated or must not be published.
+# Binaries and downloaded dependencies
+*.jar
+*.class
+*.hprof
+# Build outputs and caches
+build/
+dist/
+.gradle/
+.work/
+__pycache__/
+# Test server (Paper + worlds + plugin data)
+/test-server/
+# Original third-party binaries kept only for comparison
+/originals/
+# Secrets and logs
+token.secret
+*.log
