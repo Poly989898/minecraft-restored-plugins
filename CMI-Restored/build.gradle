@@ -22,6 +22,16 @@ dependencies {
     compileOnly('com.github.MilkBowl:VaultAPI:1.7') { transitive = false }
     compileOnly('net.luckperms:api:5.4') { transitive = false }
     compileOnly('net.citizensnpcs:citizens-main:2.0.33-SNAPSHOT') { transitive = false }
+    // Real artifacts for optional plugin APIs (replace the former stubs/java packages)
+    compileOnly('com.github.BlueMap-Minecraft:BlueMapAPI:2.7.0') { transitive = false }
+    compileOnly('me.lucko.luckperms:luckperms-api:4.0') { transitive = false }
+    compileOnly('com.github.Zrips:Jobs:5.2.6.3') { transitive = false }
+    compileOnly('com.github.ElgarL:GroupManager:3.2') { transitive = false }
+    compileOnly('dev.aurelium:auraskills-api:2.4.0') { transitive = false }
+    compileOnly('org.apache.logging.log4j:log4j-core:2.26.1') { transitive = false }
+    compileOnly('io.netty:netty-transport:4.2.21.Final') { transitive = false }
+    compileOnly('io.netty:netty-common:4.2.21.Final') { transitive = false }
+    compileOnly('com.googlecode.json-simple:json-simple:1.1.1') { transitive = false }
     // CMILib is built from CMILib-Restored (run its build first)
     compileOnly files('../CMILib-Restored/build/libs/CMILib-1.6.1.3-restored.jar')
 }

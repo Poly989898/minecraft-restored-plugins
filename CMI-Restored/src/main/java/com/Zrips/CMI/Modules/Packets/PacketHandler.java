@@ -107,11 +107,13 @@ public class PacketHandler extends ChannelDuplexHandler {
   }
 
   public void write(
-      ChannelHandlerContext channelHandlerContext, Object object, ChannelPromise channelPromise) {
+      ChannelHandlerContext channelHandlerContext, Object object, ChannelPromise channelPromise)
+      throws Exception {
     super.write(channelHandlerContext, object, channelPromise);
   }
 
-  public void channelRead(ChannelHandlerContext channelHandlerContext, Object object) {
+  public void channelRead(ChannelHandlerContext channelHandlerContext, Object object)
+      throws Exception {
     CMIScheduler.runTaskAsynchronously(
         CMI.getInstance(),
         () -> {
