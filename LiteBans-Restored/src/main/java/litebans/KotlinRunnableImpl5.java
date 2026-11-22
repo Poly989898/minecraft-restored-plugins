@@ -5,13 +5,13 @@ import litebans.api.Events$Listener;
 
 public final class KotlinRunnableImpl5 implements Runnable {
    final Collection collection;
-   final DatabaseSession databaseSession2;
+   final DatabaseSession databaseSession;
    final CharSequence message2;
    final String text2;
 
    public KotlinRunnableImpl5(Collection collection, DatabaseSession databaseSession, CharSequence message, String text) {
       this.collection = collection;
-      this.databaseSession2 = databaseSession;
+      this.databaseSession = databaseSession;
       this.message2 = message;
       this.text2 = text;
    }
@@ -19,7 +19,7 @@ public final class KotlinRunnableImpl5 implements Runnable {
    @Override
    public final void run() {
       Iterable iterable = this.collection;
-      DatabaseSession databaseSession = this.databaseSession2;
+      DatabaseSession databaseSession = this.databaseSession;
 
       for (Object obj : iterable) {
          Events$Listener events$Listener = (Events$Listener)obj;

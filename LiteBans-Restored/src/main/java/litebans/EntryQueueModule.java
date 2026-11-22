@@ -10,8 +10,8 @@ import org.jetbrains.annotations.Nullable;
 public final class EntryQueueModule extends PluginModule implements Runnable {
    public static final EntryQueueModuleCompanion ENTRY_QUEUE_MODULE_COMPANION = new EntryQueueModuleCompanion(null);
    private final Lazy commandQueueModuleLazy = KotlinStub5.computeLazy(() -> (CommandQueueModule)this.platform.getModule(CommandQueueModule.class));
-   private final ArrayBlockingQueue arrayBlockingQueue2 = new ArrayBlockingQueue(512);
-   private final AtomicBoolean atomicBoolean3 = new AtomicBoolean();
+   private final ArrayBlockingQueue queue = new ArrayBlockingQueue(512);
+   private final AtomicBoolean draining = new AtomicBoolean();
    public static final long VALUE_80 = 80L;
    public static final long VALUE_30 = 30L;
    public static final int VALUE_512 = 512;
@@ -39,8 +39,8 @@ public final class EntryQueueModule extends PluginModule implements Runnable {
 
    @Override
    public void disable() {
-      this.arrayBlockingQueue2.clear();
-      AtomicBoolean atomicBoolean = this.atomicBoolean3;
+      this.queue.clear();
+      AtomicBoolean atomicBoolean = this.draining;
       atomicBoolean.set(false);
    }
 
@@ -52,12 +52,12 @@ public final class EntryQueueModule extends PluginModule implements Runnable {
 
    @Override
    public void run() {
-      AtomicBoolean atomicBoolean = this.atomicBoolean3;
+      AtomicBoolean atomicBoolean = this.draining;
       if (atomicBoolean.compareAndSet(false, true)) {
          DatabaseModule module = (DatabaseModule)this.platform.getModule(DatabaseModule.class);
 
          try {
-            int value = this.arrayBlockingQueue2.size() >= 256 ? 3 : (this.arrayBlockingQueue2.size() >= 128 ? 2 : (this.arrayBlockingQueue2.size() >= 64 ? 1 : 0));
+            int value = this.queue.size() >= 256 ? 3 : (this.queue.size() >= 128 ? 2 : (this.queue.size() >= 64 ? 1 : 0));
             byte b;
             switch (value) {
                case 0:
@@ -85,7 +85,7 @@ public final class EntryQueueModule extends PluginModule implements Runnable {
                }
 
                while (true) {
-                  PlayerInfo peek2 = (PlayerInfo)this.arrayBlockingQueue2.peek();
+                  PlayerInfo peek2 = (PlayerInfo)this.queue.peek();
                   if (peek2 == null) {
                      return;
                   }
@@ -94,11 +94,11 @@ public final class EntryQueueModule extends PluginModule implements Runnable {
                      return;
                   }
 
-                  PlayerInfo poll2 = (PlayerInfo)this.arrayBlockingQueue2.poll();
+                  PlayerInfo poll2 = (PlayerInfo)this.queue.poll();
                   if (poll2 != peek2) {
                      Intrinsics.checkNotNull(poll2);
                      if (this.checkPlayerInfo(poll2)) {
-                        this.arrayBlockingQueue2.offer(poll2);
+                        this.queue.offer(poll2);
                         return;
                      }
                   }
@@ -155,7 +155,7 @@ public final class EntryQueueModule extends PluginModule implements Runnable {
       ThrottleModule module = (ThrottleModule)this.platform.getModule(ThrottleModule.class);
       ConfigModule module2 = (ConfigModule)this.platform.getModule(ConfigModule.class);
       if (module2.getSettings().isNotifyDupeipOnJoin() && !module.checkByteValue((byte)0, text2)) {
-         ArrayBlockingQueue arrayBlockingQueue = this.arrayBlockingQueue2;
+         ArrayBlockingQueue arrayBlockingQueue = this.queue;
          Intrinsics.checkNotNull(text);
          Intrinsics.checkNotNull(text2);
          arrayBlockingQueue.offer(new PlayerInfo(text, TargetParser.normalize(text2), text3));

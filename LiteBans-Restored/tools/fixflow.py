@@ -6,7 +6,7 @@ rules fail on the decompiled code. Policy (no `throws` propagation, behaviour id
   * `variable v might not have been initialized` -> default value at the declaration (tools/initfix.py)
 Runs gradle until clean or no progress."""
 import re,subprocess,sys,glob,os
-G=subprocess.run("ls -d ~/.gradle/wrapper/dists/gradle-9.9.1-bin/*/gradle-9.9.1/bin/gradle",shell=True,capture_output=True,text=True).stdout.split()[0]
+G=r'D:\Tools\gradle-9.9.1\bin\gradle.bat'
 IMPORTS={'SQLException':'java.sql.SQLException','SQLTransientException':'java.sql.SQLTransientException','SQLFeatureNotSupportedException':'java.sql.SQLFeatureNotSupportedException','SQLTransientConnectionException':'java.sql.SQLTransientConnectionException','IOException':'java.io.IOException','FileNotFoundException':'java.io.FileNotFoundException','UnsupportedEncodingException':'java.io.UnsupportedEncodingException','TimeoutException':'java.util.concurrent.TimeoutException','ExecutionException':'java.util.concurrent.ExecutionException','GeneralSecurityException':'java.security.GeneralSecurityException','NoSuchAlgorithmException':'java.security.NoSuchAlgorithmException','URISyntaxException':'java.net.URISyntaxException','MalformedURLException':'java.net.MalformedURLException','UnknownHostException':'java.net.UnknownHostException','SocketException':'java.net.SocketException','InvocationTargetException':'java.lang.reflect.InvocationTargetException','CertificateException':'java.security.cert.CertificateException','KeyStoreException':'java.security.KeyStoreException','InvalidKeyException':'java.security.InvalidKeyException','KeyManagementException':'java.security.KeyManagementException','UnrecoverableKeyException':'java.security.UnrecoverableKeyException','ProtocolException':'java.net.ProtocolException','SQLClientInfoException':'java.sql.SQLClientInfoException','SQLTimeoutException':'java.sql.SQLTimeoutException','SQLIntegrityConstraintViolationException':'java.sql.SQLIntegrityConstraintViolationException','SQLNonTransientException':'java.sql.SQLNonTransientException','SQLRecoverableException':'java.sql.SQLRecoverableException','BatchUpdateException':'java.sql.BatchUpdateException','SSLException':'javax.net.ssl.SSLException','SSLHandshakeException':'javax.net.ssl.SSLHandshakeException','ZipException':'java.util.zip.ZipException','DataFormatException':'java.util.zip.DataFormatException','UncheckedIOException':None,'NoSuchMethodException':None,'IllegalAccessException':None,'InstantiationException':None,'ClassNotFoundException':None,'InterruptedException':None}
 PKGS=['java.io','java.net','java.nio.charset','java.nio','java.nio.file','java.sql','java.security','java.security.cert','java.util','java.util.concurrent','java.util.zip','java.lang.reflect','javax.net.ssl','java.text','java.time','javax.crypto','javax.naming','java.util.regex','java.lang']
 _cache={}
@@ -19,7 +19,7 @@ def resolve(name):
     _cache[name]=None; return None
 def auto_imports_from_log(out):
     n=0
-    for b in re.split(r'\n(?=\s*/home/)',out):
+    for b in re.split(r'\n(?=\s*(?:/home/|[A-Za-z]:\\))',out):
         m=re.match(r'\s*(\S+?\.java):\d+: error: cannot find symbol\n[^\n]*\n[^\n]*\n\s*symbol:\s+class (\w+)',b)
         if m:
             fq=resolve(m.group(2))
@@ -91,12 +91,12 @@ def fix_never_thrown(items):
 for it in range(int(sys.argv[1]) if len(sys.argv)>1 else 20):
     ensure_imports()
     out=subprocess.run([G,'compileJava','-q'],capture_output=True,text=True).stderr
-    open('/tmp/claude-1000/fixflow.log','w').write(out)
+    open(os.path.join(os.environ.get('TMPDIR','D:/Tools/tmp'),'fixflow.log'),'w').write(out)
     n=len(re.findall(r'error:',out))//2
     print('iter',it,'errors',n,flush=True)
     if n==0: break
     todo={}; never=[]; seen=set(); lam=[]
-    for b in re.split(r'\n(?=\s*/home/)',out):
+    for b in re.split(r'\n(?=\s*(?:/home/|[A-Za-z]:\\))',out):
         b=b.strip()
         m=re.match(r'.*?/litebans/(\w+)\.java:(\d+): error: unreported exception ([\w.]+);[^\n]*\n([^\n]*)',b,re.S)
         if m:
@@ -111,14 +111,14 @@ for it in range(int(sys.argv[1]) if len(sys.argv)>1 else 20):
         m=re.match(r'.*?/litebans/(\w+)\.java:(\d+): error: exception ([\w.]+) is never thrown in body of corresponding try statement',b,re.S)
         if m and (m.group(1),int(m.group(2)),m.group(3).split('.')[-1]) not in never: never.append((m.group(1),int(m.group(2)),m.group(3).split('.')[-1]))
     nf=auto_imports_from_log(out)
-    for b in re.split(r'\n(?=\s*/home/)',out):
+    for b in re.split(r'\n(?=\s*(?:/home/|[A-Za-z]:\\))',out):
         m=re.match(r'\s*(\S+?\.java):(\d+): error: variable (\w+) not initialized in the default constructor',b)
         if m:
             src=open(m.group(1),encoding='utf-8').read().split('\n'); i=int(m.group(2))-1
             if ' final ' in src[i]: src[i]=src[i].replace(' final ',' ',1); open(m.group(1),'w',encoding='utf-8').write('\n'.join(src)); nf+=1
     changed=nf+(fix_never_thrown(sorted(never,key=lambda x:(x[0],-x[1]))) if never else wrap_methods(todo))
     if lam: print('lambda sites need manual care:',lam)
-    r=subprocess.run(['python3','tools/initfix.py','/tmp/claude-1000/fixflow.log'],capture_output=True,text=True)
+    r=subprocess.run(['python3','tools/initfix.py',os.path.join(os.environ.get('TMPDIR','D:/Tools/tmp'),'fixflow.log')],capture_output=True,text=True)
     if 'initialised 0' not in r.stdout: changed+=1
     if not changed: print('no progress'); break
 print(re.findall(r'error: ([^\n]*)',out)[:6])

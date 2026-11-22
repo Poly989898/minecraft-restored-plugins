@@ -37,7 +37,7 @@ public final class ConfigModule extends PluginModule {
    public Settings settings;
    public ArchiveHelper9 archiveHelper9;
    public TemplateManager templateManager;
-   public WebhookConfig kotlinData8;
+   public WebhookConfig webhookConfig;
    private final UnsafeLazyImpl unsafeLazyImpl = new UnsafeLazyImpl(() -> new KotlinData12(this.getSettings().getSecurityObscureSeed()));
    private final Lazy authMeInstalled = KotlinStub5.computeLazy(() -> this.platform.createBridge().hasPlugin("AuthMe"));
    private Object serverListPlusBanProvider;
@@ -48,7 +48,7 @@ public final class ConfigModule extends PluginModule {
    private final StateFlags stateFlags = new StateFlags(false, false, 3, null);
    private UserRecord userRecord4;
    public static final int VALUE_8 = 8;
-   public static final String TEXT_5 = "geoip";
+   public static final String GEOIP_FOLDER = "geoip";
    public static final int VALUE_40000 = 40000;
    private static int value32;
    private static final AtomicBoolean return7 = new AtomicBoolean();
@@ -111,8 +111,8 @@ public final class ConfigModule extends PluginModule {
    }
 
    public final WebhookConfig obtainKotlinData() {
-      if (this.kotlinData8 != null) {
-         return this.kotlinData8;
+      if (this.webhookConfig != null) {
+         return this.webhookConfig;
       }
 
       Intrinsics.throwUninitializedProperty("");
@@ -120,7 +120,7 @@ public final class ConfigModule extends PluginModule {
    }
 
    public final void setKotlinData8(@NotNull WebhookConfig kotlinData) {
-      this.kotlinData8 = kotlinData;
+      this.webhookConfig = kotlinData;
    }
 
    public final KotlinData12 obtainKotlinData2() {
@@ -354,7 +354,7 @@ public final class ConfigModule extends PluginModule {
 
                   for (int i2 = messages.length; value3 < i2; value3++) {
                      Message message2 = messages[value3];
-                     String text31 = message2.text3;
+                     String text31 = message2.key;
                      CharSequence c3_f2 = message2.c3_f;
                      if (c3_f2 != null) {
                         String string12 = configFile2.getString(text31, null);
@@ -1029,8 +1029,8 @@ public final class ConfigModule extends PluginModule {
                               throw new IllegalArgumentException(message2.toString());
                            }
 
-                           session.getHistory(loginRecord.getUuid(), kotlinCommandTaskSub12.getText57(), PunishmentType.BAN, ServerScopes.SERVER_SCOPE.getLocalScope(), false, 1);
-                           session.getHistory(loginRecord.getUuid(), kotlinCommandTaskSub12.getText57(), PunishmentType.BAN, ServerScopes.SERVER_SCOPE.getLocalScope(), true, 1);
+                           session.getHistory(loginRecord.getUuid(), kotlinCommandTaskSub12.getDetail(), PunishmentType.BAN, ServerScopes.SERVER_SCOPE.getLocalScope(), false, 1);
+                           session.getHistory(loginRecord.getUuid(), kotlinCommandTaskSub12.getDetail(), PunishmentType.BAN, ServerScopes.SERVER_SCOPE.getLocalScope(), true, 1);
                            String text32 = "*";
                            String normalize2 = ServerScopes.SERVER_SCOPE.normalize("global");
                            if (!ServerScopes.SERVER_SCOPE.isGlobal(normalize2)) {

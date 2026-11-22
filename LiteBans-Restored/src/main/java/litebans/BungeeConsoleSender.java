@@ -16,9 +16,9 @@ import org.jetbrains.annotations.Nullable;
 public class BungeeConsoleSender implements LiteSender {
    private final BungeePlugin bungeePlugin;
    private final WeakReference weakReference2;
-   private UUID uuid6 = uuid3;
+   private UUID consoleUuid = ZERO_UUID;
    private String uuidString = null;
-   private String text6;
+   private String displayName;
    private final String name;
    private final boolean player;
 
@@ -54,11 +54,11 @@ public class BungeeConsoleSender implements LiteSender {
 
    @Override
    public @Nullable String getIpAddress() {
-      String text = this.text6;
+      String text = this.displayName;
       if (text == null) {
          CommandSender commandSender = (CommandSender)this.weakReference2.get();
          if (commandSender != null) {
-            this.text6 = text = this.computeText(commandSender);
+            this.displayName = text = this.computeText(commandSender);
          }
       }
 
@@ -86,13 +86,13 @@ public class BungeeConsoleSender implements LiteSender {
 
    @Override
    public @NonNull UUID getUuid() {
-      UUID uuid = this.uuid6;
-      if (uuid.equals(uuid3) && this.player) {
+      UUID uuid = this.consoleUuid;
+      if (uuid.equals(ZERO_UUID) && this.player) {
          CommandSender commandSender = (CommandSender)this.weakReference2.get();
          if (commandSender != null) {
             UUID uniqueId = ((ProxiedPlayer)commandSender).getUniqueId();
             if (uniqueId != null) {
-               this.uuid6 = uniqueId;
+               this.consoleUuid = uniqueId;
                return uniqueId;
             }
          }

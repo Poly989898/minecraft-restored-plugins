@@ -3,11 +3,11 @@ package litebans;
 import org.jetbrains.annotations.NotNull;
 
 public final class UnlinkTask extends CommandTask {
-   private final String[] texts14;
+   private final String[] args;
 
    public UnlinkTask(@NotNull String[] texts, @NotNull Platform platform) {
       super(platform);
-      this.texts14 = texts;
+      this.args = texts;
    }
 
    @Override
@@ -25,7 +25,7 @@ public final class UnlinkTask extends CommandTask {
             commandOutput.returnResult(message);
             throw new CommandAbortException();
          } else {
-            String text = this.texts14[1];
+            String text = this.args[1];
             LoginRecord loginRecord = databaseSession.findLoginRecord(text);
             if (loginRecord == null) {
                CommandTask.COMMAND_OUTPUT.returnResult(Message.ERROR_NO_UUID_FOUND);

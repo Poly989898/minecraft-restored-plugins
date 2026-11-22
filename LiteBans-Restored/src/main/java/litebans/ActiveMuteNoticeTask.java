@@ -5,17 +5,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class ActiveMuteNoticeTask extends CommandTask {
-   private final String text46;
-   private final String text47;
-   private final String text48;
-   private final String text49;
+   private final String serverScope;
+   private final String uuid;
+   private final String ip;
+   private final String serverName;
 
    public ActiveMuteNoticeTask(@NotNull Platform platform, @Nullable String text, @NotNull String text2, @Nullable String text3, @Nullable String text4) {
       super(platform);
-      this.text46 = text;
-      this.text47 = text2;
-      this.text48 = text3;
-      this.text49 = text4;
+      this.serverScope = text;
+      this.uuid = text2;
+      this.ip = text3;
+      this.serverName = text4;
    }
 
    @Override
@@ -26,10 +26,10 @@ public final class ActiveMuteNoticeTask extends CommandTask {
          ((DatabaseModule)commandTask2.getPlatform().getModule(DatabaseModule.class)).handleFunction(obj -> {
             DatabaseSession databaseSession = (DatabaseSession) obj;
             Object obj2 = null;
-            String text = this.text49;
-            if (this.text49 == null) {
+            String text = this.serverName;
+            if (this.serverName == null) {
                CommandTask commandTask3 = this;
-               String text2 = this.text47;
+               String text2 = this.uuid;
                Object[] onlineSenders = commandTask3.getPlatform().getOnlineSenders();
                int value = 0;
                int length2 = onlineSenders.length;
@@ -58,11 +58,11 @@ public final class ActiveMuteNoticeTask extends CommandTask {
             }
 
             String text3 = TextUtil.access$length(text, 32);
-            Punishment punishment = PunishmentQueries.findPunishmentWithDefaults(databaseSession, this.text47, this.text48, PunishmentType.MUTE, text3, false, false, 48, null);
-            if (punishment == null && this.text46 != null) {
+            Punishment punishment = PunishmentQueries.findPunishmentWithDefaults(databaseSession, this.uuid, this.ip, PunishmentType.MUTE, text3, false, false, 48, null);
+            if (punishment == null && this.serverScope != null) {
                CommandTask commandTask32 = this;
                if (((ConfigModule)commandTask32.getPlatform().getModule(ConfigModule.class)).getSettings().isBanNames()) {
-                  punishment = databaseSession.findPunishment(this.text46, this.text47, text3, PunishmentType.MUTE);
+                  punishment = databaseSession.findPunishment(this.serverScope, this.uuid, text3, PunishmentType.MUTE);
                }
             }
 
@@ -70,15 +70,15 @@ public final class ActiveMuteNoticeTask extends CommandTask {
             ConfigModule module = (ConfigModule)commandTask4.getPlatform().getModule(ConfigModule.class);
             byte b = 3;
             if (module.isDebugAtLeast(b)) {
-               module.logDebug("Active mute for " + this.text47 + " on server " + text3 + ": " + punishment);
+               module.logDebug("Active mute for " + this.uuid + " on server " + text3 + ": " + punishment);
             }
 
             if (punishment != null) {
                CommandTask commandTask5 = this;
-               ((PunishmentLookupModule)commandTask5.getPlatform().getModule(PunishmentLookupModule.class)).handleText(this.text47, punishment);
+               ((PunishmentLookupModule)commandTask5.getPlatform().getModule(PunishmentLookupModule.class)).handleText(this.uuid, punishment);
             } else {
                CommandTask commandTask6 = this;
-               ((PunishmentLookupModule)commandTask6.getPlatform().getModule(PunishmentLookupModule.class)).getMuteChatTask().getMutedPlayers().remove(UUID.fromString(this.text47));
+               ((PunishmentLookupModule)commandTask6.getPlatform().getModule(PunishmentLookupModule.class)).getMuteChatTask().getMutedPlayers().remove(UUID.fromString(this.uuid));
             }
 
             return Unit.UNIT;

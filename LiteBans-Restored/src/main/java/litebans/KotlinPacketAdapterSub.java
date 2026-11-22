@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public final class KotlinPacketAdapterSub extends PacketAdapter {
    public static final KotlinPacketAdapterSubCompanion KOTLIN_PACKET_ADAPTER_SUB_COMPANION = new KotlinPacketAdapterSubCompanion(null);
    private final Platform platform;
-   private final ConfigModule configModule4;
+   private final ConfigModule configModule;
    private static final Lazy return2 = KotlinStub5.computeLazy(() -> {
       PacketType packetType;
       try {
@@ -35,7 +35,7 @@ public final class KotlinPacketAdapterSub extends PacketAdapter {
       packetTypes[0] = (PacketType)obj;
       super(PacketAdapter.params(plugin, packetTypes).optionAsync());
       this.platform = platform;
-      this.configModule4 = (ConfigModule)this.platform.getModule(ConfigModule.class);
+      this.configModule = (ConfigModule)this.platform.getModule(ConfigModule.class);
    }
 
    public void onPacketSending(@NotNull PacketEvent packetEvent) {
@@ -46,14 +46,14 @@ public final class KotlinPacketAdapterSub extends PacketAdapter {
 
          PacketContainer packet = packetEvent.getPacket();
          WrappedChatComponent read2 = (WrappedChatComponent)packet.getChatComponents().read(0);
-         ConfigModule configModule = this.configModule4;
+         ConfigModule configModule = this.configModule;
          if (configModule.isVerbose()) {
             configModule.logDebug("1 " + (read2 != null ? read2.getJson() : null));
          }
 
          ChatBaseComponent[] chatBaseComponents = TextComponentDeserializer.computeChatBaseComponentArray(read2.getJson());
          String text = ChatTextComponent.computeText(Arrays.copyOf(chatBaseComponents, chatBaseComponents.length));
-         ConfigModule configModule2 = this.configModule4;
+         ConfigModule configModule2 = this.configModule;
          if (configModule2.isVerbose()) {
             configModule2.logDebug("2 " + text);
          }
@@ -62,7 +62,7 @@ public final class KotlinPacketAdapterSub extends PacketAdapter {
          if (StringsKt.containsWithDefaults((CharSequence)text, (CharSequence)LiteColor.MAGIC, false, 2, null)) {
             ChatBaseComponent[] fromLegacyText2 = ChatTextComponent.fromLegacyText(text);
             WrappedChatComponent fromJson2 = WrappedChatComponent.fromJson(TextComponentDeserializer.computeText(Arrays.copyOf(fromLegacyText2, fromLegacyText2.length)));
-            ConfigModule configModule3 = this.configModule4;
+            ConfigModule configModule3 = this.configModule;
             if (configModule3.isVerbose()) {
                configModule3.logDebug("3 " + fromJson2.getJson());
             }
@@ -70,8 +70,8 @@ public final class KotlinPacketAdapterSub extends PacketAdapter {
             packet.getChatComponents().write(0, fromJson2);
          }
       } catch (Throwable e) {
-         ConfigModule.handleConfigModule(this.configModule4, e, 0, 2, null);
-         ProtocolLibHelper.handlePluginModule2(this.configModule4, this);
+         ConfigModule.handleConfigModule(this.configModule, e, 0, 2, null);
+         ProtocolLibHelper.handlePluginModule2(this.configModule, this);
       }
    }
 

@@ -8,11 +8,11 @@ import org.jetbrains.annotations.NotNull;
 
 public final class PoolBungeeListenerImpl implements BungeeListener {
    private final Platform platform;
-   private final PunishmentLookupModule punishmentLookupModule2;
+   private final PunishmentLookupModule lookupModule;
 
    public PoolBungeeListenerImpl(@NotNull Platform platform2) {
       this.platform = platform2;
-      this.punishmentLookupModule2 = (PunishmentLookupModule)this.platform.getModule(PunishmentLookupModule.class);
+      this.lookupModule = (PunishmentLookupModule)this.platform.getModule(PunishmentLookupModule.class);
    }
 
    public final Platform getPlatform() {
@@ -26,7 +26,7 @@ public final class PoolBungeeListenerImpl implements BungeeListener {
          ProxiedPlayer proxiedPlayer = sender instanceof ProxiedPlayer ? (ProxiedPlayer)sender : null;
          if ((sender instanceof ProxiedPlayer ? (ProxiedPlayer)sender : null) != null) {
             String message = chatEvent.getMessage();
-            MuteChatTask muteChatTask = this.punishmentLookupModule2.getMuteChatTask();
+            MuteChatTask muteChatTask = this.lookupModule.getMuteChatTask();
             Intrinsics.checkNotNull(message);
             MuteChatTask.handleMuteChatTask(muteChatTask, chatEvent, message, this.platform.wrapSender(proxiedPlayer), false, 8, null);
          }

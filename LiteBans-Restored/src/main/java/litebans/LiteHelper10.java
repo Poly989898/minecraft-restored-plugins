@@ -122,23 +122,23 @@ public class LiteHelper10 {
                   ClickAction clickAction = ClickAction.computeClickAction(lowerCase.toUpperCase(Locale.ROOT));
                   switch (GameVersionSwitchMap.value[clickAction.ordinal()]) {
                      case 1:
-                        jsonObject2.addProperty("url", chatBaseComponent.getClickEvent().getText3());
+                        jsonObject2.addProperty("url", chatBaseComponent.getClickEvent().getValue());
                         break;
                      case 2:
                      case 3:
-                        jsonObject2.addProperty("command", chatBaseComponent.getClickEvent().getText3());
+                        jsonObject2.addProperty("command", chatBaseComponent.getClickEvent().getValue());
                         break;
                      case 4:
-                        jsonObject2.addProperty("page", Integer.parseInt(chatBaseComponent.getClickEvent().getText3()));
+                        jsonObject2.addProperty("page", Integer.parseInt(chatBaseComponent.getClickEvent().getValue()));
                         break;
                      default:
-                        jsonObject2.addProperty("value", chatBaseComponent.getClickEvent().getText3());
+                        jsonObject2.addProperty("value", chatBaseComponent.getClickEvent().getValue());
                   }
 
                   jsonObject.add("click_event", jsonObject2);
                   break;
                case 2:
-                  jsonObject2.addProperty("value", chatBaseComponent.getClickEvent().getText3());
+                  jsonObject2.addProperty("value", chatBaseComponent.getClickEvent().getValue());
                   jsonObject.add("clickEvent", jsonObject2);
                   break;
                default:

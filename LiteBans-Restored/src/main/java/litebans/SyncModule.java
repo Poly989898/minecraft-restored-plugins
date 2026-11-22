@@ -33,7 +33,7 @@ public final class SyncModule extends PluginModule implements Runnable {
    private final Lazy broadcastModuleLazy = KotlinStub5.computeLazy(() -> (BroadcastModule)this.platform.getModule(BroadcastModule.class));
    private final Lazy punishmentLookupModuleLazy = KotlinStub5.computeLazy(() -> (PunishmentLookupModule)this.platform.getModule(PunishmentLookupModule.class));
    private final AtomicBoolean atomicBoolean2 = new AtomicBoolean();
-   private final CacheSyncTask kotlinCommandTaskSub7 = new CacheSyncTask(this.platform);
+   private final CacheSyncTask cacheSyncTask = new CacheSyncTask(this.platform);
    private long longValue;
    private int intValue2;
    private byte byteValue;
@@ -83,7 +83,7 @@ public final class SyncModule extends PluginModule implements Runnable {
    }
 
    public final CacheSyncTask getKotlinCommandTaskSub7() {
-      return this.kotlinCommandTaskSub7;
+      return this.cacheSyncTask;
    }
 
    public final int obtainIntValue2() {

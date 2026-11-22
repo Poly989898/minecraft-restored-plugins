@@ -2,7 +2,7 @@
 """Applies mappings/names.map with Renamer; on compile errors drops offending lines (whole override families by original name+params) and retries."""
 import subprocess,re,sys,os
 def sh(c): return subprocess.run(c,shell=True,capture_output=True,text=True)
-G=sh('ls -d ~/.gradle/wrapper/dists/gradle-9.9.1-bin/*/gradle-9.9.1/bin/gradle').stdout.strip()
+G=r'D:\Tools\gradle-9.9.1\bin\gradle.bat'
 def key(l):
     m=re.match(r'^M \w+\.(\w+)\((.*?)\) (\w+)$',l)
     return (m.group(1),m.group(2)) if m else None

@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public final class CommandQueueModule extends PluginModule implements Runnable {
    public static final CommandQueueModuleCompanion COMMAND_QUEUE_MODULE_COMPANION = new CommandQueueModuleCompanion(null);
    private final ArrayBlockingQueue arrayBlockingQueue = new ArrayBlockingQueue(2048);
-   private final AtomicBoolean atomicBoolean7 = new AtomicBoolean();
+   private final AtomicBoolean draining = new AtomicBoolean();
    public static final long VALUE_64 = 64L;
    public static final int VALUE_2048 = 2048;
 
@@ -23,14 +23,14 @@ public final class CommandQueueModule extends PluginModule implements Runnable {
 
    @Override
    public void enable() {
-      AtomicBoolean atomicBoolean = this.atomicBoolean7;
+      AtomicBoolean atomicBoolean = this.draining;
       atomicBoolean.set(false);
       this.platform.runAsyncTimer(this, 64L, 64L);
    }
 
    @Override
    public void run() {
-      AtomicBoolean atomicBoolean = this.atomicBoolean7;
+      AtomicBoolean atomicBoolean = this.draining;
       if (atomicBoolean.compareAndSet(false, true)) {
          DatabaseModule module = (DatabaseModule)this.platform.getModule(DatabaseModule.class);
 

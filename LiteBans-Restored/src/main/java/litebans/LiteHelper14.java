@@ -1,16 +1,16 @@
 package litebans;
 
 public class LiteHelper14 {
-   public final String text2;
-   public final byte[] bytes2;
+   public final String channel;
+   public final byte[] payload;
 
    public LiteHelper14(String text, byte[] bytes) {
-      this.text2 = text;
-      this.bytes2 = bytes;
+      this.channel = text;
+      this.payload = bytes;
    }
 
    public LiteHelper14() {
-      this.text2 = "";
-      this.bytes2 = new byte[0];
+      this.channel = "";
+      this.payload = new byte[0];
    }
 }

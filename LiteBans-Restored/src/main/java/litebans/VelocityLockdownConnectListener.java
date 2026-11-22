@@ -8,16 +8,16 @@ import com.velocitypowered.api.proxy.server.RegisteredServer;
 import org.jetbrains.annotations.NotNull;
 
 public final class VelocityLockdownConnectListener implements VelocityListener {
-   private final Platform platform3;
-   private final BroadcastModule broadcastModule6;
+   private final Platform platform;
+   private final BroadcastModule broadcastModule;
 
    public VelocityLockdownConnectListener(@NotNull Platform platform) {
-      this.platform3 = platform;
-      this.broadcastModule6 = (BroadcastModule)this.platform3.getModule(BroadcastModule.class);
+      this.platform = platform;
+      this.broadcastModule = (BroadcastModule)this.platform.getModule(BroadcastModule.class);
    }
 
    public final Platform getPlatform3() {
-      return this.platform3;
+      return this.platform;
    }
 
    @Subscribe(order = PostOrder.FIRST)
@@ -25,11 +25,11 @@ public final class VelocityLockdownConnectListener implements VelocityListener {
       boolean flag = false;
       Object obj = null;
       if (serverPreConnectEvent.getResult().isAllowed()) {
-         LiteSender wrapSender2 = this.platform3.wrapSender(serverPreConnectEvent.getPlayer());
-         LockdownHandler lockdownHandler = this.broadcastModule6.getLockdownHandler();
+         LiteSender wrapSender2 = this.platform.wrapSender(serverPreConnectEvent.getPlayer());
+         LockdownHandler lockdownHandler = this.broadcastModule.getLockdownHandler();
          if (lockdownHandler != null) {
-            Platform platform = this.platform3;
-            Intrinsics.checkNotNullExpressionValue(this.platform3, "");
+            Platform platform = this.platform;
+            Intrinsics.checkNotNullExpressionValue(this.platform, "");
             VelocityPlugin velocityPlugin = (VelocityPlugin)platform;
             Intrinsics.checkNotNull(wrapSender2);
             String text = "litebans.lockdown.bypass";
@@ -92,7 +92,7 @@ public final class VelocityLockdownConnectListener implements VelocityListener {
    }
 
    public VelocityLockdownConnectListener obtainLiteVelocityListenerImpl() {
-      Platform platform = this.platform3;
+      Platform platform = this.platform;
       PlatformListener[] platformListeners = new PlatformListener[]{this};
       platform.registerListeners(platformListeners);
       return this;

@@ -2,7 +2,7 @@
 """After patchparams: patched bodies still use pre-rename member names (fields/methods). For each javac `cannot find symbol` on a variable/method
 whose location class (or a superclass) has a rename in mappings/applied (F / M lines), rewrite the token at the error position."""
 import re,subprocess,glob,os,sys
-G=subprocess.run("ls -d ~/.gradle/wrapper/dists/gradle-9.9.1-bin/*/gradle-9.9.1/bin/gradle",shell=True,capture_output=True,text=True).stdout.split()[0]
+G=r'D:\Tools\gradle-9.9.1\bin\gradle.bat'
 F={}; M={}
 for m in sorted(glob.glob('mappings/applied/*.map')):
     for l in open(m):
@@ -33,7 +33,7 @@ def run():
 total=0
 for rnd in range(int(sys.argv[1]) if len(sys.argv)>1 else 6):
     out=run(); fixes=0; edits={}
-    for b in re.split(r'\n(?=\s*/home/)',out):
+    for b in re.split(r'\n(?=\s*(?:/home/|[A-Za-z]:\\))',out):
         b=b.strip()
         m=re.match(r'(\S+?\.java):(\d+): error: cannot find symbol\n([^\n]*)\n(\s*)\^\n\s*symbol:\s+(variable|method) (\w+)(?:\([^)]*\))?\n\s*location:\s+(?:variable \w+ of type |class |interface )(\w+)',b)
         if not m: continue
@@ -57,4 +57,4 @@ for rnd in range(int(sys.argv[1]) if len(sys.argv)>1 else 6):
     total+=fixes
     print('round',rnd,'errors',len(re.findall(r'error:',out))//2,'fixed',fixes,flush=True)
     if not fixes: break
-open('/tmp/claude-1000/memberfix.log','w').write(out)
+open(os.path.join(os.environ.get('TMPDIR','D:/Tools/tmp'),'memberfix.log'),'w').write(out)

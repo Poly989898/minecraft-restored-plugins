@@ -6,22 +6,22 @@ import org.jetbrains.annotations.Nullable;
 public final class PunishmentTarget {
    public static final PunishmentTargetCompanion PUNISHMENT_TARGET_COMPANION = new PunishmentTargetCompanion(null);
    private final byte byteValue;
-   private final String text2;
+   private final String target;
    public static final byte VALUE_0 = 0;
    public static final byte VALUE_1 = 1;
    public static final byte VALUE_2 = 2;
 
    public PunishmentTarget(byte b, @NotNull String text) {
       this.byteValue = b;
-      this.text2 = text;
+      this.target = text;
    }
 
    public final byte getByteValue() {
       return this.byteValue;
    }
 
-   public final String getText2() {
-      return this.text2;
+   public final String getTarget() {
+      return this.target;
    }
 
    public final String obtainText() {
@@ -39,13 +39,13 @@ public final class PunishmentTarget {
 
    @Override
    public String toString() {
-      return "Target(type=" + this.byteValue + ", target=" + this.text2 + ')';
+      return "Target(type=" + this.byteValue + ", target=" + this.target + ')';
    }
 
    @Override
    public int hashCode() {
       int value = Byte.hashCode(this.byteValue);
-      return value * 31 + this.text2.hashCode();
+      return value * 31 + this.target.hashCode();
    }
 
    @Override
@@ -59,6 +59,6 @@ public final class PunishmentTarget {
       }
 
       PunishmentTarget punishmentTarget = (PunishmentTarget)obj;
-      return this.byteValue != punishmentTarget.byteValue ? false : Intrinsics.areEqual(this.text2, punishmentTarget.text2);
+      return this.byteValue != punishmentTarget.byteValue ? false : Intrinsics.areEqual(this.target, punishmentTarget.target);
    }
 }

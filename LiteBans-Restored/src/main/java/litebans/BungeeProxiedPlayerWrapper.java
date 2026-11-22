@@ -29,11 +29,11 @@ import org.jetbrains.annotations.Nullable;
 @PlatformMarker(obtainByteValue = 1)
 public final class BungeeProxiedPlayerWrapper implements ProxiedPlayer {
    private final Platform platform;
-   private final PendingConnection pendingConnection2;
+   private final PendingConnection pendingConnection;
 
    public BungeeProxiedPlayerWrapper(@NotNull Platform platform, @Nullable PendingConnection pendingConnection) {
       this.platform = platform;
-      this.pendingConnection2 = pendingConnection;
+      this.pendingConnection = pendingConnection;
    }
 
    public final Void obtainVoid() {
@@ -106,25 +106,25 @@ public final class BungeeProxiedPlayerWrapper implements ProxiedPlayer {
    }
 
    public void disconnect(@NotNull String text) {
-      if (this.pendingConnection2 != null) {
-         this.pendingConnection2.disconnect(text);
+      if (this.pendingConnection != null) {
+         this.pendingConnection.disconnect(text);
       }
    }
 
    public void disconnect(@NotNull BaseComponent[] baseComponents) {
-      if (this.pendingConnection2 != null) {
-         this.pendingConnection2.disconnect(Arrays.copyOf(baseComponents, baseComponents.length));
+      if (this.pendingConnection != null) {
+         this.pendingConnection.disconnect(Arrays.copyOf(baseComponents, baseComponents.length));
       }
    }
 
    public void disconnect(@NotNull BaseComponent baseComponent) {
-      if (this.pendingConnection2 != null) {
-         this.pendingConnection2.disconnect(baseComponent);
+      if (this.pendingConnection != null) {
+         this.pendingConnection.disconnect(baseComponent);
       }
    }
 
    public InetSocketAddress getAddress() {
-      return this.pendingConnection2 != null ? this.pendingConnection2.getAddress() : null;
+      return this.pendingConnection != null ? this.pendingConnection.getAddress() : null;
    }
 
    public String getDisplayName() {
@@ -152,8 +152,8 @@ public final class BungeeProxiedPlayerWrapper implements ProxiedPlayer {
    }
 
    public String getName() {
-      if (this.pendingConnection2 != null) {
-         String name = this.pendingConnection2.getName();
+      if (this.pendingConnection != null) {
+         String name = this.pendingConnection.getName();
          if (name != null) {
             return name;
          }
@@ -163,8 +163,8 @@ public final class BungeeProxiedPlayerWrapper implements ProxiedPlayer {
    }
 
    public PendingConnection getPendingConnection() {
-      PendingConnection pendingConnection = this.pendingConnection2;
-      Intrinsics.checkNotNull(this.pendingConnection2);
+      PendingConnection pendingConnection = this.pendingConnection;
+      Intrinsics.checkNotNull(this.pendingConnection);
       return pendingConnection;
    }
 
@@ -181,8 +181,8 @@ public final class BungeeProxiedPlayerWrapper implements ProxiedPlayer {
       BungeeBridge bridge = (BungeeBridge) this.platform.createBridge();
       Intrinsics.checkNotNullExpressionValue(bridge, "");
       bridge = bridge;
-      PendingConnection pendingConnection = this.pendingConnection2;
-      Intrinsics.checkNotNull(this.pendingConnection2);
+      PendingConnection pendingConnection = this.pendingConnection;
+      Intrinsics.checkNotNull(this.pendingConnection);
       return bridge.computeServerInfo2(pendingConnection);
    }
 
@@ -198,8 +198,8 @@ public final class BungeeProxiedPlayerWrapper implements ProxiedPlayer {
    }
 
    public UUID getUniqueId() {
-      if (this.pendingConnection2 != null) {
-         UUID uniqueId = this.pendingConnection2.getUniqueId();
+      if (this.pendingConnection != null) {
+         UUID uniqueId = this.pendingConnection.getUniqueId();
          if (uniqueId != null) {
             return uniqueId;
          }
@@ -232,7 +232,7 @@ public final class BungeeProxiedPlayerWrapper implements ProxiedPlayer {
    }
 
    public SocketAddress getSocketAddress() {
-      return this.pendingConnection2 != null ? this.pendingConnection2.getSocketAddress() : null;
+      return this.pendingConnection != null ? this.pendingConnection.getSocketAddress() : null;
    }
 
    public void sendData(@NotNull String text, @NotNull byte[] bytes) {
@@ -301,8 +301,8 @@ public final class BungeeProxiedPlayerWrapper implements ProxiedPlayer {
    }
 
    public Unsafe unsafe() {
-      PendingConnection pendingConnection = this.pendingConnection2;
-      Intrinsics.checkNotNull(this.pendingConnection2);
+      PendingConnection pendingConnection = this.pendingConnection;
+      Intrinsics.checkNotNull(this.pendingConnection);
       return pendingConnection.unsafe();
    }
 

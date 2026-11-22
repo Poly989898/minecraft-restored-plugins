@@ -740,7 +740,7 @@ public enum Message implements CharSequence {
    WEB_ALTS_COLOR(WEB_ALTS, "color", "#999999"),
    WEB_ALTS_THUMB(WEB_ALTS, "thumbnail", "");
 
-   public final String text3;
+   public final String key;
    public @Nullable CharSequence c3_f;
 
    public static Message computeMessage(String text) {
@@ -756,7 +756,7 @@ public enum Message implements CharSequence {
    }
 
    Message(String text) {
-      this.text3 = text;
+      this.key = text;
    }
 
    Message(String text, @Nullable CharSequence message) {
@@ -835,7 +835,7 @@ public enum Message implements CharSequence {
          return null;
       }
 
-      if (!message.text3.startsWith("webhook") && message2.toString().contains("#$id")) {
+      if (!message.key.startsWith("webhook") && message2.toString().contains("#$id")) {
          message2 = message2.toString().replace("#$id", "#&b$id");
       }
 
@@ -891,7 +891,7 @@ public enum Message implements CharSequence {
    }
 
    public String obtainText() {
-      return this.text3;
+      return this.key;
    }
 
    private static final Message[] obtainMessageArray() {

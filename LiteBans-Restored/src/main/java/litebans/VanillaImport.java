@@ -14,7 +14,7 @@ import java.util.Date;
 import org.jetbrains.annotations.NotNull;
 
 public final class VanillaImport extends ImportSource {
-   private final File file3 = new File("banned-players.json");
+   private final File bannedPlayersFile = new File("banned-players.json");
    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 
    public VanillaImport(@NotNull Platform platform) {
@@ -36,7 +36,7 @@ public final class VanillaImport extends ImportSource {
    @Override
    public void handleText(@NotNull String text, @NotNull Connection connection, @NotNull DatabaseSession databaseSession, boolean flag) {
       try {
-         File file = this.file3;
+         File file = this.bannedPlayersFile;
          Charset charset = KotlinCharsets.CHARSET;
          short value = 8192;
          Reader inputStreamReader = new InputStreamReader(new FileInputStream(file), charset);

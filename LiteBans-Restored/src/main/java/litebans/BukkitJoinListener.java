@@ -8,10 +8,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
 
 public final class BukkitJoinListener implements BukkitListener {
-   private final Platform platform5;
+   private final Platform platform;
 
    public BukkitJoinListener(@NotNull Platform platform) {
-      this.platform5 = platform;
+      this.platform = platform;
    }
 
    @EventHandler
@@ -24,10 +24,10 @@ public final class BukkitJoinListener implements BukkitListener {
       String text2;
       label12: {
          player = playerJoinEvent.getPlayer();
-         databaseModule = (DatabaseModule)this.platform5.getModule(DatabaseModule.class);
-         broadcastModule = (BroadcastModule)this.platform5.getModule(BroadcastModule.class);
-         configModule = (ConfigModule)this.platform5.getModule(ConfigModule.class);
-         PlatformBridge bridge = this.platform5.createBridge();
+         databaseModule = (DatabaseModule)this.platform.getModule(DatabaseModule.class);
+         broadcastModule = (BroadcastModule)this.platform.getModule(BroadcastModule.class);
+         configModule = (ConfigModule)this.platform.getModule(ConfigModule.class);
+         PlatformBridge bridge = this.platform.createBridge();
          Intrinsics.checkNotNullExpressionValue(bridge, "");
          text = ((BukkitBridge)bridge).getOfflinePlayerName(player);
          InetSocketAddress address = player.getAddress();
@@ -94,7 +94,7 @@ public final class BukkitJoinListener implements BukkitListener {
    }
 
    public BukkitJoinListener obtainLiteBukkitListenerImpl2() {
-      Platform platform = this.platform5;
+      Platform platform = this.platform;
       PlatformListener[] platformListeners = new PlatformListener[]{this};
       platform.registerListeners(platformListeners);
       return this;

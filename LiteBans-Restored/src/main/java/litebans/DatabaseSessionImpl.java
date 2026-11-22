@@ -25,20 +25,20 @@ public class DatabaseSessionImpl implements DatabaseSession {
    public static final DatabaseSessionImplCompanion DATABASE_SESSION_IMPL_COMPANION = new DatabaseSessionImplCompanion(null);
    private final Platform platform;
    private final Connection connection;
-   private final PunishmentLookupModule punishmentLookupModule2;
+   private final PunishmentLookupModule punishmentLookupModule;
    private final BroadcastModule broadcastModule;
    private final ConfigModule configModule;
    private static final Function1 return2 = DATABASE_SESSION_IMPL_COMPANION.computeFunction(obj -> ((PreparedQuery) obj));
-   public static final int VALUE_72000000 = 72000000;
-   public static final int VALUE_57600000 = 57600000;
-   public static final int VALUE_28800000 = 28800000;
+   public static final int DURATION_20_HOURS_MILLIS = 72000000;
+   public static final int DURATION_16_HOURS_MILLIS = 57600000;
+   public static final int DURATION_8_HOURS_MILLIS = 28800000;
    public static final int VALUE_64 = 64;
    private static int value12 = 64;
 
    public DatabaseSessionImpl(@NotNull Platform platform, @NotNull Connection connection) {
       this.platform = platform;
       this.connection = connection;
-      this.punishmentLookupModule2 = (PunishmentLookupModule)this.platform.getModule(PunishmentLookupModule.class);
+      this.punishmentLookupModule = (PunishmentLookupModule)this.platform.getModule(PunishmentLookupModule.class);
       this.broadcastModule = (BroadcastModule)this.platform.getModule(BroadcastModule.class);
       this.configModule = (ConfigModule)this.platform.getModule(ConfigModule.class);
    }
@@ -914,7 +914,7 @@ public class DatabaseSessionImpl implements DatabaseSession {
          }
 
          PreparedQuery prepare2 = this.prepare("SELECT " + this.broadcastModule.getHistoryColumns() + " FROM " + PunishmentTable.HISTORY + " WHERE " + text3 + " ORDER BY date DESC LIMIT 1");
-         String text4 = target.getText2();
+         String text4 = target.getTarget();
          prepare2.bindString(text4);
          ResultSet resultSet = SqlUtil.computeResultSet(prepare2);
          return resultSet.next() ? this.readLoginRecord(resultSet, true, this.configModule.getSettings().getSqlDriver()) : null;
@@ -938,7 +938,7 @@ public class DatabaseSessionImpl implements DatabaseSession {
          String text2 = target.obtainText();
          String text3 = DATABASE_SESSION_IMPL_COMPANION.computeText(this, text2);
          PreparedQuery prepare2 = this.prepare("SELECT " + this.broadcastModule.getHistoryColumns() + " FROM " + PunishmentTable.HISTORY + " WHERE " + text3 + " ORDER BY date DESC LIMIT " + value);
-         String text4 = target.getText2();
+         String text4 = target.getTarget();
          prepare2.bindString(text4);
          ResultSet resultSet = SqlUtil.computeResultSet(prepare2);
          ArrayList arrayList = new ArrayList();
@@ -1839,7 +1839,7 @@ public class DatabaseSessionImpl implements DatabaseSession {
       }
 
       if (this.configModule.getSettings().isMutesEnabled()) {
-         PunishmentLookupModule punishmentLookupModule = this.punishmentLookupModule2;
+         PunishmentLookupModule punishmentLookupModule = this.punishmentLookupModule;
          punishmentLookupModule.handleDatabaseSession(this);
       }
 

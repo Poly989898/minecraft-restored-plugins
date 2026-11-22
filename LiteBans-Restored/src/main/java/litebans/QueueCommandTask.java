@@ -7,24 +7,24 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class QueueCommandTask extends CommandTask {
-   private final String text51;
-   private final String text52;
-   private final String text53;
+   private final String command;
+   private final String senderName;
+   private final String targetName;
 
    public QueueCommandTask(@NotNull Platform platform, @NotNull String text, @NotNull String text2, @Nullable String text3) {
       super(platform);
-      this.text51 = text;
-      this.text52 = text2;
-      this.text53 = text3;
+      this.command = text;
+      this.senderName = text2;
+      this.targetName = text3;
    }
 
    @Override
    public void run() {
       try {
          CommandQueueModule module = (CommandQueueModule)this.getPlatform().getModule(CommandQueueModule.class);
-         String text = this.text51;
-         String text2 = this.text52;
-         String text3 = this.text53;
+         String text = this.command;
+         String text2 = this.senderName;
+         String text3 = this.targetName;
          var arrayBlockingQueue = module.getArrayBlockingQueue();
          boolean flag;
          if (arrayBlockingQueue instanceof Collection && arrayBlockingQueue.isEmpty()) {

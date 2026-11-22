@@ -8,21 +8,21 @@ import org.jetbrains.annotations.NotNull;
 
 public final class ResetDatabaseTask extends CommandTask {
    private final String[] texts;
-   private boolean flag42;
-   private String text54;
+   private boolean globalScope;
+   private String serverScope;
    private KotlinDeleteDeactivatePruneEnum kotlinDeleteDeactivatePruneEnum;
-   private DatabaseSession databaseSession4;
+   private DatabaseSession session;
 
    public ResetDatabaseTask(@NotNull String[] texts, @NotNull Platform platform) {
       super(platform);
       this.texts = texts;
-      this.text54 = "global";
+      this.serverScope = "global";
       this.kotlinDeleteDeactivatePruneEnum = KotlinDeleteDeactivatePruneEnum.DELETE;
    }
 
    @Override
    public void run() {
-      this.text54 = AltAccountPunisher.getReasonArgument(this, this.getSender(), this.texts, this.text54);
+      this.serverScope = AltAccountPunisher.getReasonArgument(this, this.getSender(), this.texts, this.serverScope);
       CommandTask commandTask = this;
       CommandOutput commandOutput = CommandTask.COMMAND_OUTPUT;
       boolean isConsole2 = commandTask.getSender().isConsole();
@@ -36,7 +36,7 @@ public final class ResetDatabaseTask extends CommandTask {
       CommandOutput commandOutput2 = CommandTask.COMMAND_OUTPUT;
       boolean flag2 = !ArraysKt.contains(this.texts, "confirm");
       if (flag2) {
-         commandOutput2.returnResult(Message.RESET_DATABASE_CONFIRM_QUOTED.computeText("serverScope", this.text54));
+         commandOutput2.returnResult(Message.RESET_DATABASE_CONFIRM_QUOTED.computeText("serverScope", this.serverScope));
          throw new CommandAbortException();
       }
 
@@ -85,9 +85,9 @@ public final class ResetDatabaseTask extends CommandTask {
             throw new CommandAbortException();
          }
 
-         this.databaseSession4 = databaseSession;
-         this.flag42 = ServerScopes.SERVER_SCOPE.isGlobal(this.text54);
-         String text = this.flag42 ? "__ALL__" : this.text54;
+         this.session = databaseSession;
+         this.globalScope = ServerScopes.SERVER_SCOPE.isGlobal(this.serverScope);
+         String text = this.globalScope ? "__ALL__" : this.serverScope;
          Iterable iterable2 = list;
          var arrayList = new ArrayList();
 
@@ -189,7 +189,7 @@ public final class ResetDatabaseTask extends CommandTask {
          }
 
          List list2;
-         if (this.flag42) {
+         if (this.globalScope) {
             PunishmentTable[] punishmentTables = PunishmentTable.values();
             var arrayList6 = new ArrayList();
             byte b2 = 0;
@@ -238,20 +238,20 @@ public final class ResetDatabaseTask extends CommandTask {
 
          for (Object obj12 : iterable11) {
             Pair pair = (Pair)obj12;
-            DatabaseSession databaseSession2 = this.databaseSession4;
-            if (this.databaseSession4 == null) {
+            DatabaseSession databaseSession2 = this.session;
+            if (this.session == null) {
                Intrinsics.throwUninitializedProperty("");
                databaseSession2 = null;
             }
 
-            databaseSession2.getEntries((PunishmentTable)pair.getFirst(), this.text54, this.kotlinDeleteDeactivatePruneEnum.ordinal());
+            databaseSession2.getEntries((PunishmentTable)pair.getFirst(), this.serverScope, this.kotlinDeleteDeactivatePruneEnum.ordinal());
          }
 
 
          for (Object obj13 : iterable11) {
             Pair pair2 = (Pair)obj13;
             CommandTask commandTask3 = this;
-            CharSequence message3 = Message.RESET_DATABASE_RESULT.computeText("serverScope", this.text54);
+            CharSequence message3 = Message.RESET_DATABASE_RESULT.computeText("serverScope", this.serverScope);
             CharSequence[] messages = new CharSequence[]{"amount", String.valueOf(((Number)pair2.getSecond()).longValue())};
             message3 = TextUtil.replacePairs(message3, messages);
             CharSequence[] messages2 = new CharSequence[]{"type", ((PunishmentTable)pair2.getFirst()).name().toLowerCase(Locale.ROOT)};

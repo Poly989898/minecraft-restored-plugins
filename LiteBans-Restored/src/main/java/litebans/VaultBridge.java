@@ -14,13 +14,13 @@ import org.jetbrains.annotations.Nullable;
 @PlatformMarker(obtainByteValue = 0)
 public final class VaultBridge {
    private final PlatformBridge bridge;
-   private final Lazy lazy2;
-   private final Lazy lazy3;
+   private final Lazy permissionService;
+   private final Lazy chatService;
 
    public VaultBridge(@NotNull PlatformBridge platformBridge) {
       this.bridge = platformBridge;
-      this.lazy2 = KotlinStub5.computeLazy(() -> this.getService("net.milkbowl.vault.permission.Permission"));
-      this.lazy3 = KotlinStub5.computeLazy(() -> this.getService("net.milkbowl.vault.chat.Chat"));
+      this.permissionService = KotlinStub5.computeLazy(() -> this.getService("net.milkbowl.vault.permission.Permission"));
+      this.chatService = KotlinStub5.computeLazy(() -> this.getService("net.milkbowl.vault.chat.Chat"));
    }
 
    public final PlatformBridge getBridge() {
@@ -28,12 +28,12 @@ public final class VaultBridge {
    }
 
    public final Object getPermission() {
-      Lazy lazy = this.lazy2;
+      Lazy lazy = this.permissionService;
       return lazy.getValue();
    }
 
    public final Object getChat() {
-      Lazy lazy = this.lazy3;
+      Lazy lazy = this.chatService;
       return lazy.getValue();
    }
 

@@ -3,14 +3,14 @@ package litebans;
 import org.jetbrains.annotations.NotNull;
 
 public final class SqlText implements CharSequence {
-   private final String text8;
+   private final String sql;
 
    public static int lengthImpl(String text) {
       return text.length();
    }
 
    public int obtainIntValue() {
-      return lengthImpl(this.text8);
+      return lengthImpl(this.sql);
    }
 
    public static char charAtImpl(String text, int value) {
@@ -18,7 +18,7 @@ public final class SqlText implements CharSequence {
    }
 
    public char computeCharValue(int value) {
-      return charAtImpl(this.text8, value);
+      return charAtImpl(this.sql, value);
    }
 
    public static CharSequence subSequenceImpl(String text, int value, int value2) {
@@ -27,7 +27,7 @@ public final class SqlText implements CharSequence {
 
    @Override
    public CharSequence subSequence(int value, int value2) {
-      return subSequenceImpl(this.text8, value, value2);
+      return subSequenceImpl(this.sql, value, value2);
    }
 
    public static String expandImpl(String text) {
@@ -54,7 +54,7 @@ public final class SqlText implements CharSequence {
 
    @Override
    public String toString() {
-      return expandImpl(this.text8);
+      return expandImpl(this.sql);
    }
 
    public static final String and(String text, @NotNull CharSequence message) {
@@ -202,7 +202,7 @@ public final class SqlText implements CharSequence {
 
    @Override
    public int hashCode() {
-      return hashCodeImpl(this.text8);
+      return hashCodeImpl(this.sql);
    }
 
    public static boolean equalsImpl(String text, Object obj) {
@@ -211,11 +211,11 @@ public final class SqlText implements CharSequence {
 
    @Override
    public boolean equals(Object obj) {
-      return equalsImpl(this.text8, obj);
+      return equalsImpl(this.sql, obj);
    }
 
    private SqlText(String text) {
-      this.text8 = text;
+      this.sql = text;
    }
 
    public static String constructorImpl(@NotNull String text) {
@@ -227,7 +227,7 @@ public final class SqlText implements CharSequence {
    }
 
    public final String unbox() {
-      return this.text8;
+      return this.sql;
    }
 
    @Override

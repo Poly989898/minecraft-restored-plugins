@@ -15,9 +15,9 @@ public abstract class ImportSource extends CommandTask {
    private final int batchSize;
    private final long batchDelayMillis;
    private final Logger logger;
-   private final Lazy lazy2;
-   private final Lazy lazy3;
-   private final Lazy lazy4;
+   private final Lazy uuidCache;
+   private final Lazy importedCount;
+   private final Lazy failedCount;
 
    public ImportSource(@NotNull Platform platform, @NotNull String text, @NotNull String text2, int value, long value2) {
       super(platform);
@@ -26,9 +26,9 @@ public abstract class ImportSource extends CommandTask {
       this.batchSize = value;
       this.batchDelayMillis = value2;
       this.logger = platform.getLogger();
-      this.lazy2 = KotlinStub5.computeLazy(() -> new HashMap());
-      this.lazy3 = KotlinStub5.computeLazy(() -> new AtomicLong());
-      this.lazy4 = KotlinStub5.computeLazy(() -> new AtomicLong());
+      this.uuidCache = KotlinStub5.computeLazy(() -> new HashMap());
+      this.importedCount = KotlinStub5.computeLazy(() -> new AtomicLong());
+      this.failedCount = KotlinStub5.computeLazy(() -> new AtomicLong());
    }
 
    public ImportSource(Platform platform, String text, String text2, int value, long value2, int value3, DefaultConstructorMarker defaultConstructorMarker) {
@@ -72,17 +72,17 @@ public abstract class ImportSource extends CommandTask {
    }
 
    public final HashMap obtainHashMap() {
-      Lazy lazy = this.lazy2;
+      Lazy lazy = this.uuidCache;
       return (HashMap)lazy.getValue();
    }
 
    public final AtomicLong obtainAtomicLong() {
-      Lazy lazy = this.lazy3;
+      Lazy lazy = this.importedCount;
       return (AtomicLong)lazy.getValue();
    }
 
    public final AtomicLong obtainAtomicLong2() {
-      Lazy lazy = this.lazy4;
+      Lazy lazy = this.failedCount;
       return (AtomicLong)lazy.getValue();
    }
 

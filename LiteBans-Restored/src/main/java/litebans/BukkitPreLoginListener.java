@@ -8,14 +8,14 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
 import org.jetbrains.annotations.NotNull;
 
 public final class BukkitPreLoginListener implements BukkitListener {
-   private final Platform platform7;
+   private final Platform platform;
    private final BroadcastModule broadcastModule;
    private final ConfigModule configModule;
 
    public BukkitPreLoginListener(@NotNull Platform platform) {
-      this.platform7 = platform;
-      this.broadcastModule = (BroadcastModule)this.platform7.getModule(BroadcastModule.class);
-      this.configModule = (ConfigModule)this.platform7.getModule(ConfigModule.class);
+      this.platform = platform;
+      this.broadcastModule = (BroadcastModule)this.platform.getModule(BroadcastModule.class);
+      this.configModule = (ConfigModule)this.platform.getModule(ConfigModule.class);
    }
 
    public final BroadcastModule getBroadcastModule() {
@@ -49,11 +49,11 @@ public final class BukkitPreLoginListener implements BukkitListener {
 
    private final void handleAsyncPlayerPreLoginEvent3(AsyncPlayerPreLoginEvent asyncPlayerPreLoginEvent) {
       if (asyncPlayerPreLoginEvent.getLoginResult() == Result.ALLOWED) {
-         if (!this.platform7.obtainFlag3()) {
-            if (!this.platform7.obtainFlag2()) {
-               this.platform7.getLogger().severe("Ignored " + asyncPlayerPreLoginEvent.getClass().getSimpleName() + "; plugin is not enabled yet!");
+         if (!this.platform.obtainFlag3()) {
+            if (!this.platform.obtainFlag2()) {
+               this.platform.getLogger().severe("Ignored " + asyncPlayerPreLoginEvent.getClass().getSimpleName() + "; plugin is not enabled yet!");
                if (FeatureDetection.obtainFlag()) {
-                  this.platform7
+                  this.platform
                      .getLogger()
                      .severe("Enable late-bind in spigot.yml to fix this problem, otherwise banned players can join before LiteBans has been loaded.");
                }
@@ -81,7 +81,7 @@ public final class BukkitPreLoginListener implements BukkitListener {
    }
 
    public BukkitPreLoginListener obtainLiteBukkitListenerImpl4() {
-      Platform platform = this.platform7;
+      Platform platform = this.platform;
       PlatformListener[] platformListeners = new PlatformListener[]{this};
       platform.registerListeners(platformListeners);
       return this;

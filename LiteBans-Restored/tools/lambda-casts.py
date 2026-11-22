@@ -3,8 +3,8 @@
 the functional interface is raw), cast the lambda parameter to the parameter type of the only candidate with the right arity."""
 import re,sys
 log=open(sys.argv[1]).read(); n=0
-for b in re.split(r'\n(?=/home/)',log):
-    m=re.match(r'(/home/\S+?\.java):(\d+): error: no suitable method found for (\w+)\((.*?)\)\n',b)
+for b in re.split(r'\n(?=/home/|[A-Za-z]:\\)',log):
+    m=re.match(r'((?:/home/|[A-Za-z]:\\)\S+?\.java):(\d+): error: no suitable method found for (\w+)\((.*?)\)\n',b)
     if not m: continue
     path,line,name,args=m.group(1),int(m.group(2)),m.group(3),m.group(4)
     arity=len(args.split(',')) if args else 0

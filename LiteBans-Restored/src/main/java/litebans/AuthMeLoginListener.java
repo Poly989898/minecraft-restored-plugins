@@ -7,15 +7,15 @@ import org.bukkit.event.EventPriority;
 import org.jetbrains.annotations.NotNull;
 
 public final class AuthMeLoginListener implements BukkitListener {
-   private final Platform platform4;
+   private final Platform platform;
 
    public AuthMeLoginListener(@NotNull Platform platform) {
-      this.platform4 = platform;
+      this.platform = platform;
    }
 
    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
    public final void handleLoginEvent(@NotNull LoginEvent loginEvent) {
-      DatabaseModule module = (DatabaseModule)this.platform4.getModule(DatabaseModule.class);
+      DatabaseModule module = (DatabaseModule)this.platform.getModule(DatabaseModule.class);
 
       try {
          Player player = loginEvent.getPlayer();
@@ -23,16 +23,16 @@ public final class AuthMeLoginListener implements BukkitListener {
             return;
          }
 
-         LiteSender wrapSender2 = this.platform4.wrapSender(player);
+         LiteSender wrapSender2 = this.platform.wrapSender(player);
          String name = wrapSender2.getName();
          String uuidString = wrapSender2.getUuidString();
          String ipAddress = wrapSender2.getIpAddress();
-         new QueueCommandTask(this.platform4, name, uuidString, ipAddress).run();
+         new QueueCommandTask(this.platform, name, uuidString, ipAddress).run();
       } catch (Throwable e) {
-         this.platform4.getLogger().severe("Handling AuthMe login event failed. Further events will not be handled.");
-         ConfigModule module2 = (ConfigModule)this.platform4.getModule(ConfigModule.class);
+         this.platform.getLogger().severe("Handling AuthMe login event failed. Further events will not be handled.");
+         ConfigModule module2 = (ConfigModule)this.platform.getModule(ConfigModule.class);
          module.logConnectionError(e);
-         Platform platform = this.platform4;
+         Platform platform = this.platform;
          PlatformListener[] platformListeners = new PlatformListener[]{this};
          platform.unregisterListeners(platformListeners);
          module2.getStateFlags().setFlag3(true);
@@ -40,7 +40,7 @@ public final class AuthMeLoginListener implements BukkitListener {
    }
 
    public AuthMeLoginListener obtainLiteBukkitListenerImpl() {
-      Platform platform = this.platform4;
+      Platform platform = this.platform;
       PlatformListener[] platformListeners = new PlatformListener[]{this};
       platform.registerListeners(platformListeners);
       return this;

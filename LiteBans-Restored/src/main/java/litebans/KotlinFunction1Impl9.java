@@ -3,30 +3,30 @@ package litebans;
 import java.util.ArrayList;
 
 public final class KotlinFunction1Impl9 implements Function1 {
-   final LockdownHandler lockdownHandler2;
-   final LiteSender liteSender4;
+   final LockdownHandler lockdownHandler;
+   final LiteSender liteSender;
 
    public KotlinFunction1Impl9(LockdownHandler lockdownHandler, LiteSender liteSender) {
-      this.lockdownHandler2 = lockdownHandler;
-      this.liteSender4 = liteSender;
+      this.lockdownHandler = lockdownHandler;
+      this.liteSender = liteSender;
    }
 
    public final void handleDatabaseSession(DatabaseSession databaseSession) {
       CharSequence message;
-      if (this.lockdownHandler2.getKickMessage() != null) {
+      if (this.lockdownHandler.getKickMessage() != null) {
          message = Message.MESSAGE_5;
-         CharSequence[] messages = new CharSequence[]{"serverScope", this.lockdownHandler2.getReason(), "reason", this.lockdownHandler2.getKickMessage()};
+         CharSequence[] messages = new CharSequence[]{"serverScope", this.lockdownHandler.getReason(), "reason", this.lockdownHandler.getKickMessage()};
          message = TextUtil.replacePairs(message, messages);
       } else {
          message = Message.STOPPED;
       }
 
       CharSequence message2 = message;
-      LiteSender liteSender = this.liteSender4;
+      LiteSender liteSender = this.liteSender;
       Intrinsics.checkNotNull(liteSender);
       CharSequence replacePlaceholdersNullable2 = databaseSession.replacePlaceholdersNullable(message2, liteSender);
       Object[] onlineSenders = databaseSession.getPlatform().getOnlineSenders();
-      LockdownHandler lockdownHandler = this.lockdownHandler2;
+      LockdownHandler lockdownHandler = this.lockdownHandler;
       var arrayList = new ArrayList();
       int value = 0;
 
@@ -52,7 +52,7 @@ public final class KotlinFunction1Impl9 implements Function1 {
          CommandOutput.sendWithDefaults(CommandTask.COMMAND_OUTPUT, liteSender3, replacePlaceholdersNullable2, null, 4, null);
       }
 
-      CommandTask commandTask2 = this.lockdownHandler2;
+      CommandTask commandTask2 = this.lockdownHandler;
       if (((ConfigModule)commandTask2.getPlatform().getModule(ConfigModule.class)).getSettings().isNotifyNotifyConsole()) {
          if (databaseSession.getPlatform().getPlatformId() == 3) {
             databaseSession.getPlatform().getLogger().info(replacePlaceholdersNullable2.toString());

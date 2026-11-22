@@ -10,27 +10,27 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class DupeIpAlertTask extends CommandTask {
-   private final String text55;
-   private final String text56;
-   private final String text57;
+   private final String messageKey;
+   private final String target;
+   private final String detail;
 
    public DupeIpAlertTask(@NotNull Platform platform, @NotNull String text, @NotNull String text2, @Nullable String text3) {
       super(platform);
-      this.text55 = text;
-      this.text56 = text2;
-      this.text57 = text3;
+      this.messageKey = text;
+      this.target = text2;
+      this.detail = text3;
    }
 
-   public final String getText55() {
-      return this.text55;
+   public final String getMessageKey() {
+      return this.messageKey;
    }
 
-   public final String getText56() {
-      return this.text56;
+   public final String getTarget() {
+      return this.target;
    }
 
-   public final String getText57() {
-      return this.text57;
+   public final String getDetail() {
+      return this.detail;
    }
 
    @Override
@@ -47,10 +47,10 @@ public final class DupeIpAlertTask extends CommandTask {
             try {
                CommandTask commandTask2 = this;
                Settings settings = ((ConfigModule)commandTask2.getPlatform().getModule(ConfigModule.class)).getSettings();
-               DupeIpScanTask punishmentApplyTask = new DupeIpScanTask(this.text56, session, null, false, 0, 28, null).obtainPunishmentApplyTask();
+               DupeIpScanTask punishmentApplyTask = new DupeIpScanTask(this.target, session, null, false, 0, 28, null).obtainPunishmentApplyTask();
                CommandTask commandTask3 = this;
                Settings settings2 = ((ConfigModule)commandTask3.getPlatform().getModule(ConfigModule.class)).getSettings();
-               UUID uuid = TargetParser.TARGET_PARSER.parseUuid(this.getText56());
+               UUID uuid = TargetParser.TARGET_PARSER.parseUuid(this.getTarget());
                if (uuid != null) {
                   UUID uuid2 = uuid;
                   if (settings2.getByteValue() > 1 && session.getDatabaseModule().isDisclaimerAccepted() && punishmentApplyTask.isBannedFound() && !PunishmentQueries.hasAllowEntryWithDefaults(session, uuid2, null, 2, null)) {
@@ -75,14 +75,14 @@ public final class DupeIpAlertTask extends CommandTask {
                      if ((DupeIpResult)obj != null) {
                         Punishment punishment = dupeIpResult2.getPunishment();
                         Intrinsics.checkNotNull(punishment);
-                        AltAccountPunisher.computePunishment(session, dupeIpResult2, punishment, this.getText55(), this.getText57(), this.getText56(), this.getText57(), false, 64, null);
+                        AltAccountPunisher.computePunishment(session, dupeIpResult2, punishment, this.getMessageKey(), this.getDetail(), this.getTarget(), this.getDetail(), false, 64, null);
                         if (settings2.getByteValue() > 2) {
                            Iterable iterable2 = punishmentApplyTask.getResults();
                            var arrayList = new ArrayList();
 
                            for (Object obj3 : iterable2) {
                               DupeIpResult dupeIpResult3 = (DupeIpResult)obj3;
-                              if (!Intrinsics.areEqual(dupeIpResult3.getText4(), this.getText56()) && dupeIpResult3.getPunishment() == null) {
+                              if (!Intrinsics.areEqual(dupeIpResult3.getText4(), this.getTarget()) && dupeIpResult3.getPunishment() == null) {
                                  arrayList.add(obj3);
                               }
                            }
@@ -111,7 +111,7 @@ public final class DupeIpAlertTask extends CommandTask {
 
                            for (Object obj5 : iterable4) {
                               DupeIpResult dupeIpResult5 = (DupeIpResult)obj5;
-                              AltAccountPunisher.createDupePunishment(session, dupeIpResult5, dupeIpResult2.getPunishment(), dupeIpResult5.getText3(), this.getText57(), dupeIpResult5.getText4(), this.getText57(), true);
+                              AltAccountPunisher.createDupePunishment(session, dupeIpResult5, dupeIpResult2.getPunishment(), dupeIpResult5.getText3(), this.getDetail(), dupeIpResult5.getText4(), this.getDetail(), true);
                            }
                         }
                      }
@@ -167,7 +167,7 @@ public final class DupeIpAlertTask extends CommandTask {
    }
 
    public final CharSequence computeMessage(@NotNull DatabaseSession databaseSession, @NotNull LoginRecord loginRecord, @NotNull DupeIpScanTask punishmentApplyTask) {
-      CharSequence message = punishmentApplyTask.hasMultipleAddresses() ? Message.DUPEIP_MULTIPLE_ADDRESSES.computeText("num", punishmentApplyTask.getAddressCount()) : this.text57;
+      CharSequence message = punishmentApplyTask.hasMultipleAddresses() ? Message.DUPEIP_MULTIPLE_ADDRESSES.computeText("num", punishmentApplyTask.getAddressCount()) : this.detail;
       return TextUtil.computeMessage(TextUtil.computeMessage(PunishmentQueries.replacePlaceholdersWithDefaults(databaseSession, Message.START_NO_IP.computeText("ip", message), loginRecord, false, 2, null), punishmentApplyTask.getResultText()), Message.DUPEIP_END);
    }
 

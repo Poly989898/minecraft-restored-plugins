@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 @PlatformMarker(obtainByteValue = 0)
 public final class BukkitLockdownListener extends ListenerModule {
-   private boolean flag13;
+   private boolean useProtocolLib;
    private Object[] objArray = new Object[0];
 
    public BukkitLockdownListener(@NotNull Platform platform) {
@@ -49,10 +49,10 @@ public final class BukkitLockdownListener extends ListenerModule {
       if (module.getSettings().isMutesEnabled()) {
          this.platform.runSync(() -> {
             try {
-               this.flag13 = settings.isUseProtocollib() && this.platform.createBridge().hasPlugin("ProtocolLib");
-               if (this.flag13 && LockdownState.LOCKDOWN_STATE.obtainFlag()) {
+               this.useProtocolLib = settings.isUseProtocollib() && this.platform.createBridge().hasPlugin("ProtocolLib");
+               if (this.useProtocolLib && LockdownState.LOCKDOWN_STATE.obtainFlag()) {
                   this.platform.getLogger().warning("ProtocolLib error 00 - manager is missing.");
-               } else if (this.flag13) {
+               } else if (this.useProtocolLib) {
                   PluginModule pluginModule = this;
                   Object[] objs = new Object[]{new KotlinPacketAdapterSub2(this.platform), new KotlinPacketAdapterSub(this.platform)};
                   int value = 0;

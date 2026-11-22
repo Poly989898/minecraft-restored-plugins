@@ -30,13 +30,13 @@ public enum LiteColor implements CharSequence {
    RESET('r', "reset"),
    MAGIC('x', "magic");
 
-   public static final char VALUE_167 = 167;
+   public static final char COLOR_CHAR = 167;
    public static final String TEXT = "0123456789AaBbCcDdEeFfKkLlMmNnOoRrXx";
    public static final Pattern PATTERN = Pattern.compile("(?i)(?<!<@)[&§][0-9A-FK-ORX]");
    private static final Map MAP = new HashMap();
    private final char charValue;
-   private final String text2;
-   private final String text3;
+   private final String colorCode;
+   private final String colorName;
 
    public static LiteColor valueOfName(String text) {
       return Enum.valueOf(LiteColor.class, text);
@@ -44,8 +44,8 @@ public enum LiteColor implements CharSequence {
 
    LiteColor(char c, String text) {
       this.charValue = c;
-      this.text3 = text;
-      this.text2 = new String(new char[]{'§', c});
+      this.colorName = text;
+      this.colorCode = new String(new char[]{'§', c});
    }
 
    public static String stripColor(CharSequence message) {
@@ -82,7 +82,7 @@ public enum LiteColor implements CharSequence {
 
    @Override
    public @NotNull String toString() {
-      return this.text2;
+      return this.colorCode;
    }
 
    public static String gold(String text) {

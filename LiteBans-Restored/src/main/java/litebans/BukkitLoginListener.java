@@ -7,16 +7,16 @@ import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.jetbrains.annotations.NotNull;
 
 public final class BukkitLoginListener implements BukkitListener {
-   private final Platform platform6;
+   private final Platform platform;
    private final BroadcastModule broadcastModule;
 
    public BukkitLoginListener(@NotNull Platform platform) {
-      this.platform6 = platform;
-      this.broadcastModule = (BroadcastModule)this.platform6.getModule(BroadcastModule.class);
+      this.platform = platform;
+      this.broadcastModule = (BroadcastModule)this.platform.getModule(BroadcastModule.class);
    }
 
    public final Platform getPlatform6() {
-      return this.platform6;
+      return this.platform;
    }
 
    public final BroadcastModule getBroadcastModule() {
@@ -39,7 +39,7 @@ public final class BukkitLoginListener implements BukkitListener {
    }
 
    public BukkitLoginListener obtainLiteBukkitListenerImpl3() {
-      Platform platform = this.platform6;
+      Platform platform = this.platform;
       PlatformListener[] platformListeners = new PlatformListener[]{this};
       platform.registerListeners(platformListeners);
       return this;

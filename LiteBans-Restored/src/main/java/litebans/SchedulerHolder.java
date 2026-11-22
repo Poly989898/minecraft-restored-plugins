@@ -6,14 +6,14 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class SchedulerHolder {
-   private ScheduledExecutorService scheduledExecutorService2 = null;
+   private ScheduledExecutorService scheduledExecutor = null;
 
    public void perform() {
       try {
-         if (this.scheduledExecutorService2 != null && !this.scheduledExecutorService2.isShutdown()) {
-            this.scheduledExecutorService2.shutdown();
-            if (!this.scheduledExecutorService2.awaitTermination(2L, TimeUnit.SECONDS)) {
-               this.scheduledExecutorService2.shutdownNow();
+         if (this.scheduledExecutor != null && !this.scheduledExecutor.isShutdown()) {
+            this.scheduledExecutor.shutdown();
+            if (!this.scheduledExecutor.awaitTermination(2L, TimeUnit.SECONDS)) {
+               this.scheduledExecutor.shutdownNow();
             }
          }
       } catch (Throwable e) {
@@ -22,14 +22,14 @@ public class SchedulerHolder {
    }
 
    public ScheduledExecutorService computeScheduledExecutorService(PluginLifecycle pluginLifecycle) {
-      ScheduledExecutorService scheduledExecutorService = this.scheduledExecutorService2;
+      ScheduledExecutorService scheduledExecutorService = this.scheduledExecutor;
       if (scheduledExecutorService != null && !scheduledExecutorService.isShutdown()) {
-         return this.scheduledExecutorService2;
+         return this.scheduledExecutor;
       }
 
       ThreadFactoryBuilder threadFactoryBuilder = pluginLifecycle.obtainThreadFactoryBuilder();
       ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(1, threadFactoryBuilder.build());
-      this.scheduledExecutorService2 = scheduledThreadPool;
+      this.scheduledExecutor = scheduledThreadPool;
       return scheduledThreadPool;
    }
 }

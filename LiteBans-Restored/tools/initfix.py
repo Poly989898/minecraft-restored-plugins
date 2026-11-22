@@ -5,7 +5,7 @@ log=open(sys.argv[1]).read(); done=set(); n=0
 def default(t):
     t=t.strip()
     return {'int':'0','short':'0','byte':'0','char':"'\\0'",'long':'0L','boolean':'false','float':'0.0F','double':'0.0'}.get(t,'null')
-for b in re.split(r'\n(?=/home/)',log):
+for b in re.split(r'\n(?=/home/|[A-Za-z]:\\)',log):
     m=re.match(r'(\S+?\.java):(\d+): error: variable (\w+) might not have been initialized',b.strip())
     if not m: continue
     path,line,var=m.group(1),int(m.group(2)),m.group(3)

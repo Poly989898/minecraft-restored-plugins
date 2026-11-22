@@ -5,11 +5,11 @@ import org.jetbrains.annotations.Nullable;
 
 public final class DurationLimits {
    private final long longValue;
-   private final long longValue2;
+   private final long muteDuration;
 
    public DurationLimits(long value, long value2) {
       this.longValue = value;
-      this.longValue2 = value2;
+      this.muteDuration = value2;
    }
 
    public final long computeLongValue(@NotNull PunishmentType punishmentType) {
@@ -19,7 +19,7 @@ public final class DurationLimits {
             value = this.longValue;
             break;
          case 2:
-            value = this.longValue2;
+            value = this.muteDuration;
             break;
          default:
             StandardKt.notImplemented();
@@ -31,13 +31,13 @@ public final class DurationLimits {
 
    @Override
    public String toString() {
-      return "(a=" + this.longValue + ", mute=" + this.longValue2 + ')';
+      return "(a=" + this.longValue + ", mute=" + this.muteDuration + ')';
    }
 
    @Override
    public int hashCode() {
       int value = Long.hashCode(this.longValue);
-      return value * 31 + Long.hashCode(this.longValue2);
+      return value * 31 + Long.hashCode(this.muteDuration);
    }
 
    @Override
@@ -51,6 +51,6 @@ public final class DurationLimits {
       }
 
       DurationLimits kotlinData2 = (DurationLimits)obj;
-      return this.longValue != kotlinData2.longValue ? false : this.longValue2 == kotlinData2.longValue2;
+      return this.longValue != kotlinData2.longValue ? false : this.muteDuration == kotlinData2.muteDuration;
    }
 }

@@ -15,10 +15,10 @@ import org.jetbrains.annotations.Nullable;
 public class LiteLiteSenderImpl implements LiteSender {
    private final BukkitPlugin bukkitPlugin;
    private final WeakReference handle;
-   private UUID uuid4 = uuid3;
+   private UUID consoleUuid = ZERO_UUID;
    private String uuidString = null;
    private final String name;
-   private String text4;
+   private String displayName;
    private final boolean player;
    private final boolean console;
 
@@ -71,11 +71,11 @@ public class LiteLiteSenderImpl implements LiteSender {
 
    @Override
    public String getIpAddress() {
-      String text = this.text4;
+      String text = this.displayName;
       if (text == null) {
          CommandSender commandSender = (CommandSender)this.handle.get();
          if (commandSender != null) {
-            this.text4 = text = this.computeText(commandSender);
+            this.displayName = text = this.computeText(commandSender);
          }
       }
 
@@ -94,13 +94,13 @@ public class LiteLiteSenderImpl implements LiteSender {
 
    @Override
    public @NonNull UUID getUuid() {
-      UUID uuid = this.uuid4;
-      if (uuid.equals(uuid3) && this.player) {
+      UUID uuid = this.consoleUuid;
+      if (uuid.equals(ZERO_UUID) && this.player) {
          CommandSender commandSender = (CommandSender)this.handle.get();
          if (commandSender != null) {
             UUID uniqueId = ((Player)commandSender).getUniqueId();
             if (uniqueId != null) {
-               this.uuid4 = uniqueId;
+               this.consoleUuid = uniqueId;
                return uniqueId;
             }
          }

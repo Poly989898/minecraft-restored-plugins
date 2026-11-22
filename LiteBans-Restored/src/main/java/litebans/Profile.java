@@ -4,16 +4,16 @@ import java.util.UUID;
 import org.jetbrains.annotations.Nullable;
 
 public final class Profile {
-   private final String text2;
+   private final String name;
    private final UUID uUID;
 
    public Profile(@Nullable String text, @Nullable UUID uuid) {
-      this.text2 = text;
+      this.name = text;
       this.uUID = uuid;
    }
 
-   public final String getText2() {
-      return this.text2;
+   public final String getName() {
+      return this.name;
    }
 
    public final UUID getUUID() {
@@ -26,12 +26,12 @@ public final class Profile {
 
    @Override
    public String toString() {
-      return "Profile(name=" + this.text2 + ", uuid=" + this.uUID + ')';
+      return "Profile(name=" + this.name + ", uuid=" + this.uUID + ')';
    }
 
    @Override
    public int hashCode() {
-      int value = this.text2 == null ? 0 : this.text2.hashCode();
+      int value = this.name == null ? 0 : this.name.hashCode();
       return value * 31 + (this.uUID == null ? 0 : this.uUID.hashCode());
    }
 
@@ -46,6 +46,6 @@ public final class Profile {
       }
 
       Profile profile = (Profile)obj;
-      return !Intrinsics.areEqual(this.text2, profile.text2) ? false : Intrinsics.areEqual(this.uUID, profile.uUID);
+      return !Intrinsics.areEqual(this.name, profile.name) ? false : Intrinsics.areEqual(this.uUID, profile.uUID);
    }
 }

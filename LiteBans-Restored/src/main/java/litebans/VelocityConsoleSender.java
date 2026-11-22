@@ -18,9 +18,9 @@ public class VelocityConsoleSender implements LiteSender {
    private final WeakReference weakReference;
    private final String name;
    private final boolean player;
-   private UUID uuid2 = uuid3;
+   private UUID consoleUuid = ZERO_UUID;
    private String uuidString = null;
-   private String text3;
+   private String displayName;
 
    public VelocityConsoleSender(VelocityPlugin velocityPlugin, CommandSource commandSource) {
       this.velocityPlugin = velocityPlugin;
@@ -58,11 +58,11 @@ public class VelocityConsoleSender implements LiteSender {
 
    @Override
    public @Nullable String getIpAddress() {
-      String text = this.text3;
+      String text = this.displayName;
       if (text == null) {
          CommandSource commandSource = (CommandSource)this.weakReference.get();
          if (commandSource != null) {
-            this.text3 = text = this.computeText(commandSource);
+            this.displayName = text = this.computeText(commandSource);
          }
       }
 
@@ -90,13 +90,13 @@ public class VelocityConsoleSender implements LiteSender {
 
    @Override
    public @NonNull UUID getUuid() {
-      UUID uuid = this.uuid2;
-      if (uuid.equals(uuid3) && this.player) {
+      UUID uuid = this.consoleUuid;
+      if (uuid.equals(ZERO_UUID) && this.player) {
          CommandSource commandSource = (CommandSource)this.weakReference.get();
          if (commandSource != null) {
             UUID uniqueId = ((Player)commandSource).getUniqueId();
             if (uniqueId != null) {
-               this.uuid2 = uniqueId;
+               this.consoleUuid = uniqueId;
                return uniqueId;
             }
          }

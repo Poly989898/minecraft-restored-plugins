@@ -10,14 +10,14 @@ import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
 
 public final class LibertyBansImport extends ImportSource {
-   private final byte[] bytes7 = KotlinUtil22.computeBytes(LiteSender.uuid3);
+   private final byte[] consoleUuidBytes = KotlinUtil22.computeBytes(LiteSender.ZERO_UUID);
 
    public LibertyBansImport(@NotNull Platform platform) {
       super(platform, "LibertyBans", "libertybans_", 0, 0L, 24, null);
    }
 
-   public final byte[] getBytes7() {
-      return this.bytes7;
+   public final byte[] getConsoleUuidBytes() {
+      return this.consoleUuidBytes;
    }
 
    @Override
@@ -74,7 +74,7 @@ public final class LibertyBansImport extends ImportSource {
                      byte[] bytes3 = resultSet.getBytes("operator");
                      byte[] bytes4 = bytes3;
                      if (bytes4 == null || bytes4.length != 16) {
-                        bytes3 = this.getBytes7();
+                        bytes3 = this.getConsoleUuidBytes();
                      }
 
                      byte[] bytes5 = bytes3;

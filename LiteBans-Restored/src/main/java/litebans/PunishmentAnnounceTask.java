@@ -7,10 +7,10 @@ public final class PunishmentAnnounceTask extends CommandTask {
    private final PunishmentRequest punishmentRequest;
    private final LiteSender liteSender;
    private final LoginRecord loginRecord;
-   private final CharSequence message51;
-   private final LiteSender liteSender15;
-   private final boolean flag40;
-   private final boolean flag41;
+   private final CharSequence announceMessage;
+   private final LiteSender announceSender;
+   private final boolean broadcast;
+   private final boolean quiet;
 
    public PunishmentAnnounceTask(
       @NotNull PunishmentRequest punishmentRequest2, @Nullable LiteSender liteSender, @Nullable LoginRecord loginRecord2, @NotNull CharSequence message, @NotNull Platform platform, @Nullable LiteSender liteSender2, boolean flag, boolean flag2
@@ -19,10 +19,10 @@ public final class PunishmentAnnounceTask extends CommandTask {
       this.punishmentRequest = punishmentRequest2;
       this.liteSender = liteSender;
       this.loginRecord = loginRecord2;
-      this.message51 = message;
-      this.liteSender15 = liteSender2;
-      this.flag40 = flag;
-      this.flag41 = flag2;
+      this.announceMessage = message;
+      this.announceSender = liteSender2;
+      this.broadcast = flag;
+      this.quiet = flag2;
    }
 
    public PunishmentAnnounceTask(PunishmentRequest punishmentRequest2, LiteSender liteSender, LoginRecord loginRecord2, CharSequence message, Platform platform, LiteSender liteSender2, boolean flag, boolean flag2, int value, DefaultConstructorMarker defaultConstructorMarker) {
@@ -56,15 +56,15 @@ public final class PunishmentAnnounceTask extends CommandTask {
    }
 
    public final LiteSender getLiteSender15() {
-      return this.liteSender15;
+      return this.announceSender;
    }
 
-   public final boolean isFlag40() {
-      return this.flag40;
+   public final boolean isBroadcast() {
+      return this.broadcast;
    }
 
-   public final boolean isFlag41() {
-      return this.flag41;
+   public final boolean isQuiet() {
+      return this.quiet;
    }
 
    @Override
@@ -72,9 +72,9 @@ public final class PunishmentAnnounceTask extends CommandTask {
       CommandTask commandTask = this;
       ((DatabaseModule)commandTask.getPlatform().getModule(DatabaseModule.class)).handleFunction(obj -> {
          DatabaseSession databaseSession = (DatabaseSession) obj;
-         CharSequence message = this.message51;
+         CharSequence message = this.announceMessage;
          CharSequence message2 = message;
-         if (this.isFlag41()) {
+         if (this.isQuiet()) {
             CharSequence message3 = Message.SILENT_PREFIX;
             message2 = "" + message3 + message2;
          }
@@ -89,7 +89,7 @@ public final class PunishmentAnnounceTask extends CommandTask {
          Punishment punishment = punishmentRequest2.getPunishment();
          Intrinsics.checkNotNull(punishment);
          Punishment punishment2 = punishment;
-         SyncMessageType syncMessageType = this.getPunishmentRequest().isExtraSilent() ? SyncMessageType.BROADCAST_EXTRA_SILENT : (this.isFlag41() ? SyncMessageType.BROADCAST_SILENT : SyncMessageType.BROADCAST);
+         SyncMessageType syncMessageType = this.getPunishmentRequest().isExtraSilent() ? SyncMessageType.BROADCAST_EXTRA_SILENT : (this.isQuiet() ? SyncMessageType.BROADCAST_SILENT : SyncMessageType.BROADCAST);
          CommandTask commandTask2 = this;
          BroadcastModule module = (BroadcastModule)commandTask2.getPlatform().getModule(BroadcastModule.class);
          BroadcastModule.handleBroadcastModule(module, databaseSession, message5, syncMessageType.obtainText(), punishment2.getType(), punishment2.getServerOrigin(), false, false, this.getLiteSender15(), 48, null);
@@ -99,7 +99,7 @@ public final class PunishmentAnnounceTask extends CommandTask {
          Intrinsics.checkNotNull(punishment);
          Punishment punishment3 = punishment;
          PunishmentType type = punishment3.getType();
-         if ((type.obtainPunishmentType() == PunishmentType.MUTE || type.obtainPunishmentType() == PunishmentType.WARN) && this.isFlag40() && this.getLiteSender() != null) {
+         if ((type.obtainPunishmentType() == PunishmentType.MUTE || type.obtainPunishmentType() == PunishmentType.WARN) && this.isBroadcast() && this.getLiteSender() != null) {
             String text;
             switch (PunishmentTypeSwitchMap3.value[punishment3.getType().obtainPunishmentType().ordinal()]) {
                case 1:

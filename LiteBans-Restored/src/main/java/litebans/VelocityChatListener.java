@@ -10,11 +10,11 @@ import org.jetbrains.annotations.NotNull;
 
 public final class VelocityChatListener implements VelocityListener {
    private final Platform platform;
-   private final PunishmentLookupModule punishmentLookupModule3;
+   private final PunishmentLookupModule punishmentLookupModule;
 
    public VelocityChatListener(@NotNull Platform platform2) {
       this.platform = platform2;
-      this.punishmentLookupModule3 = (PunishmentLookupModule)this.platform.getModule(PunishmentLookupModule.class);
+      this.punishmentLookupModule = (PunishmentLookupModule)this.platform.getModule(PunishmentLookupModule.class);
    }
 
    public final Platform getPlatform() {
@@ -26,7 +26,7 @@ public final class VelocityChatListener implements VelocityListener {
       if (playerChatEvent.getResult().isAllowed()) {
          Player player = playerChatEvent.getPlayer();
          String message = playerChatEvent.getMessage();
-         MuteChatTask muteChatTask = this.punishmentLookupModule3.getMuteChatTask();
+         MuteChatTask muteChatTask = this.punishmentLookupModule.getMuteChatTask();
          Intrinsics.checkNotNull(message);
          muteChatTask.handleObj(playerChatEvent, message, this.platform.wrapSender(player), true);
       }
@@ -37,7 +37,7 @@ public final class VelocityChatListener implements VelocityListener {
       CommandSource commandSource = commandExecuteEvent.getCommandSource();
       String command = commandExecuteEvent.getCommand();
       if (commandExecuteEvent.getResult().isAllowed() && commandSource instanceof Player) {
-         MuteChatTask.handleMuteChatTask(this.punishmentLookupModule3.getMuteChatTask(), commandExecuteEvent, '/' + command, this.platform.wrapSender(commandSource), false, 8, null);
+         MuteChatTask.handleMuteChatTask(this.punishmentLookupModule.getMuteChatTask(), commandExecuteEvent, '/' + command, this.platform.wrapSender(commandSource), false, 8, null);
       }
    }
 

@@ -616,7 +616,7 @@ public final class BanCommand extends PunishCommandCommon {
                                           loginRecord = null;
                                        } else {
                                           UUID uuid2 = profile.getUUID();
-                                          loginRecord = new LoginRecord(profile.getText2(), uuid2 != null ? uuid2.toString() : null, null, new Date());
+                                          loginRecord = new LoginRecord(profile.getName(), uuid2 != null ? uuid2.toString() : null, null, new Date());
                                        }
                                     }
                                  } else {

@@ -7,9 +7,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 public class FabricMeta {
-   private String text3;
-   private String text4;
-   private String text5;
+   private String modId;
+   private String modName;
+   private String modVersion;
 
    public FabricMeta(String text) {
       try {
@@ -20,14 +20,14 @@ public class FabricMeta {
          while ((jarEntry = jarInputStream.getNextJarEntry()) != null) {
             if (jarEntry.getName().endsWith(text2)) {
                JSONObject jsonObject = (JSONObject)new JSONParser().computeObj(new InputStreamReader(jarInputStream));
-               this.text3 = (String)jsonObject.get("id");
-               this.text4 = (String)jsonObject.get("name");
-               this.text5 = (String)jsonObject.get("version");
+               this.modId = (String)jsonObject.get("id");
+               this.modName = (String)jsonObject.get("name");
+               this.modVersion = (String)jsonObject.get("version");
                break;
             }
          }
 
-         if (this.text3 == null) {
+         if (this.modId == null) {
             throw new AssertionError("Missing " + text2);
          }
       } catch (Throwable e) {
@@ -37,18 +37,18 @@ public class FabricMeta {
 
    @Override
    public String toString() {
-      return "FabricMeta(id=" + this.getText3() + ", name=" + this.getText4() + ", version=" + this.getText5() + ")";
+      return "FabricMeta(id=" + this.getModId() + ", name=" + this.getModName() + ", version=" + this.getModVersion() + ")";
    }
 
-   public String getText3() {
-      return this.text3;
+   public String getModId() {
+      return this.modId;
    }
 
-   public String getText4() {
-      return this.text4;
+   public String getModName() {
+      return this.modName;
    }
 
-   public String getText5() {
-      return this.text5;
+   public String getModVersion() {
+      return this.modVersion;
    }
 }

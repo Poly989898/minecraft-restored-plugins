@@ -6,12 +6,12 @@ import net.md_5.bungee.event.EventHandler;
 import org.jetbrains.annotations.NotNull;
 
 public final class BungeeLockdownLoginListener implements BungeeListener {
-   private final Platform platform8;
-   private final BroadcastModule broadcastModule7;
+   private final Platform platform;
+   private final BroadcastModule broadcastModule;
 
    public BungeeLockdownLoginListener(@NotNull Platform platform) {
-      this.platform8 = platform;
-      this.broadcastModule7 = (BroadcastModule)this.platform8.getModule(BroadcastModule.class);
+      this.platform = platform;
+      this.broadcastModule = (BroadcastModule)this.platform.getModule(BroadcastModule.class);
    }
 
    @EventHandler(priority = -64)
@@ -19,12 +19,12 @@ public final class BungeeLockdownLoginListener implements BungeeListener {
       boolean flag = false;
       Object obj = null;
       if (!serverConnectEvent.isCancelled()) {
-         LiteSender wrapSender2 = this.platform8.wrapSender(serverConnectEvent.getPlayer());
-         LockdownHandler lockdownHandler = this.broadcastModule7.getLockdownHandler();
+         LiteSender wrapSender2 = this.platform.wrapSender(serverConnectEvent.getPlayer());
+         LockdownHandler lockdownHandler = this.broadcastModule.getLockdownHandler();
          if (lockdownHandler != null) {
-            PlatformBridge bridge = this.platform8.createBridge();
+            PlatformBridge bridge = this.platform.createBridge();
             Intrinsics.checkNotNullExpressionValue(bridge, "");
-            ProxyServer proxy = ((BungeeBridge)bridge).asBungeePlugin(this.platform8).getProxy();
+            ProxyServer proxy = ((BungeeBridge)bridge).asBungeePlugin(this.platform).getProxy();
             Intrinsics.checkNotNull(wrapSender2);
             String text = "litebans.lockdown.bypass";
             if (!wrapSender2.hasPermission(text)) {
@@ -86,7 +86,7 @@ public final class BungeeLockdownLoginListener implements BungeeListener {
    }
 
    public BungeeLockdownLoginListener obtainBungeeLockdownLoginListener() {
-      Platform platform = this.platform8;
+      Platform platform = this.platform;
       PlatformListener[] platformListeners = new PlatformListener[]{this};
       platform.registerListeners(platformListeners);
       return this;

@@ -2,7 +2,7 @@
 """Summarise javac errors from a log: distinct errors, per-category counts with one sample each."""
 import re,collections,sys
 t=open(sys.argv[1]).read(); nsamples=int(sys.argv[2]) if len(sys.argv)>2 else 12
-blocks=re.split(r'\n(?=/home/)',t)
+blocks=re.split(r'\n(?=/home/|[A-Za-z]:\\)',t)
 cat=collections.OrderedDict(); files=collections.Counter(); n=0
 for b in blocks:
     m=re.match(r'.*?/litebans/(\w+)\.java:(\d+): error: ([^\n]*)',b,re.S)
@@ -12,4 +12,4 @@ for b in blocks:
     cat.setdefault(msg,[]).append(b)
 print('distinct',n,'files',len(files)); print(files.most_common(10))
 for k,v in sorted(cat.items(),key=lambda x:-len(x[1]))[:nsamples]:
-    print('=====',len(v),k); print(re.sub(r'/home/\S*/litebans/','',v[0])[:500])
+    print('=====',len(v),k); print(re.sub(r'(?:/home/|[A-Za-z]:\\)\S*?litebans[/\\]','',v[0])[:500])

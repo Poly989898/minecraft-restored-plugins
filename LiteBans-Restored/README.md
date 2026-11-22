@@ -19,6 +19,20 @@ gradle printCp                # classpath for tools/Fixer.java and tools/Renamer
 
 To re-run the pipeline the original jar is needed (`ORIG_JAR`, default `../originals/LiteBans/LiteBans-2.19.0-bm.jar`; not in git).
 
+### Windows PowerShell
+
+The `.sh` scripts have PowerShell counterparts in `tools/` with the same steps and environment variables:
+
+```powershell
+gradle compileJava jar                       # same build as above
+$env:TOOLS = 'D:\Tools'                      # folder with asm\, vineflower\ and python\python.exe
+tools\pipeline.ps1                           # regenerates src/main/java (needs the original jar)
+$env:TEST_SERVER = 'D:\Paper\test-server'    # optional: folder with paper-26.3-*.jar, libraries, versions, cache
+tools\testserver.ps1 -Commands 'litebans info;banlist'   # builds, starts a scratch Paper server, sends commands
+```
+
+Other variables: `ASM`, `VF`, `PY` and `ORIG_JAR` override single tool paths, `JAVA_HOME` selects the JDK, `GRADLE` the Gradle executable, `TMPDIR` the scratch folder (default: the system temp folder), `LB_SED` a `s/pattern/replacement/` applied to the test `config.yml`. `testserver.ps1` links `libraries`, `versions` and `cache` from `TEST_SERVER` with junctions and does not write into the repository.
+
 ## Pipeline
 
 The original jar is obfuscated: classes such as `a0`, `kU`, `gZ` share one package, strings are encrypted, bytecode flags are deliberately corrupted, and Kotlin stdlib, HikariCP and Commons Compress are bundled and obfuscated too. `tools/pipeline.sh` runs these steps in order:

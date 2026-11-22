@@ -35,7 +35,7 @@ public class Renamer {
         Path ex = Path.of("tools/fabric-files.txt");
         if (Files.exists(ex)) for (String l : Files.readAllLines(ex)) if (!l.isBlank()) excluded.add(l.trim());
         List<Path> files = new ArrayList<>(), offBuild = new ArrayList<>();
-        try (var s = Files.walk(root)) { s.filter(p -> p.toString().endsWith(".java")).forEach(p -> { if (p.toString().contains("/litebans/mixin/") || excluded.contains(p.getFileName().toString())) offBuild.add(p); else files.add(p); }); }
+        try (var s = Files.walk(root)) { s.filter(p -> p.toString().endsWith(".java")).forEach(p -> { if (p.toString().replace('\\', '/').contains("/litebans/mixin/") || excluded.contains(p.getFileName().toString())) offBuild.add(p); else files.add(p); }); }
         try (var s = Files.walk(stubs)) { s.filter(p -> p.toString().endsWith(".java")).forEach(files::add); }
 
         JavaCompiler jc = ToolProvider.getSystemJavaCompiler();

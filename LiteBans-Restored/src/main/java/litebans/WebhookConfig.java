@@ -9,17 +9,17 @@ import org.jetbrains.annotations.NotNull;
 
 public final class WebhookConfig {
    private final Platform platform;
-   private final File file2;
+   private final File file;
    private final HashMap hashMap;
    private String text3;
-   private final ConfigModule configModule2;
+   private final ConfigModule configModule;
 
    public WebhookConfig(@NotNull Platform platform, @NotNull File file) {
       this.platform = platform;
-      this.file2 = file;
+      this.file = file;
       this.hashMap = new HashMap();
       this.text3 = "";
-      this.configModule2 = (ConfigModule)this.platform.getModule(ConfigModule.class);
+      this.configModule = (ConfigModule)this.platform.getModule(ConfigModule.class);
    }
 
    public WebhookConfig(Platform platform, File file, int value, DefaultConstructorMarker defaultConstructorMarker) {
@@ -34,7 +34,7 @@ public final class WebhookConfig {
 
    public final String computeText(@NotNull String text) {
       String string = this.hashMap.getOrDefault(text, "").toString();
-      ConfigModule configModule = this.configModule2;
+      ConfigModule configModule = this.configModule;
       byte b = 1;
       if (configModule.isDebugAtLeast(b)) {
          configModule.logDebug("Fetch webhook: " + text + " => '" + string + '\'');
@@ -47,11 +47,11 @@ public final class WebhookConfig {
 
       try {
          this.platform.saveResource("webhooks.yml");
-         ConfigFile throwIfFailed2 = this.platform.loadConfigFile(this.file2).throwIfFailed();
+         ConfigFile throwIfFailed2 = this.platform.loadConfigFile(this.file).throwIfFailed();
          throwIfFailed2.computeConfigFile(ConfigFile.computeText("webhooks.yml", null));
          String string = throwIfFailed2.getString("default_webhook", "");
          CharSequence message = string;
-         this.text3 = message == null || message.length() == 0 ? this.configModule2.getSettings().getNotifyNotifyDiscord() : string;
+         this.text3 = message == null || message.length() == 0 ? this.configModule.getSettings().getNotifyNotifyDiscord() : string;
          this.hashMap.clear();
          PunishmentTypeCompanion punishmentTypeCompanion = PunishmentType.PUNISHMENT_TYPE_COMPANION;
          Iterable iterable = punishmentTypeCompanion.obtainList();
@@ -127,7 +127,7 @@ public final class WebhookConfig {
 
          this.hashMap.put("alts", this.computeText(throwIfFailed2, "webhooks.alts", "off"));
       } catch (Exception e) {
-         this.configModule2.logLoadError("webhooks", e);
+         this.configModule.logLoadError("webhooks", e);
       }
 
       return this;

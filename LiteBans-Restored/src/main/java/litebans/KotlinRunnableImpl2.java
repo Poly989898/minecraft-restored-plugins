@@ -5,23 +5,23 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public final class KotlinRunnableImpl2 implements Runnable {
-   final ConfigModule configModule2;
-   final File file4;
-   final Settings settings2;
+   final ConfigModule configModule;
+   final File file;
+   final Settings settings;
 
    public KotlinRunnableImpl2(ConfigModule configModule, File file, Settings settings) {
-      this.configModule2 = configModule;
-      this.file4 = file;
-      this.settings2 = settings;
+      this.configModule = configModule;
+      this.file = file;
+      this.settings = settings;
    }
 
    @Override
    public final void run() {
       try {
-         Logger logger = this.configModule2.platform.getLogger();
-         File file = this.file4;
-         Settings settings = this.settings2;
-         ConfigModule configModule = this.configModule2;
+         Logger logger = this.configModule.platform.getLogger();
+         File file = this.file;
+         Settings settings = this.settings;
+         ConfigModule configModule = this.configModule;
          File[] listFiles2 = file.listFiles();
          String text = "GeoLite2-Country.mmdb";
          File file2 = new File(file, text);
@@ -67,7 +67,7 @@ public final class KotlinRunnableImpl2 implements Runnable {
 
          configModule.setGeoIp(new GeoIpLookup(configModule.platform, file, file2));
       } catch (Exception e) {
-         this.configModule2.handleConfigError(e);
+         this.configModule.handleConfigError(e);
       }
    }
 }

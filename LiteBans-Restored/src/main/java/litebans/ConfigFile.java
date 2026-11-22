@@ -21,7 +21,7 @@ public abstract class ConfigFile implements ConfigKeyReader, Closeable {
    protected Platform platform;
    private File file;
    private Throwable error;
-   private String text4 = "";
+   private String configText = "";
 
    public ConfigFile(Platform platform) {
       this.platform = platform;
@@ -216,7 +216,7 @@ public abstract class ConfigFile implements ConfigKeyReader, Closeable {
    public abstract ConfigFile save(File file);
 
    public ConfigFile computeConfigFile(String text) {
-      this.text4 = text;
+      this.configText = text;
       return this;
    }
 
@@ -261,6 +261,6 @@ public abstract class ConfigFile implements ConfigKeyReader, Closeable {
    }
 
    public String obtainText() {
-      return this.text4;
+      return this.configText;
    }
 }

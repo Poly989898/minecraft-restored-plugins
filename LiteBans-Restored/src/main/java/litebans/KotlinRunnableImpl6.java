@@ -6,19 +6,19 @@ import litebans.api.Events$Listener;
 
 public final class KotlinRunnableImpl6 implements Runnable {
    final Collection collection;
-   final DatabaseSession databaseSession2;
+   final DatabaseSession databaseSession;
    final Entry entry;
 
    public KotlinRunnableImpl6(Collection collection, DatabaseSession databaseSession, Entry entry) {
       this.collection = collection;
-      this.databaseSession2 = databaseSession;
+      this.databaseSession = databaseSession;
       this.entry = entry;
    }
 
    @Override
    public final void run() {
       Iterable iterable = this.collection;
-      DatabaseSession databaseSession = this.databaseSession2;
+      DatabaseSession databaseSession = this.databaseSession;
 
       for (Object obj : iterable) {
          Events$Listener events$Listener = (Events$Listener)obj;

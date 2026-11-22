@@ -1070,7 +1070,7 @@ public final class PunishmentRequest {
 
                   Object obj = iterator2.next();
                   DurationLimitGroup kotlinData6 = (DurationLimitGroup)obj;
-                  if (kotlinData6.getGroupLimitOther().isFlag2()) {
+                  if (kotlinData6.getGroupLimitOther().isTemplateOnly()) {
                      flag = true;
                      break;
                   }
@@ -1087,7 +1087,7 @@ public final class PunishmentRequest {
                   if (kotlinData != null) {
                      GroupLimitOther groupLimitOther = kotlinData.getGroupLimitOther();
                      if (groupLimitOther != null) {
-                        flag = groupLimitOther.isFlag2();
+                        flag = groupLimitOther.isTemplateOnly();
                         break label92;
                      }
                   }

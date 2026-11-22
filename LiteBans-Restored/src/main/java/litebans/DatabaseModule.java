@@ -59,7 +59,7 @@ public final class DatabaseModule extends PluginModule {
    private final AtomicBoolean atomicBoolean5;
    private final AtomicBoolean transientErrorSeen;
    private boolean convertSqlite;
-   private boolean flag9;
+   private boolean closing;
    private boolean disclaimerAccepted;
    private byte byteValue2;
    private long longValue2;
@@ -67,7 +67,7 @@ public final class DatabaseModule extends PluginModule {
    private int intValue3;
    private String currentTime;
    private int databaseTimeOffset;
-   public static final int VALUE_3000 = 3000;
+   public static final int RETRY_DELAY_MILLIS = 3000;
    private static final String PROXY_STATEMENT_FRAME = "at " + ProxyPreparedStatement.class.getName() + ".executeQuery(";
    private static final String HIKARI_PROXY_STATEMENT_FRAME = "at " + HikariProxyPreparedStatement.class.getName() + ".executeQuery(";
    private static final String PREPARED_QUERY_FRAME = "at " + PreparedQuery.class.getName() + '.';
@@ -123,8 +123,8 @@ public final class DatabaseModule extends PluginModule {
       this.convertSqlite = flag;
    }
 
-   public final void setFlag9(boolean flag) {
-      this.flag9 = flag;
+   public final void setClosing(boolean flag) {
+      this.closing = flag;
    }
 
    public final boolean isDisclaimerAccepted() {
@@ -721,7 +721,7 @@ public final class DatabaseModule extends PluginModule {
          this.getConfigModule().enable();
 
          try {
-            if (this.flag9) {
+            if (this.closing) {
                return;
             }
 
@@ -969,7 +969,7 @@ public final class DatabaseModule extends PluginModule {
       }
 
       Connection rawConnection = this.getRawConnection();
-      return rawConnection != null && this.isConnected() && !this.flag9 ? new DatabaseSessionImpl(this.platform, rawConnection) : new KotlinDatabaseSessionImpl(this.platform);
+      return rawConnection != null && this.isConnected() && !this.closing ? new DatabaseSessionImpl(this.platform, rawConnection) : new KotlinDatabaseSessionImpl(this.platform);
    }
 
    public final void handleFunction(@NotNull Function1 callback) {

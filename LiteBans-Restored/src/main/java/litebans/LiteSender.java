@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 public interface LiteSender {
    LiteSender[] liteSenderArray = new LiteSender[0];
-   UUID uuid3 = new UUID(0L, 0L);
+   UUID ZERO_UUID = new UUID(0L, 0L);
 
    void dispatchCommand(@NonNull String text);
 

@@ -18,7 +18,7 @@ public class LiteJsonSerializerImpl extends LiteHelper10 implements JsonSerializ
       JsonObject asJsonObject = jsonElement.getAsJsonObject();
       JsonElement jsonElement2 = asJsonObject.get("text");
       if (jsonElement2 != null) {
-         chatTextComponent.setText3(jsonElement2.getAsString());
+         chatTextComponent.setContent(jsonElement2.getAsString());
       }
 
       this.handleJsonObject(asJsonObject, chatTextComponent, jsonDeserializationContext);
@@ -28,7 +28,7 @@ public class LiteJsonSerializerImpl extends LiteHelper10 implements JsonSerializ
    public JsonElement computeJsonElement(ChatTextComponent chatTextComponent, Type type, JsonSerializationContext jsonSerializationContext) {
       JsonObject jsonObject = new JsonObject();
       this.handleJsonObject(jsonObject, chatTextComponent, jsonSerializationContext);
-      jsonObject.addProperty("text", chatTextComponent.getText3());
+      jsonObject.addProperty("text", chatTextComponent.getContent());
       return jsonObject;
    }
 

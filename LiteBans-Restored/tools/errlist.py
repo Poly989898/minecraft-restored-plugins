@@ -2,7 +2,7 @@
 """Compact error list for one file: line, message, source line."""
 import re,sys
 t=open(sys.argv[1]).read(); want=sys.argv[2]
-for b in re.split(r'\n(?=/home/)',t):
+for b in re.split(r'\n(?=/home/|[A-Za-z]:\\)',t):
     m=re.match(r'.*?/litebans/(\w+)\.java:(\d+): error: ([^\n]*)\n([^\n]*)',b,re.S)
     if m and m.group(1)==want:
         extra=' | '.join(x.strip() for x in b.split('\n')[3:6] if x.strip() and not x.strip().startswith('^'))[:150]

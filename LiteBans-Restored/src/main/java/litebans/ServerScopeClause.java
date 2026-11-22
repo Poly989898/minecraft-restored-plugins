@@ -5,24 +5,24 @@ import org.jetbrains.annotations.Nullable;
 
 public class ServerScopeClause implements CharSequence {
    private final Platform platform;
-   private String text2;
+   private String serverScope;
    private final byte byteValue;
 
    public ServerScopeClause(@NotNull Platform platform, @Nullable String text) {
       this.platform = platform;
-      this.text2 = text;
-      this.text2 = ServerScopes.SERVER_SCOPE.normalize(this.text2);
+      this.serverScope = text;
+      this.serverScope = ServerScopes.SERVER_SCOPE.normalize(this.serverScope);
       byte b;
-      if (Intrinsics.areEqual(this.text2, "__ALL__")) {
+      if (Intrinsics.areEqual(this.serverScope, "__ALL__")) {
          b = 0;
       } else {
          String serverName = this.obtainDatabaseModule().getServerName();
          byte b2 = 1;
-         if (this.text2 != null && !ServerScopes.SERVER_SCOPE.isGlobal(this.text2)) {
+         if (this.serverScope != null && !ServerScopes.SERVER_SCOPE.isGlobal(this.serverScope)) {
             b2++;
          }
 
-         if (this.platform.obtainFlag4() && !Intrinsics.areEqual(serverName, this.text2)) {
+         if (this.platform.obtainFlag4() && !Intrinsics.areEqual(serverName, this.serverScope)) {
             b2++;
          }
 
@@ -33,7 +33,7 @@ public class ServerScopeClause implements CharSequence {
    }
 
    public final String obtainText() {
-      return this.text2;
+      return this.serverScope;
    }
 
    public final DatabaseModule obtainDatabaseModule() {
@@ -42,7 +42,7 @@ public class ServerScopeClause implements CharSequence {
 
    public void handlePreparedQuery(@NotNull PreparedQuery preparedQuery) {
       if (this.byteValue >= 2) {
-         preparedQuery.bindString(this.text2);
+         preparedQuery.bindString(this.serverScope);
       }
 
       if (this.byteValue >= 3) {

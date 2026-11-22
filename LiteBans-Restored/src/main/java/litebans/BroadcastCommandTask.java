@@ -4,11 +4,11 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
 public final class BroadcastCommandTask extends CommandTask {
-   private final String[] texts15;
+   private final String[] args;
 
    public BroadcastCommandTask(@NotNull String[] texts, @NotNull Platform platform) {
       super(platform);
-      this.texts15 = texts;
+      this.args = texts;
    }
 
    @Override
@@ -16,12 +16,12 @@ public final class BroadcastCommandTask extends CommandTask {
       CommandTask commandTask = this;
       String[] texts = new String[]{"litebans.admin", "litebans.broadcast"};
       AltAccountPunisher.handleCommandTask(commandTask, texts);
-      if (this.texts15.length <= 1) {
+      if (this.args.length <= 1) {
          CommandTask.COMMAND_OUTPUT.returnResult(LiteColor.red("Usage: /litebans broadcast <message>"));
          throw new CommandAbortException();
       }
 
-      List mutableList = ArraysKt.toMutableList(this.texts15);
+      List mutableList = ArraysKt.toMutableList(this.args);
       CommandTask commandTask2 = this;
       ((DatabaseModule)commandTask2.getPlatform().getModule(DatabaseModule.class)).handleFunction(obj -> computeUnit(mutableList, this, (DatabaseSession) obj));
    }

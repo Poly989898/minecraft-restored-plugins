@@ -15,25 +15,25 @@ import javax.sql.DataSource;
 public final class DriverDataSource implements DataSource {
    private static final PoolLogger POOL_LOGGER = PoolLogger.computePoolLogger(DriverDataSource.class);
    private static final String TEXT = "password";
-   private static final String TEXT_2 = "user";
-   private final String text5;
-   private final Properties properties2;
+   private static final String USER_PROPERTY = "user";
+   private final String url;
+   private final Properties properties;
    private Driver parentLogger;
 
    public DriverDataSource(String text, String text2, Properties properties, String text3, String text4) {
-      this.text5 = text;
-      this.properties2 = new Properties();
+      this.url = text;
+      this.properties = new Properties();
 
       for (Entry entry : properties.entrySet()) {
-         this.properties2.setProperty(entry.getKey().toString(), entry.getValue().toString());
+         this.properties.setProperty(entry.getKey().toString(), entry.getValue().toString());
       }
 
       if (text3 != null) {
-         this.properties2.put("user", this.properties2.getProperty("user", text3));
+         this.properties.put("user", this.properties.getProperty("user", text3));
       }
 
       if (text4 != null) {
-         this.properties2.put("password", this.properties2.getProperty("password", text4));
+         this.properties.put("password", this.properties.getProperty("password", text4));
       }
 
       if (text2 != null) {
@@ -100,7 +100,7 @@ public final class DriverDataSource implements DataSource {
    @Override
    public Connection getConnection() {
       try {
-         return this.parentLogger.connect(this.text5, this.properties2);
+         return this.parentLogger.connect(this.url, this.properties);
       } catch (SQLException e) {
          throw SneakyThrow.<RuntimeException>rethrow(e);
       }
@@ -109,7 +109,7 @@ public final class DriverDataSource implements DataSource {
    @Override
    public Connection getConnection(String text, String text2) {
       try {
-         Properties clone2 = (Properties)this.properties2.clone();
+         Properties clone2 = (Properties)this.properties.clone();
          if (text != null) {
             clone2.put("user", text);
             if (clone2.containsKey("username")) {
@@ -121,7 +121,7 @@ public final class DriverDataSource implements DataSource {
             clone2.put("password", text2);
          }
 
-         return this.parentLogger.connect(this.text5, clone2);
+         return this.parentLogger.connect(this.url, clone2);
       } catch (SQLException e) {
          throw SneakyThrow.<RuntimeException>rethrow(e);
       }

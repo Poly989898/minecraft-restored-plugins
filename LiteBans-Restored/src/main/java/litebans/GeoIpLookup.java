@@ -20,7 +20,7 @@ public final class GeoIpLookup {
    private Method getCountryMethod;
    private Method getNameMethod;
    public static final String TEXT = "geoip.unavailable";
-   public static final String TEXT_2 = "geoip.error";
+   public static final String ERROR_KEY = "geoip.error";
 
    public GeoIpLookup(@NotNull Platform platform, @NotNull File file, @NotNull File file2) {
       this.platform = platform;

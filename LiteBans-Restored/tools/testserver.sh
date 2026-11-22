@@ -1,10 +1,11 @@
 #!/bin/bash
+. "${TOOLS_ENV:-/d/Tools/env.sh}"
 # Builds the jar and starts a throw-away Paper server (scratchpad copy, port 25601, only LiteBans) until startup finishes or fails.
 # usage: tools/testserver.sh [extra console command to send after start]
 cd "$(dirname "$0")/.."
-G=$(ls -d ~/.gradle/wrapper/dists/gradle-9.9.1-bin/*/gradle-9.9.1/bin/gradle)
+G=$GRADLE_BIN
 $G jar -q 2>&1 | grep -E 'error' | head -3
-S=/tmp/claude-1000/lbtest
+S=$TMPDIR/claude-1000/lbtest
 T="$OLDPWD/../test-server"   # shared Paper test server (outside git): only its libraries/versions/cache and the Paper jar are reused
 if [ ! -d $S ]; then
   mkdir -p $S/plugins && cd $S && ln -s $T/libraries libraries && ln -s $T/versions versions && ln -s $T/cache cache && cp $T/paper-26.3-253.jar $T/eula.txt . \

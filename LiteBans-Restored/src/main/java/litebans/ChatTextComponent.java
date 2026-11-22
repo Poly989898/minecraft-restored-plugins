@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public final class ChatTextComponent extends ChatBaseComponent {
    private static final Pattern PATTERN = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/[a-z0-9]*)?$");
-   private String text3;
+   private String content;
 
    @Deprecated
    public static ChatBaseComponent[] fromLegacyText(String text) {
@@ -62,7 +62,7 @@ public final class ChatTextComponent extends ChatBaseComponent {
                if (stringBuilder.length() > 0) {
                   ChatTextComponent chatTextComponent2 = chatTextComponent;
                   chatTextComponent = new ChatTextComponent(chatTextComponent2);
-                  chatTextComponent2.setText3(stringBuilder.toString());
+                  chatTextComponent2.setContent(stringBuilder.toString());
                   stringBuilder = new StringBuilder();
                   consumer.accept(chatTextComponent2);
                }
@@ -97,7 +97,7 @@ public final class ChatTextComponent extends ChatBaseComponent {
                if (stringBuilder.length() > 0) {
                   ChatTextComponent chatTextComponent3 = chatTextComponent;
                   chatTextComponent = new ChatTextComponent(chatTextComponent3);
-                  chatTextComponent3.setText3(stringBuilder.toString());
+                  chatTextComponent3.setContent(stringBuilder.toString());
                   stringBuilder = new StringBuilder();
                   consumer.accept(chatTextComponent3);
                }
@@ -105,7 +105,7 @@ public final class ChatTextComponent extends ChatBaseComponent {
                ChatTextComponent chatTextComponent4 = chatTextComponent;
                ChatTextComponent chatTextComponent5 = new ChatTextComponent(chatTextComponent4);
                String stripColor2 = LiteColor.stripColor(text.substring(i, indexOfUrlEnd2));
-               chatTextComponent5.setText3(stripColor2);
+               chatTextComponent5.setContent(stripColor2);
                chatTextComponent5.setClickEvent(new ChatClickEvent(ClickAction.OPEN_URL, stripColor2.startsWith("http") ? stripColor2 : "http://" + stripColor2));
                consumer.accept(chatTextComponent5);
                i += indexOfUrlEnd2 - i - 1;
@@ -116,7 +116,7 @@ public final class ChatTextComponent extends ChatBaseComponent {
          }
       }
 
-      chatTextComponent.setText3(stringBuilder.toString());
+      chatTextComponent.setContent(stringBuilder.toString());
       consumer.accept(chatTextComponent);
    }
 
@@ -132,12 +132,12 @@ public final class ChatTextComponent extends ChatBaseComponent {
    }
 
    public ChatTextComponent() {
-      this.text3 = "";
+      this.content = "";
    }
 
    public ChatTextComponent(ChatTextComponent chatTextComponent) {
       super(chatTextComponent);
-      this.setText3(chatTextComponent.getText3());
+      this.setContent(chatTextComponent.getContent());
    }
 
    public ChatTextComponent(ChatBaseComponent[] chatBaseComponents) {
@@ -154,25 +154,25 @@ public final class ChatTextComponent extends ChatBaseComponent {
    @Override
    protected void appendPlainText(StringBuilder builder) {
       this.appendLegacyText(builder);
-      builder.append(this.text3);
+      builder.append(this.content);
       super.appendPlainText(builder);
    }
 
    @Override
    public String toString() {
-      return "TextComponent{text=" + this.text3 + ", " + super.toString() + '}';
+      return "TextComponent{text=" + this.content + ", " + super.toString() + '}';
    }
 
-   public String getText3() {
-      return this.text3;
+   public String getContent() {
+      return this.content;
    }
 
-   public void setText3(String text) {
-      this.text3 = text;
+   public void setContent(String text) {
+      this.content = text;
    }
 
    public ChatTextComponent(String text) {
-      this.text3 = text;
+      this.content = text;
    }
 
    @Override
@@ -194,8 +194,8 @@ public final class ChatTextComponent extends ChatBaseComponent {
          return false;
       }
 
-      String text = this.getText3();
-      String text2 = chatTextComponent.getText3();
+      String text = this.getContent();
+      String text2 = chatTextComponent.getContent();
       return text == null ? text2 == null : text.equals(text2);
    }
 
@@ -207,7 +207,7 @@ public final class ChatTextComponent extends ChatBaseComponent {
    @Override
    public int hashCode() {
       int value = super.hashCode();
-      String text = this.getText3();
+      String text = this.getContent();
       return value * 59 + (text == null ? 43 : text.hashCode());
    }
 

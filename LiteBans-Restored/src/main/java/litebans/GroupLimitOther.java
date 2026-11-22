@@ -3,24 +3,24 @@ package litebans;
 import org.jetbrains.annotations.Nullable;
 
 public final class GroupLimitOther {
-   private final boolean flag2;
+   private final boolean templateOnly;
 
    public GroupLimitOther(boolean flag) {
-      this.flag2 = flag;
+      this.templateOnly = flag;
    }
 
-   public final boolean isFlag2() {
-      return this.flag2;
+   public final boolean isTemplateOnly() {
+      return this.templateOnly;
    }
 
    @Override
    public String toString() {
-      return "GroupLimitOther(templateOnly=" + this.flag2 + ')';
+      return "GroupLimitOther(templateOnly=" + this.templateOnly + ')';
    }
 
    @Override
    public int hashCode() {
-      return Boolean.hashCode(this.flag2);
+      return Boolean.hashCode(this.templateOnly);
    }
 
    @Override
@@ -34,6 +34,6 @@ public final class GroupLimitOther {
       }
 
       GroupLimitOther groupLimitOther = (GroupLimitOther)obj;
-      return this.flag2 == groupLimitOther.flag2;
+      return this.templateOnly == groupLimitOther.templateOnly;
    }
 }

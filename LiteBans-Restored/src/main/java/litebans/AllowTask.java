@@ -5,25 +5,25 @@ import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
 
 public final class AllowTask extends CommandTask {
-   private final String[] texts17;
-   private final boolean flag44;
+   private final String[] args;
+   private final boolean checkAltAccounts;
 
    public AllowTask(@NotNull String[] texts, @NotNull Platform platform, boolean flag) {
       super(platform);
-      this.texts17 = texts;
-      this.flag44 = flag;
+      this.args = texts;
+      this.checkAltAccounts = flag;
    }
 
    @Override
    public void run() {
-      if (this.flag44) {
+      if (this.checkAltAccounts) {
          CommandTask commandTask = this;
          String[] texts = new String[]{"litebans.admin", "litebans.allow"};
          AltAccountPunisher.handleCommandTask(commandTask, texts);
       }
 
       CommandOutput commandOutput = CommandTask.COMMAND_OUTPUT;
-      boolean flag = this.texts17.length < 2;
+      boolean flag = this.args.length < 2;
       CharSequence message = Message.ALLOW_USAGE;
       if (flag) {
          commandOutput.returnResult(message);
@@ -41,7 +41,7 @@ public final class AllowTask extends CommandTask {
             throw new CommandAbortException();
          }
 
-         String orNull = (String)ArraysKt.getOrNull(this.texts17, 2);
+         String orNull = (String)ArraysKt.getOrNull(this.args, 2);
          if (orNull == null) {
             CommandTask.COMMAND_OUTPUT.returnResult(Message.ALLOW_USAGE);
             throw new CommandAbortException();
@@ -68,7 +68,7 @@ public final class AllowTask extends CommandTask {
             if (((ConfigModule)commandTask3.getPlatform().getModule(ConfigModule.class)).getSettings().isOnlineMode()) {
                Profile profile = UsernameValidator.KOTLIN_DATA.computeProfile2(text);
                UUID uuid = profile.getUUID();
-               loginRecord2 = PunishmentQueries.saveLoginRecordWithDefaults(databaseSession, new LoginRecord(profile.getText2(), uuid != null ? uuid.toString() : null, null, new Date()), false, 2, null);
+               loginRecord2 = PunishmentQueries.saveLoginRecordWithDefaults(databaseSession, new LoginRecord(profile.getName(), uuid != null ? uuid.toString() : null, null, new Date()), false, 2, null);
             } else {
                if (b != 0) {
                   CommandTask.COMMAND_OUTPUT.returnResult(Message.ERROR_NO_UUID_FOUND);
@@ -93,7 +93,7 @@ public final class AllowTask extends CommandTask {
          UUID fromString2 = UUID.fromString(orNull);
          Intrinsics.checkNotNull(fromString2);
          boolean hasAllowEntry = PunishmentQueries.hasAllowEntryWithDefaults(databaseSession, fromString2, null, 2, null);
-         String text2 = this.texts17[1];
+         String text2 = this.args[1];
          switch (text2.hashCode()) {
             case -934610812:
                if (text2.equals("remove")) {

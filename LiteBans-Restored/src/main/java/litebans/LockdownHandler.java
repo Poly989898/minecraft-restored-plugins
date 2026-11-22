@@ -7,14 +7,14 @@ import org.jetbrains.annotations.Nullable;
 public final class LockdownHandler extends CommandTask implements Named {
    private final CharSequence kickMessage;
    private final String reason;
-   private final boolean flag39;
-   private PlatformListener platformListener2;
+   private final boolean enabled;
+   private PlatformListener platformListener;
 
    public LockdownHandler(@NotNull Platform platform, @Nullable CharSequence message, @NotNull String text, boolean flag) {
       super(platform);
       this.kickMessage = message;
       this.reason = text;
-      this.flag39 = flag;
+      this.enabled = flag;
    }
 
    public final CharSequence getKickMessage() {
@@ -30,9 +30,9 @@ public final class LockdownHandler extends CommandTask implements Named {
       boolean flag = false;
       if (this.kickMessage != null && this.getPlatform().getPlatformId() != 3) {
          ListenerModule moduleOrNull = (ListenerModule)this.getPlatform().getModuleOrNull(ListenerModule.class);
-         this.platformListener2 = moduleOrNull.computePlatformListener(this);
-         if (this.platformListener2 != null) {
-            this.platformListener2.obtainPlatformListener();
+         this.platformListener = moduleOrNull.computePlatformListener(this);
+         if (this.platformListener != null) {
+            this.platformListener.obtainPlatformListener();
          }
       }
 
@@ -90,7 +90,7 @@ public final class LockdownHandler extends CommandTask implements Named {
          }
       }
 
-      if (this.flag39) {
+      if (this.enabled) {
          CommandTask commandTask4 = this;
          if (((DatabaseModule)commandTask4.getPlatform().getModule(DatabaseModule.class)).isConnected()) {
             LiteSender liteSender3 = (LiteSender)CommandTask.COMMAND_OUTPUT.getSenderHolder().get();
@@ -112,7 +112,7 @@ public final class LockdownHandler extends CommandTask implements Named {
 
    @Override
    public void perform3() {
-      PlatformListener platformListener = this.platformListener2;
+      PlatformListener platformListener = this.platformListener;
       if (platformListener != null) {
          Platform platform = this.getPlatform();
          PlatformListener[] platformListeners = new PlatformListener[]{platformListener};
