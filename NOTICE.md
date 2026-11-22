@@ -48,3 +48,17 @@ Every plugin in this repository is an unofficial, modified version of the origin
   - Restored the names of bridges and check implementations that the obfuscator renamed, and substituted decrypted constants.
   - The bundled Adventure library is relocated from `net/kyori` to `it/ytnoos/lpx/lib/kyori` across the whole jar, so the plugin starts on Paper 26.3. The original jar does not start there.
   - Bundled libraries (PacketEvents, Adventure, Gson, bStats) are not part of `src/`.
+
+## CMILib 1.6.1.3
+
+- Original: CMILib by Zrips.
+- Source: decompiled from the 1.6.1.3 jar (Vineflower), repaired to compile.
+- Changes: decompiler artifacts are removed. The version parser reads Paper version strings such as `26.3.build.257` (only the leading digits of each part are a number).
+## CMI 9.8.7.5
+
+- Original: CMI by Zrips.
+- Source: decompiled from the 9.8.7.5 jar (Vineflower, CFR and bytecode listings where the decompiler failed), repaired to compile.
+- Changes:
+  - The Spigot license check (`loadConfig0`, a phone-home request) is removed.
+  - Version-specific NMS code is moved behind the `NMS` interface. The Paper 26.3 adapter is in `nms/v26_3`. Adapters for other versions are not included yet.
+  - Decompiler artifacts (numbered locals, labels, GOTO, synthetic accessors) are rewritten by meaning.

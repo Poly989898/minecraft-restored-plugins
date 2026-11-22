@@ -11,6 +11,8 @@ Readable, rebuildable Java sources for Paper plugins. The sources were recovered
 | [`MythicMobs-Restored`](MythicMobs-Restored) | MythicMobs 5.14.0 | Lumine | Paper 1.20 – 26.3 | Plugin and all NMS modules build from source; smoke-tested on Paper 1.21.4, 1.21.5, 1.21.8, 1.21.10, 1.21.11 and 26.3 |
 | [`LiteBans-Restored`](LiteBans-Restored) | LiteBans 2.19.0 | Ruan | Paper, Bungee, Velocity | Compiles (Fabric/Mixin excluded), deobfuscation partial; console commands verified on Paper 26.3 with H2 |
 | [`LPX-Restored`](LPX-Restored) | LPX 3.9.1 | Ytnoos | Paper / Spigot 1.8 – 1.21 | All 189 classes compile; starts on Paper 26.3; in-game check behaviour not verified |
+| [`CMILib-Restored`](CMILib-Restored) | CMILib 1.6.1.3 | Zrips | Paper 26.3 | Builds from source; starts with CMI on Paper 26.3 |
+| [`CMI-Restored`](CMI-Restored) | CMI 9.8.7.5 | Zrips | Paper 26.3 | Core builds from source; starts on Paper 26.3; adapters for other versions not included yet |
 
 What "verified" means for each plugin, what was **not** tested, and the exact build commands are in the README inside each folder.
 
@@ -49,6 +51,8 @@ Short version per plugin (details in each README):
 | MythicMobs | `cd nms && gradle :v26_3:compileJava …`, then `cd plugin && gradle compileJava jar` |
 | LiteBans | `gradle compileJava jar` |
 | LPX | `tools/build.sh && tools/package.sh` |
+| CMILib | `gradle jar` |
+| CMI | `(cd ../CMILib-Restored && gradle jar)`, then `(cd nms/v26_3 && gradle compileJava)`, then `gradle jar` |
 
 ## Changes from the originals
 
