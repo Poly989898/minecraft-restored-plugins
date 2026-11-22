@@ -9,7 +9,7 @@ Readable, rebuildable Java sources of Nexo 1.26 (custom items, blocks, furniture
 | `src/` | Sources (`com/nexomc/nexo`) |
 | `stubs/` | Compile-only stubs of third-party APIs (never shipped) |
 | `libs/` | Build dependencies (not in git) |
-| `tools/` | `package.sh` (final jar), `testserver.sh` (build and run Paper 26.3 in a scratch copy), `Check.java`, `Verify.java`, `fixnames.py` |
+| `tools/` | `package.sh` / `package.ps1` (final jar), `testserver.sh` / `testserver.ps1` (build and run Paper 26.3 in a scratch copy), `Check.java`, `Verify.java`, `fixnames.py` |
 | `excludes.txt` | Files that are not part of the build (bundled third-party libraries, old NMS) |
 
 ## Building
@@ -25,6 +25,13 @@ Integration dependencies come from Maven (FAWE core, lin-bus, BlockLocker, AWS S
 ```sh
 gradle --offline compileJava
 tools/package.sh      # build/libs/nexo-1.26-custom.jar = original jar + recompiled classes
+```
+
+Windows (PowerShell), the same steps:
+
+```powershell
+gradle --offline compileJava
+tools\package.ps1
 ```
 
 The original jar is required as `libs/nexo-1.26-patched.jar` and is kept outside the repository (`../originals/Nexo/`).

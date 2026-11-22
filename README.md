@@ -34,6 +34,8 @@ NOTICE.md               origin and behavioural changes of every plugin
 
 ## Building
 
+LPX and Nexo also ship PowerShell versions of their build scripts (`tools/*.ps1`, same steps as the `.sh` ones) for Windows. The other plugins are Linux and Git Bash only for now.
+
 General requirements: **JDK 25** (the bytecode target is Java 17, 21 or 25 depending on the module, as in the original), Gradle where a `build.gradle` exists, `bash`, `curl`, `unzip` and `python3` for the helper scripts, and network access to download Paper and dependencies.
 
 Several builds repack the recompiled classes into the original jar, and a few steps compare against it. **Original jars are not included.** Put them in `originals/` next to the plugin folders (the exact file names are given in each plugin's README). `build/`, `dist/`, `.work/` and downloaded dependencies are generated and ignored by git.
