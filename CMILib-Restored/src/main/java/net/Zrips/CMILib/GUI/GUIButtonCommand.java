@@ -1,0 +1,33 @@
+package net.Zrips.CMILib.GUI;
+
+import net.Zrips.CMILib.Container.CommandType;
+
+class GUIButtonCommand {
+  private String command;
+  private CommandType vis = CommandType.gui;
+
+  public GUIButtonCommand(String command) {
+    this.command = command;
+  }
+
+  public GUIButtonCommand(String command, CommandType vis) {
+    this.command = command;
+    this.vis = vis;
+  }
+
+  public String getCommand() {
+    return this.command;
+  }
+
+  public void setCommand(String command) {
+    this.command = command;
+  }
+
+  public CommandType getVis() {
+    return this.vis;
+  }
+
+  public void setVis(CommandType vis) {
+    this.vis = vis;
+  }
+}

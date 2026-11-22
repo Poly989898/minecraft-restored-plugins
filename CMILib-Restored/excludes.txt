@@ -1,0 +1,1 @@
+# All CMILib sources compile against Paper 26.3 (nothing excluded).
