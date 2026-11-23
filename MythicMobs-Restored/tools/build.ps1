@@ -38,12 +38,8 @@ if (-not (Test-Path $gradle)) {
     throw "Gradle not found: $gradle"
 }
 
-foreach ($lib in 'original.jar', 'shaded.jar') {
-    $libPath = Join-Path $pluginDir "libs\$lib"
-    if (-not (Test-Path $libPath)) {
-        throw "Missing $libPath (plugin\libs must contain original.jar and shaded.jar, see README)."
-    }
-}
+# Only the NMS modules that build from public Maven artifacts (Paper devBundle). The Spigot-mapped modules
+# (w1_*, v1_*) are not built: their org.spigotmc:spigot snapshots are not public. See README.
 
 $gradleOptions = @()
 if ($Offline) {
@@ -51,12 +47,7 @@ if ($Offline) {
 }
 
 $nmsTasks = @(
-    ':v26_1:compileJava', ':v26_2:compileJava', ':v26_3:compileJava',
-    ':w1_18_R2:compileJava', ':w1_19_R2:compileJava', ':w1_19_R3:compileJava',
-    ':w1_20_R1:compileJava', ':w1_20_R2:compileJava', ':w1_20_R3:compileJava',
-    ':v1_20_R1:compileJava', ':v1_20_R3:compileJava',
-    ':v1_21_R1:compileJava', ':v1_21_R3:compileJava', ':v1_21_R4:compileJava',
-    ':v1_21_R5:compileJava', ':v1_21_R6:compileJava', ':v1_21_R7:compileJava'
+    ':v26_1:compileJava', ':v26_2:compileJava', ':v26_3:compileJava'
 )
 
 function Invoke-Gradle {

@@ -19,7 +19,11 @@ sourceSets {
 }
 
 def stubRoot = file('src/stubs/java')
-def stubPackages = fileTree(stubRoot).files.collect { stubRoot.toPath().relativize(it.parentFile.toPath()).toString().replace('\\', '/') + '/' }.unique()
+// stub package directories plus their parent directories (for directory entries of the jar); shared roots such as com or io/lumine are kept
+def stubPackages = fileTree(stubRoot).files.collect { stubRoot.toPath().relativize(it.parentFile.toPath()).toString().replace('\\', '/') }.unique()
+def stubDirs = [] as Set
+stubPackages.each { pkg -> def segs = pkg.split('/'); for (int i = 2; i <= segs.size(); i++) stubDirs << segs[0..<i].join('/') }
+stubDirs -= ['com', 'net', 'eu', 'io', 'io/lumine'] as Set
 dependencies {
     compileOnly 'io.papermc.paper:paper-api:26.3.build.254-stable'
     implementation 'org.apache.commons:commons-lang3:3.22.0'
@@ -76,34 +80,16 @@ tasks.register('printCp') {
     doLast { configurations.compileClasspath.files.each { println "CP:" + it } }
 }
 
-// Hybrid jar: our rebuilt classes first, everything not yet rebuilt (shaded libs, NMS modules) from the original jar
+// Jar: plugin classes, Maven runtime dependencies, and the NMS modules that build from public artifacts (nms/v26_*).
+// No original jar is used. The Spigot-mapped modules (w1_*, v1_*) are not built, see README.
 tasks.named('jar') {
     archiveFileName = 'MythicMobs-5.14.0-rebuilt.jar'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from sourceSets.main.output
     from({ configurations.runtimeClasspath.collect { zipTree(it) } }) { exclude 'META-INF/*.SF', 'META-INF/*.RSA', 'META-INF/*.DSA', 'module-info.class' }
-    // rebuilt NMS modules (paperweight project in ../nms)
+    // NMS modules (paperweight project in ../nms)
     ['v26_1','v26_2','v26_3'].each { v -> from("../nms/${v}/build/classes/java/main") }
-    ['w1_18_R2','w1_19_R2','w1_19_R3','w1_20_R1','w1_20_R2','w1_20_R3'].each { w -> from("../nms/${w}/build/classes/java/main") }
-    ['v1_20_R1','v1_20_R3','v1_21_R1','v1_21_R3','v1_21_R4','v1_21_R5','v1_21_R6','v1_21_R7'].each { v -> from("../nms/${v}/build/classes/java/main") }
-    if (file('libs/original.jar').exists()) from(zipTree('libs/original.jar')) {
-        exclude { fte ->
-            def p = fte.relativePath.pathString
-            if (p.startsWith('META-INF/') && (p.endsWith('.SF') || p.endsWith('.RSA') || p.endsWith('.DSA'))) return true
-            def own = p.startsWith('io/lumine/mythic/api/') || p.startsWith('io/lumine/mythic/core/') || p.startsWith('io/lumine/mythic/bukkit/')
-            if (!own) return false
-            if (p.startsWith('io/lumine/mythic/bukkit/utils/lib/') || p.startsWith('io/lumine/mythic/bukkit/utils/caffeine/') || p.startsWith('io/lumine/mythic/bukkit/utils/redis/')) return false
-            if (p.startsWith('io/lumine/mythic/core/volatilecode/v26_') || p.startsWith('io/lumine/mythic/core/volatilecode/VolatileCodeEnabled_v26_')) return p.endsWith('.class') // rebuilt
-            if (p.startsWith('io/lumine/mythic/core/volatilecode/v1_') || p.startsWith('io/lumine/mythic/core/volatilecode/VolatileCodeEnabled_v1_')) return p.endsWith('.class') // rebuilt legacy NMS
-            if (p.startsWith('io/lumine/mythic/bukkit/utils/version/wrappers/v1_') || p.startsWith('io/lumine/mythic/bukkit/utils/version/wrappers/VersionWrapper_v')) return p.endsWith('.class') // rebuilt version wrappers
-            if (p.startsWith('io/lumine/mythic/core/volatilecode/') || p.startsWith('io/lumine/mythic/bukkit/utils/version/')) {
-                // keep the NMS-dependent parts from the original; interfaces are rebuilt
-                return p.endsWith('/wrappers/VersionWrapper.class') || p.endsWith('/wrappers/VersionItemHandler.class') || p.contains('/version/MinecraftVersion') || p.endsWith('/version/NMSVersion.class')
-            }
-            return p.endsWith('.class') // drop original own classes (keep resources)
-        }
-    }
-    exclude { fte -> stubPackages.any { fte.relativePath.pathString.startsWith(it) } }
+    exclude { fte -> def q = fte.relativePath.pathString.replace('\\', '/').replaceAll('/$', ''); stubDirs.any { q == it || q.startsWith(it + '/') } }
     manifest { attributes 'Implementation-Title': 'MythicMobs (rebuilt)' }
 }
 

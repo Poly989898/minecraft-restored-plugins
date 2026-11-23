@@ -5,5 +5,6 @@ pluginManagement {
     }
 }
 rootProject.name = 'MythicMobs-nms'
+// Only the paperweight (Paper devBundle) modules are included. The Spigot-mapped modules (w1_*, v1_*) need
+// org.spigotmc:spigot snapshots that are not on public Maven repositories; their sources stay in nms/ but are not built.
 include 'v26_1', 'v26_2', 'v26_3'
-include 'v1_20_R1', 'v1_20_R3', 'v1_21_R1', 'v1_21_R3', 'v1_21_R4', 'v1_21_R5', 'v1_21_R6', 'v1_21_R7', 'w1_18_R2', 'w1_19_R2', 'w1_19_R3', 'w1_20_R1', 'w1_20_R2', 'w1_20_R3'
