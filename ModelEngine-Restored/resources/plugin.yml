@@ -1,5 +1,5 @@
 name: ModelEngine
-version: R4.1.1
+version: R4.1.1-UME.2
 prefix: Ultimate Model Engine
 description: Ultimate Model Engine - editable community continuation with ModelEngine compatibility.
 provides: [UltimateModelEngine]

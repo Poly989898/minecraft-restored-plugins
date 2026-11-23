@@ -36,6 +36,23 @@ scripts/test.sh              # tests (after build.sh)
 
 The result is the original jar with every rebuilt class replaced. Environment variables: `ORIG_JAR`, `WORK`, `BUILD`, `DIST`, `MAIN_PAPER`.
 
+### Windows (PowerShell)
+
+Each script has a `.ps1` counterpart in `scripts\` with the same steps. It needs JDK 25 and PowerShell 5.1 or later; `bash`, `curl`, `unzip`, `python3` and `sha256sum` are not required.
+
+```powershell
+$env:JAVA_HOME = 'C:\path\to\jdk-25'                    # required
+$env:ORIG_JAR  = 'C:\path\to\UltimateModelEngine.jar'   # if not in ..\originals\ModelEngine\
+scripts\fetch-deps.ps1
+scripts\fetch-paper.ps1 26.3
+scripts\build.ps1
+scripts\build-adapters.ps1                              # or name modules: build-adapters.ps1 v1_21_R7
+scripts\merge-jar.ps1
+scripts\test.ps1
+```
+
+If script execution is blocked, run a script with `powershell -ExecutionPolicy Bypass -File scripts\build.ps1`.
+
 Build notes:
 - The sources use Lombok; compile with `-processorpath .work/deps/lombok-1.18.42.jar` (1.18.34 does not support JDK 25). Settings are in `src/lombok.config`.
 - A file in `patches/java/` replaces the `src/` file with the same package path.
@@ -131,3 +148,12 @@ Found while reading the code and writing tests. They are original behaviour and 
 - `ColorHelper.getArgbFloat` computes a channel as `floor(clamp(value * 255, 0, 1))`. The clamp to 1 happens after the multiplication, so any channel above ~0.004 yields 1 instead of 0..255. The method is not called anywhere.
 - `InteractionTracker`: in the nearest-hitbox search `dist` stays `Double.MAX_VALUE` and is never updated, so `!(dist < hitDistSqr)` is always true and the last intersected hitbox is chosen instead of the nearest. If the ray starts inside a box (`obb.contains(start)`), the search stops at once.
 - `ConstSet` defines equality by `hashCode()` only: different objects with the same hash count as one element.
+
+## Build without the original jar
+
+- Code: compiled from src/ and patches/ (API, core, core21, core25 and the NMS adapters for 1.19.4 - 26.3). No original class is used.
+- Resources: 
+esources/ holds the default config, the internal models, the resource pack templates and shaders. These files are copied from the original jar, because they are data, not code. Without them the plugin starts but skins and the pack are incomplete.
+- scripts/build.ps1, uild-adapters.ps1 and merge-jar.ps1 run the steps. ORIG_JAR is optional; the original is only needed to refresh 
+esources/.
+- MineSkin skin generation is implemented with plain HTTP (`MineSkinGeneratorService`): POST `/v2/queue` with the image, then GET `/v2/queue/{id}` until the skin is ready. The protocol was taken from the public MineSkin Java client. It is not tested with a real API key yet: the endpoint answers, but the key check was not reached.

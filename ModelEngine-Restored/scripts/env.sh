@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Shared settings. Source this file; do not run it.
 # Override any variable from the environment.
+. "${TOOLS_ENV:-/d/Tools/env.sh}"   # JDK 25, python3, Gradle on D:\Tools
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 WORK="${WORK:-$ROOT/.work}"            # downloaded Paper builds and dependency jars
