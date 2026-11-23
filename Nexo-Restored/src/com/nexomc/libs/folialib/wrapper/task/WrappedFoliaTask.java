@@ -38,7 +38,7 @@ public class WrappedFoliaTask implements WrappedTask {
       Class<? extends ScheduledTask> asyncTaskClass = null;
 
       try {
-         asyncTaskClass = Class.forName("io.papermc.paper.threadedregions.scheduler.FoliaAsyncScheduler.AsyncScheduledTask");
+asyncTaskClass = (Class<? extends ScheduledTask>)Class.forName("io.papermc.paper.threadedregions.scheduler.FoliaAsyncScheduler.AsyncScheduledTask");
       } catch (ClassNotFoundException var2) {
       }
 

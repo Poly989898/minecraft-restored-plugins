@@ -27,8 +27,8 @@ public class PlayerUtils implements IPlayerUtils {
    @NotNull
    public GameProfile copyGameProfile(@NotNull ServerPlayer serverPlayer) {
       Intrinsics.checkNotNullParameter(serverPlayer, "serverPlayer");
-      GameProfile gameProfile = new GameProfile(UUID.randomUUID(), serverPlayer.gameProfile.getName());
-      gameProfile.getProperties().putAll((Multimap)serverPlayer.gameProfile.getProperties());
+      GameProfile gameProfile = new GameProfile(UUID.randomUUID(), serverPlayer.gameProfile.name());
+      gameProfile.properties().putAll((Multimap)serverPlayer.gameProfile.properties());
       return gameProfile;
    }
 }

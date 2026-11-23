@@ -22,7 +22,7 @@ public class DrilldownPie extends CustomChart {
             JsonObjectBuilder valueBuilder = new JsonObjectBuilder();
             boolean allSkipped = true;
 
-            for(Map.Entry<String, Integer> valueEntry : ((Map)map.get(entryValues.getKey())).entrySet()) {
+for(Map.Entry<String, Integer> valueEntry : map.get(entryValues.getKey()).entrySet()) {
                valueBuilder.appendField((String)valueEntry.getKey(), (Integer)valueEntry.getValue());
                allSkipped = false;
             }

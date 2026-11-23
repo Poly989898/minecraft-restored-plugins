@@ -1,5 +1,11 @@
 package com.nexomc.nexo.tags;
 
+import io.papermc.paper.plugin.lifecycle.event.handler.LifecycleEventHandler;
+import io.papermc.paper.plugin.lifecycle.event.registrar.ReloadableRegistrarEvent;
+import io.papermc.paper.tag.PostFlattenTagRegistrar;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.nexomc.nexo.decomp.ResultShim;
 import io.papermc.paper.plugin.bootstrap.BootstrapContext;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEventType;
@@ -53,7 +59,15 @@ public final class NexoTags {
          YamlConfiguration mechanics = yamlConfiguration;
          boolean isNoteBlocksEnabled = mechanics.getBoolean("custom_blocks.enabled", mechanics.getBoolean("custom_blocks.noteblock.enabled"));
          if (isNoteBlocksEnabled) {
-            context.getLifecycleManager().registerEventHandler((LifecycleEventType)LifecycleEvents.TAGS.postFlatten(RegistryKey.BLOCK), NexoTags$registerTags$1.INSTANCE);
+            context.getLifecycleManager().registerEventHandler((LifecycleEventType)LifecycleEvents.TAGS.postFlatten(RegistryKey.BLOCK), (LifecycleEventHandler<ReloadableRegistrarEvent<PostFlattenTagRegistrar<BlockType>>>)(event -> {
+               PostFlattenTagRegistrar<BlockType> reg = (PostFlattenTagRegistrar<BlockType>)event.registrar();
+               List<TypedKey<BlockType>> axe = new ArrayList<>(reg.getTag(MINEABLE_AXE));
+               axe.remove(NOTEBLOCK);
+               reg.setTag(MINEABLE_AXE, axe);
+               List<TypedKey<BlockType>> beacon = new ArrayList<>(reg.getTag(BEACON_BASE));
+               beacon.add(NOTEBLOCK);
+               reg.setTag(BEACON_BASE, beacon);
+            }));
          }
 
       }

@@ -73,8 +73,7 @@ public final class CustomBlockData implements PersistentDataContainer {
    private static final NamespacedKey PERSISTENCE_KEY;
    private static final int CHUNK_MIN_XZ = 0;
    private static final int CHUNK_MAX_XZ = 15;
-   @NotNull
-   private static final Lazy<Boolean> onFolia$delegate;
+    private static final boolean ON_FOLIA;
    @NotNull
    private static final IntRange CHUNK_RANGE_XZ;
 
@@ -274,7 +273,15 @@ public final class CustomBlockData implements PersistentDataContainer {
       return this.pdc.isEmpty();
    }
 
-   public void copyTo(@NotNull PersistentDataContainer other, boolean replace) {
+    public @NotNull PersistentDataType<?, ?> getPrimitiveStorageType(@NotNull net.kyori.adventure.key.Key key) {
+       return this.pdc.getPrimitiveStorageType(key);
+    }
+
+    public int getSize() {
+       return this.pdc.getKeys().size();
+    }
+
+    public void copyTo(@NotNull PersistentDataContainer other, boolean replace) {
       Intrinsics.checkNotNullParameter(other, "other");
       this.pdc.copyTo(other, replace);
    }
@@ -324,18 +331,13 @@ public final class CustomBlockData implements PersistentDataContainer {
       return Companion.<T, Z>getDataType(this, key);
    }
 
-   private static final boolean onFolia_delegate$lambda$2() {
-      Companion var0 = Companion;
-
-      Object $this$onFolia_delegate_u24lambda_u242_u24lambda_u241;
+   private static boolean checkFolia() {
       try {
-         int var2 = 0;
-         $this$onFolia_delegate_u24lambda_u242_u24lambda_u241 = Result.constructor-impl(Class.forName("io.papermc.paper.threadedregions.RegionizedServer"));
+         Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
+         return true;
       } catch (Throwable var3) {
-         $this$onFolia_delegate_u24lambda_u242_u24lambda_u241 = Result.constructor-impl(ResultKt.createFailure(var3));
+         return false;
       }
-
-      return (Result.isFailure-impl($this$onFolia_delegate_u24lambda_u242_u24lambda_u241) ? null : $this$onFolia_delegate_u24lambda_u242_u24lambda_u241) != null;
    }
 
    static {
@@ -385,7 +387,7 @@ public final class CustomBlockData implements PersistentDataContainer {
       NamespacedKey var2 = NamespacedKey.fromString("customblockdata:protected");
       Intrinsics.checkNotNull(var2);
       PERSISTENCE_KEY = var2;
-      onFolia$delegate = LazyKt.lazy(CustomBlockData::onFolia_delegate$lambda$2);
+ON_FOLIA = checkFolia();
       CHUNK_RANGE_XZ = new IntRange(0, 15);
    }
 
@@ -409,12 +411,12 @@ public final class CustomBlockData implements PersistentDataContainer {
             return Boolean.TYPE;
          }
 
-         public Byte toPrimitive(boolean complex, PersistentDataAdapterContext context) {
+public Byte toPrimitive(Boolean complex, PersistentDataAdapterContext context) {
             Intrinsics.checkNotNullParameter(context, "context");
             return (byte)(complex ? 1 : 0);
          }
 
-         public Boolean fromPrimitive(byte primitive, PersistentDataAdapterContext context) {
+public Boolean fromPrimitive(Byte primitive, PersistentDataAdapterContext context) {
             Intrinsics.checkNotNullParameter(context, "context");
             return primitive == 1;
          }
@@ -441,8 +443,7 @@ public final class CustomBlockData implements PersistentDataContainer {
       }
 
       private final boolean getOnFolia() {
-         Lazy var1 = CustomBlockData.onFolia$delegate;
-         return (Boolean)var1.getValue();
+return ON_FOLIA;
       }
 
       private final Pair<UUID, BlockVector> getBlockEntry(Block block) {
@@ -462,18 +463,16 @@ public final class CustomBlockData implements PersistentDataContainer {
          return CustomBlockData.DIRTY_BLOCKS.contains(this.getBlockEntry(block));
       }
 
-      public final void setDirty(@NotNull Plugin plugin, @NotNull Pair<UUID, ? extends BlockVector> blockEntry) {
+public final void setDirty(@NotNull Plugin plugin, @NotNull Pair<UUID, BlockVector> blockEntry) {
          Intrinsics.checkNotNullParameter(plugin, "plugin");
          Intrinsics.checkNotNullParameter(blockEntry, "blockEntry");
          if (plugin.isEnabled()) {
             CustomBlockData.DIRTY_BLOCKS.add(blockEntry);
             if (this.getOnFolia()) {
-               ScheduledTask var3 = Bukkit.getServer().getGlobalRegionScheduler().runDelayed(plugin, Companion::setDirty$lambda$0, 1L);
-               Intrinsics.checkNotNull(var3);
-            } else {
-               BukkitTask var4 = Bukkit.getScheduler().runTask(plugin, Companion::setDirty$lambda$1);
-               Intrinsics.checkNotNull(var4);
-            }
+   Bukkit.getServer().getGlobalRegionScheduler().runDelayed(plugin, (ScheduledTask task) -> CustomBlockData.DIRTY_BLOCKS.remove(blockEntry), 1L);
+   } else {
+   Bukkit.getScheduler().runTask(plugin, () -> CustomBlockData.DIRTY_BLOCKS.remove(blockEntry));
+   }
 
          }
       }
@@ -502,53 +501,25 @@ public final class CustomBlockData implements PersistentDataContainer {
       public final Block getBlockFromKey(@NotNull NamespacedKey key, @NotNull Chunk chunk) {
          Intrinsics.checkNotNullParameter(key, "key");
          Intrinsics.checkNotNullParameter(chunk, "chunk");
-         Companion var3 = this;
-
-         try {
-            Companion $this$getBlockFromKey_u24lambda_u243 = var3;
-            int var5 = 0;
-            World var29 = chunk.getWorld();
-            Intrinsics.checkNotNullExpressionValue(var29, "getWorld(...)");
-            World world = var29;
-            String var30 = key.value();
-            Intrinsics.checkNotNullExpressionValue(var30, "value(...)");
-            CharSequence var31 = (CharSequence)var30;
-            String[] var7 = new String[]{"x", "y", "z"};
-            Iterable $this$map$iv = (Iterable)StringsKt.split$default(var31, var7, false, 0, 6, (Object)null);
-            int $i$f$map = 0;
-            Collection destination$iv$iv = (Collection)(new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10)));
-            int $i$f$mapTo = 0;
-
-            for(Object item$iv$iv : $this$map$iv) {
-               String it = (String)item$iv$iv;
-               int var16 = 0;
-               destination$iv$iv.add(Integer.parseInt(it));
-            }
-
-            List var17 = (List)destination$iv$iv;
-            int x = ((Number)var17.get(0)).intValue();
-            $i$f$map = ((Number)var17.get(1)).intValue();
-            int z = ((Number)var17.get(2)).intValue();
-            IntRange var23 = CustomBlockData.CHUNK_RANGE_XZ;
-            $i$f$mapTo = var23.getFirst();
-            if (x <= var23.getLast() ? $i$f$mapTo <= x : false) {
-               var23 = CustomBlockData.CHUNK_RANGE_XZ;
-               $i$f$mapTo = var23.getFirst();
-               if (z <= var23.getLast() ? $i$f$mapTo <= z : false) {
-                  int var25 = world.getMinHeight();
-                  if (!($i$f$map <= world.getMaxHeight() ? var25 <= $i$f$map : false)) {
-                     return null;
-                  }
-
-                  return chunk.getBlock(x, $i$f$map, z);
-               }
-            }
-
-            return null;
-         } catch (Throwable var18) {
-            Object var19 = Result.constructor-impl(ResultKt.createFailure(var18));
-            return (Block)(Result.isFailure-impl(var19) ? null : var19);
-         }
+   try {
+   World world = chunk.getWorld();
+   String value = key.value();
+   List<Integer> parts = new ArrayList<>();
+   for (String s : value.split("[xyz]", -1)) {
+   parts.add(Integer.parseInt(s));
+   }
+   int x = parts.get(0);
+   int y = parts.get(1);
+   int z = parts.get(2);
+   if (x >= 0 && x <= 15 && z >= 0 && z <= 15) {
+   if (y <= world.getMaxHeight() && world.getMinHeight() <= y) {
+   return chunk.getBlock(x, y, z);
+   }
+   }
+   return null;
+   } catch (Throwable var18) {
+   return null;
+   }
       }
 
       public final boolean hasCustomBlockData(@NotNull Block block, @NotNull Plugin plugin) {
@@ -624,13 +595,7 @@ public final class CustomBlockData implements PersistentDataContainer {
          return null;
       }
 
-      private static final void setDirty$lambda$0(Pair $blockEntry, ScheduledTask it) {
-         CustomBlockData.DIRTY_BLOCKS.remove($blockEntry);
-      }
 
-      private static final void setDirty$lambda$1(Pair $blockEntry) {
-         CustomBlockData.DIRTY_BLOCKS.remove($blockEntry);
-      }
    }
 
    @Retention(AnnotationRetention.BINARY)

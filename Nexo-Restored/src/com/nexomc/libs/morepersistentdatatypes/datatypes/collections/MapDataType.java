@@ -21,7 +21,7 @@ public class MapDataType<M extends Map<K, V>, K, V> implements PersistentDataTyp
 
    public MapDataType(@NotNull Supplier<? extends M> mapSupplier, @NotNull PersistentDataType<?, K> keyDataType, @NotNull PersistentDataType<?, V> valueDataType) {
       this.mapSupplier = mapSupplier;
-      this.mapClazz = ((Map)mapSupplier.get()).getClass();
+this.mapClazz = (Class<M>)(Class<?>)((Map)mapSupplier.get()).getClass();
       this.keyDataType = keyDataType;
       this.valueDataType = valueDataType;
    }
@@ -84,16 +84,16 @@ public class MapDataType<M extends Map<K, V>, K, V> implements PersistentDataTyp
       private PersistentDataType<?, V> valueDataType;
 
       @Contract("_ -> this")
-      public <K1 extends K> Builder<?, K1, V> keyDataType(@NotNull PersistentDataType<?, K1> keyDataType) {
-         this.keyDataType = keyDataType;
-         return this;
-      }
+   public <K1 extends K> Builder<?, K1, V> keyDataType(@NotNull PersistentDataType<?, K1> keyDataType) {
+   this.keyDataType = (PersistentDataType<?, K>)(PersistentDataType<?, ?>)keyDataType;
+   return (Builder)this;
+   }
 
       @Contract("_ -> this")
-      public <V1 extends V> Builder<?, K, V1> valueDataType(@NotNull PersistentDataType<?, V1> valueDataType) {
-         this.valueDataType = valueDataType;
-         return this;
-      }
+   public <V1 extends V> Builder<?, K, V1> valueDataType(@NotNull PersistentDataType<?, V1> valueDataType) {
+   this.valueDataType = (PersistentDataType<?, V>)(PersistentDataType<?, ?>)valueDataType;
+   return (Builder)this;
+   }
 
       @Contract("_ -> new")
       public <M1 extends M> MapDataType<M1, K, V> build(@NotNull Supplier<? extends M1> mapSupplier) {

@@ -2,7 +2,6 @@ package com.nexomc.nexo.compatibilities.worldedit;
 
 import com.nexomc.nexo.NexoPlugin;
 import com.nexomc.nexo.utils.PluginUtils;
-import com.sk89q.worldedit.WorldEdit;
 import java.io.File;
 import java.util.List;
 import kotlin.Lazy;
@@ -54,15 +53,14 @@ public final class WrappedWorldEdit {
 
    public final void registerParser() {
       if (this.getLoaded()) {
-         WorldEdit.getInstance().getEventBus().register(this.getHandlers());
-         WorldEdit.getInstance().getBlockFactory().register(new CustomBlocksFactory());
-         Bukkit.getPluginManager().registerEvents(new WorldEditListener(), (Plugin)NexoPlugin.Companion.instance());
+         // WorldEdit-only classes live in WorldEditParserRegistrar so this class links without WorldEdit on the classpath
+         WorldEditParserRegistrar.register(this.getHandlers());
       }
    }
 
    public final void unregister() {
       if (this.getLoaded()) {
-         WorldEdit.getInstance().getEventBus().unregister(this.getHandlers());
+         WorldEditParserRegistrar.unregister(this.getHandlers());
       }
 
    }

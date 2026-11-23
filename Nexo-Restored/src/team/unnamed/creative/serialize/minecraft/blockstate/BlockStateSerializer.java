@@ -225,7 +225,7 @@ public final class BlockStateSerializer implements JsonResourceSerializer<BlockS
 
                return Condition.and(conditions);
             case "OR":
-               List<Condition> conditions = new ArrayList();
+               conditions = new ArrayList();
 
                for(JsonElement element : contentNode.getAsJsonArray()) {
                   conditions.add(readCondition(element.getAsJsonObject()));

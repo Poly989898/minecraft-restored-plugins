@@ -1,5 +1,13 @@
 package com.nexomc.nexo;
 
+import com.nexomc.nexo.configs.ConfigsManager;
+import com.nexomc.nexo.configs.SoundManager;
+import com.nexomc.nexo.converter.Converter;
+import com.nexomc.nexo.fonts.FontManager;
+import com.nexomc.nexo.utils.actions.ClickActionManager;
+import com.nexomc.nexo.utils.breaker.ModernBreakerManager;
+import com.nexomc.nexo.utils.inventories.InventoryManager;
+
 import com.nexomc.nexo.decomp.ResultShim;
 import com.nexomc.libs.folialib.FoliaLib;
 import com.nexomc.libs.folialib.wrapper.task.WrappedTask;
@@ -96,13 +104,13 @@ public final class NexoPlugin extends JavaPlugin implements Reloadable {
 
    public NexoPlugin() {
       nexo = this;
-      this.configsManager$delegate = LazyKt.lazy(NexoPlugin$configsManager$2.INSTANCE);
-      this.fontManager$delegate = LazyKt.lazy(NexoPlugin$fontManager$2.INSTANCE);
-      this.soundManager$delegate = LazyKt.lazy(NexoPlugin$soundManager$2.INSTANCE);
-      this.invManager$delegate = LazyKt.lazy(NexoPlugin$invManager$2.INSTANCE);
-      this.clickActionManager$delegate = LazyKt.lazy(NexoPlugin$clickActionManager$2.INSTANCE);
-      this.breakerManager$delegate = LazyKt.lazy(NexoPlugin$breakerManager$2.INSTANCE);
-      this.converter$delegate = LazyKt.lazy(NexoPlugin$converter$2.INSTANCE);
+      this.configsManager$delegate = LazyKt.lazy(() -> new ConfigsManager());
+      this.fontManager$delegate = LazyKt.lazy(() -> new FontManager());
+      this.soundManager$delegate = LazyKt.lazy(() -> new SoundManager());
+      this.invManager$delegate = LazyKt.lazy(() -> new InventoryManager());
+      this.clickActionManager$delegate = LazyKt.lazy(() -> new ClickActionManager());
+      this.breakerManager$delegate = LazyKt.lazy(() -> new ModernBreakerManager());
+      this.converter$delegate = LazyKt.lazy(() -> new Converter());
       this.multipackManager = new MultipackManager();
    }
 
@@ -164,7 +172,13 @@ public final class NexoPlugin extends JavaPlugin implements Reloadable {
       this.packServer = new EmptyServer();
       this.foliaLib = new FoliaLib((Plugin)this);
       this.getFoliaLib().getOptions().disableInvalidTickDebugMode();
-      NexoWorldguardFlags.INSTANCE.registerFlags();
+      // WorldGuard is optional: its flag classes must not be touched when the plugin is absent
+      try {
+         Class.forName("com.sk89q.worldguard.protection.flags.Flag");
+         NexoWorldguardFlags.INSTANCE.registerFlags();
+      } catch (ClassNotFoundException | LinkageError ignored) {
+         // WorldGuard not installed
+      }
       NexoDatapack.Companion.clearOldDatapacks();
    }
 

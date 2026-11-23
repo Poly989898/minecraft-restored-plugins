@@ -120,7 +120,7 @@ public final class ItemSerializer implements JsonResourceSerializer<Item>, JsonR
             this.writeRangeDispatch(writer, rangeDispatchItemModel, packFormat);
             break;
          case 7:
-            BundleSelectedItemModel ignored = (BundleSelectedItemModel)model;
+            BundleSelectedItemModel selectedBundle = (BundleSelectedItemModel)model;
             writer.name("type").value("bundle/selected_item");
             break;
          default:
@@ -333,9 +333,9 @@ public final class ItemSerializer implements JsonResourceSerializer<Item>, JsonR
             HeadSpecialRender headRender = (HeadSpecialRender)render;
             writer.name("type").value("head");
             writer.name("kind").value(headRender.kind().name().toLowerCase(Locale.ENGLISH));
-            Key texture = headRender.texture();
-            if (texture != null) {
-               writer.name("texture").value(KeySerializer.toString(texture));
+            Key headTexture = headRender.texture();
+            if (headTexture != null) {
+               writer.name("texture").value(KeySerializer.toString(headTexture));
             }
 
             float animation = headRender.animation();
@@ -347,9 +347,9 @@ public final class ItemSerializer implements JsonResourceSerializer<Item>, JsonR
             ShulkerBoxSpecialRender shulkerBoxRender = (ShulkerBoxSpecialRender)render;
             writer.name("type").value("shulker_box");
             writer.name("texture").value(KeySerializer.toString(shulkerBoxRender.texture()));
-            float openness = shulkerBoxRender.openness();
-            if (openness != 0.0F) {
-               writer.name("openness").value(openness);
+            float shulkerOpenness = shulkerBoxRender.openness();
+            if (shulkerOpenness != 0.0F) {
+               writer.name("openness").value(shulkerOpenness);
             }
 
             CubeFace orientation = shulkerBoxRender.orientation();
@@ -792,17 +792,17 @@ public final class ItemSerializer implements JsonResourceSerializer<Item>, JsonR
          case 3:
             DamageItemNumericProperty damageItemNumericProperty = (DamageItemNumericProperty)property;
             writer.name("property").value("damage");
-            boolean normalize = damageItemNumericProperty.normalize();
-            if (!normalize) {
-               writer.name("normalize").value(normalize);
+            boolean normalizeValue = damageItemNumericProperty.normalize();
+            if (!normalizeValue) {
+               writer.name("normalize").value(normalizeValue);
             }
             break;
          case 4:
             TimeItemNumericProperty timeProperty = (TimeItemNumericProperty)property;
             writer.name("property").value("time");
-            boolean wobble = timeProperty.wobble();
-            if (!wobble) {
-               writer.name("wobble").value(wobble);
+            boolean wobbleValue = timeProperty.wobble();
+            if (!wobbleValue) {
+               writer.name("wobble").value(wobbleValue);
             }
 
             writer.name("source").value(timeProperty.source().name().toLowerCase(Locale.ENGLISH));

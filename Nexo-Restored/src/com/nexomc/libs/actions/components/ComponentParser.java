@@ -25,7 +25,7 @@ public class ComponentParser {
    }
 
    private <T> @Nullable Component<T, ?> createComponent(@NotNull Class<T> clazz, @NotNull String id, @NotNull String value) {
-      Component.Supplier<?, ?> supplier = (Component.Supplier)this.registeredComponents.get(id.toLowerCase(), clazz);
+Component.Supplier<T, ?> supplier = (Component.Supplier<T, ?>)this.registeredComponents.get(id.toLowerCase(), clazz);
       return supplier == null ? null : supplier.run(value, this.placeholderManager);
    }
 

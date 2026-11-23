@@ -1,5 +1,4 @@
 package com.nexomc.nexo.pack;
-import com.nexomc.nexo.mechanics.breakable.L;
 import com.nexomc.nexo.pack.AtlasGenerator;
 import com.nexomc.nexo.pack.BBModelGenerator;
 import com.nexomc.nexo.pack.ModelGenerator;

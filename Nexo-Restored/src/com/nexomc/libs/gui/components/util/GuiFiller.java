@@ -136,7 +136,7 @@ public final class GuiFiller {
       List<GuiItem> repeated = new ArrayList();
       List var10000 = Collections.nCopies(this.gui.getRows() * 9, guiItems);
       Objects.requireNonNull(repeated);
-      var10000.forEach(repeated::addAll);
+      var10000.forEach(part -> repeated.addAll((java.util.Collection<? extends GuiItem>) part));
       return repeated;
    }
 

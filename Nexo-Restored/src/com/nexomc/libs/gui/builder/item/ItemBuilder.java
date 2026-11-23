@@ -90,7 +90,7 @@ public class ItemBuilder extends BaseItemBuilder<ItemBuilder> {
       } else {
          SkullMeta skullMeta = (SkullMeta)this.getMeta();
          GameProfile profile = new GameProfile(UUID.randomUUID(), (String)null);
-         profile.getProperties().put("textures", new Property("textures", texture));
+         profile.properties().put("textures", new Property("textures", texture));
 
          try {
             Field profileField = skullMeta.getClass().getDeclaredField("profile");

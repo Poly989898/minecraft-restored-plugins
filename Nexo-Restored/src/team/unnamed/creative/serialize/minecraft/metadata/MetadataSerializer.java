@@ -49,7 +49,8 @@ public class MetadataSerializer implements JsonResourceSerializer<Metadata> {
             JsonObject partObject = ((JsonElement)entry.getValue()).getAsJsonObject();
             MetadataPartCodec<?> codec = (MetadataPartCodec)CODECS.get(partName);
             if (codec == null) {
-               System.err.println("Warning: Unknown metadata part name: " + partName + ". Skipping...");
+               // stdout: unknown parts are expected (newer pack formats) and skipped; stderr would show up as ERROR lines in the server log
+               System.out.println("Warning: Unknown metadata part name: " + partName + ". Skipping...");
             } else {
                this.deserializeAndAdd(builder, codec, partObject);
             }

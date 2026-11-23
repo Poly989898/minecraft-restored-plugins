@@ -9,6 +9,7 @@ import kotlin.jvm.internal.Intrinsics;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.Interaction;
 import net.minecraft.world.entity.monster.Shulker;
 import net.minecraft.world.level.block.Block;
@@ -28,42 +29,43 @@ import org.jetbrains.annotations.NotNull;
 public class EntityUtils {
    @NotNull
    public EntityType<Interaction> interactionType() {
-      EntityType var10000 = EntityType.INTERACTION;
+      EntityType var10000 = EntityTypes.INTERACTION;
       Intrinsics.checkNotNullExpressionValue(var10000, "INTERACTION");
       return var10000;
    }
 
    @NotNull
    public EntityType<Display.ItemDisplay> itemDisplayType() {
-      EntityType var10000 = EntityType.ITEM_DISPLAY;
+      EntityType var10000 = EntityTypes.ITEM_DISPLAY;
       Intrinsics.checkNotNullExpressionValue(var10000, "ITEM_DISPLAY");
       return var10000;
    }
 
    @NotNull
    public EntityType<Display.TextDisplay> textDisplayType() {
-      EntityType var10000 = EntityType.TEXT_DISPLAY;
+      EntityType var10000 = EntityTypes.TEXT_DISPLAY;
       Intrinsics.checkNotNullExpressionValue(var10000, "TEXT_DISPLAY");
       return var10000;
    }
 
    @NotNull
    public EntityType<Shulker> shulkerType() {
-      EntityType var10000 = EntityType.SHULKER;
+      EntityType var10000 = EntityTypes.SHULKER;
       Intrinsics.checkNotNullExpressionValue(var10000, "SHULKER");
       return var10000;
    }
 
    @NotNull
    public EntityType<?> happyGhastType() {
-      EntityType var10000 = EntityType.HAPPY_GHAST;
+      EntityType var10000 = EntityTypes.HAPPY_GHAST;
       Intrinsics.checkNotNullExpressionValue(var10000, "HAPPY_GHAST");
       return var10000;
    }
 
    @NotNull
    public Block whiteBed() {
-      Block var10000 = Blocks.WHITE_BED;
+Object white = Blocks.BED.white();
+      Block var10000 = (Block)white;
       Intrinsics.checkNotNullExpressionValue(var10000, "WHITE_BED");
       return var10000;
    }
@@ -79,6 +81,6 @@ public class EntityUtils {
 
    public int nextEntityId(@NotNull World world) {
       Intrinsics.checkNotNullParameter(world, "world");
-      return Entity.nextEntityId();
+      return ((org.bukkit.craftbukkit.CraftWorld)world).getHandle().getNextEntityId();
    }
 }

@@ -1,79 +1,70 @@
-# Nexo 1.26
+# Nexo 1.26 Restored Edition
 
-Readable, rebuildable Java sources of Nexo 1.26 (custom items, blocks, furniture, glyphs and resource pack generation for Paper). The code was recovered from Kotlin bytecode, repaired to compile and cleaned up.
+Source code of Nexo 1.26 (custom items, blocks, furniture, glyphs and resource pack generation for Paper), recovered from the release jar and repaired to compile. The jar is built from these sources, Maven dependencies and the data files in `src/`. The original jar is not used.
+
+Target server: Paper 26.3 (NMS adapter `v26_R2`). Other Minecraft versions are not compiled.
 
 ## Layout
 
 | Path | Content |
 |---|---|
-| `src/` | Sources (`com/nexomc/nexo`) |
-| `stubs/` | Compile-only stubs of third-party APIs (never shipped) |
-| `libs/` | Build dependencies (not in git) |
-| `tools/` | `package.sh` / `package.ps1` (final jar), `testserver.sh` / `testserver.ps1` (build and run Paper 26.3 in a scratch copy), `Check.java`, `Verify.java`, `fixnames.py` |
-| `excludes.txt` | Files that are not part of the build (bundled third-party libraries, old NMS) |
+| `src/` | Java sources (`com/nexomc/nexo`, vendored `team/unnamed/creative`, `com/nexomc/libs`, `com/nexomc/customblockdata`, `com/nexomc/protectionlib`) and the data files (`paper-plugin.yml`, `*.yml`, `messages/`, `items/`, `glyphs/`, `shaders/`, `custom_armor/`, `META-INF/`) |
+| `stubs/` | Compile-only signatures of optional plugin APIs. Never packaged (see below) |
+| `build.gradle.kts`, `settings.gradle.kts`, `gradle.properties` | Build |
 
-## Building
+## Build
 
-Gradle (`build.gradle.kts`, paperweight, Paper 26.3). All of Nexo's own code compiles, including the integrations (WorldEdit/FAWE, MythicMobs, MMOItems, BlockLocker, Axiom) and the resource pack servers (S3, Hermes, Polymath). Excluded from compilation:
-
-- bundled third-party libraries (`com/google`, `team/unnamed`, `com/nexomc/libs`, `customblockdata`, `protectionlib`);
-- the shared classes `nms/commons/EntityUtils` and `PlayerUtils`: they come from the `com.nexomc:commons` library built against NMS 1.21 and do not compile against Paper 26.3 (`EntityType` and `GameProfile` have different members). The versioned `v26_R2` takes them from the original jar;
-- the old NMS adapters `v1_21_R*` and `v26_R1` (other Minecraft versions).
-
-Integration dependencies come from Maven (FAWE core, lin-bus, BlockLocker, AWS SDK S3). Axiom has no API in the public repositories, so `stubs/` contains compile-only stubs. `tools/package.sh` keeps the original bytecode for `compatibilities/` classes (recompiled ones fail bytecode checks when the partner plugin is absent) and uses recompiled classes for `pack/server/*`.
+Requirements: JDK 25 and Gradle 9.x. The Maven repositories listed in `build.gradle.kts` must be reachable.
 
 ```sh
-gradle --offline compileJava
-tools/package.sh      # build/libs/nexo-1.26-custom.jar = original jar + recompiled classes
+gradle jar
 ```
 
-Windows (PowerShell), the same steps:
+Output: `build/libs/nexo-1.26-restored.jar`. The sources compile without any exclusion file.
 
-```powershell
-gradle --offline compileJava
-tools\package.ps1
-```
+Clean build of this version (Windows, Gradle 9.9.1, JDK 25): `BUILD SUCCESSFUL`, 0 compile errors, 40 compiler warnings. The jar has 2,350 class files and 2,833 entries (404 of them are directory entries).
 
-The original jar is required as `libs/nexo-1.26-patched.jar` and is kept outside the repository (`../originals/Nexo/`).
+## Replacements compared with the original jar
 
-## Status
+- **Original jar removed from the build.** Earlier builds copied the original jar and recompiled classes into it. Now `gradle jar` packages the compiled classes, the runtime dependencies and the resources of `src/`. The `tools/` scripts that repacked the original jar (`package.sh`, `package.ps1`, `testserver.*`, `fixnames.py`, `Check.java`, `Verify.java`) are removed.
+- **Data files.** All non-Java files in `src/` are byte-identical to the files of the original jar (75 files). They are included as data.
+- **Maven instead of bundled copies.**
+  - Bundled into the jar: `gson` 2.13.2 (replaces the bundled `com/google` sources), `adventure-platform-bukkit` 4.4.1, `EvalEx` 2.7, `error_prone_annotations` 2.36.0.
+  - Compile-only (provided by the server or by the partner plugin at runtime): MMOItems-API 6.10.1-SNAPSHOT, MythicLib-dist 1.7.1-SNAPSHOT, Mythic-Dist 5.14.0 (MythicMobs API), ModelEngine R4.0.9, GriefPrevention 16.18.4, Residence 6.0.2.3, LandsAPI 7.25.4, PlotSquared 7.6.0, Towny 0.100.2.11, Guice 7.0.0, PlaceholderAPI 2.11.6, BlockLocker 1.13, FastAsyncWorldEdit 2.16.2, WorldEdit 7.3.9, WorldGuard 7.0.12, lin-bus 0.2.0, Spring 6.1.14, httpclient5 5.4.1, AWS SDK S3 2.29.0, authlib 7.0.63, Paper dev bundle 26.3.build.254-stable.
+  - Kotlin stdlib 2.2.20 is compile-only. The server provides it at runtime, as the original jar relies on.
+- **Stubs are not packaged.** `stubs/` holds signatures for APIs that are not on the build classpath: Axiom (`com/moulberry/axiom`), BentoBox (`world/bentobox`), CrashClaim (`net/crashcraft`), Factions (`com/massivecraft/factions`), HuskClaims and HuskTowns (`net/william278`), mclo.gs (`gs/mclo/java`), NoBuildPlus (`p1xel/nobuildplus`), Vacan (`ai/idealistic/vacan`), Vulcan (`me/frep/vulcan`), TAB (`me/neznamy/tab`), Spartan (`me/vagdedes/spartan`), and the `kotlin/time/Duration` stub. The build drops every class compiled from `stubs/` from the jar. In the clean build the jar contains 0 stub class files and no `kotlin/time/Duration*` class. Some empty directory entries of these packages remain.
+- **Kotlin `Duration` call sites.** The stub cannot spell Kotlin's hyphenated inline-class names (for example `getZERO-UwyO8pc`). `build.gradle.kts` rewrites the underscore names in the compiled classes that reference `kotlin/time/Duration` to the hyphenated names. The rewrite keeps the byte length.
+- **ProtectionLib rewritten.** `com.nexomc.protectionlib` resolves each protection plugin class by name inside a `try`. A missing plugin is skipped, so the library loads without any of the optional plugins.
+- **Optional integrations guarded.**
+  - `NexoPlugin.onLoad` looks up the WorldGuard flag classes with `Class.forName` before it registers flags.
+  - `WrappedWorldEdit` moved its WorldEdit-only code into `WorldEditParserRegistrar`, so `WrappedWorldEdit` loads without WorldEdit.
+  - The other classes of `compatibilities/` were rewritten to resolve partner plugins by name. They were not re-tested one by one.
+- **NMS adapters.** `v1_21_R4`, `v1_21_R5`, `v1_21_R8`, `v1_21_R10`, `v1_21_R11` and `v26_R1` are excluded from compilation (`build.gradle.kts`). Only `v26_R2` and the shared `commons` code are compiled. `commons/EntityUtils.nextEntityId` goes through `CraftWorld.getHandle()`.
+- **Vendored sources.** Unnamed Creative (`team/`) is compiled from its sources in `src/team`. Gson is taken from Maven, so `com/google` is not compiled from source.
+- **Kotlin lambda singletons** were rewritten as Java classes in the earlier repair pass. This was not re-checked in the clean build.
+- **Resource pack token.** `token.secret` is not included (see Behaviour changes).
 
-- Compiles; ran on Paper 26.3. Logs match the original jar, the resource pack builds, and `nexo reload all`, `nexo list` and `nexo recipes reload` run without exceptions; the plugin unloads cleanly.
-- The recompiled `HermesServer` uploads the pack to Hermes and receives a URL (hash and URL stay the same on `nexo reload`; hashes were not compared with the original because they differ between runs).
-- Not verified: S3 and Polymath servers, in-game behaviour (commands, mechanics, blocks, furniture), and the WorldEdit, Axiom and BlockLocker integrations (compile only).
+## Behaviour changes
 
-## Architecture
+- `BannerBuilder.baseColor(DyeColor)` changes the item material to `<COLOR>_BANNER` (for example `RED_BANNER`). If that material does not exist, the item is returned unchanged. The original set the color on the banner metadata.
+- `CustomBlockData.getBlockFromKey` keeps a bug of the original. The key is split on `[xyz]`, which gives an empty first token; `Integer.parseInt("")` throws and the method returns no block. As a result `getBlocksWithCustomData` returns an empty collection. The bug is kept as it is in the original.
+- The vendored Unnamed Creative `MetadataSerializer` prints its "Unknown metadata part name" warning to `System.out`. The original printed it to `System.err`. On the server the line appears as `[STDOUT]`, and Paper logs a "System.out/err usage" notice for the author.
+- `token.secret` is not included. `PackDownloader` reads that token from a file or from the jar resource. The original jar contained a 232-byte file under that name. It is a credential and is not published. Without it the log shows `Missing token-file, please contact the developer!`.
+- Resource pack generation on reload uploaded the pack to `hermes.nexomc.com`, and the test reload received a URL from it. The behaviour without a token was not compared with the original.
 
-### Entry points
+## Tested
 
-`paper-plugin.yml`: `main: com.nexomc.nexo.NexoPlugin`, `loader: PaperPluginLoader` (library loading), `bootstrapper: NexoBootstrap` (early initialization). `NexoPlugin.onEnable` starts the managers (items, blocks, furniture, resource pack, recipes) and selects the NMS handler through `nms/NMSHandlers`.
+- Clean copy build: `gradle jar` `BUILD SUCCESSFUL`, 0 compile errors. The jar was started on a Paper 26.3 test server with the other restored plugins in `plugins/` (CMI, CMILib, LiteBans, LPX, MythicMobs, ModelEngine). Startup: `Done (19.4s)` and no exception in the log. Nexo detects MythicMobs and ModelEngine and enables their hooks.
+- `nexo reload`: reloads dialogs, configs, items and recipes, and regenerates the resource pack. `nexo`: prints the command list. No exception after either command.
 
-### Packages (`com.nexomc.nexo`)
+## Not tested
 
-| Package | Files | Role |
-|---|---|---|
-| `nms` | 252 | Adapters per Minecraft version (`v1_21_R4 … v1_21_R11`, `v26_R1`, `v26_R2`); shared interfaces `NMSHandler`, `IPacketHandler`, `IBlockUtils`, `ICustomEntityHandler`; `commons` for shared code |
-| `mechanics` | 172 | Item mechanics. `MechanicFactory` reads config and creates a `Mechanic`; `MechanicsManager` registers it. Subpackages: `custom_block`, `furniture`, `breakable`, `farming`, `light`, `limitedplacing`, `repair`, `storage`, `trident`, `misc` |
-| `utils` | 89 | Utilities |
-| `pack` | 47 | Resource pack generation and distribution: `PackGenerator`, `ModelGenerator`, `AtlasGenerator`, `Overlays`, `PackValidator`, `NexoPackSquash`, `PackObfuscator`; servers in `pack/server`; `PackDownloader` |
-| `api` | 37 | Public API: `NexoItems`, `NexoBlocks`, `NexoFurniture`, `NexoPack`, events in `api/events` |
-| `recipes`, `items`, `glyphs`, `fonts`, `dialog`, `commands`, `configs`, `converter` | | Recipes, item builder, glyphs and fonts, dialogs, commands, config loading, ItemsAdder and Oraxen converters |
-| `compatibilities` | 26 | Optional integrations (WorldEdit, MythicMobs and others) |
+- Gameplay: placing and breaking blocks, furniture, mechanics, recipes and items in a client.
+- The resource pack in a client, the S3 and Polymath pack servers, self-hosting.
+- Real integrations: WorldEdit/FAWE, WorldGuard, GriefPrevention, Residence, Towny, PlotSquared, Lands, MMOItems, MythicCrucible, BlockLocker, Axiom, HuskClaims, HuskTowns, BentoBox, Factions, Vacan, Vulcan, Spartan, TAB, NoBuildPlus. They compile against Maven artifacts or stubs; their runtime behaviour is unknown.
+- Servers other than Paper 26.3.
 
-### Data flow
+## Source notes
 
-Configs (`items/`, `glyphs/`, `languages.yml`) → mechanic factories and item builders → registration in the managers → `PackGenerator` builds the resource pack → served to clients (`PackListener`, `pack/server`).
-
-### Source notes
-
-- Files named like `Class$method$lambda$0$$inlined$sortedBy$1.java` are Kotlin inline function classes. Do not delete them: bytecode references them.
-- Kotlin traces are visible: `Companion`, `$default`, `Intrinsics` checks.
-- Local names and comments of the original are not preserved. Readability work changed names only: 12,873 `varN` locals and 6,518 Kotlin inline names (`x$iv`, `$this$map$iv`) were renamed, `labelNN` labels were replaced, about 480 redundant casts were removed, and the bytecode of 871 classes was identical before and after (`javap -v` without constant pool). Javadoc was added to the public API (`NexoItems`, `NexoBlocks`, `NexoFurniture`, `NexoPack`).
-
-## Build inputs
-
-- `libs/nexo-1.26-patched.jar` is the base jar that `tools/package.sh` copies from. It is the original 1.26 release jar (the same file as `nexo-original.jar`), which is not in the repository.
-- `libs/MMOItems-API-6.10.1-SNAPSHOT.jar` and `libs/MythicLib-dist-1.7.1-SNAPSHOT.jar` are the integration APIs; they are published on the phoenixdevt Maven repository and are not in git.
-- The MythicMobs integration compiles against `../MythicMobs-Restored/dist/MythicMobs-5.14.0-rebuilt.jar` (copy the built jar there).
-- `tools/package.sh` uses the JDK `jar` tool instead of `zip` and `unzip`.
-- Tested on Paper 26.3 with CMI, CMILib, MythicMobs, ModelEngine, LiteBans and LPX: Nexo enables, detects MythicMobs and ModelEngine, and `nexo reload` succeeds. Pack generation and in-game behaviour are not verified.
+- Names such as `Class$method$lambda$0$$inlined$sortedBy$1.java` are Kotlin inline-function classes. Do not delete them: the bytecode refers to them.
+- Local names of the original are not preserved. Names were recovered from the decompiled code.

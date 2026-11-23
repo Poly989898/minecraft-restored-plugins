@@ -62,7 +62,7 @@ public final class SkullBuilder extends BaseItemBuilder<SkullBuilder> {
       } else {
          SkullMeta skullMeta = (SkullMeta)this.getMeta();
          GameProfile profile = new GameProfile(profileId, "");
-         profile.getProperties().put("textures", new Property("textures", texture));
+         profile.properties().put("textures", new Property("textures", texture));
 
          try {
             PROFILE_FIELD.set(skullMeta, profile);

@@ -1,5 +1,7 @@
 package com.nexomc.nexo.items;
 
+import com.nexomc.nexo.items.customarmor.CustomArmorTextures;
+
 import com.nexomc.nexo.decomp.ResultShim;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -559,7 +561,7 @@ public final class NexoMeta {
                   if (matchResult != null) {
                      String str = matchResult.getValue();
                      if (str != null) {
-                        customArmorTextures3 = StringUtilsKt.ifNotEmpty(str, NexoMeta$ensureCustomArmorTextures$2.INSTANCE);
+                        customArmorTextures3 = StringUtilsKt.ifNotEmpty(str, s -> new CustomArmorTextures(s));
                         break block;
                      }
                   }

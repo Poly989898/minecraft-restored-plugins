@@ -31,7 +31,7 @@ public final class EquipmentSerializer implements JsonResourceSerializer<Equipme
       for(Map.Entry<EquipmentLayerType, List<EquipmentLayer>> entry : equipment.layers().entrySet()) {
          writer.name(((EquipmentLayerType)entry.getKey()).name().toLowerCase(Locale.ENGLISH)).beginArray();
 
-         for(EquipmentLayer layer : (List)entry.getValue()) {
+         for(EquipmentLayer layer : (List<EquipmentLayer>)entry.getValue()) {
             writer.beginObject().name("texture").value(KeySerializer.toString(layer.texture()));
             boolean usePlayerTexture = layer.usePlayerTexture();
             if (usePlayerTexture) {

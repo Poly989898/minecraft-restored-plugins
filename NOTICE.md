@@ -12,13 +12,22 @@ Every plugin in this repository is an unofficial, modified version of the origin
   - MineSkin skin generation is reimplemented with plain HTTP (MineSkinGeneratorService), because the MineSkin Java client is not published to a public repository. The protocol follows the public client. It is not tested with a real API key.
 ## Nexo 1.26
 
-- Original: Nexo by boy0000.
-- Source: decompiled from the public 1.26 release jar (SHA-256 identical to the GitHub release), repaired to compile.
+- Original: Nexo by boy0000 (release jar 1.26).
+- Source: decompiled from the 1.26 release jar (Vineflower, CFR), repaired to compile. The build uses Maven dependencies and the sources only; the original jar is not used.
+- Data files in `src/` (`*.yml`, `messages/`, `items/`, `glyphs/`, `shaders/`, `custom_armor/`, `META-INF/`) are byte-identical to the files of the original jar.
 - Changes:
-  - Removed build-flag checks (`VersionUtil.isCompiled/isCI/isDevBuild/isLeaked`) and their warnings in `NexoPlugin.onEnable`, buyer watermarks (`Print`, `L`), the marketplace tag in `NexoMetrics`, and a hidden reflective switch that blocked sending the resource pack.
-  - Removed Kotlin `Intrinsics.checkNotNull*` calls (5,778 lines in 504 files). Behaviour change: a `null` passed from Java now fails later or not at all. `@NotNull`/`@Nullable` annotations are kept.
-  - The resource pack token is still read from `token.secret`; no token is included.
-
+  - Libraries: Gson, Adventure (`adventure-platform-bukkit`), EvalEx and error_prone annotations are Maven dependencies. The bundled `com/google` sources are not compiled. Other third-party APIs are compile-only.
+  - Compile-only stubs of APIs that are not on the build classpath (Axiom, BentoBox, CrashClaim, Factions, HuskClaims, HuskTowns, mclo.gs, NoBuildPlus, Vacan, Vulcan, TAB, Spartan, and `kotlin/time/Duration`) are never packaged. The jar contains no class from them.
+  - `ProtectionLib` resolves protection plugins by class name inside a `try`, so missing plugins are skipped. WorldGuard flags are registered only when the WorldGuard classes exist. WorldEdit-only code is in its own class, so the plugin loads without WorldEdit.
+  - Other optional integrations in `compatibilities/` resolve their partner plugins by name. Not re-tested one by one.
+  - NMS adapters for Minecraft 1.21.x and `v26_R1` are not compiled. Only `v26_R2` (Paper 26.3) is included.
+  - Kotlin inline-class member names (`getZERO-UwyO8pc` and similar) are written as hyphenated JVM names in the compiled classes.
+  - Behaviour change: `BannerBuilder.baseColor` changes the item material to `<COLOR>_BANNER` instead of setting the color on the banner metadata.
+  - The bug in `CustomBlockData.getBlockFromKey` is kept: the leading empty token makes `Integer.parseInt` throw, so `getBlocksWithCustomData` returns nothing, as in the original.
+  - Behaviour change: the "Unknown metadata part name" warning of the vendored Unnamed Creative code is printed to `System.out`. The original used `System.err`.
+  - `token.secret`, a 232-byte credential resource of the original jar, is not included. Without it the log shows `Missing token-file`.
+- Tested: clean build with `gradle jar`; startup on Paper 26.3 next to the other restored plugins (CMI, CMILib, LiteBans, LPX, MythicMobs, ModelEngine); `nexo reload` and `nexo` without exceptions.
+- Not tested: gameplay, the resource pack in a client, the S3 and Polymath pack servers, and the real partner plugins (WorldEdit, WorldGuard, GriefPrevention, Towny and the others listed in the README).
 ## MythicMobs 5.14.0
 
 - Original: MythicMobs.

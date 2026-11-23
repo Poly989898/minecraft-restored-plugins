@@ -39,7 +39,7 @@ public final class Pdc implements NbtWrapper {
       if (meta == null) {
          return itemStack;
       } else {
-         meta.getPersistentDataContainer().set(new NamespacedKey(PLUGIN, key), PersistentDataType.BYTE, value ? 1 : 0);
+         meta.getPersistentDataContainer().set(new NamespacedKey(PLUGIN, key), PersistentDataType.BYTE, (byte) (value ? 1 : 0));
          itemStack.setItemMeta(meta);
          return itemStack;
       }

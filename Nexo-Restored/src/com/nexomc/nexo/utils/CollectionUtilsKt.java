@@ -660,7 +660,12 @@ public final class CollectionUtilsKt {
 
       for(Object element : iterable) {
          Object key = ((Function1)keySelector).invoke(element);
-         ((ObjectArrayList)map.computeIfAbsent(key, CollectionUtilsKt$groupByFast$1.INSTANCE)).add(element);
+ObjectArrayList list = (ObjectArrayList)map.get(key);
+         if (list == null) {
+            list = new ObjectArrayList();
+            map.put(key, list);
+         }
+         list.add(element);
       }
 
       return map;
@@ -672,7 +677,12 @@ public final class CollectionUtilsKt {
 
       for(Object element : iterable) {
          Object key = ((Function1)keySelector).invoke(element);
-         ((ObjectOpenHashSet)map.computeIfAbsent(key, CollectionUtilsKt$groupByFastSet$1.INSTANCE)).add(element);
+ObjectOpenHashSet set = (ObjectOpenHashSet)map.get(key);
+         if (set == null) {
+            set = new ObjectOpenHashSet();
+            map.put(key, set);
+         }
+         set.add(element);
       }
 
       return map;

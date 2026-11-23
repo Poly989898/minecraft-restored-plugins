@@ -2,7 +2,6 @@ package com.nexomc.customblockdata;
 
 import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
-import kotlin.text.StringsKt;
 import org.jetbrains.annotations.NotNull;
 
 @Metadata(
@@ -18,6 +17,15 @@ public final class HelpersKt {
       Intrinsics.checkNotNullParameter($this$substringBetween, "<this>");
       Intrinsics.checkNotNullParameter(after, "after");
       Intrinsics.checkNotNullParameter(before, "before");
-      return StringsKt.substringBefore$default(StringsKt.substringAfter$default($this$substringBetween, after, (String)null, 2, (Object)null), before, (String)null, 2, (Object)null);
+   String s = $this$substringBetween;
+   int i = s.indexOf(after);
+   if (i >= 0) {
+   s = s.substring(i + after.length());
+   }
+   int j = s.indexOf(before);
+   if (j >= 0) {
+   s = s.substring(0, j);
+   }
+   return s;
    }
 }

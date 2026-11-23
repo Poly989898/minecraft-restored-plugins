@@ -1,5 +1,15 @@
 package com.nexomc.nexo.mechanics.misc.custom.fields;
 
+import com.nexomc.nexo.mechanics.misc.custom.listeners.BreakListener;
+import com.nexomc.nexo.mechanics.misc.custom.listeners.ClickListener;
+import com.nexomc.nexo.mechanics.misc.custom.listeners.InvClickListener;
+import com.nexomc.nexo.mechanics.misc.custom.listeners.DropListener;
+import com.nexomc.nexo.mechanics.misc.custom.listeners.DropAllListener;
+import com.nexomc.nexo.mechanics.misc.custom.listeners.PickupListener;
+import com.nexomc.nexo.mechanics.misc.custom.listeners.EquipListener;
+import com.nexomc.nexo.mechanics.misc.custom.listeners.UnequipListener;
+import com.nexomc.nexo.mechanics.misc.custom.listeners.DeathListener;
+
 import com.nexomc.nexo.mechanics.misc.custom.listeners.CustomListener;
 import com.nexomc.nexo.utils.actions.ClickAction;
 import kotlin.Metadata;
@@ -16,15 +26,15 @@ import org.jetbrains.annotations.Nullable;
    d2 = {"Lcom/nexomc/nexo/mechanics/misc/custom/fields/CustomEventType;", "", "constructor", "Lcom/nexomc/nexo/mechanics/misc/custom/fields/CustomEventType$CustomListenerConstructor;", "<init>", "(Ljava/lang/String;ILcom/nexomc/nexo/mechanics/misc/custom/fields/CustomEventType$CustomListenerConstructor;)V", "getConstructor", "()Lcom/nexomc/nexo/mechanics/misc/custom/fields/CustomEventType$CustomListenerConstructor;", "BREAK", "CLICK", "INV_CLICK", "DROP", "DROP_ALL", "PICKUP", "EQUIP", "UNEQUIP", "DEATH", "CustomListenerConstructor", "com.nexomc:core"}
 )
 public enum CustomEventType {
-   BREAK(CustomEventType$1.INSTANCE),
-   CLICK(CustomEventType$2.INSTANCE),
-   INV_CLICK(CustomEventType$3.INSTANCE),
-   DROP(CustomEventType$4.INSTANCE),
-   DROP_ALL(CustomEventType$5.INSTANCE),
-   PICKUP(CustomEventType$6.INSTANCE),
-   EQUIP(CustomEventType$7.INSTANCE),
-   UNEQUIP(CustomEventType$8.INSTANCE),
-   DEATH(CustomEventType$9.INSTANCE);
+   BREAK((itemID, cooldown, event, clickAction) -> new BreakListener(itemID, cooldown, event, clickAction, null)),
+   CLICK((itemID, cooldown, event, clickAction) -> new ClickListener(itemID, cooldown, event, clickAction, null)),
+   INV_CLICK((itemID, cooldown, event, clickAction) -> new InvClickListener(itemID, cooldown, event, clickAction, null)),
+   DROP((itemID, cooldown, event, clickAction) -> new DropListener(itemID, cooldown, event, clickAction, null)),
+   DROP_ALL((itemID, cooldown, event, clickAction) -> new DropAllListener(itemID, cooldown, event, clickAction, null)),
+   PICKUP((itemID, cooldown, event, clickAction) -> new PickupListener(itemID, cooldown, event, clickAction, null)),
+   EQUIP((itemID, cooldown, event, clickAction) -> new EquipListener(itemID, cooldown, event, clickAction, null)),
+   UNEQUIP((itemID, cooldown, event, clickAction) -> new UnequipListener(itemID, cooldown, event, clickAction, null)),
+   DEATH((itemID, cooldown, event, clickAction) -> new DeathListener(itemID, cooldown, event, clickAction, null));
 
    @NotNull
    private final CustomListenerConstructor constructor;

@@ -1,5 +1,11 @@
 package com.nexomc.nexo;
 
+import com.nexomc.nexo.commands.NexoCommand;
+import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.plugin.lifecycle.event.handler.LifecycleEventHandler;
+import io.papermc.paper.plugin.lifecycle.event.registrar.ReloadableRegistrarEvent;
+import java.util.List;
+
 import com.nexomc.nexo.decomp.ResultShim;
 import com.nexomc.nexo.configs.Settings;
 import com.nexomc.nexo.dialog.NexoDialogs;
@@ -77,7 +83,10 @@ public final class NexoBootstrap implements PluginBootstrap {
       try {
          NexoBootstrap nexoBootstrap3 = nexoBootstrap;
          int it = 0;
-         context.getLifecycleManager().registerEventHandler((LifecycleEventType)LifecycleEvents.COMMANDS, NexoBootstrap$bootstrap$3$1.INSTANCE);
+         context.getLifecycleManager().registerEventHandler((LifecycleEventType)LifecycleEvents.COMMANDS, (LifecycleEventHandler<ReloadableRegistrarEvent<Commands>>)(commands -> {
+               Commands registrar = (Commands)commands.registrar();
+registrar.register(NexoCommand.INSTANCE.createCommand("nexo"), "Nexo command", List.of("nx", "n"));
+            }));
          Object it_2 = ResultShim.ok(Unit.INSTANCE);
       } catch (Throwable ex) {
          obj = ResultShim.ok(ResultKt.createFailure(ex));

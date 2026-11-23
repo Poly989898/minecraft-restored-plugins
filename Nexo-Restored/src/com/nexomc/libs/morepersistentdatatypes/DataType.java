@@ -95,7 +95,7 @@ public interface DataType {
    PersistentDataType<byte[], Vector[]> VECTOR_ARRAY = new ConfigurationSerializableArrayDataType(Vector[].class);
    PersistentDataType<Byte, Boolean> BOOLEAN = new GenericDataType<Byte, Boolean>(Byte.class, Boolean.class, (aByte) -> aByte == 1, (aBoolean) -> (byte)(aBoolean ? 1 : 0));
    PersistentDataType<byte[], boolean[]> BOOLEAN_ARRAY = new BooleanArrayDataType();
-   PersistentDataType<Integer, Character> CHARACTER = new GenericDataType<Integer, Character>(Integer.class, Character.class, (integer) -> (char)integer, (character) -> character);
+   PersistentDataType<Integer, Character> CHARACTER = new GenericDataType<Integer, Character>(Integer.class, Character.class,(integer) -> (char)(int)integer, (character) -> (int)character);
    PersistentDataType<int[], char[]> CHARACTER_ARRAY = new CharArrayDataType();
    PersistentDataType<byte[], double[]> DOUBLE_ARRAY = new DoubleArrayDataType();
    PersistentDataType<byte[], float[]> FLOAT_ARRAY = new FloatArrayDataType();

@@ -19,7 +19,7 @@ public class PlaceholderManager {
    public <T> @NotNull String replace(@NotNull T t, @NotNull String string) {
       for(PlaceholderProvider<?> provider : this.providers) {
          if (provider.getType().isAssignableFrom(t.getClass())) {
-            string = provider.replace(t, string);
+string = ((PlaceholderProvider<T>)provider).replace(t, string);
          }
       }
 

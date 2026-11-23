@@ -75,7 +75,7 @@ public class SpigotImplementation implements PlatformScheduler {
       CompletableFuture<Void> future = new CompletableFuture();
       this.scheduler.runTask(this.plugin, (task) -> {
          consumer.accept(this.wrapTask(task));
-         future.complete((Object)null);
+         future.complete(null);
       });
       return future;
    }
@@ -84,7 +84,7 @@ public class SpigotImplementation implements PlatformScheduler {
       CompletableFuture<Void> future = new CompletableFuture();
       this.scheduler.runTaskAsynchronously(this.plugin, (task) -> {
          consumer.accept(this.wrapTask(task));
-         future.complete((Object)null);
+         future.complete(null);
       });
       return future;
    }
@@ -97,7 +97,7 @@ public class SpigotImplementation implements PlatformScheduler {
       CompletableFuture<Void> future = new CompletableFuture();
       this.scheduler.runTaskLater(this.plugin, (task) -> {
          consumer.accept(this.wrapTask(task));
-         future.complete((Object)null);
+         future.complete(null);
       }, delay);
       return future;
    }
@@ -118,7 +118,7 @@ public class SpigotImplementation implements PlatformScheduler {
       CompletableFuture<Void> future = new CompletableFuture();
       this.scheduler.runTaskLaterAsynchronously(this.plugin, (task) -> {
          consumer.accept(this.wrapTask(task));
-         future.complete((Object)null);
+         future.complete(null);
       }, delay);
       return future;
    }
@@ -246,23 +246,23 @@ public class SpigotImplementation implements PlatformScheduler {
    public @NotNull CompletableFuture<Void> runAtEntityLater(Entity entity, @NotNull Consumer<WrappedTask> consumer, @Nullable Runnable fallback, long delay) {
       CompletableFuture<Void> future = new CompletableFuture();
       if (!this.isValid(entity)) {
-         future.complete((Object)null);
+         future.complete(null);
          if (fallback != null) {
             fallback.run();
          }
 
          return future;
       } else {
-         this.runLater((Consumer)((task) -> {
+         this.runLater((Consumer<WrappedTask>)((WrappedTask task) -> {
             if (!this.isValid(entity)) {
                if (fallback != null) {
                   fallback.run();
                }
 
-               future.complete((Object)null);
+               future.complete(null);
             } else {
                consumer.accept(task);
-               future.complete((Object)null);
+               future.complete(null);
             }
          }), delay);
          return future;
@@ -318,7 +318,7 @@ public class SpigotImplementation implements PlatformScheduler {
          }
 
       } else {
-         this.runTimer((Consumer)((task) -> {
+         this.runTimer((Consumer<WrappedTask>)((WrappedTask task) -> {
             if (!this.isValid(entity)) {
                if (fallback != null) {
                   fallback.run();

@@ -39,8 +39,8 @@ final class GuiMetaCodec implements MetadataPartCodec<GuiMeta> {
                int height = GsonUtil.getInt(scalingNode, "height", 0);
                return GuiMeta.of(GuiScaling.tile(width, height));
             case "nine_slice":
-               int width = GsonUtil.getInt(scalingNode, "width", 0);
-               int height = GsonUtil.getInt(scalingNode, "height", 0);
+               int nineWidth = GsonUtil.getInt(scalingNode, "width", 0);
+               int nineHeight = GsonUtil.getInt(scalingNode, "height", 0);
                GuiBorder border;
                if (GsonUtil.isInt(scalingNode, "border")) {
                   border = GuiBorder.border(GsonUtil.getInt(scalingNode, "border", 0));
@@ -58,7 +58,7 @@ final class GuiMetaCodec implements MetadataPartCodec<GuiMeta> {
                }
 
                boolean stretchInner = GsonUtil.getBoolean(scalingNode, "stretch_inner", false);
-               return GuiMeta.of(GuiScaling.nineSlice(width, height, border, stretchInner));
+               return GuiMeta.of(GuiScaling.nineSlice(nineWidth, nineHeight, border, stretchInner));
             default:
                throw new IllegalArgumentException("Unknown gui scaling type: " + typeString);
          }

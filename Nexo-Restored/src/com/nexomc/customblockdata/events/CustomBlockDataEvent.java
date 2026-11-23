@@ -94,7 +94,7 @@ public class CustomBlockDataEvent extends Event implements Cancellable {
    @NotNull
    public final Reason getReason() {
       for(Reason reason : CustomBlockDataEvent.Reason.getEntries()) {
-         if (reason != CustomBlockDataEvent.Reason.UNKNOWN && reason.getApplicableEvents().stream().anyMatch(CustomBlockDataEvent::_get_reason_$lambda$1)) {
+         if (reason != CustomBlockDataEvent.Reason.UNKNOWN &&reason.getApplicableEvents().stream().anyMatch(clazz -> clazz == this.bukkitEvent.getClass())) {
             return reason;
          }
       }
@@ -107,13 +107,7 @@ public class CustomBlockDataEvent extends Event implements Cancellable {
       return handlerList;
    }
 
-   private static final boolean _get_reason_$lambda$0(CustomBlockDataEvent this$0, Class clazz) {
-      return Intrinsics.areEqual(clazz, this$0.bukkitEvent.getClass());
-   }
 
-   private static final boolean _get_reason_$lambda$1(Function1 $tmp0, Object p0) {
-      return (Boolean)$tmp0.invoke(p0);
-   }
 
    @Metadata(
       mv = {2, 2, 0},
@@ -133,7 +127,7 @@ public class CustomBlockDataEvent extends Event implements Cancellable {
       STRUCTURE_GROW(StructureGrowEvent.class),
       FERTILIZE(BlockFertilizeEvent.class),
       /** @deprecated */
-      @Deprecated
+      @java.lang.Deprecated
       LEAVES_DECAY(LeavesDecayEvent.class),
       UNKNOWN((Class<? extends Event>)null);
 

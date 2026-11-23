@@ -77,7 +77,7 @@ public class LegacySpigotImplementation implements PlatformScheduler {
       WrappedTask[] taskReference = new WrappedTask[1];
       taskReference[0] = this.wrapTask(this.scheduler.runTask(this.plugin, () -> {
          consumer.accept(taskReference[0]);
-         future.complete((Object)null);
+         future.complete(null);
       }));
       return future;
    }
@@ -87,7 +87,7 @@ public class LegacySpigotImplementation implements PlatformScheduler {
       WrappedTask[] taskReference = new WrappedTask[1];
       taskReference[0] = this.wrapTask(this.scheduler.runTaskAsynchronously(this.plugin, () -> {
          consumer.accept(taskReference[0]);
-         future.complete((Object)null);
+         future.complete(null);
       }));
       return future;
    }
@@ -101,7 +101,7 @@ public class LegacySpigotImplementation implements PlatformScheduler {
       WrappedTask[] taskReference = new WrappedTask[1];
       taskReference[0] = this.wrapTask(this.scheduler.runTaskLater(this.plugin, () -> {
          consumer.accept(taskReference[0]);
-         future.complete((Object)null);
+         future.complete(null);
       }, delay));
       return future;
    }
@@ -123,7 +123,7 @@ public class LegacySpigotImplementation implements PlatformScheduler {
       WrappedTask[] taskReference = new WrappedTask[1];
       taskReference[0] = this.wrapTask(this.scheduler.runTaskLaterAsynchronously(this.plugin, () -> {
          consumer.accept(taskReference[0]);
-         future.complete((Object)null);
+         future.complete(null);
       }, delay));
       return future;
    }
@@ -183,7 +183,7 @@ public class LegacySpigotImplementation implements PlatformScheduler {
       WrappedTask[] taskReference = new WrappedTask[1];
       taskReference[0] = this.wrapTask(this.scheduler.runTaskLater(this.plugin, () -> {
          consumer.accept(taskReference[0]);
-         future.complete((Object)null);
+         future.complete(null);
       }, delay));
       return future;
    }
@@ -263,13 +263,13 @@ public class LegacySpigotImplementation implements PlatformScheduler {
       CompletableFuture<Void> future = new CompletableFuture();
       if (!this.isValid(entity) && fallback != null) {
          fallback.run();
-         future.complete((Object)null);
+         future.complete(null);
       }
 
       WrappedTask[] taskReference = new WrappedTask[1];
       taskReference[0] = this.wrapTask(this.scheduler.runTaskLater(this.plugin, () -> {
          consumer.accept(taskReference[0]);
-         future.complete((Object)null);
+         future.complete(null);
       }, delay));
       return future;
    }

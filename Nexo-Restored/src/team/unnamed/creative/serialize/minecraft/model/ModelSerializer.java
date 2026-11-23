@@ -467,7 +467,7 @@ public final class ModelSerializer implements JsonResourceSerializer<Model>, Jso
             if (!layers.isEmpty()) {
                particle = (ModelTexture)layers.getFirst();
             } else {
-               particle = (ModelTexture)variables.values().stream().findFirst().orElse((Object)null);
+               particle = (ModelTexture)variables.values().stream().findFirst().orElse(null);
             }
          }
 

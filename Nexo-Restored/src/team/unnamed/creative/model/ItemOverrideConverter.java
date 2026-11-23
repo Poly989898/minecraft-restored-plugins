@@ -46,10 +46,10 @@ public final class ItemOverrideConverter {
                      SelectItemModel.Builder builder = ItemModel.select();
                      builder.property(ItemStringProperty.customModelData()).fallback(selectModel);
 
-                     for(ItemOverride override : model.overrides()) {
-                        Integer cmd = getCustomModelData(override);
+                     for(ItemOverride itemOverride : model.overrides()) {
+                        Integer cmd = getCustomModelData(itemOverride);
                         if (cmd != null) {
-                           builder.addCase(ItemModel.reference(override.model()), new JsonPrimitive(cmd));
+                           builder.addCase(ItemModel.reference(itemOverride.model()), new JsonPrimitive(cmd));
                         }
                      }
 
@@ -67,17 +67,17 @@ public final class ItemOverrideConverter {
                      trueBuilder.addEntry(RangeDispatchItemModel.Entry.entry(0.0F, conditionItemModel.onTrue()));
                      falseBuilder.addEntry(RangeDispatchItemModel.Entry.entry(0.0F, conditionItemModel.onFalse()));
 
-                     for(ItemOverride override : trueOverrides) {
-                        Integer cmd = getCustomModelData(override);
+                     for(ItemOverride ov : trueOverrides) {
+                        Integer cmd = getCustomModelData(ov);
                         if (cmd != null) {
-                           trueBuilder.addEntry((float)cmd, ItemModel.reference(override.model()));
+                           trueBuilder.addEntry((float)cmd, ItemModel.reference(ov.model()));
                         }
                      }
 
-                     for(ItemOverride override : falseOverrides) {
-                        Integer cmd = getCustomModelData(override);
+                     for(ItemOverride ov : falseOverrides) {
+                        Integer cmd = getCustomModelData(ov);
                         if (cmd != null) {
-                           falseBuilder.addEntry((float)cmd, ItemModel.reference(override.model()));
+                           falseBuilder.addEntry((float)cmd, ItemModel.reference(ov.model()));
                         }
                      }
 
@@ -91,10 +91,10 @@ public final class ItemOverrideConverter {
                      RangeDispatchItemModel.Builder builder = ItemModel.rangeDispatch();
                      builder.fallback(standardItem.model()).property(ItemNumericProperty.customModelData());
 
-                     for(ItemOverride override : model.overrides()) {
-                        Integer cmd = getCustomModelData(override);
+                     for(ItemOverride ov : model.overrides()) {
+                        Integer cmd = getCustomModelData(ov);
                         if (cmd != null) {
-                           builder.addEntry((float)cmd, ItemModel.reference(override.model(), referenceItemModel.tints()));
+                           builder.addEntry((float)cmd, ItemModel.reference(ov.model(), referenceItemModel.tints()));
                         }
                      }
 
@@ -108,6 +108,6 @@ public final class ItemOverrideConverter {
    }
 
    private static Integer getCustomModelData(ItemOverride override) {
-      return (Integer)override.predicate().stream().filter((p) -> p.name().equals("custom_model_data")).findFirst().map((p) -> Integer.parseInt(p.value().toString())).orElse((Object)null);
+      return (Integer)override.predicate().stream().filter((p) -> p.name().equals("custom_model_data")).findFirst().map((p) -> Integer.parseInt(p.value().toString())).orElse(null);
    }
 }

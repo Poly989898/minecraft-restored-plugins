@@ -18,7 +18,7 @@ public class ConfigurationSerializableArrayDataType<T extends ConfigurationSeria
    private final Class<T[]> types;
 
    public ConfigurationSerializableArrayDataType(Class<T[]> types) {
-      this.type = types.getComponentType();
+this.type = (Class<T>)types.getComponentType();
       this.types = types;
    }
 
@@ -82,15 +82,15 @@ public class ConfigurationSerializableArrayDataType<T extends ConfigurationSeria
       try {
          ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
 
-         ConfigurationSerializable[] var14;
+         T[] var14;
          try {
             BukkitObjectInputStream bukkitObjectInputStream = new BukkitObjectInputStream(inputStream);
 
             try {
-               T[] ts = (ConfigurationSerializable[])Array.newInstance(this.type, bukkitObjectInputStream.readInt());
+T[] ts = (T[])Array.newInstance(this.type, bukkitObjectInputStream.readInt());
 
                for(int i = 0; i < ts.length; ++i) {
-                  ts[i] = (ConfigurationSerializable)bukkitObjectInputStream.readObject();
+ts[i] = (T)bukkitObjectInputStream.readObject();
                }
 
                var14 = ts;

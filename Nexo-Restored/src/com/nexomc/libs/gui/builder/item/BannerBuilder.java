@@ -32,10 +32,16 @@ public final class BannerBuilder extends BaseItemBuilder<BannerBuilder> {
 
    @Contract("_ -> this")
    public @NotNull BannerBuilder baseColor(@NotNull DyeColor color) {
-      BannerMeta bannerMeta = (BannerMeta)this.getMeta();
-      bannerMeta.setBaseColor(color);
-      this.setMeta(bannerMeta);
-      return this;
+   // Paper 26.x removed BannerMeta#setBaseColor: the base colour is carried by the banner material.
+   Material banner = Material.matchMaterial(color.name() + "_BANNER");
+   if (banner == null) {
+   return this;
+   }
+   ItemStack stack = this.getItemStack();
+   stack.setType(banner);
+   this.setItemStack(stack);
+   this.setMeta(stack.getItemMeta());
+   return this;
    }
 
    @Contract("_, _ -> this")

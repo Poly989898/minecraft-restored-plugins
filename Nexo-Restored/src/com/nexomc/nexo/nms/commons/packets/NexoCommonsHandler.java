@@ -267,25 +267,25 @@ public abstract class NexoCommonsHandler extends ChannelDuplexHandler {
       }
 
       if (mechanicFactory != null) {
-         Function1 function1 = (Function1)NexoCommonsHandler$19.INSTANCE;
+         Function1 function1 = (Function1)(p -> ((ClientboundFurnitureBasePacket)p).getMetadataPacket());
          condition = true;
          this.getPacketTransformers().put(ClientboundFurnitureBasePacket.class, new NexoCommonsHandler$special$$inlined$registerTransformer$default$10(function1));
-         function1 = (Function1)NexoCommonsHandler$20.INSTANCE;
+         function1 = (Function1)(p -> ((ClientboundEntityHitboxPacket)p).getWrappedPacket());
          condition = true;
          this.getPacketTransformers().put(ClientboundEntityHitboxPacket.class, new NexoCommonsHandler$special$$inlined$registerTransformer$default$11(function1));
-         function1 = (Function1)NexoCommonsHandler$21.INSTANCE;
+         function1 = (Function1)(p -> ((ClientboundFurnitureTextEntityPacket)p).getWrappedPacket());
          condition = true;
          this.getPacketTransformers().put(ClientboundFurnitureTextEntityPacket.class, new NexoCommonsHandler$special$$inlined$registerTransformer$default$12(function1));
-         function1 = (Function1)NexoCommonsHandler$22.INSTANCE;
+         function1 = (Function1)(p -> ((ClientboundSendBarrierHitboxPacket)p).getWrappedPacket());
          condition = true;
          this.getPacketTransformers().put(ClientboundSendBarrierHitboxPacket.class, new NexoCommonsHandler$special$$inlined$registerTransformer$default$13(function1));
-         function1 = (Function1)NexoCommonsHandler$23.INSTANCE;
+         function1 = (Function1)(p -> ((ClientboundRemoveBarrierHitboxPacket)p).getWrappedPacket());
          condition = true;
          this.getPacketTransformers().put(ClientboundRemoveBarrierHitboxPacket.class, new NexoCommonsHandler$special$$inlined$registerTransformer$default$14(function1));
-         function1 = (Function1)NexoCommonsHandler$24.INSTANCE;
+         function1 = (Function1)(p -> ((ClientboundSendFurnitureLightsPacket)p).getWrappedPacket());
          condition = true;
          this.getPacketTransformers().put(ClientboundSendFurnitureLightsPacket.class, new NexoCommonsHandler$special$$inlined$registerTransformer$default$15(function1));
-         function1 = (Function1)NexoCommonsHandler$25.INSTANCE;
+         function1 = (Function1)(p -> ((ClientboundRemoveFurnitureLightsPacket)p).getWrappedPacket());
          condition = true;
          this.getPacketTransformers().put(ClientboundRemoveFurnitureLightsPacket.class, new NexoCommonsHandler$special$$inlined$registerTransformer$default$16(function1));
          function1 = (a0_ -> NexoCommonsHandler._init_$lambda$18(this, (ClientboundBlockUpdatePacket)a0_));

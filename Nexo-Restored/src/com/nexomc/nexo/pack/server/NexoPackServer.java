@@ -1,4 +1,11 @@
 package com.nexomc.nexo.pack.server;
+
+import com.nexomc.nexo.pack.server.SelfHostServer;
+import com.nexomc.nexo.pack.server.PolymathServer;
+import com.nexomc.nexo.pack.server.HermesServer;
+import com.nexomc.nexo.pack.server.LobFileServer;
+import com.nexomc.nexo.pack.server.S3Server;
+import com.nexomc.nexo.pack.server.EmptyServer;
 import com.nexomc.nexo.pack.server.EmptyServer;
 import com.nexomc.nexo.pack.server.NexoPackServer;
 import com.nexomc.nexo.pack.server.PackServerRegistry;
@@ -287,12 +294,12 @@ public interface NexoPackServer {
       }
 
       public final void registerDefaultPackServers() {
-         PackServerRegistry.register("SELFHOST", NexoPackServer$Companion$registerDefaultPackServers$1.INSTANCE);
-         PackServerRegistry.register("POLYMATH", NexoPackServer$Companion$registerDefaultPackServers$2.INSTANCE);
-         PackServerRegistry.register("HERMES", NexoPackServer$Companion$registerDefaultPackServers$3.INSTANCE);
-         PackServerRegistry.register("LOBFILE", NexoPackServer$Companion$registerDefaultPackServers$4.INSTANCE);
-         PackServerRegistry.register("S3", NexoPackServer$Companion$registerDefaultPackServers$5.INSTANCE);
-         PackServerRegistry.register("NONE", NexoPackServer$Companion$registerDefaultPackServers$6.INSTANCE);
+         PackServerRegistry.register("SELFHOST", () -> new SelfHostServer());
+         PackServerRegistry.register("POLYMATH", () -> new PolymathServer());
+         PackServerRegistry.register("HERMES", () -> new HermesServer());
+         PackServerRegistry.register("LOBFILE", () -> new LobFileServer());
+         PackServerRegistry.register("S3", () -> new S3Server());
+         PackServerRegistry.register("NONE", () -> new EmptyServer());
       }
 
       @JvmStatic

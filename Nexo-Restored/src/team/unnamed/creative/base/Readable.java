@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
@@ -92,7 +93,12 @@ public interface Readable {
 
    static @NotNull Readable copyInputStream(@NotNull InputStream inputStream) {
       Objects.requireNonNull(inputStream, "inputStream");
-      final byte[] bytes = (() -> inputStream).readAsByteArray();
+      final byte[] bytes;
+      try {
+         bytes = inputStream.readAllBytes();
+      } catch (IOException e) {
+         throw new UncheckedIOException(e);
+      }
       return new Readable() {
          public @NotNull InputStream open() {
             return new ByteArrayInputStream(bytes);

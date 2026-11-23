@@ -90,11 +90,8 @@ public abstract class BaseItemBuilder<B extends BaseItemBuilder<B>> {
       if (this.meta == null) {
          return (B)this;
       } else if (VersionHelper.IS_COMPONENT_LEGACY) {
-         ItemMeta var10000 = this.meta;
-         Stream var10001 = lore.stream().filter(Objects::nonNull);
-         LegacyComponentSerializer var10002 = Legacy.SERIALIZER;
-         Objects.requireNonNull(var10002);
-         var10000.setLore((List)var10001.map(var10002::serialize).collect(Collectors.toList()));
+   LegacyComponentSerializer legacySerializer = Legacy.SERIALIZER;
+   this.meta.setLore(lore.stream().filter(Objects::nonNull).map(legacySerializer::serialize).collect(Collectors.toList()));
          return (B)this;
       } else {
          List<Object> jsonLore = (List)lore.stream().filter(Objects::nonNull).map(this::serializeComponent).collect(Collectors.toList());
@@ -121,10 +118,9 @@ public abstract class BaseItemBuilder<B extends BaseItemBuilder<B>> {
             if (stringLore == null) {
                var10000 = new ArrayList();
             } else {
-               Stream var6 = stringLore.stream();
-               LegacyComponentSerializer var10001 = Legacy.SERIALIZER;
-               Objects.requireNonNull(var10001);
-               var10000 = (List)var6.map(var10001::deserialize).collect(Collectors.toList());
+   Stream<String> var6 = stringLore.stream();
+   LegacyComponentSerializer var10001 = Legacy.SERIALIZER;
+   var10000 = var6.map(var10001::deserialize).collect(Collectors.toList());
             }
 
             components = (List<Component>)var10000;

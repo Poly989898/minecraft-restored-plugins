@@ -88,7 +88,7 @@ public class MetricsConfig {
          throw new AssertionError("Content of newly created file is null");
       } else {
          this.enabled = (Boolean)this.getConfigValue("enabled", lines).map("true"::equals).orElse(true);
-         this.serverUUID = (String)this.getConfigValue("server-uuid", lines).orElse((Object)null);
+this.serverUUID = this.getConfigValue("server-uuid", lines).orElse(null);
          this.logErrors = (Boolean)this.getConfigValue("log-errors", lines).map("true"::equals).orElse(false);
          this.logSentData = (Boolean)this.getConfigValue("log-sent-data", lines).map("true"::equals).orElse(false);
          this.logResponseStatusText = (Boolean)this.getConfigValue("log-response-status-text", lines).map("true"::equals).orElse(false);

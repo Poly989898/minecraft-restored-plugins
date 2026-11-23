@@ -16,8 +16,8 @@ public class ArrayDataType<T> implements PersistentDataType<PersistentDataContai
    private final PersistentDataType<?, T> dataType;
 
    public ArrayDataType(@NotNull T[] array, @NotNull PersistentDataType<?, T> dataType) {
-      this.arrayClazz = array.getClass();
-      this.componentClazz = array.getClass().getComponentType();
+this.arrayClazz = (Class<T[]>)(Class<?>)array.getClass();
+this.componentClazz = (Class<T>)array.getClass().getComponentType();
       this.dataType = dataType;
    }
 

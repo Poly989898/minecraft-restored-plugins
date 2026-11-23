@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import kotlin.Metadata;
 import kotlin.collections.CollectionsKt;
-import kotlin.jvm.functions.Function1;
+import java.util.function.Predicate;
 import kotlin.jvm.internal.Intrinsics;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -41,20 +41,20 @@ import org.jetbrains.annotations.NotNull;
    mv = {2, 2, 0},
    k = 1,
    xi = 48,
-   d1 = {"\u0000\u008c\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0010\u000b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\b\u0000\u0018\u00002\u00020\u0001B\u000f\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0004\u0010\u0005J\u0010\u0010\n\u001a\u00020\u000b2\u0006\u0010\f\u001a\u00020\rH\u0002J\u0010\u0010\n\u001a\u00020\u000b2\u0006\u0010\u000e\u001a\u00020\bH\u0002J\u0010\u0010\u000f\u001a\u00020\u00102\u0006\u0010\u0011\u001a\u00020\rH\u0002J\u0010\u0010\u0012\u001a\u00020\t2\u0006\u0010\u0011\u001a\u00020\rH\u0002J\u0018\u0010\u0012\u001a\u00020\t2\u0006\u0010\u000e\u001a\u00020\b2\u0006\u0010\u0013\u001a\u00020\u0014H\u0002J\u001e\u0010\u0015\u001a\u00020\u00102\f\u0010\u0016\u001a\b\u0012\u0004\u0012\u00020\u00180\u00172\u0006\u0010\u0013\u001a\u00020\u0014H\u0002J\u001e\u0010\u0019\u001a\u00020\u00102\f\u0010\u001a\u001a\b\u0012\u0004\u0012\u00020\b0\u00172\u0006\u0010\u0013\u001a\u00020\u0014H\u0002J\u0018\u0010\u000f\u001a\u00020\u00102\u0006\u0010\u000e\u001a\u00020\b2\u0006\u0010\u0013\u001a\u00020\u0014H\u0002J\f\u0010\u001b\u001a\u00020\u0010*\u00020\u001cH\u0007J\f\u0010\u001d\u001a\u00020\u0010*\u00020\u001eH\u0007J\f\u0010\u001f\u001a\u00020\u0010*\u00020 H\u0007J\f\u0010!\u001a\u00020\u0010*\u00020\"H\u0007J\f\u0010!\u001a\u00020\u0010*\u00020#H\u0007J\f\u0010$\u001a\u00020\u0010*\u00020%H\u0007J\f\u0010&\u001a\u00020\u0010*\u00020'H\u0007J\f\u0010&\u001a\u00020\u0010*\u00020(H\u0007J\f\u0010)\u001a\u00020\u0010*\u00020*H\u0007J\f\u0010+\u001a\u00020\u0010*\u00020,H\u0007J\f\u0010-\u001a\u00020\u0010*\u00020.H\u0007J\u001e\u0010&\u001a\u00020\u00102\f\u0010\u001a\u001a\b\u0012\u0004\u0012\u00020\b0\u00172\u0006\u0010\u0013\u001a\u00020/H\u0002R\u000e\u0010\u0002\u001a\u00020\u0003X\u0082\u0004¢\u0006\u0002\n\u0000R\u001a\u0010\u0006\u001a\u000e\u0012\u0004\u0012\u00020\b\u0012\u0004\u0012\u00020\t0\u0007X\u0082\u0004¢\u0006\u0002\n\u0000¨\u00060"},
+   d1 = {"\u0000\u008c\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0010\u000b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\b\u0000\u0018\u00002\u00020\u0001B\u000f\u0012\u0006\u0010\u0002\u001a\u00020\u0003Вў\u0006\u0004\b\u0004\u0010\u0005J\u0010\u0010\n\u001a\u00020\u000b2\u0006\u0010\f\u001a\u00020\rH\u0002J\u0010\u0010\n\u001a\u00020\u000b2\u0006\u0010\u000e\u001a\u00020\bH\u0002J\u0010\u0010\u000f\u001a\u00020\u00102\u0006\u0010\u0011\u001a\u00020\rH\u0002J\u0010\u0010\u0012\u001a\u00020\t2\u0006\u0010\u0011\u001a\u00020\rH\u0002J\u0018\u0010\u0012\u001a\u00020\t2\u0006\u0010\u000e\u001a\u00020\b2\u0006\u0010\u0013\u001a\u00020\u0014H\u0002J\u001e\u0010\u0015\u001a\u00020\u00102\f\u0010\u0016\u001a\b\u0012\u0004\u0012\u00020\u00180\u00172\u0006\u0010\u0013\u001a\u00020\u0014H\u0002J\u001e\u0010\u0019\u001a\u00020\u00102\f\u0010\u001a\u001a\b\u0012\u0004\u0012\u00020\b0\u00172\u0006\u0010\u0013\u001a\u00020\u0014H\u0002J\u0018\u0010\u000f\u001a\u00020\u00102\u0006\u0010\u000e\u001a\u00020\b2\u0006\u0010\u0013\u001a\u00020\u0014H\u0002J\f\u0010\u001b\u001a\u00020\u0010*\u00020\u001cH\u0007J\f\u0010\u001d\u001a\u00020\u0010*\u00020\u001eH\u0007J\f\u0010\u001f\u001a\u00020\u0010*\u00020 H\u0007J\f\u0010!\u001a\u00020\u0010*\u00020\"H\u0007J\f\u0010!\u001a\u00020\u0010*\u00020#H\u0007J\f\u0010$\u001a\u00020\u0010*\u00020%H\u0007J\f\u0010&\u001a\u00020\u0010*\u00020'H\u0007J\f\u0010&\u001a\u00020\u0010*\u00020(H\u0007J\f\u0010)\u001a\u00020\u0010*\u00020*H\u0007J\f\u0010+\u001a\u00020\u0010*\u00020,H\u0007J\f\u0010-\u001a\u00020\u0010*\u00020.H\u0007J\u001e\u0010&\u001a\u00020\u00102\f\u0010\u001a\u001a\b\u0012\u0004\u0012\u00020\b0\u00172\u0006\u0010\u0013\u001a\u00020/H\u0002R\u000e\u0010\u0002\u001a\u00020\u0003X\u0082\u0004Вў\u0006\u0002\n\u0000R\u001a\u0010\u0006\u001a\u000e\u0012\u0004\u0012\u00020\b\u0012\u0004\u0012\u00020\t0\u0007X\u0082\u0004Вў\u0006\u0002\n\u0000ВЁ\u00060"},
    d2 = {"Lcom/nexomc/customblockdata/BlockDataListener;", "Lorg/bukkit/event/Listener;", "plugin", "Lorg/bukkit/plugin/Plugin;", "<init>", "(Lorg/bukkit/plugin/Plugin;)V", "customDataPredicate", "Lkotlin/Function1;", "Lorg/bukkit/block/Block;", "", "getCbd", "Lcom/nexomc/customblockdata/CustomBlockData;", "event", "Lorg/bukkit/event/block/BlockEvent;", "block", "callAndRemove", "", "blockEvent", "callEvent", "bukkitEvent", "Lorg/bukkit/event/Event;", "callAndRemoveBlockStateList", "blockStates", "", "Lorg/bukkit/block/BlockState;", "callAndRemoveBlockList", "blocks", "onBreak", "Lorg/bukkit/event/block/BlockBreakEvent;", "onPlace", "Lorg/bukkit/event/block/BlockPlaceEvent;", "onEntity", "Lorg/bukkit/event/entity/EntityChangeBlockEvent;", "onExplode", "Lorg/bukkit/event/block/BlockExplodeEvent;", "Lorg/bukkit/event/entity/EntityExplodeEvent;", "onBurn", "Lorg/bukkit/event/block/BlockBurnEvent;", "onPiston", "Lorg/bukkit/event/block/BlockPistonExtendEvent;", "Lorg/bukkit/event/block/BlockPistonRetractEvent;", "onFade", "Lorg/bukkit/event/block/BlockFadeEvent;", "onStructure", "Lorg/bukkit/event/world/StructureGrowEvent;", "onFertilize", "Lorg/bukkit/event/block/BlockFertilizeEvent;", "Lorg/bukkit/event/block/BlockPistonEvent;", "custom-block-data"}
 )
 public final class BlockDataListener implements Listener {
    @NotNull
    private final Plugin plugin;
    @NotNull
-   private final Function1<Block, Boolean> customDataPredicate;
+   private final Predicate<Block> customDataPredicate;
 
    public BlockDataListener(@NotNull Plugin plugin) {
       Intrinsics.checkNotNullParameter(plugin, "plugin");
       super();
       this.plugin = plugin;
-      this.customDataPredicate = BlockDataListener::customDataPredicate$lambda$0;
+      this.customDataPredicate = block -> CustomBlockData.Companion.hasCustomBlockData(block, this.plugin);
    }
 
    private final CustomBlockData getCbd(BlockEvent event) {
@@ -90,10 +90,10 @@ public final class BlockDataListener implements Listener {
       for(Object element$iv : $this$forEach$iv) {
          BlockState it = (BlockState)element$iv;
          int var8 = 0;
-         Function1 var10000 = this.customDataPredicate;
+         Predicate<Block> var10000 = this.customDataPredicate;
          Block var10001 = it.getBlock();
          Intrinsics.checkNotNullExpressionValue(var10001, "getBlock(...)");
-         if ((Boolean)var10000.invoke(var10001)) {
+         if (var10000.test(var10001)) {
             var10001 = it.getBlock();
             Intrinsics.checkNotNullExpressionValue(var10001, "getBlock(...)");
             this.callAndRemove(var10001, bukkitEvent);
@@ -108,7 +108,7 @@ public final class BlockDataListener implements Listener {
       for(Object element$iv : $this$forEach$iv) {
          Block it = (Block)element$iv;
          int var8 = 0;
-         if ((Boolean)this.customDataPredicate.invoke(it)) {
+         if (this.customDataPredicate.test(it)) {
             this.callAndRemove(it, bukkitEvent);
          }
       }
@@ -255,11 +255,11 @@ public final class BlockDataListener implements Listener {
       Intrinsics.checkNotNullExpressionValue(var10000, "getDirection(...)");
       BlockFace direction = var10000;
       Iterable $this$forEach$iv = (Iterable)blocks;
-      Function1 predicate$iv = this.customDataPredicate;
+      Predicate<Block> predicate$iv = this.customDataPredicate;
       Collection destination$iv$iv = (Collection)(new ArrayList());
 
       for(Object element$iv$iv : $this$forEach$iv) {
-         if ((Boolean)predicate$iv.invoke(element$iv$iv)) {
+         if (predicate$iv.test((Block)element$iv$iv)) {
             destination$iv$iv.add(element$iv$iv);
          }
       }
@@ -303,8 +303,4 @@ public final class BlockDataListener implements Listener {
 
    }
 
-   private static final boolean customDataPredicate$lambda$0(BlockDataListener this$0, Block block) {
-      Intrinsics.checkNotNullParameter(block, "block");
-      return CustomBlockData.Companion.hasCustomBlockData(block, this$0.plugin);
-   }
 }

@@ -82,7 +82,7 @@ public final class FontSerializer implements JsonResourceSerializer<Font>, JsonR
             case "ttf" -> providers.add(readTrueType(providerObjectNode));
             case "reference" -> providers.add(readReference(providerObjectNode));
             case "unihex" -> providers.add(readUnihex(providerObjectNode));
-            default -> throw new IllegalStateException("Unknown font provider type: " + type);
+            default -> throw new IllegalStateException("Unknown font provider type: " + providerObjectNode.get("type").getAsString());
          }
       }
 

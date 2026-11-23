@@ -119,7 +119,7 @@ public final class ShiftTag {
          if (optional != null) {
             optional = optional.map((a0_ -> ShiftTag.RESOLVER$lambda$0$1$0((kotlin.jvm.functions.Function1)((Object x) -> org.bukkit.Bukkit.getPlayer((String)x)), a0_)));
             if (optional != null) {
-               player = (Player)optional.orElse((Object)null);
+               player = (Player)optional.orElse(null);
                return player;
             }
          }

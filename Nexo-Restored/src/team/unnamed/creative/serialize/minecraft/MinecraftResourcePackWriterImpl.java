@@ -51,7 +51,7 @@ final class MinecraftResourcePackWriterImpl implements MinecraftResourcePackWrit
    }
 
    public <T extends Keyed & ResourcePackPart> void writeFullCategory(@NotNull String basePath, @NotNull ResourceContainer resourceContainer, @NotNull FileTreeWriter target, @NotNull ResourceCategory<T> category, PackFormat packFormat) {
-      for(T resource : (Collection)category.lister().apply(resourceContainer)) {
+      for(T resource : (Collection<T>)category.lister().apply(resourceContainer)) {
          String path = basePath + category.pathOf(resource, packFormat);
          ResourceSerializer<T> serializer = category.serializer();
          if (serializer instanceof JsonResourceSerializer) {

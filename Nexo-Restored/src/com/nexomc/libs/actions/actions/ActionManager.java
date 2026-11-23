@@ -36,7 +36,7 @@ public abstract class ActionManager {
    }
 
    protected final <T> @Nullable Action<T> createAction(@NotNull Class<T> clazz, @NotNull String id, @NotNull ActionMeta<T> meta) {
-      Action.Supplier<?> supplier = (Action.Supplier)this.actions.get(id.toLowerCase(), clazz);
+Action.Supplier<T> supplier = (Action.Supplier<T>)this.actions.get(id.toLowerCase(), clazz);
       return supplier == null ? null : supplier.run(meta);
    }
 

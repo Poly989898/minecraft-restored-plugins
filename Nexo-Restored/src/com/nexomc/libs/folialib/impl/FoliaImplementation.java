@@ -80,7 +80,7 @@ public class FoliaImplementation implements PlatformScheduler {
       CompletableFuture<Void> future = new CompletableFuture();
       this.globalRegionScheduler.run(this.plugin, (task) -> {
          consumer.accept(this.wrapTask(task));
-         future.complete((Object)null);
+         future.complete(null);
       });
       return future;
    }
@@ -89,7 +89,7 @@ public class FoliaImplementation implements PlatformScheduler {
       CompletableFuture<Void> future = new CompletableFuture();
       this.asyncScheduler.runNow(this.plugin, (task) -> {
          consumer.accept(this.wrapTask(task));
-         future.complete((Object)null);
+         future.complete(null);
       });
       return future;
    }
@@ -104,7 +104,7 @@ public class FoliaImplementation implements PlatformScheduler {
       delay = this.ensureValidDuration(delay);
       this.globalRegionScheduler.runDelayed(this.plugin, (task) -> {
          consumer.accept(this.wrapTask(task));
-         future.complete((Object)null);
+         future.complete(null);
       }, delay);
       return future;
    }
@@ -133,7 +133,7 @@ public class FoliaImplementation implements PlatformScheduler {
       CompletableFuture<Void> future = new CompletableFuture();
       this.asyncScheduler.runDelayed(this.plugin, (task) -> {
          consumer.accept(this.wrapTask(task));
-         future.complete((Object)null);
+         future.complete(null);
       }, delay, unit);
       return future;
    }
@@ -178,7 +178,7 @@ public class FoliaImplementation implements PlatformScheduler {
       CompletableFuture<Void> future = new CompletableFuture();
       this.regionScheduler.run(this.plugin, location, (task) -> {
          consumer.accept(this.wrapTask(task));
-         future.complete((Object)null);
+         future.complete(null);
       });
       return future;
    }
@@ -193,7 +193,7 @@ public class FoliaImplementation implements PlatformScheduler {
       delay = this.ensureValidDuration(delay);
       this.regionScheduler.runDelayed(this.plugin, location, (task) -> {
          consumer.accept(this.wrapTask(task));
-         future.complete((Object)null);
+         future.complete(null);
       }, delay);
       return future;
    }
@@ -270,17 +270,18 @@ public class FoliaImplementation implements PlatformScheduler {
 
    public @NotNull CompletableFuture<Void> runAtEntityLater(Entity entity, @NotNull Consumer<WrappedTask> consumer, Runnable fallback, long delay) {
       CompletableFuture<Void> future = new CompletableFuture();
-      if (fallback != null) {
-         fallback = () -> {
-            fallback.run();
-            future.complete((Object)null);
-         };
-      }
+   Runnable originalFallback = fallback;
+   if (originalFallback != null) {
+   fallback = () -> {
+   originalFallback.run();
+   future.complete(null);
+   };
+   }
 
       delay = this.ensureValidDuration(delay);
       entity.getScheduler().runDelayed(this.plugin, (task) -> {
          consumer.accept(this.wrapTask(task));
-         future.complete((Object)null);
+         future.complete(null);
       }, fallback, delay);
       return future;
    }
