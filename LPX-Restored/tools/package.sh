@@ -1,4 +1,5 @@
 #!/bin/bash
+. "${TOOLS_ENV:-/d/Tools/env.sh}"
 # build/libs/LPX-3.9.1-restored.jar = original jar + classes recompiled from src/. Run tools/build.sh first.
 set -e
 P="$(cd "$(dirname "$0")/.." && pwd)"; cd "$P"
@@ -10,9 +11,9 @@ rm -rf $W; mkdir -p $W build/libs; (cd $W && unzip -q "$ORIG")
 (cd build/classes && find . -name '*.class' | sed 's#^\./##; s/\.class$//' | sort) > build/new-classes.txt
 comm -23 build/orig-classes.txt build/new-classes.txt | grep -vxFf tools/keep-original.txt | while read -r c; do rm -f "$W/$c.class"; done
 cp -r build/classes/. $W/
-ASM=$(find ~/.gradle/caches/modules-2/files-2.1/org.ow2.asm -name 'asm-9*.jar' ! -name '*sources*' | head -1)
-ASMC=$(find ~/.gradle/caches/modules-2/files-2.1/org.ow2.asm -name 'asm-commons-9*.jar' ! -name '*sources*' | head -1)
+ASM="$ASM_DIR/asm-9.11.1.jar"
+ASMC="$ASM_DIR/asm-commons-9.11.1.jar"
 java -cp "$ASM:$ASMC" tools/RemapClasses.java tools/mappings.txt $W
 java -cp "$ASM:$ASMC" tools/RelocateKyori.java $W
-rm -f "$OUT"; (cd $W && zip -q -r -X "$OUT" META-INF/MANIFEST.MF && zip -q -r -X "$OUT" . -x META-INF/MANIFEST.MF)
+rm -f "$OUT"; (cd $W && jar --create --file "$OUT" --manifest META-INF/MANIFEST.MF .)
 echo "built $OUT"

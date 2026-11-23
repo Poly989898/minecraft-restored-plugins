@@ -69,3 +69,11 @@ Configs (`items/`, `glyphs/`, `languages.yml`) → mechanic factories and item b
 - Files named like `Class$method$lambda$0$$inlined$sortedBy$1.java` are Kotlin inline function classes. Do not delete them: bytecode references them.
 - Kotlin traces are visible: `Companion`, `$default`, `Intrinsics` checks.
 - Local names and comments of the original are not preserved. Readability work changed names only: 12,873 `varN` locals and 6,518 Kotlin inline names (`x$iv`, `$this$map$iv`) were renamed, `labelNN` labels were replaced, about 480 redundant casts were removed, and the bytecode of 871 classes was identical before and after (`javap -v` without constant pool). Javadoc was added to the public API (`NexoItems`, `NexoBlocks`, `NexoFurniture`, `NexoPack`).
+
+## Build inputs
+
+- `libs/nexo-1.26-patched.jar` is the base jar that `tools/package.sh` copies from. It is the original 1.26 release jar (the same file as `nexo-original.jar`), which is not in the repository.
+- `libs/MMOItems-API-6.10.1-SNAPSHOT.jar` and `libs/MythicLib-dist-1.7.1-SNAPSHOT.jar` are the integration APIs; they are published on the phoenixdevt Maven repository and are not in git.
+- The MythicMobs integration compiles against `../MythicMobs-Restored/dist/MythicMobs-5.14.0-rebuilt.jar` (copy the built jar there).
+- `tools/package.sh` uses the JDK `jar` tool instead of `zip` and `unzip`.
+- Tested on Paper 26.3 with CMI, CMILib, MythicMobs, ModelEngine, LiteBans and LPX: Nexo enables, detects MythicMobs and ModelEngine, and `nexo reload` succeeds. Pack generation and in-game behaviour are not verified.

@@ -42,3 +42,9 @@ javac -proc:none -encoding UTF-8 -d /tmp/lpx-out \
 ```
 
 The original jar is kept outside the repository: `../originals/LPX/LPX-3.9.1.jar`.
+
+## Build inputs
+
+- `ORIG` (default `../originals/LPX/LPX-3.9.1.jar`) is the original release jar. `tools/build.sh` compiles against it and against the Paper 1.21.11 API (`paper-api-1.21.11-R0.1-SNAPSHOT`, found under `GRADLE_USER_HOME`).
+- `tools/package.sh` uses the JDK `jar` tool instead of `zip`. On Windows, run both from Git Bash with `TOOLS_ENV` pointing at a shared env file.
+- The jar was built and started on Paper 26.3 together with CMI, CMILib, MythicMobs, ModelEngine, LiteBans and Nexo: startup and `lpx` work, no errors. Behaviour of the checks in game is not verified.
