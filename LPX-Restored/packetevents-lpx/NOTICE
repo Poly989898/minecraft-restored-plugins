@@ -1,0 +1,21 @@
+NOTICE for packetevents-lpx
+
+This directory holds the PacketEvents classes that LPX needs and that the public packetevents-spigot
+2.14.1-SNAPSHOT artifact does not provide, plus patched copies of upstream classes.
+
+Upstream: https://github.com/retrooper/packetevents
+Copyright (C) retrooper and contributors (per the source file headers).
+Base commit for the upstream copies: ab562e7e5424c086ad6b41e5932d94ce93aa5b89 (2026-11-18, the commit before the 2.15.0-SNAPSHOT bump).
+License: GNU General Public License v3 (see LICENSE-PacketEvents.txt). The upstream LICENSE file is GPL-3.0,
+not MIT as stated in the task brief; the copies here are kept under GPL-3.0.
+
+Upstream files copied and patched (keep the upstream header):
+  protocol/nbt/NBT.java, protocol/nbt/NBTLimiter.java, protocol/nbt/NBTString.java (setValue added),
+  protocol/item/ItemStack.java, protocol/item/ItemStackSerialization.java,
+  wrapper/PacketWrapper.java, wrapper/play/client/WrapperPlayClientClickWindow.java,
+  wrapper/play/client/WrapperPlayClientEditBook.java, settings/PacketEventsSettings.java,
+  event/ProtocolPacketEvent.java (unpatched copy from the base commit).
+
+Written for LPX (fork-only, not in upstream): exception/PacketLimitException.java,
+  event/simple/NBTDecodeEvent.java, event/simple/ItemStackDecodeEvent.java, event/simple/ReadSlotsEvent.java,
+  protocol/nbt/NBTElementCounter.java, wrapper/e1.java.

@@ -7,7 +7,6 @@ import com.github.retrooper.packetevents.protocol.nbt.NBTList;
 import com.github.retrooper.packetevents.protocol.nbt.NBTString;
 import com.github.retrooper.packetevents.protocol.packettype.PacketTypeCommon;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType.Play.Client;
-import it.ytnoos.lpx.iy;
 import it.ytnoos.lpx.api.check.CheckResult;
 import it.ytnoos.lpx.api.check.RollingIntervalCounter;
 import it.ytnoos.lpx.api.check.options.CheckOptions;

@@ -2,7 +2,6 @@ package it.ytnoos.lpx.check.checks.item;
 
 import com.github.retrooper.packetevents.event.simple.ItemStackDecodeEvent;
 import com.github.retrooper.packetevents.protocol.item.ItemStack;
-import it.ytnoos.lpx.q_;
 import it.ytnoos.lpx.api.check.CheckResult;
 import it.ytnoos.lpx.api.check.options.CheckOptions;
 import it.ytnoos.lpx.api.player.ProtocolPlayer;

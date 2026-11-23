@@ -5,7 +5,7 @@ Readable sources of LPX 3.9.1, an anti-exploit plugin for Paper/Spigot 1.8 – 1
 ## Status
 
 - All 189 files of the `it.ytnoos` package compile with 0 errors against the original jar, Paper API 1.21.11 and the NMS 1.8 stubs in `stubs/` (`excludes.txt` is empty). The bundled PacketEvents, Adventure and Gson are not part of `src/`. There is no Gradle project.
-- Packaging: `tools/build.sh`, then `tools/package.sh` (original jar + rebuilt classes, `build/libs/LPX-3.9.1-restored.jar`). `tools/testserver.sh` starts a scratch Paper 26.3 server (port 25603); `JAR=<original>` runs the same test against the original jar. On Windows the same steps are `tools\build.ps1`, `tools\package.ps1` and `tools\testserver.ps1` (`-Jar <original>` for the baseline run).
+- Packaging: `tools/build.sh`, then `tools/package.sh` (original jar + rebuilt classes, `build/libs/LPX-3.9.1-restored.jar`). `tools/testserver.sh` starts a scratch Paper 26.3 server (port 25603); `JAR=<original>` runs the same test against the original jar.
 - On Paper 26.3 the rebuilt jar starts: `LPX enabled!`, PacketEvents loads, `lpx` and `lpx reload` work, 0 exceptions.
 - The original jar does not start on that server (`ClassNotFoundException: it.ytnoos.lpx.lib.kyori...DataComponentValueConversionImpl`). It bundles Adventure as `net/kyori/...` while PacketEvents looks for the relocated name, and Paper 26.3 ships its own Adventure 5.x with the same names. `tools/RelocateKyori.java` (a `package.sh` step) moves the bundled Adventure, examination and option packages from `net/kyori` to `it/ytnoos/lpx/lib/kyori` across the whole jar (classes, references, strings, `META-INF/services`) and leaves references to classes that are not bundled (`ComponentLogger`, provided by Paper) as `net.kyori.*`.
 - Not verified: the behaviour of the individual checks in game. The original has no baseline run to compare against.
@@ -42,9 +42,3 @@ javac -proc:none -encoding UTF-8 -d /tmp/lpx-out \
 ```
 
 The original jar is kept outside the repository: `../originals/LPX/LPX-3.9.1.jar`.
-
-## Build inputs
-
-- `ORIG` (default `../originals/LPX/LPX-3.9.1.jar`) is the original release jar. `tools/build.sh` compiles against it and against the Paper 1.21.11 API (`paper-api-1.21.11-R0.1-SNAPSHOT`, found under `GRADLE_USER_HOME`).
-- `tools/package.sh` uses the JDK `jar` tool instead of `zip`. On Windows, run both from Git Bash with `TOOLS_ENV` pointing at a shared env file.
-- The jar was built and started on Paper 26.3 together with CMI, CMILib, MythicMobs, ModelEngine, LiteBans and Nexo: startup and `lpx` work, no errors. Behaviour of the checks in game is not verified.
