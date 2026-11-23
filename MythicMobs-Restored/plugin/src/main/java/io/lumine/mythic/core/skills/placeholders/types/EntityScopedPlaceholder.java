@@ -5,7 +5,7 @@ import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.adapters.AbstractLocation;
 import io.lumine.mythic.api.skills.SkillCaster;
 import io.lumine.mythic.bukkit.MythicBukkit;
-import io.lumine.mythic.bukkit.utils.lib.lang3.text.WordUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import io.lumine.mythic.bukkit.utils.serialize.Optl;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import io.lumine.mythic.core.skills.placeholders.PlaceholderContext;

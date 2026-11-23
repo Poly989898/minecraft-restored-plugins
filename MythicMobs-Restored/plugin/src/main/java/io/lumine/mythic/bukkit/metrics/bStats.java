@@ -3,8 +3,8 @@ package io.lumine.mythic.bukkit.metrics;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.logging.MythicLogger;
 import io.lumine.mythic.core.mobs.WorldScaling;
-import io.lumine.mythic.metrics.bukkit.Metrics;
-import io.lumine.mythic.metrics.charts.SimplePie;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 
 public class bStats {
    public bStats(MythicBukkit plugin) {

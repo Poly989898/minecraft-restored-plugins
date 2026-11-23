@@ -13,13 +13,13 @@ public class CollectionUtils {
 
    public static List<String> filterMatches(final String lookup, Collection<String> collection, int similarityDepth) {
       List<String> matches = collection.stream()
-         .filter(item -> io.lumine.mythic.bukkit.utils.lib.lang3.StringUtils.containsIgnoreCase(item, lookup))
+         .filter(item -> org.apache.commons.lang3.StringUtils.containsIgnoreCase(item, lookup))
          .sorted(new Comparator<String>() {
             public int compare(String s1, String s2) {
                boolean s1ExactStartsWith = s1.startsWith(lookup);
                boolean s2ExactStartsWith = s2.startsWith(lookup);
-               boolean s1StartsWith = io.lumine.mythic.bukkit.utils.lib.lang3.StringUtils.startsWithIgnoreCase(s1, lookup);
-               boolean s2StartsWith = io.lumine.mythic.bukkit.utils.lib.lang3.StringUtils.startsWithIgnoreCase(s2, lookup);
+               boolean s1StartsWith = org.apache.commons.lang3.StringUtils.startsWithIgnoreCase(s1, lookup);
+               boolean s2StartsWith = org.apache.commons.lang3.StringUtils.startsWithIgnoreCase(s2, lookup);
                if (s1ExactStartsWith && !s2ExactStartsWith) {
                   return -1;
                } else if (!s1ExactStartsWith && s2ExactStartsWith) {

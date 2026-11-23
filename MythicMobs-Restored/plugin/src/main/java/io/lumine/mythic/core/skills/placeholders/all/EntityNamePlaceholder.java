@@ -1,7 +1,7 @@
 package io.lumine.mythic.core.skills.placeholders.all;
 
 import io.lumine.mythic.api.adapters.AbstractEntity;
-import io.lumine.mythic.bukkit.utils.lib.lang3.text.WordUtils;
+import org.apache.commons.lang3.text.WordUtils;
 
 @Deprecated(
    forRemoval = true

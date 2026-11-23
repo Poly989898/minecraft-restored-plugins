@@ -14,13 +14,23 @@ repositories {
     maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
 }
 sourceSets {
-    stubs { java.srcDir 'src/stubs/java' }
+    // compile-only stubs of third-party APIs are compiled with the plugin but never packaged (see jar below)
+    main { java.srcDir 'src/stubs/java' }
 }
+
+def stubRoot = file('src/stubs/java')
+def stubPackages = fileTree(stubRoot).files.collect { stubRoot.toPath().relativize(it.parentFile.toPath()).toString().replace('\\', '/') + '/' }.unique()
 dependencies {
-    stubsCompileOnly 'io.papermc.paper:paper-api:26.3.build.254-stable'
-    stubsCompileOnly files('libs/original.jar')
-    compileOnly sourceSets.stubs.output
     compileOnly 'io.papermc.paper:paper-api:26.3.build.254-stable'
+    implementation 'org.apache.commons:commons-lang3:3.22.0'
+    implementation 'org.apache.commons:commons-math3:3.6.1'
+    implementation 'org.jooq:jooq:3.21.10'
+    implementation 'redis.clients:jedis:3.10.0'
+    implementation 'org.apache.commons:commons-pool2:2.12.0'
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.3.1'
+    implementation 'org.bstats:bstats-bukkit:3.2.1'
+    implementation 'com.github.roklenarcic:aho-corasick:1.2'
+    implementation 'net.objecthunter:exp4j:0.4.8'
     compileOnly 'org.projectlombok:lombok:1.18.42'
     annotationProcessor 'org.projectlombok:lombok:1.18.42'   // sources use Lombok annotations again (1.18.34 does not support JDK 25)
     compileOnly 'org.jetbrains:annotations:24.1.0'
@@ -56,7 +66,6 @@ dependencies {
     compileOnly('com.github.GriefPrevention:GriefPrevention:16.18.4') { transitive = false }
     compileOnly('com.github.Zrips:Residence:6.0.2.3') { transitive = false }
     compileOnly('io.pixeloutlaw.mythicdrops:mythicdrops:7.0.4') { transitive = false }
-    compileOnly files('libs/shaded.jar')   // third-party only; no own classes, so missing sources can't hide
 }
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -72,11 +81,12 @@ tasks.named('jar') {
     archiveFileName = 'MythicMobs-5.14.0-rebuilt.jar'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from sourceSets.main.output
+    from({ configurations.runtimeClasspath.collect { zipTree(it) } }) { exclude 'META-INF/*.SF', 'META-INF/*.RSA', 'META-INF/*.DSA', 'module-info.class' }
     // rebuilt NMS modules (paperweight project in ../nms)
     ['v26_1','v26_2','v26_3'].each { v -> from("../nms/${v}/build/classes/java/main") }
     ['w1_18_R2','w1_19_R2','w1_19_R3','w1_20_R1','w1_20_R2','w1_20_R3'].each { w -> from("../nms/${w}/build/classes/java/main") }
     ['v1_20_R1','v1_20_R3','v1_21_R1','v1_21_R3','v1_21_R4','v1_21_R5','v1_21_R6','v1_21_R7'].each { v -> from("../nms/${v}/build/classes/java/main") }
-    from(zipTree('libs/original.jar')) {
+    if (file('libs/original.jar').exists()) from(zipTree('libs/original.jar')) {
         exclude { fte ->
             def p = fte.relativePath.pathString
             if (p.startsWith('META-INF/') && (p.endsWith('.SF') || p.endsWith('.RSA') || p.endsWith('.DSA'))) return true
@@ -93,6 +103,7 @@ tasks.named('jar') {
             return p.endsWith('.class') // drop original own classes (keep resources)
         }
     }
+    exclude { fte -> stubPackages.any { fte.relativePath.pathString.startsWith(it) } }
     manifest { attributes 'Implementation-Title': 'MythicMobs (rebuilt)' }
 }
 

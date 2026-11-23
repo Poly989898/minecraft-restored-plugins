@@ -1,7 +1,7 @@
 package io.lumine.mythic.bukkit.utils.storage.sql;
 
-import io.lumine.mythic.bukkit.utils.lib.jooq.DSLContext;
-import io.lumine.mythic.bukkit.utils.lib.jooq.impl.DSL;
+import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import io.lumine.mythic.bukkit.utils.logging.Log;
 import io.lumine.mythic.bukkit.utils.plugin.LuminePlugin;
 import io.lumine.mythic.bukkit.utils.plugin.PluginModule;
@@ -25,8 +25,8 @@ public class SqlConnector<T extends LuminePlugin> extends PluginModule<T> {
       String user = this.credentials.getUsername();
       String pass = this.credentials.getPassword();
       String address = this.provider.formatAddress(this.credentials);
-      System.setProperty("io.lumine.mythic.bukkit.utils.lib.jooq.no-tips", "true");
-      System.setProperty("io.lumine.mythic.bukkit.utils.lib.jooq.no-logo", "true");
+      System.setProperty("org.jooq.no-tips", "true");
+      System.setProperty("org.jooq.no-logo", "true");
 
       try {
          HikariConfig config = new HikariConfig();

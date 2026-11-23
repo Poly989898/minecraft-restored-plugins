@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Regenerate shims + build.gradle for the legacy Spigot-mapped NMS modules. Run from nms/."""
 import glob, os, subprocess, sys, zipfile
+GH = os.environ.get('GRADLE_USER_HOME') or os.path.expanduser('~/.gradle')
 NMS = os.getcwd()
 ORIG = os.path.join(NMS, '..', 'original', 'MythicMobs-5.14.0.jar')
 M2 = os.path.expanduser('~/.m2/repository/org/spigotmc/spigot')
@@ -41,7 +42,7 @@ configurations.matching {{ it.name.toLowerCase().endsWith('compileclasspath') }}
 '''
 def attribute_instance_refs(mod, mc):
     """All abstract methods of the Paper API's AttributeInstance, force-added to CraftAttributeInstance (Paper's patched server implements them)."""
-    pa = sorted(glob.glob(os.path.expanduser(f'~/.gradle/caches/modules-2/files-2.1/io.papermc.paper/paper-api/{mc}-R0.1-SNAPSHOT/*/paper-api-{mc}-R0.1-SNAPSHOT.jar')))
+    pa = sorted(glob.glob(os.path.join(GH, f'caches/modules-2/files-2.1/io.papermc.paper/paper-api/{mc}-R0.1-SNAPSHOT/*/paper-api-{mc}-R0.1-SNAPSHOT.jar')))
     if not pa: return ''
     txt = subprocess.run(['javap', '-p', '-s', '-cp', pa[0], 'org.bukkit.attribute.AttributeInstance'], capture_output=True, text=True).stdout.split('\n')
     out = []
@@ -59,7 +60,7 @@ def extra_api(mc, sv):
     """Spigot-API classes that are NOT in the matching Paper API (types only the server jar refers to)."""
     out = f'shim/{mc}-extra-api.jar'
     sa = os.path.expanduser(f'~/.m2/repository/org/spigotmc/spigot-api/{sv}/spigot-api-{sv}.jar')
-    pa = sorted(glob.glob(os.path.expanduser(f'~/.gradle/caches/modules-2/files-2.1/io.papermc.paper/paper-api/{mc}-R0.1-SNAPSHOT/*/paper-api-{mc}-R0.1-SNAPSHOT.jar')))
+    pa = sorted(glob.glob(os.path.join(GH, f'caches/modules-2/files-2.1/io.papermc.paper/paper-api/{mc}-R0.1-SNAPSHOT/*/paper-api-{mc}-R0.1-SNAPSHOT.jar')))
     have = set(zipfile.ZipFile(pa[0]).namelist()) if pa else set()
     n = 0
     with zipfile.ZipFile(sa) as zi, zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as zo:
@@ -72,7 +73,7 @@ only = sys.argv[1:] or list(MODS)
 for mod in only:
     mc = MODS[mod]
     sv = f'{mc}-R0.2-SNAPSHOT' if os.path.isdir(f'{M2}/{mc}-R0.2-SNAPSHOT') else f'{mc}-R0.1-SNAPSHOT'
-    refs = f'/tmp/refs_{mod}.txt'
+    refs = os.path.join(os.environ.get('TMPDIR','D:/Tools/tmp'), f'refs_{mod}.txt')
     subprocess.run([sys.executable, 'tools/extract_refs.py', ORIG, mod, refs], check=True)
     # members the Paper-patched server provides but no module code references directly (e.g. inherited abstract methods)
     with open(refs, 'a', encoding='utf-8') as rf, open('tools/extra_refs.txt', encoding='utf-8') as ef:

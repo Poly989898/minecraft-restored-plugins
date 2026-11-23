@@ -9,7 +9,8 @@ repositories {
 }
 dependencies {
     compileOnly 'org.spigotmc:spigot:1.20.2-R0.1-SNAPSHOT'
-    compileOnly files("$rootDir/../plugin/build/classes/java/main", "$rootDir/../plugin/libs/shaded.jar")
+    compileOnly files("$rootDir/../plugin/build/classes/java/main")
+    compileOnly 'org.apache.commons:commons-lang3:3.22.0'
     compileOnly 'org.projectlombok:lombok:1.18.34'
     compileOnly 'org.jetbrains:annotations:24.1.0'
     compileOnly 'com.google.code.findbugs:jsr305:3.0.2'

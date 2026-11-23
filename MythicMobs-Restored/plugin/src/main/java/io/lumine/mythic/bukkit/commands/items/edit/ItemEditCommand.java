@@ -2,8 +2,8 @@ package io.lumine.mythic.bukkit.commands.items.edit;
 
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.bukkit.commands.CommandHelper;
-import io.lumine.mythic.bukkit.utils.caffeine.cache.Cache;
-import io.lumine.mythic.bukkit.utils.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import io.lumine.mythic.bukkit.utils.commands.Command;
 import io.lumine.mythic.core.items.MythicItem;
 import io.lumine.mythic.core.menus.items.ItemEditorMenuContext;

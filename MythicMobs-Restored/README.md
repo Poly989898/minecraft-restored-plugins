@@ -6,19 +6,34 @@ Rebuildable sources of MythicMobs 5.14.0 for Paper: the plugin and all version-s
 
 - `plugin/` is the main Gradle project. Sources are in `src/main/java`, resources in `src/main/resources`.
   - `src/volatile/java`: sources of the NMS modules (the working copies live in `nms/`).
-  - `src/stubs/java`: compile-only stubs for plugins without a buildable API: CrashClaim, AriKeys, SkillAPI, PhatLoots (signatures checked against their GitHub sources), MiniaturePets, Crucible, OTG (unchecked, no API available). They are not packaged.
-  - `libs/`: `original.jar` (copy of the original) and `shaded.jar` (third-party libraries only).
+  - `src/stubs/java`: compile-only stubs for plugins without a buildable API: CrashClaim, AriKeys, SkillAPI, PhatLoots (signatures checked against their GitHub sources), MiniaturePets, Crucible, OTG (unchecked, no API available). They are compiled with the plugin but not packaged (the jar task excludes them).
+  - Third-party libraries (Apache Commons Lang3 and Math3, jOOQ, exp4j, jedis, Caffeine, bStats, aho-corasick) are normal Maven dependencies, bundled into the jar. No original jar is needed.
 - `nms/` is a Gradle project with the NMS modules:
   - `v26_1 … v26_3`: paperweight, built and included in the jar;
   - `w1_18_R2 … w1_20_R3`: version wrappers, built and included;
   - `v1_20_R1 … v1_21_R7`: legacy NMS (Spigot mappings, MC 1.20.1 … 1.21.11), built from source against generated shim jars (`nms/shim/`, see below); included.
-- `../originals/MythicMobs/MythicMobs-5.14.0.jar` is the original, used for comparison (not in git).
+- The original jar is not needed for the build. Use it only for comparison, if you have it.
 
 ## Building (JDK 25 for Gradle, Java 21 bytecode)
 
 1. `cd nms && gradle :v26_1:compileJava :v26_2:compileJava :v26_3:compileJava :w1_18_R2:compileJava :w1_19_R2:compileJava :w1_19_R3:compileJava :w1_20_R1:compileJava :w1_20_R2:compileJava :w1_20_R3:compileJava :v1_20_R1:compileJava :v1_20_R3:compileJava :v1_21_R1:compileJava :v1_21_R3:compileJava :v1_21_R4:compileJava :v1_21_R5:compileJava :v1_21_R6:compileJava :v1_21_R7:compileJava`
 2. `cd plugin && gradle compileJava jar`
 3. Output: `plugin/build/libs/MythicMobs-5.14.0-rebuilt.jar`
+
+### Windows
+
+`tools/build.ps1` runs the same steps (plugin compile, NMS modules, plugin jar). Set the environment variables first:
+
+- `JAVA_HOME`: JDK 25 directory;
+- `GRADLE`: full path to `gradle.bat` (optional, `gradle` from `PATH` is used if unset);
+- `GRADLE_USER_HOME`: Gradle home directory (optional).
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\build.ps1          # online
+powershell -ExecutionPolicy Bypass -File tools\build.ps1 -Offline # --offline for Gradle
+```
+
+The script compiles `plugin` before the NMS modules, because they compile against `plugin/build/classes/java/main`. No original or shaded jar is needed.
 
 ### Legacy NMS modules (`v1_20_R1 … v1_21_R7`)
 

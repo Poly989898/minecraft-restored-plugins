@@ -2,10 +2,10 @@ package io.lumine.mythic.bukkit.utils;
 
 import io.lumine.mythic.bukkit.utils.network.messaging.redis.Redis;
 import io.lumine.mythic.bukkit.utils.promise.Promise;
-import io.lumine.mythic.bukkit.utils.redis.jedis.Jedis;
-import io.lumine.mythic.bukkit.utils.redis.jedis.JedisPool;
-import io.lumine.mythic.bukkit.utils.redis.jedis.Pipeline;
-import io.lumine.mythic.bukkit.utils.redis.jedis.Response;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.Response;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

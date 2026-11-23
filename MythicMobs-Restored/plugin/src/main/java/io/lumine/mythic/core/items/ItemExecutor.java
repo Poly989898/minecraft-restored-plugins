@@ -10,7 +10,7 @@ import io.lumine.mythic.bukkit.BukkitAdapter;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.bukkit.utils.config.properties.types.NodeListProp;
 import io.lumine.mythic.bukkit.utils.items.ItemFactory;
-import io.lumine.mythic.bukkit.utils.lib.lang3.text.WordUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import io.lumine.mythic.bukkit.utils.plugin.ReloadableModule;
 import io.lumine.mythic.core.config.IOHandler;
 import io.lumine.mythic.core.config.IOLoader;

@@ -1,6 +1,6 @@
 package io.lumine.mythic.bukkit.utils.storage.sql;
 
-import io.lumine.mythic.bukkit.utils.lib.jooq.SQLDialect;
+import org.jooq.SQLDialect;
 
 public enum SqlProvider {
    MYSQL(SQLDialect.MYSQL, "jdbc:mysql://"),

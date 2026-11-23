@@ -18,7 +18,7 @@ import io.lumine.mythic.api.volatilecode.virtual.PacketItem;
 import io.lumine.mythic.api.volatilecode.virtual.PacketItemDisplay;
 import io.lumine.mythic.api.volatilecode.virtual.PacketTextDisplay;
 import io.lumine.mythic.bukkit.BukkitAdapter;
-import io.lumine.mythic.bukkit.utils.lib.lang3.Validate;
+import org.apache.commons.lang3.Validate;
 import io.lumine.mythic.bukkit.utils.logging.Log;
 import io.lumine.mythic.core.logging.MythicLogger;
 import io.lumine.mythic.core.volatilecode.v1_21_R1.virtual.VirtualArmorStand;

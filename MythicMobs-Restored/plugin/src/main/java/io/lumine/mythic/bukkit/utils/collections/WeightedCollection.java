@@ -2,7 +2,7 @@ package io.lumine.mythic.bukkit.utils.collections;
 
 import com.google.common.collect.Lists;
 import io.lumine.mythic.bukkit.utils.functions.IParamFunction;
-import io.lumine.mythic.bukkit.utils.lib.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;

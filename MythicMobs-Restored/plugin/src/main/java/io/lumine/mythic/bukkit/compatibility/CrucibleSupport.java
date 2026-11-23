@@ -7,7 +7,7 @@ import io.lumine.mythic.api.config.MythicConfig;
 import io.lumine.mythic.api.config.MythicLineConfig;
 import io.lumine.mythic.api.packs.Pack;
 import io.lumine.mythic.api.skills.SkillCaster;
-import io.lumine.mythic.bukkit.utils.lib.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import io.lumine.mythiccrucible.items.CrucibleItem;
 import io.lumine.mythiccrucible.items.blocks.CustomBlockItemContext;
 import java.util.Optional;
