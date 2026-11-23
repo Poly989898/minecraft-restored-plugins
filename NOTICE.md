@@ -6,7 +6,7 @@ Every plugin in this repository is an unofficial, modified version of the origin
 
 - Original: ModelEngine by Ticxo.
 - Source: decompiled from the R4.1.1 build (Vineflower), repaired to compile. Code builds from src/ and patches/; the original jar is not needed for code.
-- Resources are not in this repository: config.yml, internal/, pack/, plugin-data.json were copied from the original jar. Copy them into esources/ yourself (see the plugin README).
+- Resources are not in this repository: config.yml, internal/, pack/, plugin-data.json were copied from the original jar. Copy them into resources/ yourself (see the plugin README).
 - Changes:
   - The buyer watermark resource (me/lucko/shadow/play.rotmc.net) is removed. No license check or activation code was found in the recovered source.
   - MineSkin skin generation is reimplemented with plain HTTP (MineSkinGeneratorService), because the MineSkin Java client is not published to a public repository. The protocol follows the public client. It is not tested with a real API key.
@@ -33,12 +33,12 @@ Every plugin in this repository is an unofficial, modified version of the origin
 - Original: MythicMobs.
 - Source: decompiled from the 5.14.0 release jar (CFR, Vineflower), repaired to compile. The plugin and all NMS modules build from source, without the original or shaded jars.
 - Changes:
-  1. MythicBukkit.isVolatile() always returns 	rue. Code that upstream gates behind its separate premium module is present in this code base and is enabled.
+  1. MythicBukkit.isVolatile() always returns true. Code that upstream gates behind its separate premium module is present in this code base and is enabled.
   2. bStats metrics are not started. The bStats classes are only bundled.
   3. The startup message and /mm version state that this is a modified build.
   4. AdventureBossBar.getTitle() returns the plain-text title (upstream called a method that no longer exists in current Adventure).
   5. BukkitEntityType.spawn calls World#spawn(Location, Class, SpawnReason, boolean, Consumer) reflectively with a fallback, because that overload is missing from the newest Paper API.
-  6. Third-party libraries are Maven dependencies, not the shaded copies of the original. Packages are the original names (org.apache.commons.lang3, org.jooq, com.github.benmanes.caffeine, edis.clients.jedis, org.bstats), so the jar is not relocated. jedis is 3.10.0, because the 5.x line has no JedisExhaustedPoolException.
+  6. Third-party libraries are Maven dependencies, not the shaded copies of the original. Packages are the original names (org.apache.commons.lang3, org.jooq, com.github.benmanes.caffeine, edis.clients.jedis, org.bstats), so the jar is not relocated. jedis is 3.10.0, because the 5.x line has no JedisExhaustedPoolException.
   7. Platform bridges for Paper and Spigot (PaperPlatformBridge, SpigotPlatformBridge) are written from the interface, not recovered. They only parse item component config.
   8. The unused NBT reflection layer (utils/nbt, utils/shadows) is removed. Nothing referenced it, so the Lumine Shadow library is not needed.
   9. Third-party plugin APIs are real artifacts where public, otherwise compile-only stubs that are compiled with the plugin and never packaged.
