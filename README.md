@@ -6,9 +6,9 @@ Readable, rebuildable Java sources for Paper plugins. The sources were recovered
 
 | Folder | Plugin | Author | Platform | State |
 |---|---|---|---|---|
-| [`ModelEngine-Restored`](ModelEngine-Restored) | Ultimate Model Engine R4.1.1 (continuation of ModelEngine) | Ticxo | Paper 1.19.4 – 26.3 | All 19 modules compile; ran on Paper 26.3, logs and resource pack match the original |
+| [`ModelEngine-Restored`](ModelEngine-Restored) | Ultimate Model Engine R4.1.1 (continuation of ModelEngine) | Ticxo | Paper 1.19.4 – 26.3 | Code builds from source for all adapters; resources (`config.yml`, `internal/`, `pack/`) come from the original jar and are not included; started on Paper 26.3 with `meg reload`, models and skins not tested in game; MineSkin reimplemented, not tested with a key |
 | [`Nexo-Restored`](Nexo-Restored) | Nexo 1.26 | boy0000 | Paper 26.x | All own code compiles, including integrations and pack servers; ran on Paper 26.3 |
-| [`MythicMobs-Restored`](MythicMobs-Restored) | MythicMobs 5.14.0 | Lumine | Paper 1.20 – 26.3 | Plugin and all NMS modules build from source; smoke-tested on Paper 1.21.4, 1.21.5, 1.21.8, 1.21.10, 1.21.11 and 26.3 |
+| [`MythicMobs-Restored`](MythicMobs-Restored) | MythicMobs 5.14.0 | Lumine | Paper 1.20 – 26.3 | Plugin and NMS modules build from source without original jars; started on Paper 26.3, reload and mob spawn checked on the server console; other versions were tested with the earlier build |
 | [`LiteBans-Restored`](LiteBans-Restored) | LiteBans 2.19.0 | Ruan | Paper, Bungee, Velocity | Compiles (Fabric/Mixin excluded), deobfuscation partial; console commands verified on Paper 26.3 with H2 |
 | [`LPX-Restored`](LPX-Restored) | LPX 3.9.1 | Ytnoos | Paper / Spigot 1.8 – 1.21 | All 189 classes compile; starts on Paper 26.3; in-game check behaviour not verified |
 | [`CMILib-Restored`](CMILib-Restored) | CMILib 1.6.1.3 | Zrips | Paper 26.3 | Builds from source; starts with CMI on Paper 26.3 |
@@ -46,7 +46,7 @@ Short version per plugin (details in each README):
 
 | Plugin | Build |
 |---|---|
-| ModelEngine | `scripts/fetch-deps.sh && scripts/fetch-paper.sh 26.3 && scripts/build.sh && scripts/build-adapters.sh && scripts/merge-jar.sh` |
+| ModelEngine | `scripts\build.ps1`, then `scripts\merge-jar.ps1` (Windows, tested on this build; the `.sh` scripts still have the older build order) |
 | Nexo | `gradle --offline compileJava && tools/package.sh` |
 | MythicMobs | `cd nms && gradle :v26_3:compileJava …`, then `cd plugin && gradle compileJava jar` |
 | LiteBans | `gradle compileJava jar` |
