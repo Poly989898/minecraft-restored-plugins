@@ -105,9 +105,9 @@ public class UpgradeTemplate {
 
    @NotNull
    public static String getUpgradeChangeSuffix(@NotNull String text, boolean flag) {
-      String text2 = Objects.requireNonNull(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-suffix", " &8(<p>#stat#&8)"));
-      String text3 = Objects.requireNonNull(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-positive", "&a"));
-      String text4 = Objects.requireNonNull(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-negative", "&c"));
-      return flag ? text2.replace("<p>", text4).replace("#stat#", text) : text2.replace("<p>", text3).replace("#stat#", text);
+      String changeSuffix = Objects.requireNonNull(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-suffix", " &8(<p>#stat#&8)"));
+      String positivePrefix = Objects.requireNonNull(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-positive", "&a"));
+      String negativePrefix = Objects.requireNonNull(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-negative", "&c"));
+      return flag ? changeSuffix.replace("<p>", negativePrefix).replace("#stat#", text) : changeSuffix.replace("<p>", positivePrefix).replace("#stat#", text);
    }
 }

@@ -156,8 +156,8 @@ public class ItemTier {
       }
 
       public int[] calculateRange(int count) {
-         int count2 = (int)Math.max(1.0, count - this.range * ItemTier.RANDOM.nextDouble());
-         return new int[]{count2, count2 + this.range};
+         int reducedCount = (int)Math.max(1.0, count - this.range * ItemTier.RANDOM.nextDouble());
+         return new int[]{reducedCount, reducedCount + this.range};
       }
    }
 }

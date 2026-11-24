@@ -136,9 +136,9 @@ public class Amphibian extends ChooseStat implements ItemRestriction, GemStoneSt
          for (double minY = boundingBox.getMinY(); minY <= boundingBox.getMaxY(); minY += Math.min(1.0, Math.max(boundingBox.getHeight() - (minY - boundingBox.getMinY()), 0.001))) {
             for (double minZ = boundingBox.getMinZ(); minZ <= boundingBox.getMaxZ(); minZ += Math.min(1.0, Math.max(boundingBox.getWidthZ() - (minZ - boundingBox.getMinZ()), 0.001))) {
                int count = SilentNumbers.floor(minX);
-               int count2 = SilentNumbers.floor(minY);
-               int count3 = SilentNumbers.floor(minZ);
-               Block blockAt = player.getLocation().getWorld().getBlockAt(count, count2, count3);
+               int blockY = SilentNumbers.floor(minY);
+               int blockZ = SilentNumbers.floor(minZ);
+               Block blockAt = player.getLocation().getWorld().getBlockAt(count, blockY, blockZ);
                if (!list.contains(blockAt)) {
                   list.add(blockAt);
                }

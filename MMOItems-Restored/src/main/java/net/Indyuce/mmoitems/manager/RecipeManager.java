@@ -67,17 +67,17 @@ public class RecipeManager implements Reloadable {
 
                for (String registeredRecipe : RecipeTypeListGUI.getRegisteredRecipes()) {
                   if (section.contains(registeredRecipe)) {
-                     RecipeRegistry registeredRecipe2 = RecipeTypeListGUI.getRegisteredRecipe(registeredRecipe);
-                     ConfigurationSection section2 = RecipeEditorGUI.getSection(section, registeredRecipe);
+                     RecipeRegistry registry = RecipeTypeListGUI.getRegisteredRecipe(registeredRecipe);
+                     ConfigurationSection registrySection = RecipeEditorGUI.getSection(section, registeredRecipe);
 
-                     for (String key : section2.getKeys(false)) {
+                     for (String key : registrySection.getKeys(false)) {
                         NamespacedKey recipeKey = this.getRecipeKey(template.getType(), template.getId(), registeredRecipe, key);
                         Ref ref = new Ref(recipeKey);
-                        FriendlyFeedbackProvider friendlyFeedbackProvider2 = new FriendlyFeedbackProvider(FFPMMOItems.get());
-                        friendlyFeedbackProvider2.activatePrefix(true, "Recipe of $u" + template.getType() + " " + template.getId());
+                        FriendlyFeedbackProvider feedbackProvider = new FriendlyFeedbackProvider(FFPMMOItems.get());
+                        feedbackProvider.activatePrefix(true, "Recipe of $u" + template.getType() + " " + template.getId());
 
                         try {
-                           MythicRecipeBlueprint mythicRecipeBlueprint = registeredRecipe2.sendToMythicLib(template, section2, key, ref, friendlyFeedbackProvider2);
+                           MythicRecipeBlueprint mythicRecipeBlueprint = registry.sendToMythicLib(template, registrySection, key, ref, feedbackProvider);
                            (ref.getValue() != null ? this.customRecipes : this.booklessRecipes).add(mythicRecipeBlueprint);
                         } catch (IllegalArgumentException exception) {
                            if (!exception.getMessage().isEmpty()) {
@@ -90,8 +90,8 @@ public class RecipeManager implements Reloadable {
                                  key,
                                  exception.getMessage()
                               );
-                              friendlyFeedbackProvider2.sendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
-                              friendlyFeedbackProvider2.sendTo(FriendlyFeedbackCategory.FAILURE, MMOItems.getConsole());
+                              feedbackProvider.sendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
+                              feedbackProvider.sendTo(FriendlyFeedbackCategory.FAILURE, MMOItems.getConsole());
                            }
                         }
                      }
@@ -219,8 +219,8 @@ public class RecipeManager implements Reloadable {
             if (namespacedKey != null) {
                boolean flag = false;
 
-               for (NamespacedKey namespacedKey2 : this.blacklistedFromAutomaticDiscovery) {
-                  if (namespacedKey.equals(namespacedKey2)) {
+               for (NamespacedKey blacklistedKey : this.blacklistedFromAutomaticDiscovery) {
+                  if (namespacedKey.equals(blacklistedKey)) {
                      flag = true;
                      break;
                   }
@@ -244,8 +244,8 @@ public class RecipeManager implements Reloadable {
             if (namespacedKey != null) {
                boolean flag = false;
 
-               for (NamespacedKey namespacedKey2 : this.blacklistedFromAutomaticDiscovery) {
-                  if (namespacedKey.equals(namespacedKey2)) {
+               for (NamespacedKey blacklistedKey : this.blacklistedFromAutomaticDiscovery) {
+                  if (namespacedKey.equals(blacklistedKey)) {
                      flag = true;
                      break;
                   }

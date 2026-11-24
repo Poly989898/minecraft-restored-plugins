@@ -56,18 +56,18 @@ public class RandomElementListData implements RandomStatData<ElementListData>, U
 
    @NotNull
    public ElementListData reroll(@NotNull ItemStat itemStat, @NotNull ElementListData elementListData, int count) {
-      ElementListData elementListData2 = new ElementListData();
-      ElementListData elementListData3 = elementListData;
+      ElementListData mergedData = new ElementListData();
+      ElementListData sourceData = elementListData;
 
       for (Element element : Element.values()) {
          for (ElementStatType elementStatType : ElementStatType.values()) {
             NumericStatFormula stat = this.getStat(element, elementStatType);
-            DoubleData doubleData = new DoubleData(elementListData3.getStat(element, elementStatType));
-            DoubleData doubleData2 = stat.reroll(itemStat, doubleData, count);
-            elementListData2.setStat(element, elementStatType, doubleData2.getValue());
+            DoubleData doubleData = new DoubleData(sourceData.getStat(element, elementStatType));
+            DoubleData rerolledData = stat.reroll(itemStat, doubleData, count);
+            mergedData.setStat(element, elementStatType, rerolledData.getValue());
          }
       }
 
-      return elementListData2;
+      return mergedData;
    }
 }

@@ -57,8 +57,8 @@ public class RecipeListGUI extends EditionInventory {
       this.recipeType = recipeRegistry;
       this.listedItem = this.getRecipeRegistry().getDisplayListItem();
       ConfigurationSection section = RecipeEditorGUI.getSection(this.getEditedSection(), "crafting");
-      ConfigurationSection section2 = RecipeEditorGUI.getSection(section, recipeRegistry.getRecipeConfigPath());
-      this.recipeNames.addAll(section2.getKeys(false));
+      ConfigurationSection recipesSection = RecipeEditorGUI.getSection(section, recipeRegistry.getRecipeConfigPath());
+      this.recipeNames.addAll(recipesSection.getKeys(false));
       this.page = 0;
    }
 
@@ -108,13 +108,13 @@ public class RecipeListGUI extends EditionInventory {
    }
 
    public static int page(int count) {
-      int count2 = SilentNumbers.floor(count / 21.0);
-      count -= count2 * 21;
-      int count3 = SilentNumbers.floor(count / 7.0);
-      int count4 = count - 7 * count3;
-      int count5 = 18 + count3 * 9;
-      int count6 = count4 + 1;
-      return count5 + count6;
+      int pageIndex = SilentNumbers.floor(count / 21.0);
+      count -= pageIndex * 21;
+      int rowIndex = SilentNumbers.floor(count / 7.0);
+      int columnIndex = count - 7 * rowIndex;
+      int baseSlot = 18 + rowIndex * 9;
+      int columnOffset = columnIndex + 1;
+      return baseSlot + columnOffset;
    }
 
    @Override
@@ -146,9 +146,9 @@ public class RecipeListGUI extends EditionInventory {
                String text = this.recipeMap.get(event.getSlot());
                if (text != null) {
                   ConfigurationSection section = RecipeEditorGUI.getSection(this.getEditedSection(), "crafting");
-                  ConfigurationSection section2 = RecipeEditorGUI.getSection(section, this.getRecipeRegistry().getRecipeConfigPath());
+                  ConfigurationSection recipesSection = RecipeEditorGUI.getSection(section, this.getRecipeRegistry().getRecipeConfigPath());
                   this.recipeNames.remove(text);
-                  section2.set(text, null);
+                  recipesSection.set(text, null);
                   this.registerTemplateEdition();
                }
             }

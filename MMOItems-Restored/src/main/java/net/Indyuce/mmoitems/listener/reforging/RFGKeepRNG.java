@@ -19,8 +19,8 @@ public class RFGKeepRNG implements Listener {
                StatHistory statHistory = event.getOldMMOItem().computeStatHistory((ItemStat<?, ?>)var1x);
                StatData statData = ((UpdatableRandomStatData)randomStatData).reroll(var1x, statHistory.getOriginalData(), event.getReforger().getGenerationItemLevel());
                if (statData != null) {
-                  StatHistory statHistory2 = event.getNewMMOItem().computeStatHistory((ItemStat<?, ?>)var1x);
-                  statHistory2.setOriginalData(statData);
+                  StatHistory newHistory = event.getNewMMOItem().computeStatHistory((ItemStat<?, ?>)var1x);
+                  newHistory.setOriginalData(statData);
                }
             }
          });

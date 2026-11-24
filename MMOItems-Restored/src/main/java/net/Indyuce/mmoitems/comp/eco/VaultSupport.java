@@ -15,8 +15,8 @@ public class VaultSupport {
    public VaultSupport() {
       RegisteredServiceProvider registration = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
       this.economy = registration != null ? (Economy)registration.getProvider() : null;
-      RegisteredServiceProvider registration2 = Bukkit.getServer().getServicesManager().getRegistration(Permission.class);
-      this.permissions = registration2 != null ? (Permission)registration2.getProvider() : null;
+      RegisteredServiceProvider permissionProvider = Bukkit.getServer().getServicesManager().getRegistration(Permission.class);
+      this.permissions = permissionProvider != null ? (Permission)permissionProvider.getProvider() : null;
       if (this.economy == null) {
          MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load Economy Support (Vault)");
       } else {

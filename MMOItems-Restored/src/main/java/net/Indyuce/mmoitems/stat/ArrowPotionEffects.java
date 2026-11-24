@@ -86,9 +86,9 @@ public class ArrowPotionEffects extends ItemStat<RandomPotionEffectListData, Pot
       );
       PotionEffectType potionEffectType = null;
 
-      for (PotionEffectType potionEffectType2 : PotionEffectType.values()) {
-         if (potionEffectType2 != null && potionEffectType2.getName().equalsIgnoreCase(texts[0].replace("-", "_"))) {
-            potionEffectType = potionEffectType2;
+      for (PotionEffectType effectType : PotionEffectType.values()) {
+         if (effectType != null && effectType.getName().equalsIgnoreCase(texts[0].replace("-", "_"))) {
+            potionEffectType = effectType;
             break;
          }
       }

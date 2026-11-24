@@ -158,8 +158,8 @@ public class MMOItem implements ItemReference {
       int count = this.hasData(ItemStats.MAX_DURABILITY) ? SilentNumbers.round(((DoubleData)this.getData(ItemStats.MAX_DURABILITY)).getValue()) : -1;
       if (count > 0) {
          NBTItem nBT = this.newBuilder().buildNBT();
-         int count2 = this.hasData(ItemStats.CUSTOM_DURABILITY) ? SilentNumbers.round(((DoubleData)this.getData(ItemStats.CUSTOM_DURABILITY)).getValue()) : count;
-         return count - count2;
+         int currentDurability = this.hasData(ItemStats.CUSTOM_DURABILITY) ? SilentNumbers.round(((DoubleData)this.getData(ItemStats.CUSTOM_DURABILITY)).getValue()) : count;
+         return count - currentDurability;
       } else {
          return this.hasData(ItemStats.ITEM_DAMAGE) ? SilentNumbers.round(((DoubleData)this.getData(ItemStats.ITEM_DAMAGE)).getValue()) : 0;
       }
@@ -168,12 +168,12 @@ public class MMOItem implements ItemReference {
    @Deprecated
    public void setDamage(int count) {
       if (!this.hasData(ItemStats.UNBREAKABLE)) {
-         int count2 = this.hasData(ItemStats.MAX_DURABILITY) ? SilentNumbers.round(((DoubleData)this.getData(ItemStats.MAX_DURABILITY)).getValue()) : -1;
-         if (count2 > 0) {
+         int maxDurability = this.hasData(ItemStats.MAX_DURABILITY) ? SilentNumbers.round(((DoubleData)this.getData(ItemStats.MAX_DURABILITY)).getValue()) : -1;
+         if (maxDurability > 0) {
             NBTItem nBT = this.newBuilder().buildNBT();
-            this.setData(ItemStats.CUSTOM_DURABILITY, new DoubleData(count2 - count));
+            this.setData(ItemStats.CUSTOM_DURABILITY, new DoubleData(maxDurability - count));
             Material material = this.hasData(ItemStats.MATERIAL) ? ((MaterialData)this.getData(ItemStats.MATERIAL)).getMaterial() : Material.GOLD_INGOT;
-            double value = (double)count * material.getMaxDurability() / count2;
+            double value = (double)count * material.getMaxDurability() / maxDurability;
             if (value == 0.0) {
                return;
             }
@@ -263,9 +263,9 @@ public class MMOItem implements ItemReference {
       }
 
       for (StatHistory statHistory : this.mergeableStatHistory.values()) {
-         StatData gemstoneData2 = statHistory.getGemstoneData(gemstoneData.getHistoricUUID());
-         if (gemstoneData2 != null) {
-            mMOItem.setData(statHistory.getItemStat(), gemstoneData2);
+         StatData oldGemstoneData = statHistory.getGemstoneData(gemstoneData.getHistoricUUID());
+         if (oldGemstoneData != null) {
+            mMOItem.setData(statHistory.getItemStat(), oldGemstoneData);
          }
       }
 

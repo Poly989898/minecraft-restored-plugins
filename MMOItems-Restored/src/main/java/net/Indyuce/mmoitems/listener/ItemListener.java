@@ -87,15 +87,15 @@ public class ItemListener implements Listener {
                         NBTItem var1xx = NBTItem.get(var0x);
                         return var1xx.hasTag("MMOITEMS_DISABLE_REPAIRING") && var1xx.getBoolean("MMOITEMS_DISABLE_REPAIRING");
                      });
-                     boolean flag2 = var4x.stream().allMatch(var1xx -> new DurabilityItem(player, var1xx).isValid());
+                     boolean allValid = var4x.stream().allMatch(var1xx -> new DurabilityItem(player, var1xx).isValid());
                      if (flag) {
                         inventory.setResult(item);
-                     } else if (flag2) {
+                     } else if (allValid) {
                         DurabilityItem durabilityItem = new DurabilityItem(player, (ItemStack)var4x.get(0));
                         int count = var4x.stream().map(var1xx -> new DurabilityItem(player, var1xx)).map(DurabilityItem::getDurability).reduce(0, Integer::sum);
-                        int count2 = durabilityItem.getMaxDurability() - Math.min(durabilityItem.getMaxDurability(), count);
-                        if (count2 > 0) {
-                           durabilityItem.addDurability(count2);
+                        int remainingDurability = durabilityItem.getMaxDurability() - Math.min(durabilityItem.getMaxDurability(), count);
+                        if (remainingDurability > 0) {
+                           durabilityItem.addDurability(remainingDurability);
                         }
 
                         inventory.setResult(durabilityItem.toItem());
@@ -209,9 +209,9 @@ public class ItemListener implements Listener {
             return null;
          }
 
-         for (ItemStack item2 : player.getInventory().addItem(mmoItemReforger.getReforgingOutput().toArray(new ItemStack[0])).values()) {
-            if (!SilentNumbers.isAir(item2)) {
-               player.getWorld().dropItem(player.getLocation(), item2);
+         for (ItemStack leftoverItem : player.getInventory().addItem(mmoItemReforger.getReforgingOutput().toArray(new ItemStack[0])).values()) {
+            if (!SilentNumbers.isAir(leftoverItem)) {
+               player.getWorld().dropItem(player.getLocation(), leftoverItem);
             }
          }
 

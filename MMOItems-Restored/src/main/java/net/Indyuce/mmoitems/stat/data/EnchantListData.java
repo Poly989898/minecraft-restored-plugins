@@ -110,13 +110,13 @@ public class EnchantListData implements StatData, Mergeable<EnchantListData> {
          } else {
             EnchantListData enchantListData = new EnchantListData();
             mmoItem.hasData(ItemStats.MATERIAL);
-            MaterialData data2 = (MaterialData)mmoItem.getData(ItemStats.MATERIAL);
-            Material material = data2.getMaterial();
+            MaterialData materialData = (MaterialData)mmoItem.getData(ItemStats.MATERIAL);
+            Material material = materialData.getMaterial();
 
             for (Enchantment enchant : this.getEnchants()) {
                int level = this.getLevel(enchant);
-               int level2 = data.getLevel(enchant);
-               if (level2 <= enchant.getMaxLevel() && enchant.getItemTarget().includes(material) && level2 < level) {
+               int otherLevel = data.getLevel(enchant);
+               if (otherLevel <= enchant.getMaxLevel() && enchant.getItemTarget().includes(material) && otherLevel < level) {
                   enchantListData.addEnchant(enchant, level);
                }
             }

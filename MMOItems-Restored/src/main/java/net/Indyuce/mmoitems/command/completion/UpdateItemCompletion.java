@@ -15,19 +15,19 @@ public class UpdateItemCompletion implements TabCompleter {
          return null;
       }
 
-      ArrayList<String> texts2 = new ArrayList<>();
+      ArrayList<String> suggestions = new ArrayList<>();
       if (texts.length == 1) {
          for (Type type : MMOItems.plugin.getTypes().getAll()) {
-            texts2.add(type.getId());
+            suggestions.add(type.getId());
          }
       }
 
       if (texts.length == 2 && Type.isValid(texts[0])) {
-         Type.get(texts[0]).getConfigFile().getConfig().getKeys(false).forEach(var1x -> texts2.add(var1x.toUpperCase()));
+         Type.get(texts[0]).getConfigFile().getConfig().getKeys(false).forEach(var1x -> suggestions.add(var1x.toUpperCase()));
       }
 
       return texts[texts.length - 1].isEmpty()
-         ? texts2
-         : texts2.stream().filter(var1x -> var1x.toLowerCase().startsWith(texts[texts.length - 1].toLowerCase())).collect(Collectors.toList());
+         ? suggestions
+         : suggestions.stream().filter(var1x -> var1x.toLowerCase().startsWith(texts[texts.length - 1].toLowerCase())).collect(Collectors.toList());
    }
 }

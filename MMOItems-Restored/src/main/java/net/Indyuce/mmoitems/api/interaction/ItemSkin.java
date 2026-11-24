@@ -96,9 +96,9 @@ public class ItemSkin extends UseItem {
    public static ItemStack applySkin(@NotNull NBTItem nbtItem, @NotNull VolatileMMOItem volatileMMOItem) {
       NBTItem nBT = volatileMMOItem.getNBT();
       String text = MMOUtils.requireNonEmptyElse(volatileMMOItem.getNBT().getString("MMOITEMS_SKIN_ID"), nBT.getString("MMOITEMS_ITEM_ID"));
-      String text2 = MMOUtils.requireNonEmptyElse(volatileMMOItem.getNBT().getString("MMOITEMS_SKIN_TYPE"), nBT.getString("MMOITEMS_ITEM_TYPE"));
+      String skinType = MMOUtils.requireNonEmptyElse(volatileMMOItem.getNBT().getString("MMOITEMS_SKIN_TYPE"), nBT.getString("MMOITEMS_ITEM_TYPE"));
       nbtItem.addTag(new ItemTag[]{new ItemTag("MMOITEMS_SKIN_ID", text)});
-      nbtItem.addTag(new ItemTag[]{new ItemTag("MMOITEMS_SKIN_TYPE", text2)});
+      nbtItem.addTag(new ItemTag[]{new ItemTag("MMOITEMS_SKIN_TYPE", skinType)});
       if (!nBT.getString("MMOITEMS_ITEM_PARTICLES").isEmpty()) {
          nbtItem.addTag(new ItemTag[]{new ItemTag("MMOITEMS_ITEM_PARTICLES", nBT.getString("MMOITEMS_ITEM_PARTICLES"))});
       }
@@ -109,26 +109,26 @@ public class ItemSkin extends UseItem {
       }
 
       ItemMeta itemMeta = item.getItemMeta();
-      ItemMeta itemMeta2 = nBT.getItem().getItemMeta();
-      if (itemMeta2 != null && itemMeta != null) {
-         if (itemMeta2.hasCustomModelData()) {
-            itemMeta.setCustomModelData(itemMeta2.getCustomModelData());
+      ItemMeta skinMeta = nBT.getItem().getItemMeta();
+      if (skinMeta != null && itemMeta != null) {
+         if (skinMeta.hasCustomModelData()) {
+            itemMeta.setCustomModelData(skinMeta.getCustomModelData());
          }
 
-         if (itemMeta2.isUnbreakable()) {
+         if (skinMeta.isUnbreakable()) {
             itemMeta.setUnbreakable(true);
-            if (itemMeta instanceof Damageable && itemMeta2 instanceof Damageable) {
-               ((Damageable)itemMeta).setDamage(((Damageable)itemMeta2).getDamage());
+            if (itemMeta instanceof Damageable && skinMeta instanceof Damageable) {
+               ((Damageable)itemMeta).setDamage(((Damageable)skinMeta).getDamage());
             }
          }
 
-         if (itemMeta2 instanceof LeatherArmorMeta && itemMeta instanceof LeatherArmorMeta) {
-            ((LeatherArmorMeta)itemMeta).setColor(((LeatherArmorMeta)itemMeta2).getColor());
+         if (skinMeta instanceof LeatherArmorMeta && itemMeta instanceof LeatherArmorMeta) {
+            ((LeatherArmorMeta)itemMeta).setColor(((LeatherArmorMeta)skinMeta).getColor());
          }
 
-         if (itemMeta2 instanceof ArmorMeta && itemMeta instanceof ArmorMeta) {
-            ((ArmorMeta)itemMeta).setTrim(((ArmorMeta)itemMeta2).getTrim());
-            if (itemMeta2.hasItemFlag(ItemFlag.HIDE_ARMOR_TRIM)) {
+         if (skinMeta instanceof ArmorMeta && itemMeta instanceof ArmorMeta) {
+            ((ArmorMeta)itemMeta).setTrim(((ArmorMeta)skinMeta).getTrim());
+            if (skinMeta.hasItemFlag(ItemFlag.HIDE_ARMOR_TRIM)) {
                itemMeta.addItemFlags(new ItemFlag[]{ItemFlag.HIDE_ARMOR_TRIM});
             } else {
                itemMeta.removeItemFlags(new ItemFlag[]{ItemFlag.HIDE_ARMOR_TRIM});

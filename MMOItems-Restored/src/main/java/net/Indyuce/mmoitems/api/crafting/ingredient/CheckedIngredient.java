@@ -46,9 +46,9 @@ public class CheckedIngredient {
          if (item.getAmount() <= 0) {
             iterator.remove();
          } else {
-            int count2 = Math.min(item.getAmount(), count);
-            count -= count2;
-            item.setAmount(item.getAmount() - count2);
+            int consumedAmount = Math.min(item.getAmount(), count);
+            count -= consumedAmount;
+            item.setAmount(item.getAmount() - consumedAmount);
          }
       }
    }

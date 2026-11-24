@@ -42,10 +42,10 @@ public class CraftingStatus {
             Optional first = section.getConfigurationSection(key).getKeys(false).stream().findFirst();
             boolean flag = first.isPresent() && section.contains(key + "." + (String)first.get() + ".delay");
 
-            for (String key2 : section.getConfigurationSection(key).getKeys(false)) {
-               String text2 = section.getString(key + "." + key2 + ".recipe");
-               if (text2 != null && station.hasRecipe(text2)) {
-                  Recipe recipe = station.getRecipe(text2);
+            for (String entryKey : section.getConfigurationSection(key).getKeys(false)) {
+               String recipeId = section.getString(key + "." + entryKey + ".recipe");
+               if (recipeId != null && station.hasRecipe(recipeId)) {
+                  Recipe recipe = station.getRecipe(recipeId);
                   if (!(recipe instanceof CraftingRecipe)) {
                      MMOItems.plugin
                         .getLogger()
@@ -58,11 +58,11 @@ public class CraftingStatus {
                               + "' is not a CRAFTING recipe."
                         );
                   } else if (flag) {
-                     long value = section.getLong(key + "." + key2 + ".started");
-                     long value2 = section.getLong(key + "." + key2 + ".delay");
-                     craftingQueue.add((CraftingRecipe)recipe, value, value + value2);
+                     long value = section.getLong(key + "." + entryKey + ".started");
+                     long delay = section.getLong(key + "." + entryKey + ".delay");
+                     craftingQueue.add((CraftingRecipe)recipe, value, value + delay);
                   } else {
-                     craftingQueue.add((CraftingRecipe)recipe, section.getLong(key + "." + key2 + ".start"), section.getLong(key + "." + key2 + ".completion"));
+                     craftingQueue.add((CraftingRecipe)recipe, section.getLong(key + "." + entryKey + ".start"), section.getLong(key + "." + entryKey + ".completion"));
                   }
                } else {
                   MMOItems.plugin
@@ -72,7 +72,7 @@ public class CraftingStatus {
                         "An error occurred while trying to load crafting station recipe data of '"
                            + text
                            + "': could not find recipe with ID '"
-                           + text2
+                           + recipeId
                            + "', make sure you backup that player data file before the user logs off."
                      );
                }

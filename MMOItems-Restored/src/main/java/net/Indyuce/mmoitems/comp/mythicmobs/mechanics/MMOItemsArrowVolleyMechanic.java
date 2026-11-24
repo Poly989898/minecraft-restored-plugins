@@ -79,9 +79,9 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
       this.scalePerArrow = mythicLineConfig.getBoolean(new String[]{"scaleperarrow", "spa"}, false);
       this.fromOrigin = mythicLineConfig.getBoolean(new String[]{"fromorigin", "fo"}, false);
       this.allowPickup = mythicLineConfig.getBoolean(new String[]{"allowpickup", "ap"}, false);
-      String text2 = mythicLineConfig.getString(new String[]{"arrowitem", "item", "ai"}, null, new String[0]);
-      if (text2 != null) {
-         ProvidedUIFilter uIFilter = UIFilterManager.getUIFilter(text2.replace("<&sp>", " ").replace("\"", ""), null);
+      String arrowItemId = mythicLineConfig.getString(new String[]{"arrowitem", "item", "ai"}, null, new String[0]);
+      if (arrowItemId != null) {
+         ProvidedUIFilter uIFilter = UIFilterManager.getUIFilter(arrowItemId.replace("<&sp>", " ").replace("\"", ""), null);
          if (uIFilter != null && uIFilter.isValid(null) && uIFilter.getParent().fullyDefinesItem()) {
             uIFilter.setAmount(1);
             this.arrowItem = uIFilter.getItemStack(null);
@@ -170,23 +170,23 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
          if (skillCaster.getEntity().getBukkitEntity() instanceof Player) {
             Player bukkitEntity = (Player)skillCaster.getEntity().getBukkitEntity();
             Location location = BukkitAdapter.adapt(abstractLocation);
-            Location location2 = BukkitAdapter.adapt(this.fromOrigin ? skillMetadata.getOrigin() : skillCaster.getLocation()).clone();
-            Vector vector = location2.getDirection().normalize();
-            Vector vector2 = new Vector(-vector.getZ(), 1.0E-5, vector.getX()).normalize();
-            double value3 = this.fOffset.get(skillMetadata);
-            double value4 = this.sOffset.get(skillMetadata);
-            location2.setX(location2.getX() + this.xOffset.get(skillMetadata) + vector.getX() * value3 + vector2.getX() * value4);
-            location2.setY(location2.getY() + this.yOffset.get(skillMetadata) + vector.getY() * value3 + vector2.getY() * value4);
-            location2.setZ(location2.getZ() + this.zOffset.get(skillMetadata) + vector.getZ() * value3 + vector2.getZ() * value4);
-            Vector vector3 = location.toVector().subtract(location2.toVector()).normalize();
+            Location spawnLocation = BukkitAdapter.adapt(this.fromOrigin ? skillMetadata.getOrigin() : skillCaster.getLocation()).clone();
+            Vector vector = spawnLocation.getDirection().normalize();
+            Vector sideways = new Vector(-vector.getZ(), 1.0E-5, vector.getX()).normalize();
+            double forwardOffset = this.fOffset.get(skillMetadata);
+            double sidewaysOffset = this.sOffset.get(skillMetadata);
+            spawnLocation.setX(spawnLocation.getX() + this.xOffset.get(skillMetadata) + vector.getX() * forwardOffset + sideways.getX() * sidewaysOffset);
+            spawnLocation.setY(spawnLocation.getY() + this.yOffset.get(skillMetadata) + vector.getY() * forwardOffset + sideways.getY() * sidewaysOffset);
+            spawnLocation.setZ(spawnLocation.getZ() + this.zOffset.get(skillMetadata) + vector.getZ() * forwardOffset + sideways.getZ() * sidewaysOffset);
+            Vector direction = location.toVector().subtract(spawnLocation.toVector()).normalize();
             ItemStack item = bukkitEntity.getInventory().getItemInMainHand().clone();
-            ItemStack item2 = this.arrowItem != null ? this.arrowItem.clone() : new ItemStack(Material.ARROW);
+            ItemStack arrowStack = this.arrowItem != null ? this.arrowItem.clone() : new ItemStack(Material.ARROW);
             ItemUse itemUse = new ItemUse();
-            float value5 = placeholderFloat.get(skillMetadata);
+            float arrowSpread = placeholderFloat.get(skillMetadata);
             ArrayList<Arrow> arrows = new ArrayList();
 
             for (int i = 0; i < count; i++) {
-               Arrow arrow = bukkitEntity.getWorld().spawnArrow(location2, vector3, value, value2 / 10.0F);
+               Arrow arrow = bukkitEntity.getWorld().spawnArrow(spawnLocation, direction, value, value2 / 10.0F);
                arrow.setVelocity(arrow.getVelocity());
                if (this.allowPickup) {
                   arrow.setPickupStatus(PickupStatus.ALLOWED);
@@ -196,7 +196,7 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
 
                arrow.setShooter(bukkitEntity);
                syncEventBlock = true;
-               EntityShootBowEvent event = new EntityShootBowEvent(bukkitEntity, item, item2, arrow, EquipmentSlot.HAND, value5, false);
+               EntityShootBowEvent event = new EntityShootBowEvent(bukkitEntity, item, arrowStack, arrow, EquipmentSlot.HAND, arrowSpread, false);
                if (this.fullEvent) {
                   Bukkit.getPluginManager().callEvent(event);
                } else {
@@ -213,7 +213,7 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
 
                   arrows.add(arrow);
                   if (this.scalePerArrow) {
-                     value5 = placeholderFloat.get(skillMetadata);
+                     arrowSpread = placeholderFloat.get(skillMetadata);
                   }
                }
             }

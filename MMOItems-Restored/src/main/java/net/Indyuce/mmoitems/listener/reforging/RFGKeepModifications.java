@@ -17,12 +17,12 @@ public class RFGKeepModifications implements Listener {
          }
 
          for (StatHistory statHistory : event.getOldMMOItem().getStatHistories()) {
-            StatHistory statHistory2 = event.getNewMMOItem().computeStatHistory(statHistory.getItemStat());
+            StatHistory newHistory = event.getNewMMOItem().computeStatHistory(statHistory.getItemStat());
 
             for (UUID allModifier : statHistory.getAllModifiers()) {
                StatData modifiersBonus = statHistory.getModifiersBonus(allModifier);
                if (modifiersBonus != null) {
-                  statHistory2.registerModifierBonus(allModifier, ((Mergeable)modifiersBonus).clone());
+                  newHistory.registerModifierBonus(allModifier, ((Mergeable)modifiersBonus).clone());
                }
             }
          }

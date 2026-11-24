@@ -54,15 +54,15 @@ public class GiveCommandTreeNode extends CommandTreeNode {
          MMOItemTemplate templateOrThrow = MMOItems.plugin.getTemplates().getTemplateOrThrow(type, texts[2].toUpperCase().replace("-", "_"));
          RandomAmount randomAmount = texts.length > 4 ? new RandomAmount(texts[4]) : new RandomAmount(1, 1);
          double value = texts.length > 5 ? Double.parseDouble(texts[5]) / 100.0 : 0.0;
-         double value2 = texts.length > 6 ? Double.parseDouble(texts[6]) / 100.0 : 1.0;
-         double value3 = texts.length > 7 ? Double.parseDouble(texts[7]) / 100.0 : 0.0;
+         double unidentifiedChance = texts.length > 6 ? Double.parseDouble(texts[6]) / 100.0 : 1.0;
+         double softChance = texts.length > 7 ? Double.parseDouble(texts[7]) / 100.0 : 0.0;
          boolean flag = texts.length > 8 && (texts[8].equalsIgnoreCase("silent") || texts[8].equalsIgnoreCase("s"));
-         if (random.nextDouble() > value2) {
+         if (random.nextDouble() > unidentifiedChance) {
             return CommandResult.SUCCESS;
          }
 
          MMOItem mmoItem = templateOrThrow.newBuilder(PlayerData.get(player).getRPG()).build();
-         if (random.nextDouble() < value3) {
+         if (random.nextDouble() < softChance) {
             mmoItem.setData(ItemStats.SOULBOUND, new SoulboundData(player, 1));
          }
 

@@ -153,11 +153,11 @@ public abstract class EditionInventory extends PluginInventory {
       itemMeta.setLore(list);
       item.setItemMeta(itemMeta);
       if (this.displaysBack) {
-         ItemStack item2 = new ItemStack(Material.BARRIER);
-         ItemMeta itemMeta2 = item2.getItemMeta();
-         itemMeta2.setDisplayName(ChatColor.GREEN + "⇨" + " Back");
-         item2.setItemMeta(itemMeta2);
-         this.inventory.setItem(6, item2);
+         ItemStack barrierItem = new ItemStack(Material.BARRIER);
+         ItemMeta barrierMeta = barrierItem.getItemMeta();
+         barrierMeta.setDisplayName(ChatColor.GREEN + "⇨" + " Back");
+         barrierItem.setItemMeta(barrierMeta);
+         this.inventory.setItem(6, barrierItem);
       }
 
       this.inventory.setItem(2, item);

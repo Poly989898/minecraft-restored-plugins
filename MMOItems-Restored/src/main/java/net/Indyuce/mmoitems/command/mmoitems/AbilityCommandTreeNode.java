@@ -61,13 +61,13 @@ public class AbilityCommandTreeNode extends CommandTreeNode {
       AbilityData abilityData = new AbilityData(MMOItems.plugin.getSkills().getSkill(text), TriggerType.CAST);
 
       for (byte b = 3; b < texts.length - 1; b += 2) {
-         String text2 = texts[b];
-         String text3 = texts[b + 1];
+         String modifierName = texts[b];
+         String modifierValue = texts[b + 1];
 
          try {
-            abilityData.setModifier(text2, Double.parseDouble(text3));
+            abilityData.setModifier(modifierName, Double.parseDouble(modifierValue));
          } catch (Exception exception) {
-            sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Wrong format: {" + text2 + " " + text3 + "}");
+            sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Wrong format: {" + modifierName + " " + modifierValue + "}");
             return CommandResult.FAILURE;
          }
       }

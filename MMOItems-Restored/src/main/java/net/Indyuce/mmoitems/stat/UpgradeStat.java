@@ -184,16 +184,16 @@ public class UpgradeStat extends ItemStat<UpgradeData, UpgradeData> implements C
             return false;
          }
 
-         UpgradeData data2 = (UpgradeData)mMOItem.getData(ItemStats.UPGRADE);
-         if (!MMOUtils.checkReference(data2.getReference(), data.getReference())) {
+         UpgradeData upgradeData = (UpgradeData)mMOItem.getData(ItemStats.UPGRADE);
+         if (!MMOUtils.checkReference(upgradeData.getReference(), data.getReference())) {
             Message.WRONG_UPGRADE_REFERENCE.format(ChatColor.RED).send(player);
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 2.0F);
             return false;
          }
 
-         UpgradeItemEvent event2 = new UpgradeItemEvent(playerData, mMOItem, liveMMOItem, data2, data);
-         Bukkit.getPluginManager().callEvent(event2);
-         if (event2.isCancelled()) {
+         UpgradeItemEvent upgradeEvent = new UpgradeItemEvent(playerData, mMOItem, liveMMOItem, upgradeData, data);
+         Bukkit.getPluginManager().callEvent(upgradeEvent);
+         if (upgradeEvent.isCancelled()) {
             return false;
          }
 
@@ -205,7 +205,7 @@ public class UpgradeStat extends ItemStat<UpgradeData, UpgradeData> implements C
             return false;
          }
 
-         if (RANDOM.nextDouble() > data2.getSuccess() * data.getSuccess()) {
+         if (RANDOM.nextDouble() > upgradeData.getSuccess() * data.getSuccess()) {
             Message.UPGRADE_FAIL.format(ChatColor.RED).send(player);
             if (data.destroysOnFail()) {
                event.getCurrentItem().setAmount(0);

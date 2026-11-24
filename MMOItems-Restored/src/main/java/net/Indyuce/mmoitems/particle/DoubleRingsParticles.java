@@ -27,9 +27,9 @@ public class DoubleRingsParticles extends ParticleRunnable {
       Location location = this.player.getPlayer().getLocation();
 
       for (double value = 0.0; value < 2.0; value++) {
-         double value2 = this.j + value * Math.PI;
+         double angle = this.j + value * Math.PI;
          this.particle
-            .display(location.clone().add(this.radius * Math.cos(value2), this.height + Math.sin(this.j) * this.y_offset, this.radius * Math.sin(value2)), this.speed);
+            .display(location.clone().add(this.radius * Math.cos(angle), this.height + Math.sin(this.j) * this.y_offset, this.radius * Math.sin(angle)), this.speed);
       }
 
       this.j = this.j + (Math.PI / 16) * this.r_speed;

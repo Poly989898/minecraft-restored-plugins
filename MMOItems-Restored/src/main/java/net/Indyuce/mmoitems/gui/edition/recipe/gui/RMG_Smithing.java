@@ -22,9 +22,9 @@ public class RMG_Smithing extends RecipeEditorGUI {
    public RMG_Smithing(@NotNull Player player, @NotNull MMOItemTemplate mmoItemTemplate, @NotNull String text, @NotNull RecipeRegistry recipeRegistry) {
       super(player, mmoItemTemplate, text, recipeRegistry);
       ConfigurationSection section = RecipeEditorGUI.getSection(this.getEditedSection(), "crafting");
-      ConfigurationSection section2 = RecipeEditorGUI.getSection(section, this.getRecipeRegistry().getRecipeConfigPath());
-      ConfigurationSection section3 = RecipeEditorGUI.getSection(section2, this.getRecipeName());
-      this.interpreter = new RMGRI_Smithing(section3);
+      ConfigurationSection registrySection = RecipeEditorGUI.getSection(section, this.getRecipeRegistry().getRecipeConfigPath());
+      ConfigurationSection recipeSection = RecipeEditorGUI.getSection(registrySection, this.getRecipeName());
+      this.interpreter = new RMGRI_Smithing(recipeSection);
       this.inputLinks.put(39, 0);
       this.inputLinks.put(41, 1);
       this.addButton(new RBA_InputOutput(this));

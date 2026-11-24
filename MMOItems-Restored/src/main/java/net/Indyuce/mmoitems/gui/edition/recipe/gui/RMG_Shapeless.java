@@ -22,9 +22,9 @@ public class RMG_Shapeless extends RecipeEditorGUI {
       this.addButton(new RBA_InputOutput(this));
       this.addButton(new RBA_HideFromBook(this));
       ConfigurationSection section = RecipeEditorGUI.getSection(this.getEditedSection(), "crafting");
-      ConfigurationSection section2 = RecipeEditorGUI.getSection(section, this.getRecipeRegistry().getRecipeConfigPath());
-      ConfigurationSection section3 = RecipeEditorGUI.getSection(section2, this.getRecipeName());
-      this.interpreter = new RMGRI_Shapeless(section3);
+      ConfigurationSection registrySection = RecipeEditorGUI.getSection(section, this.getRecipeRegistry().getRecipeConfigPath());
+      ConfigurationSection recipeSection = RecipeEditorGUI.getSection(registrySection, this.getRecipeName());
+      this.interpreter = new RMGRI_Shapeless(recipeSection);
       this.inputLinks.put(30, 0);
       this.inputLinks.put(31, 1);
       this.inputLinks.put(32, 2);

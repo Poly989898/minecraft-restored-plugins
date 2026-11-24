@@ -147,9 +147,9 @@ public class AbilityData extends Skill {
       JsonObject jsonObject = new JsonObject();
       jsonObject.addProperty("Id", this.ability.getHandler().getId());
       jsonObject.addProperty("CastMode", this.getTrigger().name());
-      JsonObject jsonObject2 = new JsonObject();
-      this.modifiers.keySet().forEach(var2x -> jsonObject2.addProperty(var2x, this.getParameter(var2x)));
-      jsonObject.add("Modifiers", jsonObject2);
+      JsonObject modifiersJson = new JsonObject();
+      this.modifiers.keySet().forEach(var2x -> modifiersJson.addProperty(var2x, this.getParameter(var2x)));
+      jsonObject.add("Modifiers", modifiersJson);
       return jsonObject;
    }
 

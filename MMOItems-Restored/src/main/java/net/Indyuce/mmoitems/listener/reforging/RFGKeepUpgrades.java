@@ -10,12 +10,12 @@ public class RFGKeepUpgrades implements Listener {
    @EventHandler
    public void onReforge(MMOItemReforgeEvent event) {
       UpgradeData data = (UpgradeData)event.getOldMMOItem().getData(ItemStats.UPGRADE);
-      UpgradeData data2 = (UpgradeData)event.getNewMMOItem().getData(ItemStats.UPGRADE);
-      if (event.getOptions().shouldKeepUpgrades() && data != null && data2 != null && data2.getMaxUpgrades() > 0) {
+      UpgradeData newUpgradeData = (UpgradeData)event.getNewMMOItem().getData(ItemStats.UPGRADE);
+      if (event.getOptions().shouldKeepUpgrades() && data != null && newUpgradeData != null && newUpgradeData.getMaxUpgrades() > 0) {
          UpgradeData upgradeData = new UpgradeData(
-            data2.getReference(), data2.getTemplateName(), data2.isWorkbench(), data2.isDestroy(), data2.getMax(), data2.getMin(), data2.getSuccess()
+            newUpgradeData.getReference(), newUpgradeData.getTemplateName(), newUpgradeData.isWorkbench(), newUpgradeData.isDestroy(), newUpgradeData.getMax(), newUpgradeData.getMin(), newUpgradeData.getSuccess()
          );
-         upgradeData.setLevel(Math.min(data.getLevel(), data2.getMaxUpgrades()));
+         upgradeData.setLevel(Math.min(data.getLevel(), newUpgradeData.getMaxUpgrades()));
          event.getNewMMOItem().setData(ItemStats.UPGRADE, upgradeData);
       }
    }

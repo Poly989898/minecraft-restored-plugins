@@ -48,15 +48,15 @@ public class GemStone extends UseItem {
          return new GemStone.ApplyResult(GemStone.ResultType.NONE);
       }
 
-      String text2 = this.getNBTItem().getString(ItemStats.GEM_COLOR.getNBTPath());
+      String gemColor = this.getNBTItem().getString(ItemStats.GEM_COLOR.getNBTPath());
       GemSocketsData data = (GemSocketsData)mmoItem.getData(ItemStats.GEM_SOCKETS);
-      String emptySocket = data.getEmptySocket(text2);
+      String emptySocket = data.getEmptySocket(gemColor);
       if (emptySocket == null) {
          return new GemStone.ApplyResult(GemStone.ResultType.NONE);
       }
 
-      String text3 = this.getNBTItem().getString(ItemStats.ITEM_TYPE_RESTRICTION.getNBTPath());
-      if (!text3.isEmpty() && (!type.isWeapon() || !text3.contains("WEAPON")) && !text3.contains(type.getId())) {
+      String typeRestriction = this.getNBTItem().getString(ItemStats.ITEM_TYPE_RESTRICTION.getNBTPath());
+      if (!typeRestriction.isEmpty() && (!type.isWeapon() || !typeRestriction.contains("WEAPON")) && !typeRestriction.contains(type.getId())) {
          return new GemStone.ApplyResult(GemStone.ResultType.NONE);
       }
 
@@ -82,13 +82,13 @@ public class GemStone extends UseItem {
             LiveMMOItem liveMMOItem = new LiveMMOItem(this.getNBTItem());
             GemstoneData gemstoneData = new GemstoneData(liveMMOItem, emptySocket);
             StatHistory statHistory = mmoItem.computeStatHistory(ItemStats.GEM_SOCKETS);
-            this.findEmptySocket(statHistory, text2, gemstoneData);
+            this.findEmptySocket(statHistory, gemColor, gemstoneData);
             mmoItem.setData(ItemStats.GEM_SOCKETS, statHistory.recalculate(mmoItem.getUpgradeLevel()));
             Integer value = null;
-            String text4 = liveMMOItem.hasData(ItemStats.GEM_UPGRADE_SCALING)
+            String upgradeScaling = liveMMOItem.hasData(ItemStats.GEM_UPGRADE_SCALING)
                ? liveMMOItem.getData(ItemStats.GEM_UPGRADE_SCALING).toString()
                : GemUpgradeScaling.defaultValue;
-            switch (text4) {
+            switch (upgradeScaling) {
                case "HISTORIC":
                   value = 0;
                   break;
@@ -98,11 +98,11 @@ public class GemStone extends UseItem {
 
             gemstoneData.setLevel(value);
 
-            for (ItemStat stat2 : liveMMOItem.getStats()) {
-               if (!(stat2 instanceof GemStoneStat)) {
-                  StatData data2 = liveMMOItem.getData(stat2);
-                  if (data2 instanceof Mergeable) {
-                     mmoItem.mergeData(stat2, data2, gemstoneData.getHistoricUUID());
+            for (ItemStat gemStat : liveMMOItem.getStats()) {
+               if (!(gemStat instanceof GemStoneStat)) {
+                  StatData gemStatData = liveMMOItem.getData(gemStat);
+                  if (gemStatData instanceof Mergeable) {
+                     mmoItem.mergeData(gemStat, gemStatData, gemstoneData.getHistoricUUID());
                   }
                }
             }

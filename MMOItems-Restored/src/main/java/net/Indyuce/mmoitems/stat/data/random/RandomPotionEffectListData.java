@@ -20,8 +20,8 @@ public class RandomPotionEffectListData implements RandomStatData<PotionEffectLi
       Validate.notNull(section, "Config cannot be null");
 
       for (String key : section.getKeys(false)) {
-         ConfigurationSection section2 = section.getConfigurationSection(key);
-         if (section2 == null) {
+         ConfigurationSection effectSection = section.getConfigurationSection(key);
+         if (effectSection == null) {
             String text = section.getString(key);
             if (text == null) {
                throw new IllegalArgumentException("Config cannot be null");
@@ -37,9 +37,9 @@ public class RandomPotionEffectListData implements RandomStatData<PotionEffectLi
             }
 
             Double value = SilentNumbers.DoubleParse(texts[0]);
-            Integer value2 = SilentNumbers.IntegerParse(texts[1]);
+            Integer amplifier = SilentNumbers.IntegerParse(texts[1]);
             PotionEffectType potionEffectType = PotionEffectType.getByName(key.toUpperCase().replace("-", "_").replace(" ", "_"));
-            if (value == null || value2 == null || potionEffectType == null) {
+            if (value == null || amplifier == null || potionEffectType == null) {
                throw new IllegalArgumentException(
                   FriendlyFeedbackProvider.quickForConsole(
                      FFPMMOItems.get(), "Incorrect format, expected $e{Effect}: {Duration},{Amplifier}$b instead of $i{0} {1}$b.", new String[]{key, text}
@@ -47,9 +47,9 @@ public class RandomPotionEffectListData implements RandomStatData<PotionEffectLi
                );
             }
 
-            this.effects.add(new RandomPotionEffectData(potionEffectType, new NumericStatFormula(value), new NumericStatFormula(value2)));
+            this.effects.add(new RandomPotionEffectData(potionEffectType, new NumericStatFormula(value), new NumericStatFormula(amplifier)));
          } else {
-            this.effects.add(new RandomPotionEffectData(section2));
+            this.effects.add(new RandomPotionEffectData(effectSection));
          }
       }
    }

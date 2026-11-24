@@ -177,12 +177,12 @@ public class ItemUse implements Listener {
             UseItem useItem = type.toUseItem(whoClicked, nBTItem);
             if (useItem.checkItemRequirements()) {
                if (useItem instanceof ItemSkin) {
-                  NBTItem nBTItem2 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
-                  if (!nBTItem2.hasType()) {
+                  NBTItem clickedNbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
+                  if (!clickedNbtItem.hasType()) {
                      return;
                   }
 
-                  ItemSkin.ApplyResult applyResult = ((ItemSkin)useItem).applyOntoItem(nBTItem2, Type.get(nBTItem2.getType()));
+                  ItemSkin.ApplyResult applyResult = ((ItemSkin)useItem).applyOntoItem(clickedNbtItem, Type.get(clickedNbtItem.getType()));
                   if (applyResult.getType() == ItemSkin.ResultType.NONE) {
                      return;
                   }
@@ -197,12 +197,12 @@ public class ItemUse implements Listener {
                }
 
                if (useItem instanceof GemStone) {
-                  NBTItem nBTItem2 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
-                  if (!nBTItem2.hasType()) {
+                  NBTItem clickedNbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
+                  if (!clickedNbtItem.hasType()) {
                      return;
                   }
 
-                  GemStone.ApplyResult applyResult = ((GemStone)useItem).applyOntoItem(nBTItem2, Type.get(nBTItem2.getType()));
+                  GemStone.ApplyResult applyResult = ((GemStone)useItem).applyOntoItem(clickedNbtItem, Type.get(clickedNbtItem.getType()));
                   if (applyResult.getType() == GemStone.ResultType.NONE) {
                      return;
                   }

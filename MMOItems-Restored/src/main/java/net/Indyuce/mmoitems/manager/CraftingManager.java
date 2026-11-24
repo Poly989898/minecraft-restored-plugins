@@ -194,9 +194,9 @@ public class CraftingManager implements Reloadable {
    }
 
    public void registerIngredient(
-      String text, Function<MMOLineConfig, Ingredient> function, ConditionalDisplay conditionalDisplay, Predicate<NBTItem> predicate, Function<NBTItem, PlayerIngredient> function2
+      String text, Function<MMOLineConfig, Ingredient> function, ConditionalDisplay conditionalDisplay, Predicate<NBTItem> predicate, Function<NBTItem, PlayerIngredient> ingredientFunction
    ) {
-      this.ingredients.add(0, new IngredientType(text, function, conditionalDisplay, predicate, function2));
+      this.ingredients.add(0, new IngredientType(text, function, conditionalDisplay, predicate, ingredientFunction));
    }
 
    public void registerCondition(String text, Function<MMOLineConfig, Condition> function, @NotNull ConditionalDisplay conditionalDisplay) {

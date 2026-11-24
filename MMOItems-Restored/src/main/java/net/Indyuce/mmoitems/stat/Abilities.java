@@ -68,15 +68,15 @@ public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> 
    @Override
    public void loadConfiguration(@NotNull ConfigurationSection section, @NotNull Object obj) {
       if (obj instanceof ConfigurationSection) {
-         ConfigurationSection section2 = (ConfigurationSection)obj;
-         this.generalFormat = section2.getString("general-format");
-         this.modifierIfAny = section2.getString("modifier-if-any", "");
-         this.modifierNewLine = "\n" + section2.getString("modifier-new-line", "");
-         this.modifierForEach = section2.getString("modifier-foreach");
-         this.modifierSplitter = section2.getString("modifier-splitter");
-         this.abilitySplitter = section2.getString("ability-splitter.format");
-         this.useAbilitySplitter = section2.getBoolean("ability-splitter.enabled");
-         this.modifiersPerLine = section2.getInt("modifiers-per-line");
+         ConfigurationSection abilitySection = (ConfigurationSection)obj;
+         this.generalFormat = abilitySection.getString("general-format");
+         this.modifierIfAny = abilitySection.getString("modifier-if-any", "");
+         this.modifierNewLine = "\n" + abilitySection.getString("modifier-new-line", "");
+         this.modifierForEach = abilitySection.getString("modifier-foreach");
+         this.modifierSplitter = abilitySection.getString("modifier-splitter");
+         this.abilitySplitter = abilitySection.getString("ability-splitter.format");
+         this.useAbilitySplitter = abilitySection.getBoolean("ability-splitter.enabled");
+         this.modifiersPerLine = abilitySection.getInt("modifiers-per-line");
       } else {
          this.generalFormat = section.getString("ability-format");
          this.modifierIfAny = "\n";
@@ -157,30 +157,30 @@ public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> 
 
    @Override
    public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
-      String text2 = (String)objs[0];
-      String text3 = (String)objs[1];
-      String text4 = text.toUpperCase().replace("-", "_").replace(" ", "_").replaceAll("[^A-Z0-9_]", "");
-      if (text3.equals("ability")) {
-         Validate.isTrue(MMOItems.plugin.getSkills().hasSkill(text4), text4 + " is not a valid ability! You may check the ability list using /mi list ability.");
-         RegisteredSkill skill = MMOItems.plugin.getSkills().getSkill(text4);
-         editionInventory.getEditedSection().set("ability." + text2, null);
-         editionInventory.getEditedSection().set("ability." + text2 + ".type", text4);
+      String abilityId = (String)objs[0];
+      String modeName = (String)objs[1];
+      String normalizedMode = text.toUpperCase().replace("-", "_").replace(" ", "_").replaceAll("[^A-Z0-9_]", "");
+      if (modeName.equals("ability")) {
+         Validate.isTrue(MMOItems.plugin.getSkills().hasSkill(normalizedMode), normalizedMode + " is not a valid ability! You may check the ability list using /mi list ability.");
+         RegisteredSkill skill = MMOItems.plugin.getSkills().getSkill(normalizedMode);
+         editionInventory.getEditedSection().set("ability." + abilityId, null);
+         editionInventory.getEditedSection().set("ability." + abilityId + ".type", normalizedMode);
          editionInventory.registerTemplateEdition();
          editionInventory.getPlayer()
             .sendMessage(MMOItems.plugin.getPrefix() + "Successfully set the ability to " + ChatColor.GOLD + skill.getName() + ChatColor.GRAY + ".");
-      } else if (text3.equals("mode")) {
-         TriggerType triggerType = TriggerType.valueOf(text4);
-         editionInventory.getEditedSection().set("ability." + text2 + ".mode", triggerType.name());
+      } else if (modeName.equals("mode")) {
+         TriggerType triggerType = TriggerType.valueOf(normalizedMode);
+         editionInventory.getEditedSection().set("ability." + abilityId + ".mode", triggerType.name());
          editionInventory.registerTemplateEdition();
          editionInventory.getPlayer()
             .sendMessage(MMOItems.plugin.getPrefix() + "Successfully set the trigger to " + ChatColor.GOLD + triggerType.getName() + ChatColor.GRAY + ".");
       } else {
          new NumericStatFormula(text)
-            .fillConfigurationSection(editionInventory.getEditedSection(), "ability." + text2 + "." + text3, NumericStatFormula.FormulaSaveOption.NONE);
+            .fillConfigurationSection(editionInventory.getEditedSection(), "ability." + abilityId + "." + modeName, NumericStatFormula.FormulaSaveOption.NONE);
          editionInventory.registerTemplateEdition();
          editionInventory.getPlayer()
             .sendMessage(
-               MMOItems.plugin.getPrefix() + ChatColor.GOLD + UtilityMethods.caseOnWords(text3.replace("-", " ")) + ChatColor.GRAY + " successfully added."
+               MMOItems.plugin.getPrefix() + ChatColor.GOLD + UtilityMethods.caseOnWords(modeName.replace("-", " ")) + ChatColor.GRAY + " successfully added."
             );
       }
    }

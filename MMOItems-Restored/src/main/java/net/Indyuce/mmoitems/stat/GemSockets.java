@@ -53,9 +53,9 @@ public class GemSockets extends ItemStat<GemSocketsData, GemSocketsData> {
          this.filledGemSocketFormat = section.getString("filled-gem-socket");
       } else {
          Validate.isTrue(obj instanceof ConfigurationSection, "Must be a config section");
-         ConfigurationSection section2 = (ConfigurationSection)obj;
-         this.emptyGemSocketFormat = section2.getString("empty");
-         this.filledGemSocketFormat = section2.getString("filled");
+         ConfigurationSection socketSection = (ConfigurationSection)obj;
+         this.emptyGemSocketFormat = socketSection.getString("empty");
+         this.filledGemSocketFormat = socketSection.getString("filled");
       }
    }
 

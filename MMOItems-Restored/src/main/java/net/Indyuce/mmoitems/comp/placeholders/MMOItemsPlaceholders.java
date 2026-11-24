@@ -37,14 +37,14 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
 
    public String onRequest(@Nullable OfflinePlayer offlinePlayer, @NotNull String text) {
       if (text.startsWith("type_")) {
-         String text2 = text.substring(5, text.lastIndexOf("_")).toUpperCase();
-         if (!MMOItems.plugin.getTypes().has(text2)) {
+         String typeId = text.substring(5, text.lastIndexOf("_")).toUpperCase();
+         if (!MMOItems.plugin.getTypes().has(typeId)) {
             return "Invalid type";
          }
 
-         net.Indyuce.mmoitems.api.Type type = net.Indyuce.mmoitems.api.Type.get(text2);
-         String text3 = text.substring(6 + text2.length()).toLowerCase();
-         return "total".equals(text3) ? "" + MMOItems.plugin.getTemplates().getTemplates(type).size() : type.getName();
+         net.Indyuce.mmoitems.api.Type type = net.Indyuce.mmoitems.api.Type.get(typeId);
+         String itemId = text.substring(6 + typeId.length()).toLowerCase();
+         return "total".equals(itemId) ? "" + MMOItems.plugin.getTemplates().getTemplates(type).size() : type.getName();
       } else if (offlinePlayer == null) {
          return null;
       } else if (text.equals("stat_defense_percent")) {
@@ -52,13 +52,13 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
          double value = 100.0 - new DefenseFormula().getAppliedDamage(stat, 100.0);
          return MythicLib.plugin.getMMOConfig().decimal.format(value);
       } else if (text.startsWith("stat_")) {
-         String text2 = UtilityMethods.enumName(text.substring(5));
-         return StatManager.format(text2, MMOPlayerData.get(offlinePlayer));
+         String typeId = UtilityMethods.enumName(text.substring(5));
+         return StatManager.format(typeId, MMOPlayerData.get(offlinePlayer));
       } else if (text.startsWith("ability_cd_")) {
          return MythicLib.plugin.getMMOConfig().decimal.format(MMOPlayerData.get(offlinePlayer).getCooldownMap().getCooldown("skill_" + text.substring(11)));
       } else if (text.startsWith("tier_")) {
-         String text2 = text.substring(5).toUpperCase();
-         return !MMOItems.plugin.getTiers().has(text2) ? "Invalid tier" : MMOItems.plugin.getTiers().get(text2).getName();
+         String typeId = text.substring(5).toUpperCase();
+         return !MMOItems.plugin.getTiers().has(typeId) ? "Invalid tier" : MMOItems.plugin.getTiers().get(typeId).getName();
       } else if (!offlinePlayer.isOnline()) {
          return null;
       } else if (text.equals("durability")) {

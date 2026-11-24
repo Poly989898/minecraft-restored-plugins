@@ -26,11 +26,11 @@ public class RFGKeepGems implements Listener {
       if (event.getOptions().shouldKeepGemStones()) {
          GemSocketsData data = (GemSocketsData)event.getOldMMOItem().getData(ItemStats.GEM_SOCKETS);
          if (data != null) {
-            GemSocketsData data2 = (GemSocketsData)event.getNewMMOItem().getData(ItemStats.GEM_SOCKETS);
+            GemSocketsData newSocketsData = (GemSocketsData)event.getNewMMOItem().getData(ItemStats.GEM_SOCKETS);
             ArrayList<GemstoneData> gemstoneDatas = new ArrayList();
-            if (data2 != null) {
-               ArrayList<GemstoneData> gemstoneDatas2 = new ArrayList();
-               ArrayList<String> texts = new ArrayList<>(data2.getEmptySlots());
+            if (newSocketsData != null) {
+               ArrayList<GemstoneData> newGemstones = new ArrayList();
+               ArrayList<String> texts = new ArrayList<>(newSocketsData.getEmptySlots());
 
                for (GemstoneData gemstoneData : new ArrayList<>(data.getGemstones())) {
                   if (texts.size() == 0) {
@@ -43,9 +43,9 @@ public class RFGKeepGems implements Listener {
 
                      String text = null;
 
-                     for (String text2 : texts) {
-                        if (text2.equals(GemSocketsData.getUncoloredGemSlot()) || socketColor.equals(text2)) {
-                           text = text2;
+                     for (String gemLine : texts) {
+                        if (gemLine.equals(GemSocketsData.getUncoloredGemSlot()) || socketColor.equals(gemLine)) {
+                           text = gemLine;
                         }
                      }
 
@@ -66,17 +66,17 @@ public class RFGKeepGems implements Listener {
                               } else {
                                  event.getReforger().getReforgingOutput().addAll(mmoItemReforger.getReforgingOutput());
                                  LiveMMOItem liveMMOItem = new LiveMMOItem(mmoItemReforger.getResult());
-                                 GemstoneData gemstoneData2 = new GemstoneData(liveMMOItem, text, gemstoneData.getHistoricUUID());
-                                 gemstoneData2.setLevel(gemstoneData.getLevel());
+                                 GemstoneData newGemstoneData = new GemstoneData(liveMMOItem, text, gemstoneData.getHistoricUUID());
+                                 newGemstoneData.setLevel(gemstoneData.getLevel());
                                  texts.remove(text);
-                                 gemstoneDatas2.add(gemstoneData2);
+                                 newGemstones.add(newGemstoneData);
 
                                  for (ItemStat stat : liveMMOItem.getStats()) {
                                     if (!(stat instanceof GemStoneStat)) {
-                                       StatData data3 = liveMMOItem.getData(stat);
-                                       if (data3 instanceof Mergeable && (!(data3 instanceof EnchantListData) || !data3.isEmpty())) {
+                                       StatData statData = liveMMOItem.getData(stat);
+                                       if (statData instanceof Mergeable && (!(statData instanceof EnchantListData) || !statData.isEmpty())) {
                                           StatHistory statHistory = event.getNewMMOItem().computeStatHistory(stat);
-                                          statHistory.registerGemstoneData(gemstoneData2.getHistoricUUID(), data3);
+                                          statHistory.registerGemstoneData(newGemstoneData.getHistoricUUID(), statData);
                                        }
                                     }
                                  }
@@ -89,7 +89,7 @@ public class RFGKeepGems implements Listener {
 
                GemSocketsData gemSocketsData = new GemSocketsData(texts);
 
-               for (GemstoneData gemstoneData : gemstoneDatas2) {
+               for (GemstoneData gemstoneData : newGemstones) {
                   if (gemstoneData != null) {
                      gemSocketsData.add(gemstoneData);
                   }

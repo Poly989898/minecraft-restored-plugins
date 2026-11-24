@@ -32,8 +32,8 @@ public class PickaxePower extends DoubleStat {
       Validate.isTrue(doubleData instanceof DoubleData, "Current Data is not Double Data");
       Validate.isTrue(numericStatFormula instanceof NumericStatFormula, "Template Data is not Numeric Stat Formula");
       double value = numericStatFormula.calculate(0.0, NumericStatFormula.FormulaInputType.LOWER_BOUND);
-      double value2 = numericStatFormula.calculate(0.0, NumericStatFormula.FormulaInputType.UPPER_BOUND);
-      if (!(value2 < 0.0) || this.handleNegativeStats()) {
+      double upperBound = numericStatFormula.calculate(0.0, NumericStatFormula.FormulaInputType.UPPER_BOUND);
+      if (!(upperBound < 0.0) || this.handleNegativeStats()) {
          if (value < 0.0 && !this.handleNegativeStats()) {
             value = 0.0;
          }
@@ -42,13 +42,13 @@ public class PickaxePower extends DoubleStat {
             value = numericStatFormula.getBase() - numericStatFormula.getMaxSpread();
          }
 
-         if (value2 > numericStatFormula.getBase() + numericStatFormula.getMaxSpread()) {
-            value2 = numericStatFormula.getBase() + numericStatFormula.getMaxSpread();
+         if (upperBound > numericStatFormula.getBase() + numericStatFormula.getMaxSpread()) {
+            upperBound = numericStatFormula.getBase() + numericStatFormula.getMaxSpread();
          }
 
          itemStackBuilder.addItemTag(new ItemTag("MMOITEMS_PICKAXE_POWER", doubleData.getValue()));
-         if (value != 0.0 || value2 != 0.0) {
-            String text = DoubleStat.formatPath(this.getPath(), this.getGeneralStatFormat(), true, false, Math.floor(value), Math.floor(value2));
+         if (value != 0.0 || upperBound != 0.0) {
+            String text = DoubleStat.formatPath(this.getPath(), this.getGeneralStatFormat(), true, false, Math.floor(value), Math.floor(upperBound));
             itemStackBuilder.getLore().insert("pickaxe-power", text);
          }
       }

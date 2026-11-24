@@ -36,10 +36,10 @@ public class TooltipStat extends StringStat implements GemStoneStat {
 
    @Override
    public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
-      String text2 = UtilityMethods.enumName(text);
-      Validate.isTrue(MMOItems.plugin.getLore().hasTooltip(text2), "Couldn't find tooltip with ID '" + text2 + "'");
-      editionInventory.getEditedSection().set(this.getPath(), text2);
+      String tooltipName = UtilityMethods.enumName(text);
+      Validate.isTrue(MMOItems.plugin.getLore().hasTooltip(tooltipName), "Couldn't find tooltip with ID '" + tooltipName + "'");
+      editionInventory.getEditedSection().set(this.getPath(), tooltipName);
       editionInventory.registerTemplateEdition();
-      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Tier successfully changed to " + text2 + ".");
+      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Tier successfully changed to " + tooltipName + ".");
    }
 }

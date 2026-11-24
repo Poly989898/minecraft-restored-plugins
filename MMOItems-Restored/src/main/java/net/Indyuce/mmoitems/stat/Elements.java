@@ -58,14 +58,14 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
 
    @Override
    public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
-      String text2 = objs[0].toString();
+      String elementText = objs[0].toString();
       NumericStatFormula numericStatFormula = new NumericStatFormula(text);
-      numericStatFormula.fillConfigurationSection(editionInventory.getEditedSection(), "element." + text2);
-      String text3 = text2.split("\\.")[0];
+      numericStatFormula.fillConfigurationSection(editionInventory.getEditedSection(), "element." + elementText);
+      String elementName = elementText.split("\\.")[0];
       if (editionInventory.getEditedSection().contains("element")) {
-         if (editionInventory.getEditedSection().getConfigurationSection("element").contains(text3)
-            && editionInventory.getEditedSection().getConfigurationSection("element." + text3).getKeys(false).isEmpty()) {
-            editionInventory.getEditedSection().set("element." + text3, null);
+         if (editionInventory.getEditedSection().getConfigurationSection("element").contains(elementName)
+            && editionInventory.getEditedSection().getConfigurationSection("element." + elementName).getKeys(false).isEmpty()) {
+            editionInventory.getEditedSection().set("element." + elementName, null);
          }
 
          if (editionInventory.getEditedSection().getConfigurationSection("element").getKeys(false).isEmpty()) {
@@ -78,7 +78,7 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
          .sendMessage(
             MMOItems.plugin.getPrefix()
                + ChatColor.RED
-               + UtilityMethods.caseOnWords(text2.replace(".", " "))
+               + UtilityMethods.caseOnWords(elementText.replace(".", " "))
                + ChatColor.GRAY
                + " successfully changed to "
                + ChatColor.GOLD
@@ -128,10 +128,10 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
          }
       } else {
          Validate.isTrue(obj instanceof ConfigurationSection, "Must be a config section");
-         ConfigurationSection section2 = (ConfigurationSection)obj;
+         ConfigurationSection elementSection = (ConfigurationSection)obj;
 
          for (ElementStatType elementStatType : ElementStatType.values()) {
-            this.statFormat.put(elementStatType, section2.getString(elementStatType.lowerCaseName(), "<TranslationNotFound:" + elementStatType.lowerCaseName() + ">"));
+            this.statFormat.put(elementStatType, elementSection.getString(elementStatType.lowerCaseName(), "<TranslationNotFound:" + elementStatType.lowerCaseName() + ">"));
          }
       }
    }
@@ -223,9 +223,9 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
          for (ElementStatType elementStatType : ElementStatType.values()) {
             NumericStatFormula stat = randomElementListData.getStat(element, elementStatType);
             double value = stat.calculate(0.0, NumericStatFormula.FormulaInputType.LOWER_BOUND);
-            double value2 = stat.calculate(0.0, NumericStatFormula.FormulaInputType.UPPER_BOUND);
-            if (value != 0.0 || value2 != 0.0) {
-               String text = DoubleStat.formatPath(elementStatType.getConcatenatedTagPath(element), this.formatForLore(element, elementStatType), true, value, value2);
+            double upperBound = stat.calculate(0.0, NumericStatFormula.FormulaInputType.UPPER_BOUND);
+            if (value != 0.0 || upperBound != 0.0) {
+               String text = DoubleStat.formatPath(elementStatType.getConcatenatedTagPath(element), this.formatForLore(element, elementStatType), true, value, upperBound);
                list.add(text);
             }
          }

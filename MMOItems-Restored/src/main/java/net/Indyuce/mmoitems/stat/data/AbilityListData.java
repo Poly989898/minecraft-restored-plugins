@@ -55,8 +55,8 @@ public class AbilityListData implements StatData, Mergeable<AbilityListData> {
          if (ability != null) {
             boolean flag = true;
 
-            for (AbilityData ability2 : this.getAbilities()) {
-               if (ability.equals(ability2)) {
+            for (AbilityData abilityEntry : this.getAbilities()) {
+               if (ability.equals(abilityEntry)) {
                   flag = false;
                   break;
                }

@@ -80,22 +80,22 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
    public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData) {
       double value = doubleData.getValue();
       if (!(value < 0.0) || this.handleNegativeStats()) {
-         double value2 = 0.0;
+         double previousValue = 0.0;
          if (UpgradeTemplate.isDisplayingUpgrades() && itemStackBuilder.getMMOItem().getUpgradeLevel() != 0) {
             StatHistory statHistory = itemStackBuilder.getMMOItem().getStatHistory(this);
             if (statHistory != null) {
-               DoubleData doubleData2 = (DoubleData)statHistory.recalculateUnupgraded();
-               value2 = value - doubleData2.getValue();
+               DoubleData recalculatedData = (DoubleData)statHistory.recalculateUnupgraded();
+               previousValue = value - recalculatedData.getValue();
             }
          }
 
-         if (value != 0.0 || value2 != 0.0) {
+         if (value != 0.0 || previousValue != 0.0) {
             String text = formatPath(this.getId(), this.getGeneralStatFormat(), this.moreIsBetter, value * this.multiplyWhenDisplaying());
-            if (value2 != 0.0) {
+            if (previousValue != 0.0) {
                text = text
                   + UpgradeTemplate.getUpgradeChangeSuffix(
-                     plus(true, value2 * this.multiplyWhenDisplaying()) + MythicLib.plugin.getMMOConfig().decimals.format(value2 * this.multiplyWhenDisplaying()),
-                     !this.isGood(value2 * this.multiplyWhenDisplaying())
+                     plus(true, previousValue * this.multiplyWhenDisplaying()) + MythicLib.plugin.getMMOConfig().decimals.format(previousValue * this.multiplyWhenDisplaying()),
+                     !this.isGood(previousValue * this.multiplyWhenDisplaying())
                   );
             }
 
@@ -125,9 +125,9 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
 
    @NotNull
    public static String formatPath(@NotNull String text, @NotNull String text2, boolean flag, boolean flag2, double value) {
-      String text3 = StatManager.format(text, value);
+      String formattedValue = StatManager.format(text, value);
       String colorPrefix = getColorPrefix(value < 0.0 && flag);
-      return text2.replace("{value}", colorPrefix + text3).replace("<plus>", colorPrefix + plus(flag2, value));
+      return text2.replace("{value}", colorPrefix + formattedValue).replace("<plus>", colorPrefix + plus(flag2, value));
    }
 
    @NotNull
@@ -141,12 +141,12 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
          return formatPath(text, text2, flag, flag2, value);
       }
 
-      String text3 = plus(flag2, value) + StatManager.format(text, value);
-      String text4 = (flag2 && value < 0.0 && value2 > 0.0 ? "+" : "") + StatManager.format(text, value2);
+      String formattedOld = plus(flag2, value) + StatManager.format(text, value);
+      String formattedNew = (flag2 && value < 0.0 && value2 > 0.0 ? "+" : "") + StatManager.format(text, value2);
       String colorPrefix = getColorPrefix(value < 0.0 && flag);
-      String colorPrefix2 = getColorPrefix(value2 < 0.0 && flag);
+      String deltaPrefix = getColorPrefix(value2 < 0.0 && flag);
       return text2.replace("<plus>", "")
-         .replace("{value}", colorPrefix + text3 + MMOItems.plugin.getConfig().getString("stats-displaying.range-dash", "⎓") + colorPrefix2 + text4);
+         .replace("{value}", colorPrefix + formattedOld + MMOItems.plugin.getConfig().getString("stats-displaying.range-dash", "⎓") + deltaPrefix + formattedNew);
    }
 
    @NotNull
@@ -163,16 +163,16 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
       Validate.isTrue(doubleData instanceof DoubleData, "Current Data is not Double Data");
       Validate.isTrue(numericStatFormula instanceof NumericStatFormula, "Template Data is not Numeric Stat Formula");
       double value = numericStatFormula.calculate(0.0, NumericStatFormula.FormulaInputType.LOWER_BOUND);
-      double value2 = numericStatFormula.calculate(0.0, NumericStatFormula.FormulaInputType.UPPER_BOUND);
-      if (!(value2 < 0.0) || this.handleNegativeStats()) {
+      double upperBound = numericStatFormula.calculate(0.0, NumericStatFormula.FormulaInputType.UPPER_BOUND);
+      if (!(upperBound < 0.0) || this.handleNegativeStats()) {
          if (value < 0.0 && !this.handleNegativeStats()) {
             value = 0.0;
          }
 
          itemStackBuilder.addItemTag(this.getAppliedNBT(doubleData));
-         if (value != 0.0 || value2 != 0.0) {
+         if (value != 0.0 || upperBound != 0.0) {
             String text = formatPath(
-               this.getId(), this.getGeneralStatFormat(), this.moreIsBetter(), value * this.multiplyWhenDisplaying(), value2 * this.multiplyWhenDisplaying()
+               this.getId(), this.getGeneralStatFormat(), this.moreIsBetter(), value * this.multiplyWhenDisplaying(), upperBound * this.multiplyWhenDisplaying()
             );
             itemStackBuilder.getLore().insert(this.getPath(), text);
          }
@@ -321,18 +321,18 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
    @NotNull
    @Override
    public StatData apply(@NotNull StatData statData, @NotNull UpgradeInfo upgradeInfo, int count) {
-      int count2 = count;
+      int levelCopy = count;
       if (statData instanceof DoubleData && upgradeInfo instanceof DoubleStat.DoubleUpgradeInfo) {
          double value = ((DoubleData)statData).getValue();
-         if (count2 > 0) {
-            while (count2 > 0) {
+         if (levelCopy > 0) {
+            while (levelCopy > 0) {
                value = ((DoubleStat.DoubleUpgradeInfo)upgradeInfo).getPMP().apply(value);
-               count2--;
+               levelCopy--;
             }
-         } else if (count2 < 0) {
-            while (count2 < 0) {
+         } else if (levelCopy < 0) {
+            while (levelCopy < 0) {
                value = ((DoubleStat.DoubleUpgradeInfo)upgradeInfo).getPMP().reverse(value);
-               count2++;
+               levelCopy++;
             }
          }
 

@@ -103,12 +103,12 @@ public class DurabilityListener implements Listener {
          DurabilityItem durabilityItem = new DurabilityItem(player, item);
          if (durabilityItem.isValid()) {
             durabilityItem.decreaseDurability(count);
-            ItemStack item2 = durabilityItem.toItem();
-            if (item2 == null) {
+            ItemStack repairedItem = durabilityItem.toItem();
+            if (repairedItem == null) {
                player.getInventory().setItem(equipmentSlot, null);
                player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0F, 1.0F);
             } else {
-               player.getInventory().getItem(equipmentSlot).setItemMeta(item2.getItemMeta());
+               player.getInventory().getItem(equipmentSlot).setItemMeta(repairedItem.getItemMeta());
             }
          }
       }

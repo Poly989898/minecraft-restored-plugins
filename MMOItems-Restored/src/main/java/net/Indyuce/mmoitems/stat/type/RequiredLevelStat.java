@@ -34,8 +34,8 @@ public abstract class RequiredLevelStat extends DoubleStat implements ItemRestri
    @Override
    public void whenPreviewed(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData, @NotNull NumericStatFormula numericStatFormula) {
       double value = numericStatFormula.calculate(0.0, NumericStatFormula.FormulaInputType.LOWER_BOUND);
-      double value2 = numericStatFormula.calculate(0.0, NumericStatFormula.FormulaInputType.UPPER_BOUND);
-      if (!(value2 < 0.0) || this.handleNegativeStats()) {
+      double upperBound = numericStatFormula.calculate(0.0, NumericStatFormula.FormulaInputType.UPPER_BOUND);
+      if (!(upperBound < 0.0) || this.handleNegativeStats()) {
          if (value < 0.0 && !this.handleNegativeStats()) {
             value = 0.0;
          }
@@ -44,13 +44,13 @@ public abstract class RequiredLevelStat extends DoubleStat implements ItemRestri
             value = numericStatFormula.getBase() - numericStatFormula.getMaxSpread();
          }
 
-         if (value2 > numericStatFormula.getBase() + numericStatFormula.getMaxSpread()) {
-            value2 = numericStatFormula.getBase() + numericStatFormula.getMaxSpread();
+         if (upperBound > numericStatFormula.getBase() + numericStatFormula.getMaxSpread()) {
+            upperBound = numericStatFormula.getBase() + numericStatFormula.getMaxSpread();
          }
 
          itemStackBuilder.addItemTag(this.getAppliedNBT(doubleData));
-         if (value != 0.0 || value2 != 0.0) {
-            String text = DoubleStat.formatPath(this.getPath(), this.getGeneralStatFormat(), false, false, Math.floor(value), Math.floor(value2));
+         if (value != 0.0 || upperBound != 0.0) {
+            String text = DoubleStat.formatPath(this.getPath(), this.getGeneralStatFormat(), false, false, Math.floor(value), Math.floor(upperBound));
             itemStackBuilder.getLore().insert(this.getPath(), text);
          }
       }

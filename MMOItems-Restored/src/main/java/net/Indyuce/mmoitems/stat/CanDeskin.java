@@ -64,54 +64,54 @@ public class CanDeskin extends BooleanStat implements ConsumableItemInteraction 
             nbtItem.removeTag(new String[]{"MMOITEMS_ITEM_PARTICLES"});
          }
 
-         ItemStack item2 = nbtItem.toItem();
-         ItemMeta itemMeta = item2.getItemMeta();
-         ItemMeta itemMeta2 = item.getItemMeta();
-         Integer value = itemMeta2.hasCustomModelData() ? itemMeta2.getCustomModelData() : null;
+         ItemStack resultItem = nbtItem.toItem();
+         ItemMeta itemMeta = resultItem.getItemMeta();
+         ItemMeta resultMeta = item.getItemMeta();
+         Integer value = resultMeta.hasCustomModelData() ? resultMeta.getCustomModelData() : null;
          itemMeta.setCustomModelData(value);
          if (itemMeta.isUnbreakable()) {
-            itemMeta.setUnbreakable(itemMeta2.isUnbreakable());
-            if (itemMeta instanceof Damageable && itemMeta2 instanceof Damageable) {
-               ((Damageable)itemMeta).setDamage(((Damageable)itemMeta2).getDamage());
+            itemMeta.setUnbreakable(resultMeta.isUnbreakable());
+            if (itemMeta instanceof Damageable && resultMeta instanceof Damageable) {
+               ((Damageable)itemMeta).setDamage(((Damageable)resultMeta).getDamage());
             }
          }
 
-         if (itemMeta instanceof LeatherArmorMeta && itemMeta2 instanceof LeatherArmorMeta) {
-            ((LeatherArmorMeta)itemMeta).setColor(((LeatherArmorMeta)itemMeta2).getColor());
+         if (itemMeta instanceof LeatherArmorMeta && resultMeta instanceof LeatherArmorMeta) {
+            ((LeatherArmorMeta)itemMeta).setColor(((LeatherArmorMeta)resultMeta).getColor());
          }
 
-         if (itemMeta instanceof ArmorMeta && itemMeta2 instanceof ArmorMeta) {
-            ((ArmorMeta)itemMeta).setTrim(((ArmorMeta)itemMeta2).getTrim());
-            if (itemMeta2.hasItemFlag(ItemFlag.HIDE_ARMOR_TRIM)) {
+         if (itemMeta instanceof ArmorMeta && resultMeta instanceof ArmorMeta) {
+            ((ArmorMeta)itemMeta).setTrim(((ArmorMeta)resultMeta).getTrim());
+            if (resultMeta.hasItemFlag(ItemFlag.HIDE_ARMOR_TRIM)) {
                itemMeta.addItemFlags(new ItemFlag[]{ItemFlag.HIDE_ARMOR_TRIM});
             } else {
                itemMeta.removeItemFlags(new ItemFlag[]{ItemFlag.HIDE_ARMOR_TRIM});
             }
          }
 
-         if (nbtItem.hasTag("SkullOwner") && item2.getType() == Material.PLAYER_HEAD && item.getType() == Material.PLAYER_HEAD) {
+         if (nbtItem.hasTag("SkullOwner") && resultItem.getType() == Material.PLAYER_HEAD && item.getType() == Material.PLAYER_HEAD) {
             MythicLib.plugin
                .getVersion()
                .getWrapper()
                .setProfile((SkullMeta)itemMeta, ((SkullTextureData)mmoItem.getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
          }
 
-         ItemStack item3 = nbtItem.getItem();
-         item3.setItemMeta(itemMeta);
-         item3.setType(item.getType());
+         ItemStack skinnedItem = nbtItem.getItem();
+         skinnedItem.setItemMeta(itemMeta);
+         skinnedItem.setType(item.getType());
 
          try {
             String mMOITEMSSKINTYPE = nbtItem.getString("MMOITEMS_SKIN_TYPE");
-            Type type2 = Objects.requireNonNullElse(Type.get(mMOITEMSSKINTYPE), Type.SKIN);
-            MMOItemTemplate templateOrThrow2 = MMOItems.plugin.getTemplates().getTemplateOrThrow(type2, mMOITEMSSKINID);
-            Validate.notNull(templateOrThrow2, "Could not find item template of applied skin, type used " + type2.getName());
-            MMOItem mmoItem2 = templateOrThrow2.newBuilder(playerData.getRPG()).build();
-            new SmartGive(player).give(new ItemStack[]{mmoItem2.newBuilder().build()});
+            Type skinType = Objects.requireNonNullElse(Type.get(mMOITEMSSKINTYPE), Type.SKIN);
+            MMOItemTemplate skinTemplate = MMOItems.plugin.getTemplates().getTemplateOrThrow(skinType, mMOITEMSSKINID);
+            Validate.notNull(skinTemplate, "Could not find item template of applied skin, type used " + skinType.getName());
+            MMOItem skinMMOItem = skinTemplate.newBuilder(playerData.getRPG()).build();
+            new SmartGive(player).give(new ItemStack[]{skinMMOItem.newBuilder().build()});
          } catch (Exception exception) {
             MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not retrieve item skin with ID '" + mMOITEMSSKINID + "' for player " + playerData.getUniqueId());
          }
 
-         Message.SKIN_REMOVED.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(item2)).send(player);
+         Message.SKIN_REMOVED.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(resultItem)).send(player);
          return true;
       } else {
          return false;

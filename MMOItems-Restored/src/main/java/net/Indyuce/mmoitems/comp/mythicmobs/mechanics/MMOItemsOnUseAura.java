@@ -57,9 +57,9 @@ public class MMOItemsOnUseAura extends Aura implements ITargetedEntitySkill {
          texts.add(this.weaponTypes);
       }
 
-      for (String text2 : texts) {
+      for (String skillName : texts) {
          try {
-            MMOItemsOnUseAura.UseItemTypes useItemTypes = MMOItemsOnUseAura.UseItemTypes.valueOf(text2.toUpperCase());
+            MMOItemsOnUseAura.UseItemTypes useItemTypes = MMOItemsOnUseAura.UseItemTypes.valueOf(skillName.toUpperCase());
             this.auraWeapons.add(useItemTypes);
          } catch (IllegalArgumentException exception) {
          }
@@ -110,7 +110,7 @@ public class MMOItemsOnUseAura extends Aura implements ITargetedEntitySkill {
       Optional skill = MythicBukkit.inst().getSkillManager().getSkill(text);
       if (skill.isPresent()) {
          try {
-            Skill skill2 = (Skill)skill.get();
+            Skill resolvedSkill = (Skill)skill.get();
             return true;
          } catch (Exception exception) {
             return false;

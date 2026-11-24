@@ -43,8 +43,8 @@ public class AbilityEdition extends EditionInventory {
    public void arrangeInventory() {
       int count = 0;
       String text = this.getEditedSection().getString("ability." + this.configKey + ".type");
-      String text2 = text == null ? "" : text.toUpperCase().replace(" ", "_").replace("-", "_").replaceAll("[^A-Z_]", "");
-      this.ability = MMOItems.plugin.getSkills().hasSkill(text2) ? MMOItems.plugin.getSkills().getSkill(text2) : null;
+      String normalizedAbility = text == null ? "" : text.toUpperCase().replace(" ", "_").replace("-", "_").replaceAll("[^A-Z_]", "");
+      this.ability = MMOItems.plugin.getSkills().hasSkill(normalizedAbility) ? MMOItems.plugin.getSkills().getSkill(normalizedAbility) : null;
       ItemStack item = new ItemStack(Material.BLAZE_POWDER);
       ItemMeta itemMeta = item.getItemMeta();
       itemMeta.setDisplayName(ChatColor.GREEN + "Ability");
@@ -58,46 +58,46 @@ public class AbilityEdition extends EditionInventory {
       itemMeta.setLore(list);
       item.setItemMeta(itemMeta);
       if (this.ability != null) {
-         String text3 = this.getEditedSection().getString("ability." + this.configKey + ".mode");
-         String text4 = text3 == null ? "" : text3.toUpperCase().replace(" ", "_").replace("-", "_").replaceAll("[^A-Z0-9_]", "");
+         String modeKey = this.getEditedSection().getString("ability." + this.configKey + ".mode");
+         String normalizedMode = modeKey == null ? "" : modeKey.toUpperCase().replace(" ", "_").replace("-", "_").replaceAll("[^A-Z0-9_]", "");
 
          TriggerType triggerType;
          try {
-            triggerType = TriggerType.valueOf(text4);
+            triggerType = TriggerType.valueOf(normalizedMode);
          } catch (RuntimeException exception) {
             triggerType = null;
          }
 
-         ItemStack item2 = new ItemStack(Material.ARMOR_STAND);
-         ItemMeta itemMeta2 = item2.getItemMeta();
-         itemMeta2.setDisplayName(ChatColor.GREEN + "Trigger");
-         ArrayList list2 = new ArrayList();
-         list2.add(ChatColor.GRAY + "Choose what action the player needs to");
-         list2.add(ChatColor.GRAY + "perform in order to cast your ability.");
-         list2.add("");
-         list2.add(ChatColor.GRAY + "Current Value: " + (triggerType == null ? ChatColor.RED + "No trigger selected." : ChatColor.GOLD + triggerType.getName()));
-         list2.add("");
-         list2.add(ChatColor.YELLOW + "►" + " Left click to select.");
-         list2.add(ChatColor.YELLOW + "►" + " Right click to reset.");
-         itemMeta2.setLore(list2);
-         item2.setItemMeta(itemMeta2);
-         this.inventory.setItem(30, item2);
+         ItemStack triggerItem = new ItemStack(Material.ARMOR_STAND);
+         ItemMeta triggerMeta = triggerItem.getItemMeta();
+         triggerMeta.setDisplayName(ChatColor.GREEN + "Trigger");
+         ArrayList triggerLore = new ArrayList();
+         triggerLore.add(ChatColor.GRAY + "Choose what action the player needs to");
+         triggerLore.add(ChatColor.GRAY + "perform in order to cast your ability.");
+         triggerLore.add("");
+         triggerLore.add(ChatColor.GRAY + "Current Value: " + (triggerType == null ? ChatColor.RED + "No trigger selected." : ChatColor.GOLD + triggerType.getName()));
+         triggerLore.add("");
+         triggerLore.add(ChatColor.YELLOW + "►" + " Left click to select.");
+         triggerLore.add(ChatColor.YELLOW + "►" + " Right click to reset.");
+         triggerMeta.setLore(triggerLore);
+         triggerItem.setItemMeta(triggerMeta);
+         this.inventory.setItem(30, triggerItem);
       }
 
       if (this.ability != null) {
          ConfigurationSection section = this.getEditedSection().getConfigurationSection("ability." + this.configKey);
 
          for (String modifier : this.ability.getHandler().getModifiers()) {
-            ItemStack item2 = new ItemStack(Material.GRAY_DYE);
-            ItemMeta itemMeta2 = item2.getItemMeta();
-            itemMeta2.setDisplayName(ChatColor.GREEN + UtilityMethods.caseOnWords(modifier.toLowerCase().replace("-", " ")));
-            ArrayList list2 = new ArrayList();
-            list2.add("" + ChatColor.GRAY + ChatColor.ITALIC + "This is an ability modifier. Changing this");
-            list2.add("" + ChatColor.GRAY + ChatColor.ITALIC + "value will slightly customize the ability.");
-            list2.add("");
+            ItemStack grayDyeItem = new ItemStack(Material.GRAY_DYE);
+            ItemMeta grayDyeMeta = grayDyeItem.getItemMeta();
+            grayDyeMeta.setDisplayName(ChatColor.GREEN + UtilityMethods.caseOnWords(modifier.toLowerCase().replace("-", " ")));
+            ArrayList grayDyeLore = new ArrayList();
+            grayDyeLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "This is an ability modifier. Changing this");
+            grayDyeLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "value will slightly customize the ability.");
+            grayDyeLore.add("");
 
             try {
-               list2.add(
+               grayDyeLore.add(
                   ChatColor.GRAY
                      + "Current Value: "
                      + ChatColor.GOLD
@@ -108,27 +108,27 @@ public class AbilityEdition extends EditionInventory {
                      )
                );
             } catch (IllegalArgumentException exception) {
-               list2.add(ChatColor.GRAY + "Could not read value. Using default");
+               grayDyeLore.add(ChatColor.GRAY + "Could not read value. Using default");
             }
 
-            list2.add(ChatColor.GRAY + "Default Value: " + ChatColor.GOLD + MODIFIER_FORMAT.format(this.ability.getDefaultModifier(modifier)));
-            list2.add("");
-            list2.add(ChatColor.YELLOW + "►" + " Click to change this value.");
-            list2.add(ChatColor.YELLOW + "►" + " Right click to reset.");
-            itemMeta2.setLore(list2);
-            itemMeta2.getPersistentDataContainer().set(ABILITY_MOD_KEY, PersistentDataType.STRING, modifier);
-            item2.setItemMeta(itemMeta2);
-            this.inventory.setItem(slots[count++], item2);
+            grayDyeLore.add(ChatColor.GRAY + "Default Value: " + ChatColor.GOLD + MODIFIER_FORMAT.format(this.ability.getDefaultModifier(modifier)));
+            grayDyeLore.add("");
+            grayDyeLore.add(ChatColor.YELLOW + "►" + " Click to change this value.");
+            grayDyeLore.add(ChatColor.YELLOW + "►" + " Right click to reset.");
+            grayDyeMeta.setLore(grayDyeLore);
+            grayDyeMeta.getPersistentDataContainer().set(ABILITY_MOD_KEY, PersistentDataType.STRING, modifier);
+            grayDyeItem.setItemMeta(grayDyeMeta);
+            this.inventory.setItem(slots[count++], grayDyeItem);
          }
       }
 
-      ItemStack item2 = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-      ItemMeta itemMeta2 = item2.getItemMeta();
-      itemMeta2.setDisplayName(ChatColor.RED + "- No Modifier -");
-      item2.setItemMeta(itemMeta2);
+      ItemStack noModifierItem = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+      ItemMeta noModifierMeta = noModifierItem.getItemMeta();
+      noModifierMeta.setDisplayName(ChatColor.RED + "- No Modifier -");
+      noModifierItem.setItemMeta(noModifierMeta);
 
       while (count < slots.length) {
-         this.inventory.setItem(slots[count++], item2);
+         this.inventory.setItem(slots[count++], noModifierItem);
       }
 
       this.addEditionItems();

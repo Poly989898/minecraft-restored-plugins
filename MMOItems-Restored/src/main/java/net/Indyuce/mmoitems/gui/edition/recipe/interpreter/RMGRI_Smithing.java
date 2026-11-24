@@ -68,17 +68,17 @@ public class RMGRI_Smithing implements RMG_RecipeInterpreter {
    public RMGRI_Smithing(@NotNull ConfigurationSection section) {
       this.section = section;
       String text = updateIngredients(this.section.getString("input"));
-      String text2 = updateIngredients(this.section.getString("output"));
+      String updatedOutput = updateIngredients(this.section.getString("output"));
       String[] texts = text.split("\\|");
-      String[] texts2 = text2.split("\\|");
+      String[] outputParts = updatedOutput.split("\\|");
       ProvidedUIFilter providedUIFilter = ProvidedUIFilter.getFromString(texts[0], null);
-      ProvidedUIFilter providedUIFilter2 = ProvidedUIFilter.getFromString(texts2[0], null);
-      ProvidedUIFilter providedUIFilter3 = ProvidedUIFilter.getFromString(texts[1], null);
-      ProvidedUIFilter providedUIFilter4 = ProvidedUIFilter.getFromString(texts2[1], null);
+      ProvidedUIFilter outputFirstFilter = ProvidedUIFilter.getFromString(outputParts[0], null);
+      ProvidedUIFilter inputSecondFilter = ProvidedUIFilter.getFromString(texts[1], null);
+      ProvidedUIFilter outputSecondFilter = ProvidedUIFilter.getFromString(outputParts[1], null);
       this.inputItem = providedUIFilter != null ? providedUIFilter : RecipeEditorGUI.AIR.clone();
-      this.inputIngot = providedUIFilter3 != null ? providedUIFilter3 : RecipeEditorGUI.AIR.clone();
-      this.outputItem = providedUIFilter2 != null ? providedUIFilter2 : RecipeEditorGUI.AIR.clone();
-      this.outputIngot = providedUIFilter4 != null ? providedUIFilter4 : RecipeEditorGUI.AIR.clone();
+      this.inputIngot = inputSecondFilter != null ? inputSecondFilter : RecipeEditorGUI.AIR.clone();
+      this.outputItem = outputFirstFilter != null ? outputFirstFilter : RecipeEditorGUI.AIR.clone();
+      this.outputIngot = outputSecondFilter != null ? outputSecondFilter : RecipeEditorGUI.AIR.clone();
    }
 
    public void setInput(int count, @NotNull ProvidedUIFilter providedUIFilter) {

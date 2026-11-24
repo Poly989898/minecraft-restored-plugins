@@ -27,12 +27,12 @@ public class PhatLootsHook implements Listener {
          if (!SilentNumbers.isAir(item)) {
             MMOItemReforger mmoItemReforger = new MMOItemReforger(item);
             if (mmoItemReforger.reforge(MMOItems.plugin.getLanguage().phatLootsOptions) && mmoItemReforger.hasChanges()) {
-               ItemStack item2 = mmoItemReforger.toStack();
-               item2.setAmount(item.getAmount());
-               ItemMeta itemMeta = item2.getItemMeta();
-               item.setType(item2.getType());
+               ItemStack reforgedItem = mmoItemReforger.toStack();
+               reforgedItem.setAmount(item.getAmount());
+               ItemMeta itemMeta = reforgedItem.getItemMeta();
+               item.setType(reforgedItem.getType());
                item.setItemMeta(itemMeta);
-               item.setData(item2.getData());
+               item.setData(reforgedItem.getData());
             }
          }
       }

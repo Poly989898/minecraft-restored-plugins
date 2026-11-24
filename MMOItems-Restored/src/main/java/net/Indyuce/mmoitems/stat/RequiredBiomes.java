@@ -34,22 +34,22 @@ public class RequiredBiomes extends StringListStat implements ItemRestriction, G
       }
 
       StringListData loadedNBT = this.getLoadedNBT(list);
-      boolean flag2 = false;
+      boolean hasBiome = false;
       if (loadedNBT != null) {
          for (String text : loadedNBT.getList()) {
-            String text2 = text.toLowerCase().replace(" ", "_").replace("-", "_");
-            if (text2.startsWith("!")) {
-               flag2 = true;
-               text2 = text2.substring(1);
+            String biomeName = text.toLowerCase().replace(" ", "_").replace("-", "_");
+            if (biomeName.startsWith("!")) {
+               hasBiome = true;
+               biomeName = biomeName.substring(1);
             }
 
             String key = rpgPlayer.getPlayer().getLocation().getBlock().getBiome().getKey().getKey();
-            if (key.contains(text2)) {
-               return !flag2;
+            if (key.contains(biomeName)) {
+               return !hasBiome;
             }
          }
 
-         return flag2;
+         return hasBiome;
       } else {
          return true;
       }

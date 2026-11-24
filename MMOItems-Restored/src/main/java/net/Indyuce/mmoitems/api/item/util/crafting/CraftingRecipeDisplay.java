@@ -61,7 +61,7 @@ public class CraftingRecipeDisplay extends ConfigItem {
          ListIterator listIterator = this.lore.listIterator();
 
          while (listIterator.hasNext()) {
-            int count2 = listIterator.nextIndex();
+            int ingredientIndex = listIterator.nextIndex();
             String text = (String)listIterator.next();
             if (text.startsWith("{crafting_time}")) {
                if (this.craftingRecipe.getCraftingTime() <= 0.0) {
@@ -77,7 +77,7 @@ public class CraftingRecipeDisplay extends ConfigItem {
             }
 
             if (text.startsWith("{conditions}")) {
-               count = count2 + 1;
+               count = ingredientIndex + 1;
                if (this.recipe.getConditions().size() == 0) {
                   listIterator.remove();
                } else {
@@ -90,9 +90,9 @@ public class CraftingRecipeDisplay extends ConfigItem {
             this.lore.set(this.lore.indexOf(key), (String)map.get(key));
          }
 
-         int count2 = this.lore.indexOf("#ingredients#");
-         this.lore.remove(count2);
-         this.recipe.getIngredients().forEach(var2x -> this.lore.add(count2, var2x.format()));
+         int ingredientsIndex = this.lore.indexOf("#ingredients#");
+         this.lore.remove(ingredientsIndex);
+         this.recipe.getIngredients().forEach(var2x -> this.lore.add(ingredientsIndex, var2x.format()));
          if (count >= 0) {
             for (CheckedCondition condition : this.recipe.getConditions()) {
                ConditionalDisplay display = condition.getCondition().getDisplay();

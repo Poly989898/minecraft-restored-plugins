@@ -154,11 +154,11 @@ public abstract class RecipeEditorGUI extends EditionInventory {
    }
 
    public int buttonRowPageClamp(int count) {
-      int count2 = SilentNumbers.floor(count / 7.0);
-      count -= count2 * 7;
-      int count3 = this.getButtonsRow() * 9;
-      int count4 = count + 1;
-      return count3 + count4;
+      int rowIndex = SilentNumbers.floor(count / 7.0);
+      count -= rowIndex * 7;
+      int baseSlot = this.getButtonsRow() * 9;
+      int columnOffset = count + 1;
+      return baseSlot + columnOffset;
    }
 
    public abstract int getButtonsRow();
@@ -276,18 +276,18 @@ public abstract class RecipeEditorGUI extends EditionInventory {
 
    @NotNull
    public static ConfigurationSection getSection(@NotNull ConfigurationSection section, @NotNull String text) {
-      ConfigurationSection section2 = section.getConfigurationSection(text);
-      if (section2 == null) {
-         section2 = section.createSection(text);
+      ConfigurationSection childSection = section.getConfigurationSection(text);
+      if (childSection == null) {
+         childSection = section.createSection(text);
       }
 
-      return section2;
+      return childSection;
    }
 
    public void moveInput() {
       ConfigurationSection section = getSection(this.getEditedSection(), "crafting");
-      ConfigurationSection section2 = getSection(section, this.getRecipeRegistry().getRecipeConfigPath());
-      moveInput(section2, this.recipeName);
+      ConfigurationSection registrySection = getSection(section, this.getRecipeRegistry().getRecipeConfigPath());
+      moveInput(registrySection, this.recipeName);
    }
 
    public static void tripleDebug(@NotNull ConfigurationSection section) {
@@ -301,27 +301,27 @@ public abstract class RecipeEditorGUI extends EditionInventory {
             MMOItems.print(null, "§d +§e-§7" + text, null);
          }
 
-         ConfigurationSection section2 = getSection(section, key);
-         MMOItems.print(null, "§8--§d-§7 Section §5" + section2.getCurrentPath(), null);
+         ConfigurationSection recipeTypeSection = getSection(section, key);
+         MMOItems.print(null, "§8--§d-§7 Section §5" + recipeTypeSection.getCurrentPath(), null);
 
-         for (String key2 : section2.getKeys(false)) {
-            MMOItems.print(null, "§8--§d +§7 " + key2, null);
-            MMOItems.print(null, "§8--§d-§e-§7 As List §5" + section2.getCurrentPath() + "." + key2 + "§7 {§d" + section2.getStringList(key2).size() + "§7}", null);
+         for (String recipeName : recipeTypeSection.getKeys(false)) {
+            MMOItems.print(null, "§8--§d +§7 " + recipeName, null);
+            MMOItems.print(null, "§8--§d-§e-§7 As List §5" + recipeTypeSection.getCurrentPath() + "." + recipeName + "§7 {§d" + recipeTypeSection.getStringList(recipeName).size() + "§7}", null);
 
-            for (String text : section2.getStringList(key2)) {
+            for (String text : recipeTypeSection.getStringList(recipeName)) {
                MMOItems.print(null, "§8--§d +§e-§7" + text, null);
             }
 
-            ConfigurationSection section3 = getSection(section2, key2);
-            MMOItems.print(null, "§0--§8--§d-§7 Section §5" + section3.getCurrentPath(), null);
+            ConfigurationSection recipeSection = getSection(recipeTypeSection, recipeName);
+            MMOItems.print(null, "§0--§8--§d-§7 Section §5" + recipeSection.getCurrentPath(), null);
 
-            for (String key3 : section3.getKeys(false)) {
-               MMOItems.print(null, "§0--§8--§d +§7 " + key3, null);
+            for (String field : recipeSection.getKeys(false)) {
+               MMOItems.print(null, "§0--§8--§d +§7 " + field, null);
                MMOItems.print(
-                  null, "§0--§8--§d-§e-§7 As List §5" + section3.getCurrentPath() + "." + key3 + "§7 {§d" + section3.getStringList(key3).size() + "§7}", null
+                  null, "§0--§8--§d-§e-§7 As List §5" + recipeSection.getCurrentPath() + "." + field + "§7 {§d" + recipeSection.getStringList(field).size() + "§7}", null
                );
 
-               for (String text : section3.getStringList(key3)) {
+               for (String text : recipeSection.getStringList(field)) {
                   MMOItems.print(null, "§0--§8--§d +§e-§7" + text, null);
                }
             }
@@ -330,25 +330,25 @@ public abstract class RecipeEditorGUI extends EditionInventory {
    }
 
    public static ConfigurationSection moveInput(@NotNull ConfigurationSection section, @NotNull String text) {
-      ConfigurationSection section2;
+      ConfigurationSection recipeSection;
       if (section.isConfigurationSection(text)) {
-         section2 = getSection(section, text);
-         String input1 = section2.getString("input1");
-         String input2 = section2.getString("input2");
-         if (input1 != null && input2 != null) {
-            section2.set("input1", null);
-            section2.set("input2", null);
-            section2.set("input", poofFromLegacy(input1) + "|" + poofFromLegacy(input2));
-            section2.set("output", "v AIR 0|v AIR 0");
+         recipeSection = getSection(section, text);
+         String input1 = recipeSection.getString("input1");
+         String secondInput = recipeSection.getString("input2");
+         if (input1 != null && secondInput != null) {
+            recipeSection.set("input1", null);
+            recipeSection.set("input2", null);
+            recipeSection.set("input", poofFromLegacy(input1) + "|" + poofFromLegacy(secondInput));
+            recipeSection.set("output", "v AIR 0|v AIR 0");
          }
       } else {
          List list = section.getStringList(text);
          section.set(text, null);
-         section2 = getSection(section, text);
-         section2.set("input", list);
+         recipeSection = getSection(section, text);
+         recipeSection.set("input", list);
       }
 
-      return section2;
+      return recipeSection;
    }
 
    @NotNull
@@ -364,9 +364,9 @@ public abstract class RecipeEditorGUI extends EditionInventory {
       int count = text.indexOf(58);
       QuickNumberRange quickNumberRange = new QuickNumberRange(1.0, null);
       if (count > 0) {
-         String text2 = text.substring(count + 1);
+         String remainder = text.substring(count + 1);
          text = text.substring(0, count);
-         Integer value = SilentNumbers.IntegerParse(text2);
+         Integer value = SilentNumbers.IntegerParse(remainder);
          if (value == null) {
             value = 1;
          }
@@ -414,9 +414,9 @@ public abstract class RecipeEditorGUI extends EditionInventory {
          if (text.contains(".") && !text.contains(" ")) {
             String[] texts = text.split("\\.");
             if (texts.length == 2) {
-               String text2 = texts[0];
-               String text3 = texts[1];
-               ProvidedUIFilter uIFilter = UIFilterManager.getUIFilter("m", text2, text3, "1..", friendlyFeedbackProvider);
+               String firstPart = texts[0];
+               String secondPart = texts[1];
+               ProvidedUIFilter uIFilter = UIFilterManager.getUIFilter("m", firstPart, secondPart, "1..", friendlyFeedbackProvider);
                if (uIFilter != null) {
                   return uIFilter;
                }

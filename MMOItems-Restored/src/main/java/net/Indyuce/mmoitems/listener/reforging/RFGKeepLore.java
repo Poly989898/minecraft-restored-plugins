@@ -35,9 +35,9 @@ public class RFGKeepLore implements Listener {
    ArrayList<String> extractLore(@NotNull List<String> texts, @NotNull String text) {
       ArrayList list = new ArrayList();
 
-      for (String text2 : texts) {
-         if (text2.startsWith(text)) {
-            list.add(text2);
+      for (String loreLine : texts) {
+         if (loreLine.startsWith(text)) {
+            list.add(loreLine);
          }
       }
 

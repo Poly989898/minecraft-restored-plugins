@@ -104,13 +104,13 @@ public class ProjectileParticlesData implements StatData, RandomStatData<Project
             DustOptions dustOptions = new DustOptions(Color.fromRGB(this.red, this.green, this.blue), 1.0F);
             location.getWorld().spawnParticle(this.particle, location, count, value, value, value, 0.0, dustOptions);
          } else if (this.particle == Particle.NOTE) {
-            double value2 = this.red / 24.0;
-            location.getWorld().spawnParticle(Particle.NOTE, location, 0, value2, 0.0, 0.0, 1.0);
+            double redScaled = this.red / 24.0;
+            location.getWorld().spawnParticle(Particle.NOTE, location, 0, redScaled, 0.0, 0.0, 1.0);
          } else {
-            double value2 = this.red / 255.0;
-            double value3 = this.green / 255.0;
-            double value4 = this.blue / 255.0;
-            location.getWorld().spawnParticle(this.particle, location, 0, value2, value3, value4, 1.0);
+            double redScaled = this.red / 255.0;
+            double greenScaled = this.green / 255.0;
+            double blueScaled = this.blue / 255.0;
+            location.getWorld().spawnParticle(this.particle, location, 0, redScaled, greenScaled, blueScaled, 1.0);
          }
       } else if (this.particle == VParticle.ITEM.get()) {
          ItemStack item = new ItemStack(Material.STONE);

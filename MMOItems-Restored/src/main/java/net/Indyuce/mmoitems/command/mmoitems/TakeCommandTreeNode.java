@@ -43,11 +43,11 @@ public class TakeCommandTreeNode extends CommandTreeNode {
             ItemStack item = player.getInventory().getItem(i);
             if (item != null && item.getType() != Material.AIR) {
                NBTItem nbtItem = NBTItem.get(item);
-               String type2 = nbtItem.getType();
-               if (type.getId().equals(type2) && nbtItem.getString("MMOITEMS_ITEM_ID").equals(text)) {
-                  int count2 = Math.min(count, item.getAmount());
-                  count -= count2;
-                  item.setAmount(item.getAmount() - count2);
+               String itemType = nbtItem.getType();
+               if (type.getId().equals(itemType) && nbtItem.getString("MMOITEMS_ITEM_ID").equals(text)) {
+                  int takenAmount = Math.min(count, item.getAmount());
+                  count -= takenAmount;
+                  item.setAmount(item.getAmount() - takenAmount);
                   player.getInventory().setItem(i, item);
                }
             }

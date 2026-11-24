@@ -64,13 +64,13 @@ public abstract class Recipe {
    }
 
    private void loadTriggerList(List<String> texts, String text, Set<Trigger> triggers) {
-      for (String text2 : texts) {
+      for (String line : texts) {
          try {
-            Trigger trigger = MMOItems.plugin.getCrafting().getTrigger(new MMOLineConfig(text2));
+            Trigger trigger = MMOItems.plugin.getCrafting().getTrigger(new MMOLineConfig(line));
             Validate.notNull(trigger, "Could not match trigger");
             triggers.add(trigger);
          } catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException("Could not load " + text + " trigger '" + text2 + "': " + exception.getMessage());
+            throw new IllegalArgumentException("Could not load " + text + " trigger '" + line + "': " + exception.getMessage());
          }
       }
    }

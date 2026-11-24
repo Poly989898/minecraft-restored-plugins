@@ -163,18 +163,18 @@ public class NumericStatFormula implements RandomStatData<DoubleData>, Updatable
          return value * this.scale + this.min + (this.max - this.min) * value2;
       }
 
-      double value3 = this.base + this.scale * value;
-      double value4 = Math.min(Math.max(value2 * this.spread, -this.maxSpread), this.maxSpread);
-      double value5 = RELATIVE_SPREAD ? value3 * (1.0 + value4) : value3 + value4;
+      double baseValue = this.base + this.scale * value;
+      double spreadValue = Math.min(Math.max(value2 * this.spread, -this.maxSpread), this.maxSpread);
+      double resultValue = RELATIVE_SPREAD ? baseValue * (1.0 + spreadValue) : baseValue + spreadValue;
       if (this.hasMin) {
-         value5 = Math.max(this.min, value5);
+         resultValue = Math.max(this.min, resultValue);
       }
 
       if (this.hasMax) {
-         value5 = Math.min(this.max, value5);
+         resultValue = Math.min(this.max, resultValue);
       }
 
-      return value5;
+      return resultValue;
    }
 
    public DoubleData randomize(MMOItemBuilder mmoItemBuilder) {
@@ -239,11 +239,11 @@ public class NumericStatFormula implements RandomStatData<DoubleData>, Updatable
    @NotNull
    public DoubleData reroll(@NotNull ItemStat itemStat, @NotNull DoubleData doubleData, int count) {
       double value = this.getBase() + this.getScale() * count;
-      double value2 = doubleData.getValue();
-      double value3 = value2 - value;
-      double value4 = RELATIVE_SPREAD ? Math.abs(value3 / (this.getSpread() * value)) : Math.abs(value3 / this.getSpread());
-      double value5 = this.getMaxSpread() / this.getSpread();
-      return !(value4 > value5) && !(value4 > 3.5) ? doubleData.clone() : new DoubleData(this.calculate(count));
+      double dataValue = doubleData.getValue();
+      double difference = dataValue - value;
+      double deviation = RELATIVE_SPREAD ? Math.abs(difference / (this.getSpread() * value)) : Math.abs(difference / this.getSpread());
+      double maxDeviation = this.getMaxSpread() / this.getSpread();
+      return !(deviation > maxDeviation) && !(deviation > 3.5) ? doubleData.clone() : new DoubleData(this.calculate(count));
    }
 
    public enum FormulaInputType {

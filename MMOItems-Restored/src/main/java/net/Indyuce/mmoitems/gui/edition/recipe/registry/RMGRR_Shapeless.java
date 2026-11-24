@@ -62,19 +62,19 @@ public class RMGRR_Shapeless implements RecipeRegistry {
       @NotNull FriendlyFeedbackProvider friendlyFeedbackProvider
    ) {
       RecipeEditorGUI.moveInput(section, text);
-      ConfigurationSection section2 = RecipeEditorGUI.getSection(section, text);
+      ConfigurationSection inputSection = RecipeEditorGUI.getSection(section, text);
       NamespacedKey namespacedKey = (NamespacedKey)ref.getValue();
       if (namespacedKey == null) {
          throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Illegal (Null) Namespace", new String[0]));
       }
 
       ArrayList list = new ArrayList();
-      ArrayList<String> texts = new ArrayList(section2.getStringList("input"));
+      ArrayList<String> texts = new ArrayList(inputSection.getStringList("input"));
       boolean flag = false;
 
-      for (String text2 : texts) {
-         if (text2 != null && !"AIR".equals(text2)) {
-            ProvidedUIFilter ingredientFrom = RecipeEditorGUI.readIngredientFrom(text2, friendlyFeedbackProvider);
+      for (String ingredientLine : texts) {
+         if (ingredientLine != null && !"AIR".equals(ingredientLine)) {
+            ProvidedUIFilter ingredientFrom = RecipeEditorGUI.readIngredientFrom(ingredientLine, friendlyFeedbackProvider);
             if (!ingredientFrom.isAir()) {
                flag = true;
                list.add(new MythicRecipeIngredient(ingredientFrom));
@@ -89,19 +89,19 @@ public class RMGRR_Shapeless implements RecipeRegistry {
       }
 
       ShapelessRecipe shapelessRecipe = new ShapelessRecipe(namespacedKey.getKey(), list);
-      ShapedRecipe shapedRecipe = RMGRR_Shaped.shapedRecipeFromList(namespacedKey.getKey(), new ArrayList<>(section2.getStringList("output")), friendlyFeedbackProvider);
-      int amount = section2.getInt("amount", 1);
-      boolean hidden = section2.getBoolean("hidden", false);
-      ShapedRecipe shapedRecipe2 = ShapedRecipe.single(
+      ShapedRecipe shapedRecipe = RMGRR_Shaped.shapedRecipeFromList(namespacedKey.getKey(), new ArrayList<>(inputSection.getStringList("output")), friendlyFeedbackProvider);
+      int amount = inputSection.getInt("amount", 1);
+      boolean hidden = inputSection.getBoolean("hidden", false);
+      ShapedRecipe singleRecipe = ShapedRecipe.single(
          namespacedKey.getKey(), new ProvidedUIFilter[]{new ProvidedUIFilter(MMOItemUIFilter.get(), mmoItemTemplate.getType().getId(), mmoItemTemplate.getId(), Math.max(amount, 1))}
       );
-      MRORecipe mroRecipe = new MRORecipe(shapedRecipe2, shapedRecipe);
+      MRORecipe mroRecipe = new MRORecipe(singleRecipe, shapedRecipe);
       MythicRecipeBlueprint mythicRecipeBlueprint = new MythicRecipeBlueprint(shapelessRecipe, mroRecipe, namespacedKey);
       RandomStatData randomStatData = mmoItemTemplate.getBaseItemData().get(ItemStats.CRAFT_PERMISSION);
       if (randomStatData instanceof StringData) {
-         String text2 = ((StringData)randomStatData).getString();
-         if (text2 != null) {
-            mythicRecipeBlueprint.addRequiredPermission(text2);
+         String outputText = ((StringData)randomStatData).getString();
+         if (outputText != null) {
+            mythicRecipeBlueprint.addRequiredPermission(outputText);
          }
       }
 

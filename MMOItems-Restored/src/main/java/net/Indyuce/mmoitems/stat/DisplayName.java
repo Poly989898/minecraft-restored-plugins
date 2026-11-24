@@ -45,43 +45,43 @@ public class DisplayName extends StringStat implements GemStoneStat {
 
    @NotNull
    String cropUpgrade(@NotNull String text) {
-      String text2 = MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix", " &8(&e+#lvl#&8)");
-      if (text2 != null && !text2.isEmpty()) {
-         int count = text2.indexOf("#lvl#");
+      String nameSuffix = MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix", " &8(&e+#lvl#&8)");
+      if (nameSuffix != null && !nameSuffix.isEmpty()) {
+         int count = nameSuffix.indexOf("#lvl#");
          if (count < 0) {
             return text;
          }
 
-         String text3 = text2.substring(0, count);
-         String text4 = text2.substring(count + "#lvl#".length());
-         String text5 = text3.replace("+", "-");
-         String text6 = text4.replace("+", "-");
-         if (text.contains(text3)) {
-            int count2 = text.indexOf(text3);
-            int count3 = text.lastIndexOf(text4);
-            if (count3 < 0) {
-               count3 = text.length();
+         String suffixPrefix = nameSuffix.substring(0, count);
+         String suffixPostfix = nameSuffix.substring(count + "#lvl#".length());
+         String negatedPrefix = suffixPrefix.replace("+", "-");
+         String negatedPostfix = suffixPostfix.replace("+", "-");
+         if (text.contains(suffixPrefix)) {
+            int prefixIndex = text.indexOf(suffixPrefix);
+            int postfixIndex = text.lastIndexOf(suffixPostfix);
+            if (postfixIndex < 0) {
+               postfixIndex = text.length();
             } else {
-               count3 += text4.length();
+               postfixIndex += suffixPostfix.length();
             }
 
-            String text7 = text.substring(0, count2);
-            String text8 = text.substring(count3);
-            text = text7 + text8;
+            String baseName = text.substring(0, prefixIndex);
+            String trailingText = text.substring(postfixIndex);
+            text = baseName + trailingText;
          }
 
-         if (text.contains(text5)) {
-            int count2 = text.indexOf(text5);
-            int count3 = text.lastIndexOf(text6);
-            if (count3 < 0) {
-               count3 = text.length();
+         if (text.contains(negatedPrefix)) {
+            int negatedPrefixIndex = text.indexOf(negatedPrefix);
+            int negatedPostfixIndex = text.lastIndexOf(negatedPostfix);
+            if (negatedPostfixIndex < 0) {
+               negatedPostfixIndex = text.length();
             } else {
-               count3 += text6.length();
+               negatedPostfixIndex += negatedPostfix.length();
             }
 
-            String text7 = text.substring(0, count2);
-            String text8 = text.substring(count3);
-            text = text7 + text8;
+            String baseName = text.substring(0, negatedPrefixIndex);
+            String trailingText = text.substring(negatedPostfixIndex);
+            text = baseName + trailingText;
          }
 
          return text;
@@ -92,10 +92,10 @@ public class DisplayName extends StringStat implements GemStoneStat {
 
    @NotNull
    public static String appendUpgradeLevel(@NotNull String text, int count) {
-      String text2 = MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix");
-      if (text2 != null && count != 0) {
-         String text3 = levelPrefix(text2, count);
-         return text + text3;
+      String configuredSuffix = MMOItems.plugin.getConfig().getString("item-upgrading.name-suffix");
+      if (configuredSuffix != null && count != 0) {
+         String levelSuffix = levelPrefix(configuredSuffix, count);
+         return text + levelSuffix;
       } else {
          return text;
       }
@@ -130,11 +130,11 @@ public class DisplayName extends StringStat implements GemStoneStat {
       boolean flag = false;
       ItemTag tagAtPath = ItemTag.getTagAtPath(this.getNBTPath(), readMMOItem.getNBT(), SupportedNBTTagValues.STRING);
       if (tagAtPath != null) {
-         ItemTag tagAtPath2 = ItemTag.getTagAtPath(this.getNBTPath() + "_PRE", readMMOItem.getNBT(), SupportedNBTTagValues.STRING);
-         ItemTag tagAtPath3 = ItemTag.getTagAtPath(this.getNBTPath() + "_SUF", readMMOItem.getNBT(), SupportedNBTTagValues.STRING);
+         ItemTag prefixTag = ItemTag.getTagAtPath(this.getNBTPath() + "_PRE", readMMOItem.getNBT(), SupportedNBTTagValues.STRING);
+         ItemTag suffixTag = ItemTag.getTagAtPath(this.getNBTPath() + "_SUF", readMMOItem.getNBT(), SupportedNBTTagValues.STRING);
          list.add(tagAtPath);
-         list.add(tagAtPath2);
-         list.add(tagAtPath3);
+         list.add(prefixTag);
+         list.add(suffixTag);
          if (readMMOItem.getNBT().getItem().getItemMeta().hasDisplayName()) {
             flag = true;
          }
@@ -151,8 +151,8 @@ public class DisplayName extends StringStat implements GemStoneStat {
          String text = null;
          if (flag) {
             text = readMMOItem.getNBT().getItem().getItemMeta().getDisplayName();
-            String text2 = ChatColor.stripColor(text);
-            if (!text.equals(text2)) {
+            String strippedName = ChatColor.stripColor(text);
+            if (!text.equals(strippedName)) {
                text = null;
             } else {
                loadedNBT.setString(text);
@@ -161,9 +161,9 @@ public class DisplayName extends StringStat implements GemStoneStat {
 
          readMMOItem.setData(this, loadedNBT);
          if (flag && text != null && !readMMOItem.hasStatHistory(this)) {
-            ItemTag tagAtPath2 = ItemTag.getTagAtPath("HSTRY_" + this.getId(), readMMOItem.getNBT(), SupportedNBTTagValues.STRING);
-            if (tagAtPath2 != null) {
-               StatHistory statHistory = StatHistory.fromNBTString(readMMOItem, (String)tagAtPath2.getValue());
+            ItemTag historyTag = ItemTag.getTagAtPath("HSTRY_" + this.getId(), readMMOItem.getNBT(), SupportedNBTTagValues.STRING);
+            if (historyTag != null) {
+               StatHistory statHistory = StatHistory.fromNBTString(readMMOItem, (String)historyTag.getValue());
                if (statHistory != null) {
                   NameData nameData = (NameData)statHistory.getOriginalData();
                   nameData.setString(text);

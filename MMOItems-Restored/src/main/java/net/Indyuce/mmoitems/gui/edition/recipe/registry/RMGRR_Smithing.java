@@ -60,35 +60,35 @@ public class RMGRR_Smithing implements RecipeRegistry {
       @NotNull FriendlyFeedbackProvider friendlyFeedbackProvider
    ) {
       RecipeEditorGUI.moveInput(section, text);
-      ConfigurationSection section2 = RecipeEditorGUI.getSection(section, text);
+      ConfigurationSection inputSection = RecipeEditorGUI.getSection(section, text);
       NamespacedKey namespacedKey = (NamespacedKey)ref.getValue();
       if (namespacedKey == null) {
          throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Illegal (Null) Namespace", new String[0]));
       } else {
-         String text2 = RMGRI_Smithing.updateIngredients(section2.getString("input"));
-         String[] texts = text2.split("\\|");
+         String updatedInput = RMGRI_Smithing.updateIngredients(inputSection.getString("input"));
+         String[] texts = updatedInput.split("\\|");
          ProvidedUIFilter ingredientFrom = RecipeEditorGUI.readIngredientFrom(texts[0], friendlyFeedbackProvider);
-         ProvidedUIFilter ingredientFrom2 = RecipeEditorGUI.readIngredientFrom(texts[1], friendlyFeedbackProvider);
-         if (!ingredientFrom.isAir() && !ingredientFrom2.isAir()) {
+         ProvidedUIFilter ingotFilter = RecipeEditorGUI.readIngredientFrom(texts[1], friendlyFeedbackProvider);
+         if (!ingredientFrom.isAir() && !ingotFilter.isAir()) {
             MythicRecipeIngredient mythicRecipeIngredient = new MythicRecipeIngredient(ingredientFrom);
-            MythicRecipeIngredient mythicRecipeIngredient2 = new MythicRecipeIngredient(ingredientFrom2);
+            MythicRecipeIngredient ingotIngredient = new MythicRecipeIngredient(ingotFilter);
             ShapelessRecipe shapelessRecipe = new ShapelessRecipe(namespacedKey.getKey(), new MythicRecipeIngredient[]{mythicRecipeIngredient});
-            ShapelessRecipe shapelessRecipe2 = new ShapelessRecipe(namespacedKey.getKey(), new MythicRecipeIngredient[]{mythicRecipeIngredient2});
-            String text3 = RMGRI_Smithing.updateIngredients(section2.getString("output"));
-            String[] texts2 = text3.split("\\|");
-            ProvidedUIFilter ingredientFrom3 = RecipeEditorGUI.readIngredientFrom(texts2[0], friendlyFeedbackProvider);
-            ProvidedUIFilter ingredientFrom4 = RecipeEditorGUI.readIngredientFrom(texts2[1], friendlyFeedbackProvider);
-            ShapedRecipe shapedRecipe = ingredientFrom3.isAir() ? null : ShapedRecipe.single(namespacedKey.getKey(), new ProvidedUIFilter[]{ingredientFrom3});
-            ShapedRecipe shapedRecipe2 = ingredientFrom4.isAir() ? null : ShapedRecipe.single(namespacedKey.getKey(), new ProvidedUIFilter[]{ingredientFrom4});
-            int amount = section2.getInt("amount", 1);
-            boolean dropGems = section2.getBoolean("drop-gems", false);
-            SmithingCombinationType sCT = this.readSCT(section2.getString("enchantments"));
-            SmithingCombinationType sCT2 = this.readSCT(section2.getString("upgrades"));
-            CustomSmithingRecipe customSmithingRecipe = new CustomSmithingRecipe(mmoItemTemplate, dropGems, sCT, sCT2, amount);
+            ShapelessRecipe inputRecipe = new ShapelessRecipe(namespacedKey.getKey(), new MythicRecipeIngredient[]{ingotIngredient});
+            String updatedOutput = RMGRI_Smithing.updateIngredients(inputSection.getString("output"));
+            String[] outputParts = updatedOutput.split("\\|");
+            ProvidedUIFilter outputMainFilter = RecipeEditorGUI.readIngredientFrom(outputParts[0], friendlyFeedbackProvider);
+            ProvidedUIFilter outputIngotFilter = RecipeEditorGUI.readIngredientFrom(outputParts[1], friendlyFeedbackProvider);
+            ShapedRecipe shapedRecipe = outputMainFilter.isAir() ? null : ShapedRecipe.single(namespacedKey.getKey(), new ProvidedUIFilter[]{outputMainFilter});
+            ShapedRecipe outputRecipe = outputIngotFilter.isAir() ? null : ShapedRecipe.single(namespacedKey.getKey(), new ProvidedUIFilter[]{outputIngotFilter});
+            int amount = inputSection.getInt("amount", 1);
+            boolean dropGems = inputSection.getBoolean("drop-gems", false);
+            SmithingCombinationType sCT = this.readSCT(inputSection.getString("enchantments"));
+            SmithingCombinationType combinationType = this.readSCT(inputSection.getString("upgrades"));
+            CustomSmithingRecipe customSmithingRecipe = new CustomSmithingRecipe(mmoItemTemplate, dropGems, sCT, combinationType, amount);
             customSmithingRecipe.setMainInputConsumption(shapedRecipe);
-            customSmithingRecipe.setIngotInputConsumption(shapedRecipe2);
+            customSmithingRecipe.setIngotInputConsumption(outputRecipe);
             MythicRecipeBlueprint mythicRecipeBlueprint = new MythicRecipeBlueprint(shapelessRecipe, customSmithingRecipe, namespacedKey);
-            mythicRecipeBlueprint.addSideCheck("ingot", shapelessRecipe2);
+            mythicRecipeBlueprint.addSideCheck("ingot", inputRecipe);
             mythicRecipeBlueprint.deploy(MythicRecipeStation.SMITHING, ref);
             return mythicRecipeBlueprint;
          } else {

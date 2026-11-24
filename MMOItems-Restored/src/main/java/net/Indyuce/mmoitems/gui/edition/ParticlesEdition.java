@@ -65,19 +65,19 @@ public class ParticlesEdition extends EditionInventory {
          ConfigurationSection itemParticles = this.getEditedSection().getConfigurationSection("item-particles");
 
          for (String modifier : particleType.getModifiers()) {
-            ItemStack item2 = new ItemStack(Material.GRAY_DYE);
-            ItemMeta itemMeta2 = item2.getItemMeta();
-            itemMeta2.setDisplayName(ChatColor.GREEN + UtilityMethods.caseOnWords(modifier.toLowerCase().replace("-", " ")));
-            ArrayList list2 = new ArrayList();
-            list2.add("" + ChatColor.GRAY + ChatColor.ITALIC + "This is a pattern modifier.");
-            list2.add("" + ChatColor.GRAY + ChatColor.ITALIC + "Changing this value will slightly");
-            list2.add("" + ChatColor.GRAY + ChatColor.ITALIC + "customize the particle pattern.");
-            list2.add("");
-            list2.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + (itemParticles.contains(modifier) ? itemParticles.getDouble(modifier) : particleType.getModifier(modifier)));
-            itemMeta2.setLore(list2);
-            itemMeta2.getPersistentDataContainer().set(PATTERN_MODIFIED_KEY, PersistentDataType.STRING, modifier);
-            item2.setItemMeta(itemMeta2);
-            this.inventory.setItem(counts[count++], item2);
+            ItemStack grayDyeItem = new ItemStack(Material.GRAY_DYE);
+            ItemMeta grayDyeMeta = grayDyeItem.getItemMeta();
+            grayDyeMeta.setDisplayName(ChatColor.GREEN + UtilityMethods.caseOnWords(modifier.toLowerCase().replace("-", " ")));
+            ArrayList grayDyeLore = new ArrayList();
+            grayDyeLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "This is a pattern modifier.");
+            grayDyeLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "Changing this value will slightly");
+            grayDyeLore.add("" + ChatColor.GRAY + ChatColor.ITALIC + "customize the particle pattern.");
+            grayDyeLore.add("");
+            grayDyeLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + (itemParticles.contains(modifier) ? itemParticles.getDouble(modifier) : particleType.getModifier(modifier)));
+            grayDyeMeta.setLore(grayDyeLore);
+            grayDyeMeta.getPersistentDataContainer().set(PATTERN_MODIFIED_KEY, PersistentDataType.STRING, modifier);
+            grayDyeItem.setItemMeta(grayDyeMeta);
+            this.inventory.setItem(counts[count++], grayDyeItem);
          }
       }
 
@@ -88,14 +88,14 @@ public class ParticlesEdition extends EditionInventory {
       } catch (Exception exception) {
       }
 
-      ItemStack item2 = new ItemStack(Material.BLAZE_POWDER);
-      ItemMeta itemMeta2 = item2.getItemMeta();
-      itemMeta2.setDisplayName(ChatColor.GREEN + "Particle");
-      ArrayList list2 = new ArrayList();
-      list2.add(ChatColor.GRAY + "Defines what particle is used");
-      list2.add(ChatColor.GRAY + "in the particle effect.");
-      list2.add("");
-      list2.add(
+      ItemStack particleItem = new ItemStack(Material.BLAZE_POWDER);
+      ItemMeta particleMeta = particleItem.getItemMeta();
+      particleMeta.setDisplayName(ChatColor.GREEN + "Particle");
+      ArrayList particleLore = new ArrayList();
+      particleLore.add(ChatColor.GRAY + "Defines what particle is used");
+      particleLore.add(ChatColor.GRAY + "in the particle effect.");
+      particleLore.add("");
+      particleLore.add(
          ChatColor.GRAY
             + "Current Value: "
             + (
@@ -104,57 +104,57 @@ public class ParticlesEdition extends EditionInventory {
                   : ChatColor.GOLD + UtilityMethods.caseOnWords(particle.name().toLowerCase().replace("_", " "))
             )
       );
-      list2.add("");
-      list2.add(ChatColor.YELLOW + "►" + " Click to change this value.");
-      list2.add(ChatColor.YELLOW + "►" + " Right click to change this value.");
-      itemMeta2.setLore(list2);
-      item2.setItemMeta(itemMeta2);
+      particleLore.add("");
+      particleLore.add(ChatColor.YELLOW + "►" + " Click to change this value.");
+      particleLore.add(ChatColor.YELLOW + "►" + " Right click to change this value.");
+      particleMeta.setLore(particleLore);
+      particleItem.setItemMeta(particleMeta);
       if (particle != null && MMOUtils.isColorable(particle)) {
-         int count2 = this.getEditedSection().getInt("item-particles.color.red");
-         int count3 = this.getEditedSection().getInt("item-particles.color.green");
-         int count4 = this.getEditedSection().getInt("item-particles.color.blue");
-         ItemStack item3 = new ItemStack(Material.RED_DYE);
-         ItemMeta itemMeta3 = item3.getItemMeta();
-         itemMeta3.setDisplayName(ChatColor.GREEN + "Particle Color");
-         ArrayList list3 = new ArrayList();
-         list3.add(ChatColor.GRAY + "The RGB color of your particle.");
-         list3.add("");
-         list3.add(ChatColor.GRAY + "Current Value (R-G-B):");
-         list3.add(
+         int red = this.getEditedSection().getInt("item-particles.color.red");
+         int green = this.getEditedSection().getInt("item-particles.color.green");
+         int blue = this.getEditedSection().getInt("item-particles.color.blue");
+         ItemStack particleColorItem = new ItemStack(Material.RED_DYE);
+         ItemMeta particleColorMeta = particleColorItem.getItemMeta();
+         particleColorMeta.setDisplayName(ChatColor.GREEN + "Particle Color");
+         ArrayList particleColorLore = new ArrayList();
+         particleColorLore.add(ChatColor.GRAY + "The RGB color of your particle.");
+         particleColorLore.add("");
+         particleColorLore.add(ChatColor.GRAY + "Current Value (R-G-B):");
+         particleColorLore.add(
             ""
                + ChatColor.RED
                + ChatColor.BOLD
-               + count2
+               + red
                + ChatColor.GRAY
                + " - "
                + ChatColor.GREEN
                + ChatColor.BOLD
-               + count3
+               + green
                + ChatColor.GRAY
                + " - "
                + ChatColor.BLUE
                + ChatColor.BOLD
-               + count4
+               + blue
          );
-         list3.add("");
-         list3.add(ChatColor.YELLOW + "►" + " Click to change this value.");
-         list3.add(ChatColor.YELLOW + "►" + " Right click to change this value.");
-         itemMeta3.setLore(list3);
-         item3.setItemMeta(itemMeta3);
-         this.inventory.setItem(25, item3);
+         particleColorLore.add("");
+         particleColorLore.add(ChatColor.YELLOW + "►" + " Click to change this value.");
+         particleColorLore.add(ChatColor.YELLOW + "►" + " Right click to change this value.");
+         particleColorMeta.setLore(particleColorLore);
+         particleColorItem.setItemMeta(particleColorMeta);
+         this.inventory.setItem(25, particleColorItem);
       }
 
-      ItemStack item3 = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-      ItemMeta itemMeta3 = item3.getItemMeta();
-      itemMeta3.setDisplayName(ChatColor.RED + "- No Modifier -");
-      item3.setItemMeta(itemMeta3);
+      ItemStack noModifierItem = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+      ItemMeta noModifierMeta = noModifierItem.getItemMeta();
+      noModifierMeta.setDisplayName(ChatColor.RED + "- No Modifier -");
+      noModifierItem.setItemMeta(noModifierMeta);
 
       while (count < counts.length) {
-         this.inventory.setItem(counts[count++], item3);
+         this.inventory.setItem(counts[count++], noModifierItem);
       }
 
       this.inventory.setItem(21, item);
-      this.inventory.setItem(23, item2);
+      this.inventory.setItem(23, particleItem);
    }
 
    @Override

@@ -29,17 +29,17 @@ public class DenizenHook {
          ObjectTag id = mapTag.getObject("id");
          if (type != null && id != null) {
             String text = type.toString().replace("-", "_").toUpperCase();
-            Type type2 = MMOItems.plugin.getTypes().get(text);
-            if (type2 == null) {
+            Type itemType = MMOItems.plugin.getTypes().get(text);
+            if (itemType == null) {
                attribute.echoError("Invalid type - cannot find type with name '" + text + "'");
                return null;
             } else {
-               String text2 = id.toString().replace("-", "_").toUpperCase();
-               if (!MMOItems.plugin.getTemplates().hasTemplate(type2, text2)) {
-                  attribute.echoError("Invalid template ID - cannot find template with name '" + text2 + "'");
+               String itemId = id.toString().replace("-", "_").toUpperCase();
+               if (!MMOItems.plugin.getTemplates().hasTemplate(itemType, itemId)) {
+                  attribute.echoError("Invalid template ID - cannot find template with name '" + itemId + "'");
                   return null;
                } else {
-                  return new MMOItemTemplateTag(type2, text2);
+                  return new MMOItemTemplateTag(itemType, itemId);
                }
             }
          } else {

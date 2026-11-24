@@ -48,8 +48,8 @@ public class CircularLuteAttack implements LuteAttackHandler {
                   break;
                }
 
-               double value3 = this.ti / 3.0;
-               Vector var5x = MMOUtils.rotateFunc(new Vector(Math.cos(value3), Math.sin(value3), 0.0).multiply(0.3), this.loc);
+               double step = this.ti / 3.0;
+               Vector var5x = MMOUtils.rotateFunc(new Vector(Math.cos(step), Math.sin(step), 0.0).multiply(0.3), this.loc);
                projectileParticlesData.shootParticle(this.loc.clone().add(var5x));
                projectileParticlesData.shootParticle(this.loc.clone().add(var5x.multiply(-1)));
                if (var2x == 0) {

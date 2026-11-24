@@ -85,9 +85,9 @@ public class DropTableManager implements Listener, Reloadable {
       if (killer == null || !killer.hasMetadata("NPC")) {
          if (this.monsters.containsKey(entity.getType())) {
             List list = this.monsters.get(entity.getType()).read(killer != null ? PlayerData.get(killer) : null, false);
-            ItemDropEvent event2 = new ItemDropEvent(killer, list, entity);
-            Bukkit.getPluginManager().callEvent(event2);
-            if (event2.isCancelled()) {
+            ItemDropEvent dropEvent = new ItemDropEvent(killer, list, entity);
+            Bukkit.getPluginManager().callEvent(dropEvent);
+            if (dropEvent.isCancelled()) {
                return;
             }
 
@@ -107,9 +107,9 @@ public class DropTableManager implements Listener, Reloadable {
             if (this.customBlocks.containsKey(customBlock.getId()) && MMOUtils.getPickaxePower(player) >= customBlock.getRequiredPower()) {
                PlayerData playerData = PlayerData.get(player);
                List<ItemStack> items = this.customBlocks.get(customBlock.getId()).read(playerData, this.hasSilkTouchTool(player));
-               ItemDropEvent event2 = new ItemDropEvent(player, items, customBlock);
-               Bukkit.getPluginManager().callEvent(event2);
-               if (event2.isCancelled()) {
+               ItemDropEvent dropEvent = new ItemDropEvent(player, items, customBlock);
+               Bukkit.getPluginManager().callEvent(dropEvent);
+               if (dropEvent.isCancelled()) {
                   return;
                }
 
@@ -122,9 +122,9 @@ public class DropTableManager implements Listener, Reloadable {
          } else if (this.blocks.containsKey(block.getType())) {
             Material type = block.getType();
             List<ItemStack> items = this.blocks.get(type).read(PlayerData.get(player), this.hasSilkTouchTool(player));
-            ItemDropEvent event2 = new ItemDropEvent(player, items, block);
-            Bukkit.getPluginManager().callEvent(event2);
-            if (event2.isCancelled()) {
+            ItemDropEvent dropEvent = new ItemDropEvent(player, items, block);
+            Bukkit.getPluginManager().callEvent(dropEvent);
+            if (dropEvent.isCancelled()) {
                return;
             }
 

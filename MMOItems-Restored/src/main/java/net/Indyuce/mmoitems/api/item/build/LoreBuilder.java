@@ -76,19 +76,19 @@ public class LoreBuilder extends Buildable<List<String>> {
       int count = text.indexOf("{");
 
       while (count >= 0) {
-         int count2 = text.indexOf("}", count);
-         if (count2 < 0) {
+         int closingIndex = text.indexOf("}", count);
+         if (closingIndex < 0) {
             break;
          }
 
-         String text2 = text.substring(count + 1, count2);
-         String text3 = this.placeholders.get(text2);
-         if (text3 != null) {
-            text = text.substring(0, count) + text3 + text.substring(count2 + 1);
-            count2 += text3.length() - text2.length() - 2;
+         String placeholderKey = text.substring(count + 1, closingIndex);
+         String placeholderValue = this.placeholders.get(placeholderKey);
+         if (placeholderValue != null) {
+            text = text.substring(0, count) + placeholderValue + text.substring(closingIndex + 1);
+            closingIndex += placeholderValue.length() - placeholderKey.length() - 2;
          }
 
-         count = text.indexOf("{", count2 + 1);
+         count = text.indexOf("{", closingIndex + 1);
       }
 
       return text;
@@ -122,41 +122,41 @@ public class LoreBuilder extends Buildable<List<String>> {
          }
       }
 
-      int count2 = this.tooltip != null ? this.tooltip.getFirstIgnored() : 0;
+      int firstIgnoredIndex = this.tooltip != null ? this.tooltip.getFirstIgnored() : 0;
       int index = 0;
 
       while (index < this.lore.size()) {
-         String text2 = this.lore.get(index);
-         LoreBuilder.LineType type = this.getType(index, text2);
+         String loreLine = this.lore.get(index);
+         LoreBuilder.LineType type = this.getType(index, loreLine);
          if (type.isNormalBar()) {
-            text2 = text2.substring(5);
+            loreLine = loreLine.substring(5);
          }
 
          if (type.isSuperBar()) {
-            text2 = text2.substring(6);
+            loreLine = loreLine.substring(6);
          }
 
          if (this.tooltip != null && !type.isBottom()) {
-            text2 = (index < count2 ? this.tooltip.getAlignText() : (type.isBar() ? this.tooltip.getBar() : this.tooltip.getMiddle())) + text2;
+            loreLine = (index < firstIgnoredIndex ? this.tooltip.getAlignText() : (type.isBar() ? this.tooltip.getBar() : this.tooltip.getMiddle())) + loreLine;
          }
 
-         String text3 = StringUtils.substringBetween(text2, "MATH%", "%");
-         if (text3 != null) {
-            text2 = text2.replaceFirst("MATH\\%[^%]*\\%", this.evaluate(text3));
+         String mathExpression = StringUtils.substringBetween(loreLine, "MATH%", "%");
+         if (mathExpression != null) {
+            loreLine = loreLine.replaceFirst("MATH\\%[^%]*\\%", this.evaluate(mathExpression));
          }
 
-         text2 = MythicLib.plugin.getPlaceholderParser().parse(null, text2);
-         text2 = this.applySpecialPlaceholders(text2);
-         String[] texts = text2.split("\n", -1);
+         loreLine = MythicLib.plugin.getPlaceholderParser().parse(null, loreLine);
+         loreLine = this.applySpecialPlaceholders(loreLine);
+         String[] texts = loreLine.split("\n", -1);
          if (texts.length > 1) {
             for (int i = texts.length - 1; i >= 0; i--) {
-               this.lore.add(index, LINE_PREFIX + texts[i] + (index < count2 ? "" : text));
+               this.lore.add(index, LINE_PREFIX + texts[i] + (index < firstIgnoredIndex ? "" : text));
             }
 
             this.lore.remove(index + texts.length);
             index += texts.length;
          } else {
-            this.lore.set(index++, LINE_PREFIX + text2 + text);
+            this.lore.set(index++, LINE_PREFIX + loreLine + text);
          }
       }
 

@@ -74,9 +74,9 @@ public class ConfigItem {
       String material = section.getString("material");
       if (material != null && !material.isEmpty()) {
          try {
-            Material material2 = Material.valueOf(section.getString("material"));
-            if (material2.isItem()) {
-               this.setMaterial(material2);
+            Material itemMaterial = Material.valueOf(section.getString("material"));
+            if (itemMaterial.isItem()) {
+               this.setMaterial(itemMaterial);
             }
          } catch (IllegalArgumentException exception) {
          }

@@ -37,7 +37,7 @@ public class CommandListEdition extends EditionInventory {
             String text = this.getEditedSection().getString("commands." + key + ".format");
             double value = this.getEditedSection().getDouble("commands." + key + ".delay");
             boolean flag = this.getEditedSection().getBoolean("commands." + key + ".console");
-            boolean flag2 = this.getEditedSection().getBoolean("commands." + key + ".op");
+            boolean isOp = this.getEditedSection().getBoolean("commands." + key + ".op");
             ItemStack item = new ItemStack(Material.COMPARATOR);
             ItemMeta itemMeta = item.getItemMeta();
             itemMeta.setDisplayName(text != null && !text.equals("") ? ChatColor.GREEN + text : ChatColor.RED + "No Format");
@@ -45,7 +45,7 @@ public class CommandListEdition extends EditionInventory {
             list.add("");
             list.add(ChatColor.GRAY + "Command Delay: " + ChatColor.RED + value);
             list.add(ChatColor.GRAY + "Sent by Console: " + ChatColor.RED + flag);
-            list.add(ChatColor.GRAY + "Sent w/ OP perms: " + ChatColor.RED + flag2);
+            list.add(ChatColor.GRAY + "Sent w/ OP perms: " + ChatColor.RED + isOp);
             list.add("");
             list.add(ChatColor.YELLOW + "►" + " Right click to remove.");
             itemMeta.setLore(list);
@@ -59,11 +59,11 @@ public class CommandListEdition extends EditionInventory {
       ItemMeta itemMeta = item.getItemMeta();
       itemMeta.setDisplayName(ChatColor.RED + "- No Command -");
       item.setItemMeta(itemMeta);
-      ItemStack item2 = new ItemStack(Material.WRITABLE_BOOK);
-      ItemMeta itemMeta2 = item2.getItemMeta();
-      itemMeta2.setDisplayName(ChatColor.GREEN + "Register a command...");
-      item2.setItemMeta(itemMeta2);
-      this.inventory.setItem(40, item2);
+      ItemStack registerACommandItem = new ItemStack(Material.WRITABLE_BOOK);
+      ItemMeta registerACommandMeta = registerACommandItem.getItemMeta();
+      registerACommandMeta.setDisplayName(ChatColor.GREEN + "Register a command...");
+      registerACommandItem.setItemMeta(registerACommandMeta);
+      this.inventory.setItem(40, registerACommandItem);
 
       while (count < slots.length) {
          this.inventory.setItem(slots[count++], item);

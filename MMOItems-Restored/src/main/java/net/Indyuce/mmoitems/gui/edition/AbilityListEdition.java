@@ -37,9 +37,9 @@ public class AbilityListEdition extends EditionInventory {
       if (this.getEditedSection().contains("ability")) {
          for (String key : this.getEditedSection().getConfigurationSection("ability").getKeys(false)) {
             String text = this.getEditedSection().getString("ability." + key + ".type");
-            String text2;
-            RegisteredSkill registeredSkill = text != null && MMOItems.plugin.getSkills().hasSkill(text2 = text.toUpperCase().replace(" ", "_").replace("-", "_"))
-               ? MMOItems.plugin.getSkills().getSkill(text2)
+            String abilityName;
+            RegisteredSkill registeredSkill = text != null && MMOItems.plugin.getSkills().hasSkill(abilityName = text.toUpperCase().replace(" ", "_").replace("-", "_"))
+               ? MMOItems.plugin.getSkills().getSkill(abilityName)
                : null;
 
             TriggerType triggerType;
@@ -58,21 +58,21 @@ public class AbilityListEdition extends EditionInventory {
             list.add("");
             boolean flag = false;
             if (registeredSkill != null) {
-               for (String key2 : this.getEditedSection().getConfigurationSection("ability." + key).getKeys(false)) {
-                  if (!key2.equals("type") && !key2.equals("mode") && registeredSkill.getHandler().getModifiers().contains(key2)) {
+               for (String modifierKey : this.getEditedSection().getConfigurationSection("ability." + key).getKeys(false)) {
+                  if (!modifierKey.equals("type") && !modifierKey.equals("mode") && registeredSkill.getHandler().getModifiers().contains(modifierKey)) {
                      try {
                         list.add(
                            ChatColor.GRAY
                               + "* "
-                              + UtilityMethods.caseOnWords(key2.toLowerCase().replace("-", " "))
+                              + UtilityMethods.caseOnWords(modifierKey.toLowerCase().replace("-", " "))
                               + ": "
                               + ChatColor.GOLD
-                              + new NumericStatFormula(this.getEditedSection().get("ability." + key + "." + key2)).toString()
+                              + new NumericStatFormula(this.getEditedSection().get("ability." + key + "." + modifierKey)).toString()
                         );
                         flag = true;
                      } catch (IllegalArgumentException exception) {
                         list.add(
-                           ChatColor.GRAY + "* " + UtilityMethods.caseOnWords(key2.toLowerCase().replace("-", " ")) + ": " + ChatColor.GOLD + "Unreadable"
+                           ChatColor.GRAY + "* " + UtilityMethods.caseOnWords(modifierKey.toLowerCase().replace("-", " ")) + ": " + ChatColor.GOLD + "Unreadable"
                         );
                      }
                   }
@@ -96,11 +96,11 @@ public class AbilityListEdition extends EditionInventory {
       ItemMeta itemMeta = item.getItemMeta();
       itemMeta.setDisplayName(ChatColor.RED + "- No Ability -");
       item.setItemMeta(itemMeta);
-      ItemStack item2 = new ItemStack(Material.WRITABLE_BOOK);
-      ItemMeta itemMeta2 = item2.getItemMeta();
-      itemMeta2.setDisplayName(ChatColor.GREEN + "Add an ability...");
-      item2.setItemMeta(itemMeta2);
-      this.inventory.setItem(40, item2);
+      ItemStack addAnAbilityItem = new ItemStack(Material.WRITABLE_BOOK);
+      ItemMeta addAnAbilityMeta = addAnAbilityItem.getItemMeta();
+      addAnAbilityMeta.setDisplayName(ChatColor.GREEN + "Add an ability...");
+      addAnAbilityItem.setItemMeta(addAnAbilityMeta);
+      this.inventory.setItem(40, addAnAbilityItem);
 
       while (count < slots.length) {
          this.inventory.setItem(slots[count++], item);

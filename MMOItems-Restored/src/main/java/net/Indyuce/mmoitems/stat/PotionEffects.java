@@ -86,9 +86,9 @@ public class PotionEffects extends ItemStat<RandomPotionEffectListData, PotionEf
                + " is not a valid potion effect. All potion effects can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html"
          );
          NumericStatFormula numericStatFormula = new NumericStatFormula(texts[1]);
-         NumericStatFormula numericStatFormula2 = new NumericStatFormula(texts[2]);
+         NumericStatFormula durationFormula = new NumericStatFormula(texts[2]);
          numericStatFormula.fillConfigurationSection(editionInventory.getEditedSection(), "potion-effect." + potionEffectType.getName() + ".duration");
-         numericStatFormula2.fillConfigurationSection(editionInventory.getEditedSection(), "potion-effect." + potionEffectType.getName() + ".amplifier");
+         durationFormula.fillConfigurationSection(editionInventory.getEditedSection(), "potion-effect." + potionEffectType.getName() + ".amplifier");
          editionInventory.registerTemplateEdition();
          editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + this.formatName(potionEffectType) + ChatColor.GRAY + " successfully added.");
       } else {

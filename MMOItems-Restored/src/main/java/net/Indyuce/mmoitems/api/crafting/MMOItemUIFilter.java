@@ -52,19 +52,19 @@ public class MMOItemUIFilter implements UIFilter {
          return false;
       }
 
-      String text3 = "";
+      String filterData = "";
       if (text2.contains("{")) {
-         text3 = text2.substring(text2.indexOf(123) + 1);
+         filterData = text2.substring(text2.indexOf(123) + 1);
          text2 = text2.substring(0, text2.indexOf(123));
-         if (text3.endsWith("}")) {
-            text3 = text3.substring(0, text3.length() - 1);
+         if (filterData.endsWith("}")) {
+            filterData = filterData.substring(0, filterData.length() - 1);
          }
       }
 
       if (template.getType().getId().equals(text) && template.getId().equals(text2)) {
-         if (!text3.isEmpty()) {
+         if (!filterData.isEmpty()) {
             VolatileMMOItem volatileMMOItem = new VolatileMMOItem(nbtItem);
-            QuickNumberRange quickNumberRange = SilentNumbers.rangeFromBracketsTab(text3, "LEVEL");
+            QuickNumberRange quickNumberRange = SilentNumbers.rangeFromBracketsTab(filterData, "LEVEL");
             if (quickNumberRange != null) {
                int upgradeLevel = volatileMMOItem.getUpgradeLevel();
                if (!quickNumberRange.inRange(upgradeLevel)) {
@@ -131,40 +131,40 @@ public class MMOItemUIFilter implements UIFilter {
    public ArrayList<String> tabCompleteData(@NotNull String text, @NotNull String text2) {
       Type type = MMOItems.plugin.getTypes().get(text);
       if (type != null) {
-         String text3 = "";
-         String text4 = "";
+         String completedData = "";
+         String currentData = "";
          if (text2.contains("{")) {
-            text3 = text2.substring(text2.indexOf(123) + 1);
+            completedData = text2.substring(text2.indexOf(123) + 1);
             text2 = text2.substring(0, text2.indexOf(123));
             int count = 0;
-            if (text3.contains(",")) {
-               count = text3.lastIndexOf(44) + 1;
+            if (completedData.contains(",")) {
+               count = completedData.lastIndexOf(44) + 1;
             }
 
-            text4 = text3.substring(count);
-            text3 = text3.substring(0, count);
+            currentData = completedData.substring(count);
+            completedData = completedData.substring(0, count);
          }
 
          ArrayList<String> texts = SilentNumbers.smartFilter(MMOItems.plugin.getTemplates().getTemplateNames(type), text2, true);
          ArrayList list = texts;
-         if (!text4.isEmpty()) {
-            ArrayList<String> texts2 = new ArrayList();
-            if (text4.contains("=")) {
-               String text5 = text4.substring(0, text4.indexOf(61));
-               switch (text5.toLowerCase()) {
+         if (!currentData.isEmpty()) {
+            ArrayList<String> dataSuggestions = new ArrayList();
+            if (currentData.contains("=")) {
+               String dataKey = currentData.substring(0, currentData.indexOf(61));
+               switch (dataKey.toLowerCase()) {
                   case "level":
-                     SilentNumbers.addAll(texts2, new String[]{"level=1..", "level=2..4", "level=..6"});
+                     SilentNumbers.addAll(dataSuggestions, new String[]{"level=1..", "level=2..4", "level=..6"});
                      break;
                   default:
-                     texts2.add(text4);
+                     dataSuggestions.add(currentData);
                }
             } else {
-               texts2 = SilentNumbers.smartFilter(this.getValidDataments(), text4, true);
+               dataSuggestions = SilentNumbers.smartFilter(this.getValidDataments(), currentData, true);
             }
 
-            for (String text5 : texts) {
-               for (String text6 : texts2) {
-                  list.add(text5 + "{" + text3 + text6);
+            for (String templateName : texts) {
+               for (String suggestion : dataSuggestions) {
+                  list.add(templateName + "{" + completedData + suggestion);
                }
             }
          }
@@ -207,19 +207,19 @@ public class MMOItemUIFilter implements UIFilter {
       }
 
       text = text.replace(" ", "_").replace("-", "_").toUpperCase();
-      String text3 = "";
+      String filterData = "";
       if (text2.contains("{")) {
-         text3 = text2.substring(text2.indexOf(123) + 1);
+         filterData = text2.substring(text2.indexOf(123) + 1);
          text2 = text2.substring(0, text2.indexOf(123));
-         if (text3.endsWith("}")) {
-            text3 = text3.substring(0, text3.length() - 1);
+         if (filterData.endsWith("}")) {
+            filterData = filterData.substring(0, filterData.length() - 1);
          }
       }
 
       text2 = text2.replace(" ", "_").replace("-", "_").toUpperCase();
       MMOItem mmoItem = new MMOItemBuilder(MMOItems.plugin.getTemplates().getTemplate(MMOItems.plugin.getTypes().get(text), text2), 0, null, true).build();
-      if (!text3.isEmpty() && mmoItem.hasUpgradeTemplate()) {
-         QuickNumberRange quickNumberRange = SilentNumbers.rangeFromBracketsTab(text3, "level");
+      if (!filterData.isEmpty() && mmoItem.hasUpgradeTemplate()) {
+         QuickNumberRange quickNumberRange = SilentNumbers.rangeFromBracketsTab(filterData, "level");
          if (quickNumberRange != null) {
             UpgradeData upgradeData = ((UpgradeData)mmoItem.getData(ItemStats.UPGRADE)).clone();
             upgradeData.setLevel(SilentNumbers.floor(quickNumberRange.getAsDouble(0.0)));

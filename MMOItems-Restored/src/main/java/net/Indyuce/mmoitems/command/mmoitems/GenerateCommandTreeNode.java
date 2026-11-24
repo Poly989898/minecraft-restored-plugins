@@ -50,8 +50,8 @@ public class GenerateCommandTreeNode extends CommandTreeNode {
          Player player = Bukkit.getPlayer(texts[1]);
          Validate.notNull(player, "Could not find player called " + texts[1] + ".");
          GenerateCommandHandler generateCommandHandler = new GenerateCommandHandler(texts);
-         Player player2 = !generateCommandHandler.hasArgument("gimme") && !generateCommandHandler.hasArgument("giveme") ? player : (sender instanceof Player ? (Player)sender : null);
-         Validate.notNull(player2, "You cannot use -gimme");
+         Player receiver = !generateCommandHandler.hasArgument("gimme") && !generateCommandHandler.hasArgument("giveme") ? player : (sender instanceof Player ? (Player)sender : null);
+         Validate.notNull(receiver, "You cannot use -gimme");
          RPGPlayer rPG = PlayerData.get(player).getRPG();
          int count = generateCommandHandler.hasArgument("level:")
             ? Integer.parseInt(generateCommandHandler.getValue("level"))
@@ -74,9 +74,9 @@ public class GenerateCommandTreeNode extends CommandTreeNode {
 
          String text = null;
          if (generateCommandHandler.hasArgument("tierset:")) {
-            String text2 = UtilityMethods.enumName(generateCommandHandler.getValue("tierset"));
-            Validate.isTrue(MMOItems.plugin.getTiers().has(text2), "Could not find tier with ID '" + text2 + "'");
-            templateExplorer.applyFilter(new TierFilter(text2));
+            String tierName = UtilityMethods.enumName(generateCommandHandler.getValue("tierset"));
+            Validate.isTrue(MMOItems.plugin.getTiers().has(tierName), "Could not find tier with ID '" + tierName + "'");
+            templateExplorer.applyFilter(new TierFilter(tierName));
          }
 
          if (generateCommandHandler.hasArgument("type:")) {
@@ -94,7 +94,7 @@ public class GenerateCommandTreeNode extends CommandTreeNode {
          Validate.isTrue(optional.isPresent(), "No item matched your criterias.");
          ItemStack item = ((MMOItemTemplate)optional.get()).newBuilder(count, itemTier).build().newBuilder().build();
          Validate.isTrue(item != null && item.getType() != Material.AIR, "Could not generate item with ID '" + ((MMOItemTemplate)optional.get()).getId() + "'");
-         new SmartGive(player2).give(new ItemStack[]{item});
+         new SmartGive(receiver).give(new ItemStack[]{item});
          return CommandResult.SUCCESS;
       } catch (IllegalArgumentException exception) {
          sender.sendMessage(ChatColor.RED + exception.getMessage());

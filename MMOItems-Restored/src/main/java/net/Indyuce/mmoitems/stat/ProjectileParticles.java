@@ -122,12 +122,12 @@ public class ProjectileParticles extends ItemStat<ProjectileParticlesData, Proje
                texts.length == 4, "You must provide a color for this particle.\n" + MMOItems.plugin.getPrefix() + ChatColor.AQUA + "Format: {Particle} {R G B}"
             );
             int count = texts[1] != null ? Math.min(255, Math.max(0, Integer.parseInt(texts[1]))) : 0;
-            int count2 = texts[2] != null ? Math.min(255, Math.max(0, Integer.parseInt(texts[2]))) : 0;
-            int count3 = texts[3] != null ? Math.min(255, Math.max(0, Integer.parseInt(texts[3]))) : 0;
+            int green = texts[2] != null ? Math.min(255, Math.max(0, Integer.parseInt(texts[2]))) : 0;
+            int blue = texts[3] != null ? Math.min(255, Math.max(0, Integer.parseInt(texts[3]))) : 0;
             editionInventory.getEditedSection().set("projectile-particles.particle", particle.name());
             editionInventory.getEditedSection().set("projectile-particles.color.red", count);
-            editionInventory.getEditedSection().set("projectile-particles.color.green", count2);
-            editionInventory.getEditedSection().set("projectile-particles.color.blue", count3);
+            editionInventory.getEditedSection().set("projectile-particles.color.green", green);
+            editionInventory.getEditedSection().set("projectile-particles.color.blue", blue);
             editionInventory.registerTemplateEdition();
             editionInventory.getPlayer()
                .sendMessage(
@@ -137,9 +137,9 @@ public class ProjectileParticles extends ItemStat<ProjectileParticlesData, Proje
                      + " with RGB color "
                      + count
                      + " "
-                     + count2
+                     + green
                      + " "
-                     + count3
+                     + blue
                );
          }
       } else {

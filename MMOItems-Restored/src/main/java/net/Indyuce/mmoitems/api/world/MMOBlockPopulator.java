@@ -36,10 +36,10 @@ public class MMOBlockPopulator extends BlockPopulator {
             WorldGenTemplate worldGenTemplate = (WorldGenTemplate)var5x.getValue();
             if (!(random.nextDouble() > worldGenTemplate.getChunkChance())) {
                for (int i = 0; i < worldGenTemplate.getVeinCount(); i++) {
-                  int count3 = count * 16 + random.nextInt(16);
-                  int count4 = random.nextInt(worldGenTemplate.getMaxDepth() - worldGenTemplate.getMinDepth() + 1) + worldGenTemplate.getMinDepth();
-                  int count5 = count2 * 16 + random.nextInt(16);
-                  Location location = new Location(this.world, count3, count4, count5);
+                  int worldX = count * 16 + random.nextInt(16);
+                  int worldY = random.nextInt(worldGenTemplate.getMaxDepth() - worldGenTemplate.getMinDepth() + 1) + worldGenTemplate.getMinDepth();
+                  int worldZ = count2 * 16 + random.nextInt(16);
+                  Location location = new Location(this.world, worldX, worldY, worldZ);
                   if (worldGenTemplate.canGenerate(location) && location.getWorld() != null) {
                      Block blockAt = location.getWorld().getBlockAt(location);
 

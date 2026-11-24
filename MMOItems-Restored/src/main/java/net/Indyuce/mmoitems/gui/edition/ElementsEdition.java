@@ -50,11 +50,11 @@ public class ElementsEdition extends EditionInventory {
       itemMeta.setDisplayName(ChatColor.GREEN + "Previous Page");
       item.setItemMeta(itemMeta);
       this.inventory.setItem(25, item);
-      ItemStack item2 = new ItemStack(Material.ARROW);
-      ItemMeta itemMeta2 = item2.getItemMeta();
-      itemMeta2.setDisplayName(ChatColor.GREEN + "Next Page");
-      item2.setItemMeta(itemMeta2);
-      this.inventory.setItem(43, item2);
+      ItemStack nextPageItem = new ItemStack(Material.ARROW);
+      ItemMeta nextPageMeta = nextPageItem.getItemMeta();
+      nextPageMeta.setDisplayName(ChatColor.GREEN + "Next Page");
+      nextPageItem.setItemMeta(nextPageMeta);
+      this.inventory.setItem(43, nextPageItem);
       this.editableStats.clear();
       int count = (this.page - 1) * 3;
 
@@ -65,7 +65,7 @@ public class ElementsEdition extends EditionInventory {
          }
 
          Element element = this.elements.get(index);
-         int count2 = 0;
+         int elementIndex = 0;
 
          for (ElementStatType elementStatType : ElementStatType.values()) {
             ItemStack item3 = new ItemStack(element.getIcon());
@@ -87,10 +87,10 @@ public class ElementsEdition extends EditionInventory {
             list.add(ChatColor.YELLOW + "►" + " Right click to remove this value.");
             itemMeta3.setLore(list);
             item3.setItemMeta(itemMeta3);
-            int count3 = INIT_SLOTS[i] + count2;
-            this.inventory.setItem(count3, item3);
-            this.editableStats.put(count3, Pair.of(element, elementStatType));
-            count2++;
+            int slot = INIT_SLOTS[i] + elementIndex;
+            this.inventory.setItem(slot, item3);
+            this.editableStats.put(slot, Pair.of(element, elementStatType));
+            elementIndex++;
          }
       }
    }

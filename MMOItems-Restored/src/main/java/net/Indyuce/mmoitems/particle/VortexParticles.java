@@ -30,14 +30,14 @@ public class VortexParticles extends ParticleRunnable {
       double value = this.j / Math.PI / 2.0;
 
       for (int i = 0; i < this.amount; i++) {
-         double value2 = this.j + (Math.PI * 2) * i / this.amount;
+         double angle = this.j + (Math.PI * 2) * i / this.amount;
          this.particle
             .display(
                location.clone()
                   .add(
-                     Math.cos(value2) * this.radius * (1.0 - value * this.y_speed),
+                     Math.cos(angle) * this.radius * (1.0 - value * this.y_speed),
                      value * this.y_speed * this.height,
-                     Math.sin(value2) * this.radius * (1.0 - value * this.y_speed)
+                     Math.sin(angle) * this.radius * (1.0 - value * this.y_speed)
                   ),
                this.speed
             );

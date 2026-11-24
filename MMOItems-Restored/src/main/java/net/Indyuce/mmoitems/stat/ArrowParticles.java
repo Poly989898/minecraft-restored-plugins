@@ -102,23 +102,23 @@ public class ArrowParticles extends ItemStat<ArrowParticlesData, ArrowParticlesD
 
    @Override
    public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
-      String text2 = (String)objs[0];
-      if (text2.equals("color")) {
+      String particleName = (String)objs[0];
+      if (particleName.equals("color")) {
          String[] texts = text.split(" ");
          int count = Integer.parseInt(texts[0]);
-         int count2 = Integer.parseInt(texts[1]);
-         int count3 = Integer.parseInt(texts[2]);
+         int amount = Integer.parseInt(texts[1]);
+         int speed = Integer.parseInt(texts[2]);
          editionInventory.getEditedSection().set("arrow-particles.color.red", count);
-         editionInventory.getEditedSection().set("arrow-particles.color.green", count2);
-         editionInventory.getEditedSection().set("arrow-particles.color.blue", count3);
+         editionInventory.getEditedSection().set("arrow-particles.color.green", amount);
+         editionInventory.getEditedSection().set("arrow-particles.color.blue", speed);
          editionInventory.registerTemplateEdition();
          editionInventory.getPlayer()
             .sendMessage(
                MMOItems.plugin.getPrefix()
                   + "Particle color successfully set to "
-                  + ChatColor.translateAlternateColorCodes('&', "&c&l" + count + "&7 - &a&l" + count2 + "&7 - &9&l" + count3)
+                  + ChatColor.translateAlternateColorCodes('&', "&c&l" + count + "&7 - &a&l" + amount + "&7 - &9&l" + speed)
             );
-      } else if (text2.equals("particle")) {
+      } else if (particleName.equals("particle")) {
          Particle particle = Particle.valueOf(text.toUpperCase().replace("-", "_").replace(" ", "_"));
          editionInventory.getEditedSection().set("arrow-particles.particle", particle.name());
          editionInventory.registerTemplateEdition();
@@ -131,7 +131,7 @@ public class ArrowParticles extends ItemStat<ArrowParticlesData, ArrowParticlesD
                   + ChatColor.GRAY
                   + "."
             );
-      } else if (text2.equals("amount")) {
+      } else if (particleName.equals("amount")) {
          int count = Integer.parseInt(text);
          editionInventory.getEditedSection().set("arrow-particles.amount", count);
          editionInventory.registerTemplateEdition();
@@ -139,13 +139,13 @@ public class ArrowParticles extends ItemStat<ArrowParticlesData, ArrowParticlesD
             .sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + "Amount" + ChatColor.GRAY + " set to " + ChatColor.GOLD + count + ChatColor.GRAY + ".");
       } else {
          double value = MMOUtils.parseDouble(text);
-         editionInventory.getEditedSection().set("arrow-particles." + text2, value);
+         editionInventory.getEditedSection().set("arrow-particles." + particleName, value);
          editionInventory.registerTemplateEdition();
          editionInventory.getPlayer()
             .sendMessage(
                MMOItems.plugin.getPrefix()
                   + ChatColor.GOLD
-                  + UtilityMethods.caseOnWords(text2.replace("-", " "))
+                  + UtilityMethods.caseOnWords(particleName.replace("-", " "))
                   + ChatColor.GRAY
                   + " set to "
                   + ChatColor.GOLD

@@ -95,15 +95,15 @@ public class MMOItemTemplateTag extends SimpleTag {
                }
             }
 
-            int count2 = count >= 0
+            int itemLevel = count >= 0
                ? count
                : (
                   flag && player != null
                      ? MMOItems.plugin.getTemplates().rollLevel(PlayerData.get(((PlayerTag)player).getPlayerEntity()).getRPG().getLevel())
                      : 1 + random.nextInt(100)
                );
-            ItemTier itemTier2 = itemTier != null ? itemTier : MMOItems.plugin.getTemplates().rollTier();
-            return new ItemTag(mmoItemTemplateTag.getTemplate().newBuilder(count2, itemTier2).build().newBuilder().build());
+            ItemTier rolledTier = itemTier != null ? itemTier : MMOItems.plugin.getTemplates().rollTier();
+            return new ItemTag(mmoItemTemplateTag.getTemplate().newBuilder(itemLevel, rolledTier).build().newBuilder().build());
          },
          new String[0]
       );
@@ -116,11 +116,11 @@ public class MMOItemTemplateTag extends SimpleTag {
 
       try {
          String[] texts = text.substring("mmoitem_template@".length()).split("\\.");
-         String text2 = texts[0];
-         String text3 = texts[1];
-         Type type = MMOItems.plugin.getTypes().getOrThrow(text2);
-         MMOItems.plugin.getTemplates().getTemplateOrThrow(type, text3);
-         return new MMOItemTemplateTag(type, text3);
+         String typeName = texts[0];
+         String templateId = texts[1];
+         Type type = MMOItems.plugin.getTypes().getOrThrow(typeName);
+         MMOItems.plugin.getTemplates().getTemplateOrThrow(type, templateId);
+         return new MMOItemTemplateTag(type, templateId);
       } catch (Exception exception) {
          return null;
       }

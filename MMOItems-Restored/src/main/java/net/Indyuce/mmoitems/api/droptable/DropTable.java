@@ -85,8 +85,8 @@ public class DropTable {
             for (String key : section.getConfigurationSection("items").getKeys(false)) {
                Type type = MMOItems.plugin.getTypes().getOrThrow(key.toUpperCase().replace("-", "_"));
 
-               for (String key2 : section.getConfigurationSection("items." + key).getKeys(false)) {
-                  this.items.add(new MMOItemDropItem(type, key2, section.getString("items." + key + "." + key2)));
+               for (String itemKey : section.getConfigurationSection("items." + key).getKeys(false)) {
+                  this.items.add(new MMOItemDropItem(type, itemKey, section.getString("items." + key + "." + itemKey)));
                }
             }
          }

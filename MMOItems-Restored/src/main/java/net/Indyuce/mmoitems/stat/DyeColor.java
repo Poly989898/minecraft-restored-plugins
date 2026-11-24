@@ -62,8 +62,8 @@ public class DyeColor extends ItemStat<ColorData, ColorData> {
       String[] texts = text.split(" ");
       Validate.isTrue(texts.length == 3, "Use this format: {Red} {Green} {Blue}.");
 
-      for (String text2 : texts) {
-         int count = Integer.parseInt(text2);
+      for (String colorPart : texts) {
+         int count = Integer.parseInt(colorPart);
          Validate.isTrue(count >= 0 && count < 256, "Color must be between 0 and 255");
       }
 

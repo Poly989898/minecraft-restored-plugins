@@ -20,9 +20,9 @@ public abstract class DropItem {
    public DropItem(String text) {
       String[] texts = text.split(",");
       this.drop = Double.parseDouble(texts[0]) / 100.0;
-      String[] texts2 = texts[1].split("-");
-      this.min = Integer.parseInt(texts2[0]);
-      this.max = texts2.length > 1 ? Integer.parseInt(texts2[1]) : this.min;
+      String[] rangeParts = texts[1].split("-");
+      this.min = Integer.parseInt(rangeParts[0]);
+      this.max = rangeParts.length > 1 ? Integer.parseInt(rangeParts[1]) : this.min;
    }
 
    public boolean rollDrop() {

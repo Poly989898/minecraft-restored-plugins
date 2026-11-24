@@ -22,8 +22,8 @@ public class RMGRI_Shapeless implements RMG_RecipeInterpreter {
 
       for (int i = 0; i < 9; i++) {
          String text = texts.size() > i ? (String)texts.get(i) : null;
-         String text2 = RecipeEditorGUI.poofFromLegacy(text);
-         ProvidedUIFilter providedUIFilter = ProvidedUIFilter.getFromString(text2, null);
+         String updatedIngredient = RecipeEditorGUI.poofFromLegacy(text);
+         ProvidedUIFilter providedUIFilter = ProvidedUIFilter.getFromString(updatedIngredient, null);
          if (providedUIFilter == null) {
             providedUIFilter = RecipeEditorGUI.AIR.clone();
          }

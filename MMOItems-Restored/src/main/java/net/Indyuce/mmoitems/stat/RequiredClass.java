@@ -131,10 +131,10 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
    }
 
    private boolean hasRightClass(RPGPlayer rpgPlayer, String text) {
-      String text2 = ChatColor.stripColor(rpgPlayer.getClassName());
+      String className = ChatColor.stripColor(rpgPlayer.getClassName());
 
-      for (String text3 : text.split(Pattern.quote(", "))) {
-         if (text3.equalsIgnoreCase(text2)) {
+      for (String allowedClass : text.split(Pattern.quote(", "))) {
+         if (allowedClass.equalsIgnoreCase(className)) {
             return true;
          }
       }

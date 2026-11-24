@@ -248,39 +248,39 @@ public class StatHistory {
       JsonArray jsonArray = new JsonArray();
 
       for (UUID allGemstone : this.getAllGemstones()) {
-         JsonObject jsonObject2 = new JsonObject();
-         JsonArray jsonArray2 = ItemTag.compressTags(this.getItemStat().getAppliedNBT(this.getGemstoneData(allGemstone)));
-         jsonObject2.add(allGemstone.toString(), jsonArray2);
-         jsonArray.add(jsonObject2);
+         JsonObject gemstoneJson = new JsonObject();
+         JsonArray gemstoneTags = ItemTag.compressTags(this.getItemStat().getAppliedNBT(this.getGemstoneData(allGemstone)));
+         gemstoneJson.add(allGemstone.toString(), gemstoneTags);
+         jsonArray.add(gemstoneJson);
       }
 
       if (jsonArray.size() > 0) {
          jsonObject.add("Gemstory", jsonArray);
       }
 
-      JsonArray jsonArray2 = new JsonArray();
+      JsonArray modifiersJson = new JsonArray();
 
       for (StatData statData : this.getExternalData()) {
          if (!statData.isEmpty()) {
-            jsonArray2.add(ItemTag.compressTags(this.getItemStat().getAppliedNBT(statData)));
+            modifiersJson.add(ItemTag.compressTags(this.getItemStat().getAppliedNBT(statData)));
          }
       }
 
-      if (!jsonArray2.isEmpty()) {
-         jsonObject.add("Exstory", jsonArray2);
+      if (!modifiersJson.isEmpty()) {
+         jsonObject.add("Exstory", modifiersJson);
       }
 
-      JsonArray jsonArray3 = new JsonArray();
+      JsonArray uuidModifiersArray = new JsonArray();
 
       for (UUID allModifier : this.getAllModifiers()) {
-         JsonObject jsonObject2 = new JsonObject();
-         JsonArray jsonArray4 = ItemTag.compressTags(this.getItemStat().getAppliedNBT(this.getModifiersBonus(allModifier)));
-         jsonObject2.add(allModifier.toString(), jsonArray4);
-         jsonArray3.add(jsonObject2);
+         JsonObject modifierJson = new JsonObject();
+         JsonArray modifierTags = ItemTag.compressTags(this.getItemStat().getAppliedNBT(this.getModifiersBonus(allModifier)));
+         modifierJson.add(allModifier.toString(), modifierTags);
+         uuidModifiersArray.add(modifierJson);
       }
 
-      if (jsonArray3.size() > 0) {
-         jsonObject.add("Mod", jsonArray3);
+      if (uuidModifiersArray.size() > 0) {
+         jsonObject.add("Mod", uuidModifiersArray);
       }
 
       return jsonObject;
@@ -298,9 +298,9 @@ public class StatHistory {
    @Nullable
    public static StatHistory fromJson(@NotNull MMOItem mmoItem, @NotNull JsonObject jsonObject) {
       JsonElement jsonElement = null;
-      JsonElement jsonElement2 = null;
-      JsonElement jsonElement3 = null;
-      JsonElement jsonElement4 = null;
+      JsonElement gemstonesElement = null;
+      JsonElement modifiersElement = null;
+      JsonElement externalElement = null;
       if (jsonObject.has("Stat")) {
          JsonElement stat = jsonObject.get("Stat");
          if (jsonObject.has("OGStory")) {
@@ -308,15 +308,15 @@ public class StatHistory {
          }
 
          if (jsonObject.has("Gemstory")) {
-            jsonElement2 = jsonObject.get("Gemstory");
+            gemstonesElement = jsonObject.get("Gemstory");
          }
 
          if (jsonObject.has("Exstory")) {
-            jsonElement3 = jsonObject.get("Exstory");
+            modifiersElement = jsonObject.get("Exstory");
          }
 
          if (jsonObject.has("Mod")) {
-            jsonElement4 = jsonObject.get("Mod");
+            externalElement = jsonObject.get("Mod");
          }
 
          if (!stat.isJsonPrimitive()) {
@@ -327,15 +327,15 @@ public class StatHistory {
             return null;
          }
 
-         if (jsonElement2 != null && !jsonElement2.isJsonArray()) {
+         if (gemstonesElement != null && !gemstonesElement.isJsonArray()) {
             return null;
          }
 
-         if (jsonElement3 != null && !jsonElement3.isJsonArray()) {
+         if (modifiersElement != null && !modifiersElement.isJsonArray()) {
             return null;
          }
 
-         if (jsonElement4 != null && !jsonElement4.isJsonArray()) {
+         if (externalElement != null && !externalElement.isJsonArray()) {
             return null;
          }
 
@@ -358,17 +358,17 @@ public class StatHistory {
          }
 
          StatHistory statHistory = new StatHistory(mmoItem, itemStat, statData);
-         if (jsonElement2 != null) {
-            for (JsonElement asJson : jsonElement2.getAsJsonArray()) {
+         if (gemstonesElement != null) {
+            for (JsonElement asJson : gemstonesElement.getAsJsonArray()) {
                if (asJson.isJsonObject()) {
                   JsonObject asJsonObject = asJson.getAsJsonObject();
 
                   for (Entry entry : asJsonObject.entrySet()) {
                      String key = (String)entry.getKey();
                      UUID uuid = MMOUtils.UUIDFromString(key);
-                     JsonElement jsonElement5 = (JsonElement)entry.getValue();
-                     if (jsonElement5.isJsonArray() && uuid != null) {
-                        ArrayList list = ItemTag.decompressTags(jsonElement5.getAsJsonArray());
+                     JsonElement entryElement = (JsonElement)entry.getValue();
+                     if (entryElement.isJsonArray() && uuid != null) {
+                        ArrayList list = ItemTag.decompressTags(entryElement.getAsJsonArray());
                         StatData loadedNBT = itemStat.getLoadedNBT(list);
                         if (loadedNBT != null) {
                            statHistory.registerGemstoneData(uuid, loadedNBT);
@@ -379,8 +379,8 @@ public class StatHistory {
             }
          }
 
-         if (jsonElement3 != null) {
-            for (JsonElement asJson : jsonElement3.getAsJsonArray()) {
+         if (modifiersElement != null) {
+            for (JsonElement asJson : modifiersElement.getAsJsonArray()) {
                if (asJson.isJsonArray()) {
                   ArrayList list = ItemTag.decompressTags(asJson.getAsJsonArray());
                   StatData loadedNBT = itemStat.getLoadedNBT(list);
@@ -391,17 +391,17 @@ public class StatHistory {
             }
          }
 
-         if (jsonElement4 != null) {
-            for (JsonElement asJson : jsonElement4.getAsJsonArray()) {
+         if (externalElement != null) {
+            for (JsonElement asJson : externalElement.getAsJsonArray()) {
                if (asJson.isJsonObject()) {
                   JsonObject asJsonObject = asJson.getAsJsonObject();
 
                   for (Entry entry : asJsonObject.entrySet()) {
                      String key = (String)entry.getKey();
                      UUID uuid = MMOUtils.UUIDFromString(key);
-                     JsonElement jsonElement5 = (JsonElement)entry.getValue();
-                     if (jsonElement5.isJsonArray() && uuid != null) {
-                        ArrayList list = ItemTag.decompressTags(jsonElement5.getAsJsonArray());
+                     JsonElement entryElement = (JsonElement)entry.getValue();
+                     if (entryElement.isJsonArray() && uuid != null) {
+                        ArrayList list = ItemTag.decompressTags(entryElement.getAsJsonArray());
                         StatData loadedNBT = itemStat.getLoadedNBT(list);
                         if (loadedNBT != null) {
                            statHistory.registerModifierBonus(uuid, loadedNBT);

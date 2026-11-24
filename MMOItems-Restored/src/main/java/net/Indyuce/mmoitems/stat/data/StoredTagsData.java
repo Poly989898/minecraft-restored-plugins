@@ -112,8 +112,8 @@ public class StoredTagsData implements StatData, Mergeable<StoredTagsData> {
          if (tag != null) {
             boolean flag = true;
 
-            for (ItemTag tag2 : this.getTags()) {
-               if (tag.equals(tag2)) {
+            for (ItemTag storedTag : this.getTags()) {
+               if (tag.equals(storedTag)) {
                   flag = false;
                   break;
                }

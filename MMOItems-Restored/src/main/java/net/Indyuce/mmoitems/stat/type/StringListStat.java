@@ -38,8 +38,8 @@ public class StringListStat extends ItemStat<StringListData, StringListData> {
          if (stringListData.getList().size() != 0) {
             String text = String.join(", ", stringListData.getList());
             String generalStatFormat = this.getGeneralStatFormat();
-            String text2 = generalStatFormat.replace("{value}", text);
-            itemStackBuilder.getLore().insert(this.getPath(), text2);
+            String formattedLine = generalStatFormat.replace("{value}", text);
+            itemStackBuilder.getLore().insert(this.getPath(), formattedLine);
             itemStackBuilder.addItemTag(this.getAppliedNBT(stringListData));
          }
       }

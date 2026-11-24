@@ -41,7 +41,7 @@ public class Lute extends Weapon implements LegacyWeapon {
    @Override
    public void applyAttackEffect(final PlayerMetadata playerMetadata, EquipmentSlot equipmentSlot) {
       final double value = this.requireNonZero(playerMetadata.getStat("ATTACK_DAMAGE"), 7.0);
-      final double value2 = this.requireNonZero(playerMetadata.getStat("RANGE"), MMOItems.plugin.getConfig().getDouble("default.range"));
+      final double range = this.requireNonZero(playerMetadata.getStat("RANGE"), MMOItems.plugin.getConfig().getDouble("default.range"));
       final Vector vector = new Vector(0.0, -0.003 * playerMetadata.getStat("NOTE_WEIGHT"), 0.0);
       LuteAttackEffectStat.LuteAttackEffect luteAttackEffect = LuteAttackEffectStat.LuteAttackEffect.get(this.getNBTItem());
       final SoundReader soundReader = new SoundReader(this.getNBTItem().getString("MMOITEMS_LUTE_ATTACK_SOUND"), VSound.BLOCK_NOTE_BLOCK_BELL.get());
@@ -49,7 +49,7 @@ public class Lute extends Weapon implements LegacyWeapon {
          ? new ProjectileParticlesData(this.getNBTItem().getString("MMOITEMS_PROJECTILE_PARTICLES"))
          : ProjectileParticlesData.DEFAULT;
       if (luteAttackEffect != null) {
-         luteAttackEffect.getAttack().handle(playerMetadata, value, this.getNBTItem(), value2, vector, soundReader, projectileParticlesData);
+         luteAttackEffect.getAttack().handle(playerMetadata, value, this.getNBTItem(), range, vector, soundReader, projectileParticlesData);
       } else {
          (new BukkitRunnable() {
             final Vector vec = Lute.this.getPlayer().getEyeLocation().getDirection().multiply(0.4);
@@ -57,12 +57,12 @@ public class Lute extends Weapon implements LegacyWeapon {
             int ti = 0;
 
             public void run() {
-               if (this.ti++ > value2) {
+               if (this.ti++ > range) {
                   this.cancel();
                }
 
                projectileParticlesData.shootParticle(this.loc);
-               soundReader.play(this.loc, 2.0F, (float)(0.5 + this.ti / value2));
+               soundReader.play(this.loc, 2.0F, (float)(0.5 + this.ti / range));
                List<Entity> var1x = MMOUtils.getNearbyChunkEntities(this.loc);
 
                for (int var2x = 0; var2x < 3; var2x++) {

@@ -158,8 +158,8 @@ public class HeroesHook implements RPGHandler, Listener, AttackHandler {
          Validate.isTrue(rpgPlayer instanceof HeroesHook.PlayerWrapper, "Cannot use secondary hero level requirement while Heroes is not the RPG provider");
          Hero hero = ((HeroesHook.PlayerWrapper)rpgPlayer).hero;
          HeroClass secondaryClass = hero.getSecondaryClass();
-         int count2 = secondaryClass == null ? 1 : hero.getHeroLevel(hero.getSecondaryClass());
-         if (count2 < count && !rpgPlayer.getPlayer().hasPermission("mmoitems.bypass.level")) {
+         int secondaryLevel = secondaryClass == null ? 1 : hero.getHeroLevel(hero.getSecondaryClass());
+         if (secondaryLevel < count && !rpgPlayer.getPlayer().hasPermission("mmoitems.bypass.level")) {
             if (flag) {
                Message.NOT_ENOUGH_LEVELS.format(ChatColor.RED).send(rpgPlayer.getPlayer());
                rpgPlayer.getPlayer().playSound(rpgPlayer.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);

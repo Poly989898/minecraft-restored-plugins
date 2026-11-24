@@ -17,18 +17,18 @@ public class SoundReader {
          this.sound = sound;
          this.soundKey = "";
       } else {
-         Sound sound2;
-         String text2;
+         Sound resolvedSound;
+         String resolvedName;
          try {
-            sound2 = Sound.valueOf(text);
-            text2 = null;
+            resolvedSound = Sound.valueOf(text);
+            resolvedName = null;
          } catch (Exception exception) {
-            sound2 = null;
-            text2 = text.toLowerCase();
+            resolvedSound = null;
+            resolvedName = text.toLowerCase();
          }
 
-         this.sound = sound2;
-         this.soundKey = text2;
+         this.sound = resolvedSound;
+         this.soundKey = resolvedName;
       }
    }
 

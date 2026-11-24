@@ -66,24 +66,24 @@ public class CustomSounds extends ItemStat<SoundListData, SoundListData> impleme
 
    @Override
    public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
-      String text2 = (String)objs[0];
+      String soundId = (String)objs[0];
       String[] texts = text.split(" ");
       Validate.isTrue(texts.length == 3, text + " is not a valid [SOUND NAME] [VOLUME] [PITCH].");
-      String text3 = texts[0].replace("-", "_");
+      String soundName = texts[0].replace("-", "_");
       double value = MMOUtils.parseDouble(texts[1]);
-      double value2 = MMOUtils.parseDouble(texts[2]);
-      editionInventory.getEditedSection().set("sounds." + text2 + ".sound", text3);
-      editionInventory.getEditedSection().set("sounds." + text2 + ".volume", value);
-      editionInventory.getEditedSection().set("sounds." + text2 + ".pitch", value2);
+      double pitch = MMOUtils.parseDouble(texts[2]);
+      editionInventory.getEditedSection().set("sounds." + soundId + ".sound", soundName);
+      editionInventory.getEditedSection().set("sounds." + soundId + ".volume", value);
+      editionInventory.getEditedSection().set("sounds." + soundId + ".pitch", pitch);
       editionInventory.registerTemplateEdition();
       editionInventory.getPlayer()
          .sendMessage(
             MMOItems.plugin.getPrefix()
                + ChatColor.RED
-               + UtilityMethods.caseOnWords(text2.replace(".", " "))
+               + UtilityMethods.caseOnWords(soundId.replace(".", " "))
                + ChatColor.GRAY
                + " successfully changed to '"
-               + text3
+               + soundName
                + "'."
          );
    }
@@ -129,9 +129,9 @@ public class CustomSounds extends ItemStat<SoundListData, SoundListData> impleme
    @NotNull
    public ArrayList<ItemTag> getAppliedNBT(@NotNull SoundListData soundListData) {
       ArrayList list = new ArrayList();
-      SoundListData soundListData2 = soundListData;
-      soundListData2.getCustomSounds().forEach(var2x -> {
-         SoundData var3x = soundListData2.get(var2x);
+      SoundListData soundData = soundListData;
+      soundData.getCustomSounds().forEach(var2x -> {
+         SoundData var3x = soundData.get(var2x);
          list.add(new ItemTag("MMOITEMS_SOUND_" + var2x.name(), var3x.getSound()));
          list.add(new ItemTag("MMOITEMS_SOUND_" + var2x.name() + "_VOL", var3x.getVolume()));
          list.add(new ItemTag("MMOITEMS_SOUND_" + var2x.name() + "_PIT", var3x.getPitch()));
@@ -145,14 +145,14 @@ public class CustomSounds extends ItemStat<SoundListData, SoundListData> impleme
 
       for (CustomSound customSound : CustomSound.values()) {
          ItemTag tagAtPath = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + customSound.name(), itemTags);
-         ItemTag tagAtPath2 = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + customSound.name() + "_VOL", itemTags);
-         ItemTag tagAtPath3 = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + customSound.name() + "_PIT", itemTags);
-         if (tagAtPath != null && tagAtPath2 != null && tagAtPath3 != null) {
+         ItemTag volumeTag = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + customSound.name() + "_VOL", itemTags);
+         ItemTag pitchTag = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + customSound.name() + "_PIT", itemTags);
+         if (tagAtPath != null && volumeTag != null && pitchTag != null) {
             String text = (String)tagAtPath.getValue();
-            Double value = (Double)tagAtPath2.getValue();
-            Double value2 = (Double)tagAtPath3.getValue();
+            Double value = (Double)volumeTag.getValue();
+            Double pitchValue = (Double)pitchTag.getValue();
             if (!text.isEmpty()) {
-               soundListData.set(customSound, new SoundData(text, value, value2));
+               soundListData.set(customSound, new SoundData(text, value, pitchValue));
             }
          }
       }
@@ -166,24 +166,24 @@ public class CustomSounds extends ItemStat<SoundListData, SoundListData> impleme
 
       for (CustomSound customSound : CustomSound.values()) {
          ItemTag itemTag = null;
-         ItemTag itemTag2 = null;
-         ItemTag itemTag3 = null;
+         ItemTag pitchItemTag = null;
+         ItemTag volumeItemTag = null;
          if (readMMOItem.getNBT().hasTag("MMOITEMS_SOUND_" + customSound.name())) {
             itemTag = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + customSound.name(), readMMOItem.getNBT(), SupportedNBTTagValues.STRING);
          }
 
          if (readMMOItem.getNBT().hasTag("MMOITEMS_SOUND_" + customSound.name() + "_VOL")) {
-            itemTag2 = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + customSound.name() + "_VOL", readMMOItem.getNBT(), SupportedNBTTagValues.DOUBLE);
+            pitchItemTag = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + customSound.name() + "_VOL", readMMOItem.getNBT(), SupportedNBTTagValues.DOUBLE);
          }
 
          if (readMMOItem.getNBT().hasTag("MMOITEMS_SOUND_" + customSound.name() + "_PIT")) {
-            itemTag3 = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + customSound.name() + "_PIT", readMMOItem.getNBT(), SupportedNBTTagValues.DOUBLE);
+            volumeItemTag = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + customSound.name() + "_PIT", readMMOItem.getNBT(), SupportedNBTTagValues.DOUBLE);
          }
 
-         if (itemTag != null && itemTag2 != null && itemTag3 != null) {
+         if (itemTag != null && pitchItemTag != null && volumeItemTag != null) {
             list.add(itemTag);
-            list.add(itemTag2);
-            list.add(itemTag3);
+            list.add(pitchItemTag);
+            list.add(volumeItemTag);
          }
       }
 

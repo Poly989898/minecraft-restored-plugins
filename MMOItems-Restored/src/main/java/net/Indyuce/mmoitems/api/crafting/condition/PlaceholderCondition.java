@@ -26,25 +26,25 @@ public class PlaceholderCondition extends GenericCondition {
    @Override
    public boolean isMet(PlayerData playerData) {
       String text = PlaceholderAPI.setPlaceholders(playerData.getPlayer(), this.expression1);
-      String text2 = PlaceholderAPI.setPlaceholders(playerData.getPlayer(), this.expression2);
+      String parsedExpression = PlaceholderAPI.setPlaceholders(playerData.getPlayer(), this.expression2);
 
       try {
          switch (this.comparator) {
             case "<":
-               return Double.parseDouble(text) < Double.parseDouble(text2);
+               return Double.parseDouble(text) < Double.parseDouble(parsedExpression);
             case "<=":
-               return Double.parseDouble(text) <= Double.parseDouble(text2);
+               return Double.parseDouble(text) <= Double.parseDouble(parsedExpression);
             case ">":
-               return Double.parseDouble(text) > Double.parseDouble(text2);
+               return Double.parseDouble(text) > Double.parseDouble(parsedExpression);
             case ">=":
-               return Double.parseDouble(text) >= Double.parseDouble(text2);
+               return Double.parseDouble(text) >= Double.parseDouble(parsedExpression);
             case "==":
             case "=":
-               return Math.abs(Double.parseDouble(text) - Double.parseDouble(text2)) <= EQUALITY_THRESHOLD;
+               return Math.abs(Double.parseDouble(text) - Double.parseDouble(parsedExpression)) <= EQUALITY_THRESHOLD;
             case "!=":
-               return Math.abs(Double.parseDouble(text) - Double.parseDouble(text2)) > EQUALITY_THRESHOLD;
+               return Math.abs(Double.parseDouble(text) - Double.parseDouble(parsedExpression)) > EQUALITY_THRESHOLD;
             case "equals":
-               return text.equals(text2);
+               return text.equals(parsedExpression);
             default:
                throw new RuntimeException("Comparator not recognized");
          }

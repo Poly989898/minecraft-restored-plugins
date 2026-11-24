@@ -67,9 +67,9 @@ public class CraftingStationView extends PluginInventory {
          );
       final Inventory inventory = Bukkit.createInventory(this, this.layout.getSize(), colors);
       int count = (this.page - 1) * this.layout.getRecipeSlots().size();
-      int count2 = this.page * this.layout.getRecipeSlots().size();
+      int firstRecipeIndex = this.page * this.layout.getRecipeSlots().size();
 
-      for (int i = count; i < count2; i++) {
+      for (int i = count; i < firstRecipeIndex; i++) {
          if (i >= this.recipes.size()) {
             if (this.station.getItemOptions().hasNoRecipe()) {
                inventory.setItem(this.layout.getRecipeSlots().get(i - count), this.station.getItemOptions().getNoRecipe());
@@ -79,7 +79,7 @@ public class CraftingStationView extends PluginInventory {
          }
       }
 
-      if (count2 < this.recipes.size()) {
+      if (firstRecipeIndex < this.recipes.size()) {
          inventory.setItem(this.layout.getRecipeNextSlot(), ConfigItems.NEXT_PAGE.getItem());
       }
 
@@ -167,8 +167,8 @@ public class CraftingStationView extends PluginInventory {
                this.page--;
                this.open();
             } else {
-               NBTItem nBTItem2 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
-               String recipeId = nBTItem2.getString("recipeId");
+               NBTItem clickedNbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
+               String recipeId = clickedNbtItem.getString("recipeId");
                if (!recipeId.isEmpty()) {
                   this.updateData();
                   CheckedRecipe recipe = this.getRecipe(recipeId);
@@ -178,14 +178,14 @@ public class CraftingStationView extends PluginInventory {
                      this.processRecipe(recipe);
                      this.open();
                   }
-               } else if (!(recipeId = nBTItem2.getString("queueId")).isEmpty()) {
+               } else if (!(recipeId = clickedNbtItem.getString("queueId")).isEmpty()) {
                   CraftingStatus.CraftingQueue.QueueItem craft = this.playerData.getCrafting().getQueue(this.station).getCraft(UUID.fromString(recipeId));
                   CraftingRecipe recipe = craft.getRecipe();
                   if (craft.isReady()) {
                      ItemStack item = recipe.hasOption(Recipe.RecipeOption.OUTPUT_ITEM) ? recipe.getOutputItemStack(this.playerData.getRPG()) : null;
-                     PlayerUseCraftingStationEvent event2 = new PlayerUseCraftingStationEvent(this.playerData, this.station, recipe, item);
-                     Bukkit.getPluginManager().callEvent(event2);
-                     if (event2.isCancelled()) {
+                     PlayerUseCraftingStationEvent itemEvent = new PlayerUseCraftingStationEvent(this.playerData, this.station, recipe, item);
+                     Bukkit.getPluginManager().callEvent(itemEvent);
+                     if (itemEvent.isCancelled()) {
                         return;
                      }
 
@@ -200,9 +200,9 @@ public class CraftingStationView extends PluginInventory {
                         new SmartGive(this.player).give(new ItemStack[]{item});
                      }
                   } else {
-                     PlayerUseCraftingStationEvent event2 = new PlayerUseCraftingStationEvent(this.playerData, this.station, recipe);
-                     Bukkit.getPluginManager().callEvent(event2);
-                     if (event2.isCancelled()) {
+                     PlayerUseCraftingStationEvent recipeEvent = new PlayerUseCraftingStationEvent(this.playerData, this.station, recipe);
+                     Bukkit.getPluginManager().callEvent(recipeEvent);
+                     if (recipeEvent.isCancelled()) {
                         return;
                      }
 

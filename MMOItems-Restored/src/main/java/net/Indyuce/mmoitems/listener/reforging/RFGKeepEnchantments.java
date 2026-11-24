@@ -25,10 +25,10 @@ public class RFGKeepEnchantments implements Listener {
          Enchants.separateEnchantments(mmoItem);
          StatHistory statHistory = mmoItem.computeStatHistory(ItemStats.ENCHANTS);
          EnchantListData enchantListData = ((EnchantListData)statHistory.getOriginalData()).clone();
-         StatHistory statHistory2 = event.getNewMMOItem().computeStatHistory(ItemStats.ENCHANTS);
+         StatHistory newHistory = event.getNewMMOItem().computeStatHistory(ItemStats.ENCHANTS);
 
          for (StatData statData : statHistory.getExternalData()) {
-            statHistory2.registerExternalData(statData);
+            newHistory.registerExternalData(statData);
          }
 
          enchantListData.identifyTrueOriginalEnchantments(event.getNewMMOItem());

@@ -65,25 +65,25 @@ public class RecipeTypeListGUI extends EditionInventory {
       }
 
       for (int i = 21 * this.page; i < 21 * (this.page + 1); i++) {
-         int count2 = page(i);
+         int pageIndex = page(i);
          if (i >= registeredRecipes.size()) {
-            this.inventory.setItem(count2, NO_RECIPE);
+            this.inventory.setItem(pageIndex, NO_RECIPE);
          } else {
             RecipeRegistry recipeRegistry = (RecipeRegistry)map.get(i);
-            this.inventory.setItem(count2, recipeRegistry.getDisplayListItem());
-            this.recipeTypeMap.put(count2, recipeRegistry);
+            this.inventory.setItem(pageIndex, recipeRegistry.getDisplayListItem());
+            this.recipeTypeMap.put(pageIndex, recipeRegistry);
          }
       }
    }
 
    public static int page(int count) {
-      int count2 = SilentNumbers.floor(count / 21.0);
-      count -= count2 * 21;
-      int count3 = SilentNumbers.floor(count / 7.0);
-      int count4 = count - 7 * count3;
-      int count5 = 18 + count3 * 9;
-      int count6 = count4 + 1;
-      return count5 + count6;
+      int pageIndex = SilentNumbers.floor(count / 21.0);
+      count -= pageIndex * 21;
+      int rowIndex = SilentNumbers.floor(count / 7.0);
+      int columnIndex = count - 7 * rowIndex;
+      int baseSlot = 18 + rowIndex * 9;
+      int columnOffset = columnIndex + 1;
+      return baseSlot + columnOffset;
    }
 
    @Override

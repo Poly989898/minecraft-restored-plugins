@@ -82,15 +82,15 @@ public class CenteringOptions {
          return text;
       }
 
-      int count2 = matcher.start();
-      int count3 = matcher.end();
-      int count4 = (int)(value * (count3 - count2) + 1.0 * this.countSeparators(text.substring(count2, count3)));
-      if (count4 >= count) {
+      int matchStart = matcher.start();
+      int matchEnd = matcher.end();
+      int matchWidth = (int)(value * (matchEnd - matchStart) + 1.0 * this.countSeparators(text.substring(matchStart, matchEnd)));
+      if (matchWidth >= count) {
          return text;
       }
 
-      int count5 = (count - count4) / 2;
-      return text.substring(0, count2) + UtilityMethods.getFontSpace(count5) + text2 + text.substring(count2);
+      int padding = (count - matchWidth) / 2;
+      return text.substring(0, matchStart) + UtilityMethods.getFontSpace(padding) + text2 + text.substring(matchStart);
    }
 
    private int countSeparators(@NotNull String text) {
@@ -98,12 +98,12 @@ public class CenteringOptions {
       boolean flag = true;
 
       for (int i = 0; i < text.length(); i++) {
-         boolean flag2 = text.charAt(i) == ' ';
-         if (!flag && !flag2) {
+         boolean isSpace = text.charAt(i) == ' ';
+         if (!flag && !isSpace) {
             count++;
          }
 
-         flag = flag2;
+         flag = isSpace;
       }
 
       return count;

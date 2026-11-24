@@ -29,14 +29,14 @@ public class HelixParticles extends ParticleRunnable {
       Location location = this.player.getPlayer().getLocation();
 
       for (double value = 0.0; value < this.amount; value++) {
-         double value2 = this.j + value * Math.PI * 2.0 / this.amount;
+         double angle = this.j + value * Math.PI * 2.0 / this.amount;
          this.particle
             .display(
                location.clone()
                   .add(
-                     Math.cos(value2) * Math.cos(this.j * this.y_speed) * this.radius,
+                     Math.cos(angle) * Math.cos(this.j * this.y_speed) * this.radius,
                      1.0 + Math.sin(this.j * this.y_speed) * this.height,
-                     Math.sin(value2) * Math.cos(this.j * this.y_speed) * this.radius
+                     Math.sin(angle) * Math.cos(this.j * this.y_speed) * this.radius
                   ),
                this.speed
             );

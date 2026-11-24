@@ -34,7 +34,7 @@ public class Musket extends Weapon implements LegacyWeapon {
    @Override
    public void applyAttackEffect(PlayerMetadata playerMetadata, EquipmentSlot equipmentSlot) {
       double value = this.requireNonZero(playerMetadata.getStat("RANGE"), MMOItems.plugin.getConfig().getDouble("default.range"));
-      double value2 = this.requireNonZero(playerMetadata.getStat("RECOIL"), MMOItems.plugin.getConfig().getDouble("default.recoil"));
+      double recoil = this.requireNonZero(playerMetadata.getStat("RECOIL"), MMOItems.plugin.getConfig().getDouble("default.recoil"));
       double stat = playerMetadata.getStat("KNOCKBACK");
       if (stat > 0.0) {
          this.getPlayer()
@@ -43,10 +43,10 @@ public class Musket extends Weapon implements LegacyWeapon {
             );
       }
 
-      double value3 = Math.toRadians(this.getPlayer().getEyeLocation().getYaw() + 90.0F + 45 * (equipmentSlot == EquipmentSlot.MAIN_HAND ? 1 : -1));
-      Location location = this.getPlayer().getLocation().add(Math.cos(value3) * 0.5, 1.5, Math.sin(value3) * 0.5);
-      location.setPitch((float)(location.getPitch() + (RANDOM.nextDouble() - 0.5) * 2.0 * value2));
-      location.setYaw((float)(location.getYaw() + (RANDOM.nextDouble() - 0.5) * 2.0 * value2));
+      double angle = Math.toRadians(this.getPlayer().getEyeLocation().getYaw() + 90.0F + 45 * (equipmentSlot == EquipmentSlot.MAIN_HAND ? 1 : -1));
+      Location location = this.getPlayer().getLocation().add(Math.cos(angle) * 0.5, 1.5, Math.sin(angle) * 0.5);
+      location.setPitch((float)(location.getPitch() + (RANDOM.nextDouble() - 0.5) * 2.0 * recoil));
+      location.setYaw((float)(location.getYaw() + (RANDOM.nextDouble() - 0.5) * 2.0 * recoil));
       RayTrace rayTrace = new RayTrace(
          location, location.getDirection(), value, var1x -> UtilityMethods.canTarget(playerMetadata.getPlayer(), var1x, InteractionType.OFFENSE_ACTION)
       );

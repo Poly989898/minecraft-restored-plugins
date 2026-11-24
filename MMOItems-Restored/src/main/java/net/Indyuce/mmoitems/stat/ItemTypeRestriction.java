@@ -61,17 +61,17 @@ public class ItemTypeRestriction extends ItemStat<StringListData, StringListData
 
    @Override
    public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
-      String text2 = text.toUpperCase().replace(" ", "_").replace("-", "_");
+      String restrictionId = text.toUpperCase().replace(" ", "_").replace("-", "_");
       Validate.isTrue(
-         this.isValid(text2),
-         text2
+         this.isValid(restrictionId),
+         restrictionId
             + " is not a valid item type/set. You can enter WEAPON, BLUNT, PIERCING, SLASHING, OFFHAND, EXTRA, as well as other item types here: /mi list type."
       );
       List list = editionInventory.getEditedSection().contains(this.getPath()) ? editionInventory.getEditedSection().getStringList("" + this.getPath()) : new ArrayList();
-      list.add(text2);
+      list.add(restrictionId);
       editionInventory.getEditedSection().set(this.getPath(), list);
       editionInventory.registerTemplateEdition();
-      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Your gem now supports " + text2 + ".");
+      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Your gem now supports " + restrictionId + ".");
    }
 
    @Override
@@ -124,9 +124,9 @@ public class ItemTypeRestriction extends ItemStat<StringListData, StringListData
       String text = (String)tagAtPath.getValue();
       ArrayList list = new ArrayList();
       if (text.contains(",")) {
-         for (String text2 : text.split(",")) {
-            if (!text2.isEmpty()) {
-               list.add(text2);
+         for (String restriction : text.split(",")) {
+            if (!restriction.isEmpty()) {
+               list.add(restriction);
             }
          }
       } else {

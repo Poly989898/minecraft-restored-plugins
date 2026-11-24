@@ -39,20 +39,20 @@ public class CopyCommandTreeNode extends CommandTreeNode {
          return CommandResult.FAILURE;
       }
 
-      String text2 = texts[3].toUpperCase();
-      if (configFile.getConfig().contains(text2)) {
-         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is already an item called " + text2 + "!");
+      String targetId = texts[3].toUpperCase();
+      if (configFile.getConfig().contains(targetId)) {
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is already an item called " + targetId + "!");
          return CommandResult.FAILURE;
       }
 
-      configFile.getConfig().set(text2, configFile.getConfig().getConfigurationSection(text));
+      configFile.getConfig().set(targetId, configFile.getConfig().getConfigurationSection(text));
       configFile.save();
-      MMOItems.plugin.getTemplates().requestTemplateUpdate(type, text2);
+      MMOItems.plugin.getTemplates().requestTemplateUpdate(type, targetId);
       if (sender instanceof Player) {
-         new ItemEdition((Player)sender, MMOItems.plugin.getTemplates().getTemplate(type, text2)).open();
+         new ItemEdition((Player)sender, MMOItems.plugin.getTemplates().getTemplate(type, targetId)).open();
       }
 
-      sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "You successfully copied " + text + " to " + text2 + "!");
+      sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GREEN + "You successfully copied " + text + " to " + targetId + "!");
       return CommandResult.SUCCESS;
    }
 }

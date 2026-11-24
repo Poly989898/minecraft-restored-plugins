@@ -53,8 +53,8 @@ public class SoundListData implements StatData, Mergeable<SoundListData>, Random
          if (customSound != null) {
             boolean flag = true;
 
-            for (CustomSound customSound2 : this.getCustomSounds()) {
-               if (customSound.equals(customSound2)) {
+            for (CustomSound soundEntry : this.getCustomSounds()) {
+               if (customSound.equals(soundEntry)) {
                   flag = false;
                   break;
                }

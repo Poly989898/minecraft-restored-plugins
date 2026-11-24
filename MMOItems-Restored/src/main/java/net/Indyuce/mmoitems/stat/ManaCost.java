@@ -27,12 +27,12 @@ public class ManaCost extends DoubleStat implements ItemRestriction, PlayerConsu
       }
 
       double value = nbtItem.getDouble(ItemStats.MANA_COST.getNBTPath());
-      boolean flag2 = value > 0.0 && rpgPlayer.getMana() >= value;
-      if (!flag2) {
+      boolean hasMana = value > 0.0 && rpgPlayer.getMana() >= value;
+      if (!hasMana) {
          Message.NOT_ENOUGH_MANA.format(ChatColor.RED).send(rpgPlayer.getPlayer());
       }
 
-      return flag2;
+      return hasMana;
    }
 
    @Override

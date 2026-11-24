@@ -39,10 +39,10 @@ public class ItemTierStat extends StringStat implements GemStoneStat {
 
    @Override
    public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
-      String text2 = text.toUpperCase().replace(" ", "_").replace("-", "_");
-      Validate.isTrue(MMOItems.plugin.getTiers().has(text2), "Couldn't find the tier called '" + text2 + "'.");
-      editionInventory.getEditedSection().set(this.getPath(), text2);
+      String tierId = text.toUpperCase().replace(" ", "_").replace("-", "_");
+      Validate.isTrue(MMOItems.plugin.getTiers().has(tierId), "Couldn't find the tier called '" + tierId + "'.");
+      editionInventory.getEditedSection().set(this.getPath(), tierId);
       editionInventory.registerTemplateEdition();
-      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Tier successfully changed to " + text2 + ".");
+      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Tier successfully changed to " + tierId + ".");
    }
 }

@@ -70,10 +70,10 @@ public class RandomUnsocket extends DoubleStat implements ConsumableItemInteract
             return false;
          }
 
-         DoubleData data2 = (DoubleData)consumable.getMMOItem().getData(ItemStats.RANDOM_UNSOCKET);
+         DoubleData chanceData = (DoubleData)consumable.getMMOItem().getData(ItemStats.RANDOM_UNSOCKET);
          int count = 1;
-         if (data2 != null) {
-            count = SilentNumbers.floor(data2.getValue());
+         if (chanceData != null) {
+            count = SilentNumbers.floor(chanceData.getValue());
          }
 
          UnsocketGemStoneEvent unsocketEvent = new UnsocketGemStoneEvent(playerData, mMOItem, liveMMOItem);

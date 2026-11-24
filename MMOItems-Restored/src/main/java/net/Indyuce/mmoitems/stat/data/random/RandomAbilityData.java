@@ -24,8 +24,8 @@ public class RandomAbilityData {
       String text = section.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
       Validate.isTrue(MMOItems.plugin.getSkills().hasSkill(text), "Could not find ability called '" + text + "'");
       this.ability = MMOItems.plugin.getSkills().getSkill(text);
-      String text2 = section.getString("mode").toUpperCase().replace("-", "_").replace(" ", "_");
-      this.triggerType = MMOUtils.backwardsCompatibleTriggerType(text2);
+      String modeName = section.getString("mode").toUpperCase().replace("-", "_").replace(" ", "_");
+      this.triggerType = MMOUtils.backwardsCompatibleTriggerType(modeName);
 
       for (String key : section.getKeys(false)) {
          if (!key.equalsIgnoreCase("mode") && !key.equalsIgnoreCase("type") && this.ability.getHandler().getModifiers().contains(key)) {

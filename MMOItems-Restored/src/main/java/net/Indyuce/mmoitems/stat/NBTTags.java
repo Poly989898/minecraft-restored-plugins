@@ -83,39 +83,39 @@ public class NBTTags extends StringListStat {
       JsonArray jsonArray = new JsonArray();
       ArrayList list = new ArrayList();
       HashMap<String, String> map = new HashMap<>();
-      HashMap<String, ItemTag> map2 = new HashMap<>();
+      HashMap<String, ItemTag> parsedTags = new HashMap<>();
 
       for (String text : stringListData.getList()) {
          if (!text.startsWith(extraneousTag)) {
             jsonArray.add(text);
-            String text2 = text.substring(0, text.indexOf(32));
-            String text3 = text.substring(text.indexOf(32) + 1);
-            map.put(text2, extraneousTag + text);
-            map2.put(text2, new ItemTag(text2, this.calculateObjectType(text3)));
+            String tagPath = text.substring(0, text.indexOf(32));
+            String tagValue = text.substring(text.indexOf(32) + 1);
+            map.put(tagPath, extraneousTag + text);
+            parsedTags.put(tagPath, new ItemTag(tagPath, this.calculateObjectType(tagValue)));
          }
       }
 
       for (String text : stringListData.getList()) {
          if (text.startsWith(extraneousTag)) {
-            String text2 = text.substring(extraneousTag.length());
-            String text3 = text2.substring(0, text2.indexOf(32));
-            String text4 = text2.substring(text2.indexOf(32) + 1);
-            if (map.containsKey(text3)) {
-               map.put(text3, text);
+            String tagBody = text.substring(extraneousTag.length());
+            String extraTagPath = tagBody.substring(0, tagBody.indexOf(32));
+            String extraTagValue = tagBody.substring(tagBody.indexOf(32) + 1);
+            if (map.containsKey(extraTagPath)) {
+               map.put(extraTagPath, text);
             } else {
-               if (text4.isEmpty()) {
-                  map2.remove(text3);
+               if (extraTagValue.isEmpty()) {
+                  parsedTags.remove(extraTagPath);
                } else {
-                  map2.put(text3, new ItemTag(text3, this.calculateObjectType(text4)));
+                  parsedTags.put(extraTagPath, new ItemTag(extraTagPath, this.calculateObjectType(extraTagValue)));
                }
 
-               map.remove(text3);
+               map.remove(extraTagPath);
             }
          }
       }
 
-      for (String key : map2.keySet()) {
-         list.add((ItemTag)map2.get(key));
+      for (String key : parsedTags.keySet()) {
+         list.add((ItemTag)parsedTags.get(key));
          jsonArray.add((String)map.get(key));
       }
 
@@ -137,12 +137,12 @@ public class NBTTags extends StringListStat {
       } catch (NumberFormatException exception) {
          try {
             return Double.parseDouble(text);
-         } catch (NumberFormatException exception2) {
+         } catch (NumberFormatException numberException) {
             if (text.contains("[") && text.contains("]")) {
                ArrayList list = new ArrayList();
 
-               for (String text2 : text.replace("[", "").replace("]", "").split(",")) {
-                  list.add(text2.replace("\"", ""));
+               for (String tagElement : text.replace("[", "").replace("]", "").split(",")) {
+                  list.add(tagElement.replace("\"", ""));
                }
 
                return list;

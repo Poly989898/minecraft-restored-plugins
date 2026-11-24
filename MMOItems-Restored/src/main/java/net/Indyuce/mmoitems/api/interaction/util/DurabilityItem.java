@@ -175,7 +175,7 @@ public class DurabilityItem {
 
       String colors = MythicLib.inst().parseColors(ItemStats.ITEM_DAMAGE.getGeneralStatFormat().replace("{max}", String.valueOf(this.maxDurability)));
       String text = colors.replace("{current}", String.valueOf(this.initialDurability));
-      String text2 = colors.replace("{current}", String.valueOf(this.durability));
-      return new LoreUpdate(item, text, text2).updateLore();
+      String coloredBar = colors.replace("{current}", String.valueOf(this.durability));
+      return new LoreUpdate(item, text, coloredBar).updateLore();
    }
 }

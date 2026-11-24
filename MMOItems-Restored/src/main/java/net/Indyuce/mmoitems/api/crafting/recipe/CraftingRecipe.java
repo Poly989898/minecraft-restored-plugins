@@ -43,10 +43,10 @@ public class CraftingRecipe extends Recipe {
       this.craftingTime = section.getDouble("crafting-time");
       String outputItem = section.getString("output.item", "N/A");
       String text = section.getString("output.type", "N/A").toUpperCase().replace("-", "_").replace(" ", "_");
-      String text2 = section.getString("output.id", "N/A").toUpperCase().replace("-", "_").replace(" ", "_");
+      String outputId = section.getString("output.id", "N/A").toUpperCase().replace("-", "_").replace(" ", "_");
       FriendlyFeedbackProvider friendlyFeedbackProvider = new FriendlyFeedbackProvider(FFPMMOItems.get());
-      if (!"N/A".equals(text) && !"N/A".equals(text2)) {
-         ProvidedUIFilter uIFilter = UIFilterManager.getUIFilter("m", text, text2, section.getString("output.amount", "1"), friendlyFeedbackProvider);
+      if (!"N/A".equals(text) && !"N/A".equals(outputId)) {
+         ProvidedUIFilter uIFilter = UIFilterManager.getUIFilter("m", text, outputId, section.getString("output.amount", "1"), friendlyFeedbackProvider);
          if (uIFilter == null) {
             throw new IllegalArgumentException(
                SilentNumbers.collapseList(

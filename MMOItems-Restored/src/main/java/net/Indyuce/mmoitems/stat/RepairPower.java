@@ -47,8 +47,8 @@ public class RepairPower extends DoubleStat implements ConsumableItemInteraction
    ) {
       Player player = playerData.getPlayer();
       String mMOITEMSREPAIRTYPE = consumable.getNBTItem().getString("MMOITEMS_REPAIR_TYPE");
-      String mMOITEMSREPAIRTYPE2 = nbtItem.getString("MMOITEMS_REPAIR_TYPE");
-      if (!MMOUtils.checkReference(mMOITEMSREPAIRTYPE, mMOITEMSREPAIRTYPE2)) {
+      String repairType = nbtItem.getString("MMOITEMS_REPAIR_TYPE");
+      if (!MMOUtils.checkReference(mMOITEMSREPAIRTYPE, repairType)) {
          Message.UNABLE_TO_REPAIR.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(nbtItem.getItem())).send(player);
          player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);
          return false;

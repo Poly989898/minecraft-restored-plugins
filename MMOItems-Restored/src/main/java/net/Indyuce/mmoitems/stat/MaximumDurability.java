@@ -47,11 +47,11 @@ public class MaximumDurability extends DoubleStat implements ItemRestriction, Ge
    @Override
    public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData) {
       int count = (int)doubleData.getValue();
-      int count2 = itemStackBuilder.getMMOItem().hasData(ItemStats.CUSTOM_DURABILITY)
+      int baseDurability = itemStackBuilder.getMMOItem().hasData(ItemStats.CUSTOM_DURABILITY)
          ? (int)((DoubleData)itemStackBuilder.getMMOItem().getData(ItemStats.CUSTOM_DURABILITY)).getValue()
          : count;
       itemStackBuilder.addItemTag(new ItemTag(this.getNBTPath(), count));
-      String text = this.getGeneralStatFormat().replace("{max}", String.valueOf(count)).replace("{current}", String.valueOf(count2));
+      String text = this.getGeneralStatFormat().replace("{max}", String.valueOf(count)).replace("{current}", String.valueOf(baseDurability));
       itemStackBuilder.getLore().insert("durability", text);
    }
 

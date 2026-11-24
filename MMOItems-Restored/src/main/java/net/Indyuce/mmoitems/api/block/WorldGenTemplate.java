@@ -77,10 +77,10 @@ public class WorldGenTemplate {
    }
 
    public boolean canGenerateInWorld(String text) {
-      String text2 = text.toLowerCase().replace("_", "-");
-      return !this.worldWhitelist.isEmpty() && !this.worldWhitelist.contains(text2)
+      String configKey = text.toLowerCase().replace("_", "-");
+      return !this.worldWhitelist.isEmpty() && !this.worldWhitelist.contains(configKey)
          ? false
-         : this.worldBlacklist.isEmpty() || !this.worldBlacklist.contains(text2);
+         : this.worldBlacklist.isEmpty() || !this.worldBlacklist.contains(configKey);
    }
 
    public boolean canGenerate(Location location) {

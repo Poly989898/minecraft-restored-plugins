@@ -129,13 +129,13 @@ public class MMOItemBuilder extends Buildable<MMOItem> {
       Iterator iterator = this.nameModifiers.values().iterator();
 
       while (iterator.hasNext()) {
-         NameModifier nameModifier2 = (NameModifier)iterator.next();
-         if (nameModifier2.getType() == nameModifier.getType()) {
-            if (nameModifier2.getPriority() > nameModifier.getPriority()) {
+         NameModifier nameModifierEntry = (NameModifier)iterator.next();
+         if (nameModifierEntry.getType() == nameModifier.getType()) {
+            if (nameModifierEntry.getPriority() > nameModifier.getPriority()) {
                return;
             }
 
-            if (nameModifier2.getPriority() < nameModifier.getPriority()) {
+            if (nameModifierEntry.getPriority() < nameModifier.getPriority()) {
                iterator.remove();
             }
          }

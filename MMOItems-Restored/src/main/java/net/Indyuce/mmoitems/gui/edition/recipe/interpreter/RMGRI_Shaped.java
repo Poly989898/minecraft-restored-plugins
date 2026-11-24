@@ -24,12 +24,12 @@ public class RMGRI_Shaped implements RMG_RecipeInterpreter {
 
       for (int i = 0; i < 3; i++) {
          String text = texts.size() > i ? (String)texts.get(i) : null;
-         String text2 = updateRow(text);
-         String[] texts2 = text2.split("\\|");
+         String updatedRow = updateRow(text);
+         String[] rowCells = updatedRow.split("\\|");
 
          for (int j = 0; j < 3; j++) {
-            String text3 = texts2.length > j ? texts2[j] : null;
-            ProvidedUIFilter providedUIFilter = ProvidedUIFilter.getFromString(text3, null);
+            String cell = rowCells.length > j ? rowCells[j] : null;
+            ProvidedUIFilter providedUIFilter = ProvidedUIFilter.getFromString(cell, null);
             if (providedUIFilter == null) {
                providedUIFilter = RecipeEditorGUI.AIR.clone();
             }
@@ -50,16 +50,16 @@ public class RMGRI_Shaped implements RMG_RecipeInterpreter {
          StringBuilder builder = new StringBuilder();
 
          for (ProvidedUIFilter providedUIFilter : providedUIFilters) {
-            ProvidedUIFilter providedUIFilter2 = providedUIFilter;
-            if (providedUIFilter2 == null) {
-               providedUIFilter2 = RecipeEditorGUI.AIR.clone();
+            ProvidedUIFilter ingredientFilter = providedUIFilter;
+            if (ingredientFilter == null) {
+               ingredientFilter = RecipeEditorGUI.AIR.clone();
             }
 
             if (builder.length() != 0) {
                builder.append("|");
             }
 
-            builder.append(providedUIFilter2);
+            builder.append(ingredientFilter);
          }
 
          list.add(builder.toString());

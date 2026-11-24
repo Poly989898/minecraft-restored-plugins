@@ -35,17 +35,17 @@ public class RBA_AmountOutput extends RecipeButtonAction {
          "§cChoose Output Amount"
       );
       ItemMeta itemMeta = Objects.requireNonNull(this.button.getItemMeta());
-      ItemMeta itemMeta2 = Objects.requireNonNull(item.getItemMeta());
-      if (MythicLib.plugin.getVersion().isStrictlyHigher(new int[]{1, 13}) && itemMeta2.hasCustomModelData()) {
-         itemMeta.setCustomModelData(itemMeta2.getCustomModelData());
+      ItemMeta outputMeta = Objects.requireNonNull(item.getItemMeta());
+      if (MythicLib.plugin.getVersion().isStrictlyHigher(new int[]{1, 13}) && outputMeta.hasCustomModelData()) {
+         itemMeta.setCustomModelData(outputMeta.getCustomModelData());
       }
 
-      if (itemMeta2 instanceof LeatherArmorMeta) {
-         ((LeatherArmorMeta)itemMeta).setColor(((LeatherArmorMeta)itemMeta2).getColor());
+      if (outputMeta instanceof LeatherArmorMeta) {
+         ((LeatherArmorMeta)itemMeta).setColor(((LeatherArmorMeta)outputMeta).getColor());
       }
 
-      if (itemMeta2 instanceof BannerMeta) {
-         ((BannerMeta)itemMeta).setPatterns(((BannerMeta)itemMeta2).getPatterns());
+      if (outputMeta instanceof BannerMeta) {
+         ((BannerMeta)itemMeta).setPatterns(((BannerMeta)outputMeta).getPatterns());
       }
 
       itemMeta.addItemFlags(new ItemFlag[]{ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_DYE, HidePotionEffects.ITEM_FLAG});

@@ -48,9 +48,9 @@ public class WaveLuteAttack implements LuteAttackHandler {
                   break;
                }
 
-               Vector vector2 = MMOUtils.rotateFunc(new Vector(0.5, 0.0, 0.0), this.loc);
-               projectileParticlesData.shootParticle(this.loc.clone().add(vector2.clone().multiply(Math.sin(this.ti / 2.0))));
-               projectileParticlesData.shootParticle(this.loc.clone().add(vector2.clone().multiply(-1)));
+               Vector rotatedOffset = MMOUtils.rotateFunc(new Vector(0.5, 0.0, 0.0), this.loc);
+               projectileParticlesData.shootParticle(this.loc.clone().add(rotatedOffset.clone().multiply(Math.sin(this.ti / 2.0))));
+               projectileParticlesData.shootParticle(this.loc.clone().add(rotatedOffset.clone().multiply(-1)));
                if (var2x == 0) {
                   soundReader.play(this.loc, 2.0F, (float)(0.5 + this.ti / value2));
                }

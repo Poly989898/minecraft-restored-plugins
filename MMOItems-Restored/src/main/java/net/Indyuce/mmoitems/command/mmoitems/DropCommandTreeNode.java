@@ -65,40 +65,40 @@ public class DropCommandTreeNode extends CommandTreeNode {
          return CommandResult.FAILURE;
       }
 
-      double value2;
+      double dropChance;
       try {
-         value2 = Double.parseDouble(texts[5]);
+         dropChance = Double.parseDouble(texts[5]);
       } catch (Exception exception) {
          sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + texts[5] + " is not a valid number.");
          return CommandResult.FAILURE;
       }
 
-      double value3;
+      double dropMin;
       try {
-         value3 = Double.parseDouble(texts[6]);
+         dropMin = Double.parseDouble(texts[6]);
       } catch (Exception exception) {
          sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + texts[6] + " is not a valid number.");
          return CommandResult.FAILURE;
       }
 
-      double value4;
+      double dropMax;
       try {
-         value4 = Double.parseDouble(texts[7]);
+         dropMax = Double.parseDouble(texts[7]);
       } catch (Exception exception) {
          sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + texts[7] + " is not a valid number.");
          return CommandResult.FAILURE;
       }
 
-      double value5;
+      double dropWeight;
       try {
-         value5 = Double.parseDouble(texts[9]);
+         dropWeight = Double.parseDouble(texts[9]);
       } catch (Exception exception) {
          sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + texts[9] + " is not a valid number.");
          return CommandResult.FAILURE;
       }
 
-      String[] texts2 = texts[8].split("-");
-      if (texts2.length != 2) {
+      String[] amountRange = texts[8].split("-");
+      if (amountRange.length != 2) {
          sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "The drop quantity format is incorrect.");
          sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Format: [min]-[max]");
          return CommandResult.FAILURE;
@@ -106,23 +106,23 @@ public class DropCommandTreeNode extends CommandTreeNode {
 
       int count;
       try {
-         count = Integer.parseInt(texts2[0]);
+         count = Integer.parseInt(amountRange[0]);
       } catch (Exception exception) {
-         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + texts2[0] + " is not a valid number.");
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + amountRange[0] + " is not a valid number.");
          return CommandResult.FAILURE;
       }
 
-      int count2;
+      int maxAmount;
       try {
-         count2 = Integer.parseInt(texts2[1]);
+         maxAmount = Integer.parseInt(amountRange[1]);
       } catch (Exception exception) {
-         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + texts2[1] + " is not a valid number.");
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + amountRange[1] + " is not a valid number.");
          return CommandResult.FAILURE;
       }
 
-      ItemStack item = new MMOItemDropItem(type, text, value4 / 100.0, value5 / 100.0, count, count2).getItem(null);
+      ItemStack item = new MMOItemDropItem(type, text, dropMax / 100.0, dropWeight / 100.0, count, maxAmount).getItem(null);
       if (item != null && item.getType() != Material.AIR) {
-         world.dropItem(new Location(world, value, value2, value3), item);
+         world.dropItem(new Location(world, value, dropChance, dropMin), item);
          return CommandResult.SUCCESS;
       } else {
          sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occurred while attempting to generate the item called " + text + ".");

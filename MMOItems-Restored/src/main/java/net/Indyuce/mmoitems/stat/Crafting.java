@@ -76,22 +76,22 @@ public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
       switch (count) {
          case 0:
          case 1:
-            int count2 = text.indexOf(32);
+            int spaceIndex = text.indexOf(32);
             QuickNumberRange quickNumberRange = null;
-            if (count2 > 0) {
-               String text2 = text.substring(count2 + 1);
-               if (SilentNumbers.DoubleTryParse(text2)) {
-                  text2 = text2 + "..";
+            if (spaceIndex > 0) {
+               String recipeId = text.substring(spaceIndex + 1);
+               if (SilentNumbers.DoubleTryParse(recipeId)) {
+                  recipeId = recipeId + "..";
                }
 
-               quickNumberRange = QuickNumberRange.getFromString(text2);
+               quickNumberRange = QuickNumberRange.getFromString(recipeId);
             }
 
-            if (count2 <= 0 || quickNumberRange != null) {
+            if (spaceIndex <= 0 || quickNumberRange != null) {
                if (quickNumberRange == null) {
                   quickNumberRange = new QuickNumberRange(1.0, null);
                } else {
-                  text = text.substring(0, count2);
+                  text = text.substring(0, spaceIndex);
                }
 
                if (text.contains(".")) {
@@ -103,7 +103,7 @@ public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
             }
 
             RMG_RecipeInterpreter rmG_RecipeInterpreter = (RMG_RecipeInterpreter)objs[1];
-            int count3 = (Integer)objs[2];
+            int craftingAmount = (Integer)objs[2];
             ProvidedUIFilter uIFilter = UIFilterManager.getUIFilter(text, editionInventory.getFFP());
             if (uIFilter == null) {
                throw new IllegalArgumentException("");
@@ -117,9 +117,9 @@ public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
             section = RecipeEditorGUI.getSection(section, ((RecipeEditorGUI)editionInventory).getRecipeRegistry().getRecipeConfigPath());
             section = RecipeEditorGUI.getSection(section, ((RecipeEditorGUI)editionInventory).getRecipeName());
             if (count == 0) {
-               rmG_RecipeInterpreter.editInput(uIFilter, count3);
+               rmG_RecipeInterpreter.editInput(uIFilter, craftingAmount);
             } else {
-               rmG_RecipeInterpreter.editOutput(uIFilter, count3);
+               rmG_RecipeInterpreter.editOutput(uIFilter, craftingAmount);
             }
 
             editionInventory.registerTemplateEdition();

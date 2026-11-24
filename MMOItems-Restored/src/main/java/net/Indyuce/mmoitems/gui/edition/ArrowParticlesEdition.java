@@ -57,41 +57,41 @@ public class ArrowParticlesEdition extends EditionInventory {
       list.add(ChatColor.YELLOW + "►" + " Right click to reset.");
       itemMeta.setLore(list);
       item.setItemMeta(itemMeta);
-      ItemStack item2 = new ItemStack(Material.GRAY_DYE);
-      ItemMeta itemMeta2 = item2.getItemMeta();
-      itemMeta2.setDisplayName(ChatColor.GREEN + "Amount");
-      ArrayList list2 = new ArrayList();
-      list2.add("");
-      list2.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + this.getEditedSection().getInt("arrow-particles.amount"));
-      list2.add("");
-      list2.add(ChatColor.YELLOW + "►" + " Click to change this value.");
-      list2.add(ChatColor.YELLOW + "►" + " Right click to reset.");
-      itemMeta2.setLore(list2);
-      item2.setItemMeta(itemMeta2);
-      ItemStack item3 = new ItemStack(Material.GRAY_DYE);
-      ItemMeta itemMeta3 = item3.getItemMeta();
-      itemMeta3.setDisplayName(ChatColor.GREEN + "Offset");
-      ArrayList list3 = new ArrayList();
-      list3.add("");
-      list3.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + this.getEditedSection().getDouble("arrow-particles.offset"));
-      list3.add("");
-      list3.add(ChatColor.YELLOW + "►" + " Click to change this value.");
-      list3.add(ChatColor.YELLOW + "►" + " Right click to reset.");
-      itemMeta3.setLore(list3);
-      item3.setItemMeta(itemMeta3);
+      ItemStack amountItem = new ItemStack(Material.GRAY_DYE);
+      ItemMeta amountMeta = amountItem.getItemMeta();
+      amountMeta.setDisplayName(ChatColor.GREEN + "Amount");
+      ArrayList amountLore = new ArrayList();
+      amountLore.add("");
+      amountLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + this.getEditedSection().getInt("arrow-particles.amount"));
+      amountLore.add("");
+      amountLore.add(ChatColor.YELLOW + "►" + " Click to change this value.");
+      amountLore.add(ChatColor.YELLOW + "►" + " Right click to reset.");
+      amountMeta.setLore(amountLore);
+      amountItem.setItemMeta(amountMeta);
+      ItemStack offsetItem = new ItemStack(Material.GRAY_DYE);
+      ItemMeta offsetMeta = offsetItem.getItemMeta();
+      offsetMeta.setDisplayName(ChatColor.GREEN + "Offset");
+      ArrayList offsetLore = new ArrayList();
+      offsetLore.add("");
+      offsetLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + this.getEditedSection().getDouble("arrow-particles.offset"));
+      offsetLore.add("");
+      offsetLore.add(ChatColor.YELLOW + "►" + " Click to change this value.");
+      offsetLore.add(ChatColor.YELLOW + "►" + " Right click to reset.");
+      offsetMeta.setLore(offsetLore);
+      offsetItem.setItemMeta(offsetMeta);
       if (particle != null) {
          ConfigurationSection arrowParticles = this.getEditedSection().getConfigurationSection("arrow-particles");
          if (MMOUtils.isColorable(particle)) {
             int colorRed = arrowParticles.getInt("color.red");
             int colorGreen = arrowParticles.getInt("color.green");
             int colorBlue = arrowParticles.getInt("color.blue");
-            ItemStack item4 = new ItemStack(Material.GRAY_DYE);
-            ItemMeta itemMeta4 = item4.getItemMeta();
-            itemMeta4.setDisplayName(ChatColor.GREEN + "Particle Color");
-            ArrayList list4 = new ArrayList();
-            list4.add("");
-            list4.add(ChatColor.GRAY + "Current Value (R-G-B):");
-            list4.add(
+            ItemStack particleColorItem = new ItemStack(Material.GRAY_DYE);
+            ItemMeta particleColorMeta = particleColorItem.getItemMeta();
+            particleColorMeta.setDisplayName(ChatColor.GREEN + "Particle Color");
+            ArrayList particleColorLore = new ArrayList();
+            particleColorLore.add("");
+            particleColorLore.add(ChatColor.GRAY + "Current Value (R-G-B):");
+            particleColorLore.add(
                ""
                   + ChatColor.RED
                   + ChatColor.BOLD
@@ -107,33 +107,33 @@ public class ArrowParticlesEdition extends EditionInventory {
                   + ChatColor.BOLD
                   + colorBlue
             );
-            list4.add("");
-            list4.add(ChatColor.YELLOW + "►" + " Click to change this value.");
-            list4.add(ChatColor.YELLOW + "►" + " Right click to reset.");
-            itemMeta4.setLore(list4);
-            item4.setItemMeta(itemMeta4);
-            this.inventory.setItem(41, item4);
+            particleColorLore.add("");
+            particleColorLore.add(ChatColor.YELLOW + "►" + " Click to change this value.");
+            particleColorLore.add(ChatColor.YELLOW + "►" + " Right click to reset.");
+            particleColorMeta.setLore(particleColorLore);
+            particleColorItem.setItemMeta(particleColorMeta);
+            this.inventory.setItem(41, particleColorItem);
          } else {
-            ItemStack item4 = new ItemStack(Material.GRAY_DYE);
-            ItemMeta itemMeta4 = item4.getItemMeta();
-            itemMeta4.setDisplayName(ChatColor.GREEN + "Speed");
-            ArrayList list4 = new ArrayList();
-            list4.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "The speed at which your particle");
-            list4.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "flies off in random directions.");
-            list4.add("");
-            list4.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + arrowParticles.getDouble("speed"));
-            list4.add("");
-            list4.add(ChatColor.YELLOW + "►" + " Click to change this value.");
-            list4.add(ChatColor.YELLOW + "►" + " Right click to reset.");
-            itemMeta4.setLore(list4);
-            item4.setItemMeta(itemMeta4);
-            this.inventory.setItem(41, item4);
+            ItemStack speedItem = new ItemStack(Material.GRAY_DYE);
+            ItemMeta speedMeta = speedItem.getItemMeta();
+            speedMeta.setDisplayName(ChatColor.GREEN + "Speed");
+            ArrayList speedLore = new ArrayList();
+            speedLore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "The speed at which your particle");
+            speedLore.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "flies off in random directions.");
+            speedLore.add("");
+            speedLore.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + arrowParticles.getDouble("speed"));
+            speedLore.add("");
+            speedLore.add(ChatColor.YELLOW + "►" + " Click to change this value.");
+            speedLore.add(ChatColor.YELLOW + "►" + " Right click to reset.");
+            speedMeta.setLore(speedLore);
+            speedItem.setItemMeta(speedMeta);
+            this.inventory.setItem(41, speedItem);
          }
       }
 
       this.inventory.setItem(30, item);
-      this.inventory.setItem(23, item2);
-      this.inventory.setItem(32, item3);
+      this.inventory.setItem(23, amountItem);
+      this.inventory.setItem(32, offsetItem);
    }
 
    @Override

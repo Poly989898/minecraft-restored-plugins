@@ -37,14 +37,14 @@ public class ItemEdition extends EditionInventory {
    @Override
    public void arrangeInventory() {
       int count = (this.page - 1) * slots.length;
-      int count2 = this.page * slots.length;
-      int count3 = 0;
+      int firstIndex = this.page * slots.length;
+      int slotIndex = 0;
       List list = new ArrayList<>(this.getEdited().getType().getAvailableStats())
          .stream()
          .filter(var1x -> var1x.hasValidMaterial(this.getCachedItem()) && !(var1x instanceof InternalStat))
          .collect(Collectors.toList());
 
-      for (int i = count; i < Math.min(list.size(), count2); i++) {
+      for (int i = count; i < Math.min(list.size(), firstIndex); i++) {
          ItemStat itemStat = (ItemStat)list.get(i);
          ItemStack item = new ItemStack(itemStat.getDisplayMaterial());
          ItemMeta itemMeta = item.getItemMeta();
@@ -62,28 +62,28 @@ public class ItemEdition extends EditionInventory {
          itemMeta.getPersistentDataContainer().set(STAT_ID_KEY, PersistentDataType.STRING, itemStat.getId());
          itemMeta.setLore(colors);
          item.setItemMeta(itemMeta);
-         this.inventory.setItem(slots[count3++], item);
+         this.inventory.setItem(slots[slotIndex++], item);
       }
 
       ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
       ItemMeta itemMeta = item.getItemMeta();
       itemMeta.setDisplayName(ChatColor.RED + "- No Item Stat -");
       item.setItemMeta(itemMeta);
-      ItemStack item2 = new ItemStack(Material.ARROW);
-      ItemMeta itemMeta2 = item2.getItemMeta();
-      itemMeta2.setDisplayName(ChatColor.GREEN + "Next Page");
-      item2.setItemMeta(itemMeta2);
-      ItemStack item3 = new ItemStack(Material.ARROW);
-      ItemMeta itemMeta3 = item3.getItemMeta();
-      itemMeta3.setDisplayName(ChatColor.GREEN + "Previous Page");
-      item3.setItemMeta(itemMeta3);
+      ItemStack nextPageItem = new ItemStack(Material.ARROW);
+      ItemMeta nextPageMeta = nextPageItem.getItemMeta();
+      nextPageMeta.setDisplayName(ChatColor.GREEN + "Next Page");
+      nextPageItem.setItemMeta(nextPageMeta);
+      ItemStack previousPageItem = new ItemStack(Material.ARROW);
+      ItemMeta previousPageMeta = previousPageItem.getItemMeta();
+      previousPageMeta.setDisplayName(ChatColor.GREEN + "Previous Page");
+      previousPageItem.setItemMeta(previousPageMeta);
 
-      while (count3 < slots.length) {
-         this.inventory.setItem(slots[count3++], item);
+      while (slotIndex < slots.length) {
+         this.inventory.setItem(slots[slotIndex++], item);
       }
 
-      this.inventory.setItem(27, this.page > 1 ? item3 : null);
-      this.inventory.setItem(35, list.size() > count2 ? item2 : null);
+      this.inventory.setItem(27, this.page > 1 ? previousPageItem : null);
+      this.inventory.setItem(35, list.size() > firstIndex ? nextPageItem : null);
    }
 
    @Override

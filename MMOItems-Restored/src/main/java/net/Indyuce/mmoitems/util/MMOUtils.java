@@ -70,33 +70,33 @@ public class MMOUtils {
    }
 
    public static String[] trimString(int count, @NotNull String... texts) {
-      ArrayList<String> texts2 = new ArrayList<>();
+      ArrayList<String> words = new ArrayList<>();
 
       for (String text : texts) {
          if (text.length() <= count) {
-            texts2.add(text);
+            words.add(text);
          } else {
             StringBuilder builder = new StringBuilder();
 
-            for (String text2 : text.split(" ")) {
+            for (String word : text.split(" ")) {
                if (!builder.isEmpty()) {
                   builder.append(" ");
                }
 
-               builder.append(text2);
-               if (builder.length() > count || text2.endsWith("\n")) {
-                  texts2.add(builder.toString());
+               builder.append(word);
+               if (builder.length() > count || word.endsWith("\n")) {
+                  words.add(builder.toString());
                   builder.setLength(0);
                }
             }
 
             if (!builder.isEmpty()) {
-               texts2.add(builder.toString());
+               words.add(builder.toString());
             }
          }
       }
 
-      return texts2.toArray(new String[0]);
+      return words.toArray(new String[0]);
    }
 
    @NotNull
@@ -329,8 +329,8 @@ public class MMOUtils {
       if (value != 0.0) {
          if (!entity.isDead() && !(entity.getHealth() <= 0.0)) {
             if (!(value < 0.0) || flag) {
-               double value2 = entity.getAttribute(Attribute.MAX_HEALTH).getValue();
-               entity.setHealth(Math.min(value2, entity.getHealth() + value));
+               double maxHealth = entity.getAttribute(Attribute.MAX_HEALTH).getValue();
+               entity.setHealth(Math.min(maxHealth, entity.getHealth() + value));
             }
          }
       }
@@ -354,33 +354,33 @@ public class MMOUtils {
    }
 
    public static double truncation(double value, int count) {
-      double value2 = Math.pow(10.0, count);
-      return Math.floor(value * value2) / value2;
+      double factor = Math.pow(10.0, count);
+      return Math.floor(value * factor) / factor;
    }
 
    public static Vector rotateFunc(Vector vector, Location location) {
       double value = location.getYaw() / 180.0F * Math.PI;
-      double value2 = location.getPitch() / 180.0F * Math.PI;
-      vector = rotAxisX(vector, value2);
+      double pitchRadians = location.getPitch() / 180.0F * Math.PI;
+      vector = rotAxisX(vector, pitchRadians);
       return rotAxisY(vector, -value);
    }
 
    private static Vector rotAxisX(Vector vector, double value) {
-      double value2 = vector.getY() * Math.cos(value) - vector.getZ() * Math.sin(value);
-      double value3 = vector.getY() * Math.sin(value) + vector.getZ() * Math.cos(value);
-      return vector.setY(value2).setZ(value3);
+      double rotatedY = vector.getY() * Math.cos(value) - vector.getZ() * Math.sin(value);
+      double rotatedZ = vector.getY() * Math.sin(value) + vector.getZ() * Math.cos(value);
+      return vector.setY(rotatedY).setZ(rotatedZ);
    }
 
    private static Vector rotAxisY(Vector vector, double value) {
-      double value2 = vector.getX() * Math.cos(value) + vector.getZ() * Math.sin(value);
-      double value3 = vector.getX() * -Math.sin(value) + vector.getZ() * Math.cos(value);
-      return vector.setX(value2).setZ(value3);
+      double rotatedX = vector.getX() * Math.cos(value) + vector.getZ() * Math.sin(value);
+      double rotatedZ = vector.getX() * -Math.sin(value) + vector.getZ() * Math.cos(value);
+      return vector.setX(rotatedX).setZ(rotatedZ);
    }
 
    private static Vector rotAxisZ(Vector vector, double value) {
-      double value2 = vector.getX() * Math.cos(value) - vector.getY() * Math.sin(value);
-      double value3 = vector.getX() * Math.sin(value) + vector.getY() * Math.cos(value);
-      return vector.setX(value2).setY(value3);
+      double rotatedX = vector.getX() * Math.cos(value) - vector.getY() * Math.sin(value);
+      double rotatedY = vector.getX() * Math.sin(value) + vector.getY() * Math.cos(value);
+      return vector.setX(rotatedX).setY(rotatedY);
    }
 
    public static List<Entity> getNearbyChunkEntities(Location location) {

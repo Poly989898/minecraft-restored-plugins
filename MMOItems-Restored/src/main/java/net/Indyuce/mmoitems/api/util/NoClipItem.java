@@ -68,9 +68,9 @@ public class NoClipItem implements Listener {
 
    private ItemStack stripItemData(ItemStack item) {
       NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item);
-      ItemStack item2 = new ItemStack(item.getType());
-      ItemMeta itemMeta = item2.getItemMeta();
-      item2.setAmount(1);
+      ItemStack copiedItem = new ItemStack(item.getType());
+      ItemMeta itemMeta = copiedItem.getItemMeta();
+      copiedItem.setAmount(1);
       if (item.getItemMeta().hasEnchants()) {
          itemMeta.addEnchant(VEnchantment.POWER.get(), 0, true);
          itemMeta.addItemFlags(new ItemFlag[]{ItemFlag.HIDE_ENCHANTS});
@@ -97,12 +97,12 @@ public class NoClipItem implements Listener {
          ((LeatherArmorMeta)itemMeta).setColor(((LeatherArmorMeta)item.getItemMeta()).getColor());
       }
 
-      item2.setItemMeta(itemMeta);
-      NBTItem nBTItem2 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item2);
-      nBTItem2.addTag(new ItemTag[]{new ItemTag("MMOITEMS_TIER", nBTItem.getString("MMOITEMS_TIER").trim().isEmpty() ? null : nBTItem.getString("MMOITEMS_TIER"))});
+      copiedItem.setItemMeta(itemMeta);
+      NBTItem copiedNbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(copiedItem);
+      copiedNbtItem.addTag(new ItemTag[]{new ItemTag("MMOITEMS_TIER", nBTItem.getString("MMOITEMS_TIER").trim().isEmpty() ? null : nBTItem.getString("MMOITEMS_TIER"))});
       Random random = new Random();
-      nBTItem2.addTag(new ItemTag[]{new ItemTag("MMOITEMS_NO_STACK", random.nextInt(Integer.MAX_VALUE))});
-      nBTItem2.addTag(new ItemTag[]{new ItemTag("MMOITEMS_NO_CLIP_ITEM", true)});
-      return nBTItem2.toItem();
+      copiedNbtItem.addTag(new ItemTag[]{new ItemTag("MMOITEMS_NO_STACK", random.nextInt(Integer.MAX_VALUE))});
+      copiedNbtItem.addTag(new ItemTag[]{new ItemTag("MMOITEMS_NO_CLIP_ITEM", true)});
+      return copiedNbtItem.toItem();
    }
 }

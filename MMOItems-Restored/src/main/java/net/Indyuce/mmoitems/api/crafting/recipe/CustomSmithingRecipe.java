@@ -108,8 +108,8 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
       for (MythicRecipeIngredient ingredient : mythicRecipe.getIngredients()) {
          if (ingredient != null) {
             ShapedIngredient shapedIngredient = (ShapedIngredient)ingredient;
-            MythicIngredient ingredient2 = ingredient.getIngredient();
-            if (ingredient2.isDefinesItem()) {
+            MythicIngredient mythicIngredient = ingredient.getIngredient();
+            if (mythicIngredient.isDefinesItem()) {
                FriendlyFeedbackProvider friendlyFeedbackProvider = new FriendlyFeedbackProvider(FFPMMOItems.get());
                friendlyFeedbackProvider.activatePrefix(true, "Recipe of " + this.getOutputItem().getType().getId() + " " + this.getOutputItem().getId());
                ItemStack randomSubstituteItem = ingredient.getIngredient().getRandomSubstituteItem(friendlyFeedbackProvider);
@@ -120,13 +120,13 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
                   }
 
                   if (items.length < shapedIngredient.getHorizontalOffset() + 1) {
-                     ItemStack[] items2 = new ItemStack[shapedIngredient.getHorizontalOffset() + 1];
+                     ItemStack[] shapedItems = new ItemStack[shapedIngredient.getHorizontalOffset() + 1];
 
                      for (int i = 0; i < items.length; i++) {
-                        items2[i] = items[i];
+                        shapedItems[i] = items[i];
                      }
 
-                     items = items2;
+                     items = shapedItems;
                   }
 
                   items[shapedIngredient.getHorizontalOffset()] = randomSubstituteItem;
@@ -195,9 +195,9 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
          return mythicBlueprintInventory.getResultInventory();
       }
 
-      MythicBlueprintInventory mythicBlueprintInventory2 = vanillaInventoryMapping.extractFrom(VersionUtils.getView(event).getTopInventory());
-      ItemStack first = mythicBlueprintInventory2.getMainInventory().getFirst();
-      ItemStack item = this.firstFromFirstSide(mythicBlueprintInventory2);
+      MythicBlueprintInventory currentBlueprintInventory = vanillaInventoryMapping.extractFrom(VersionUtils.getView(event).getTopInventory());
+      ItemStack first = currentBlueprintInventory.getMainInventory().getFirst();
+      ItemStack item = this.firstFromFirstSide(currentBlueprintInventory);
       MMOItem mmoItem = this.fromCombinationWith(first, item, (Player)event.getWhoClicked(), null);
       MythicRecipeInventory mythicRecipeInventory = mythicBlueprintInventory.getResultInventory().clone();
       mythicRecipeInventory.setItemAt(vanillaInventoryMapping.getResultWidth(vanillaInventoryMapping.getResultInventoryStart()), vanillaInventoryMapping.getResultHeight(vanillaInventoryMapping.getResultInventoryStart()), mmoItem.newBuilder().build());
@@ -220,50 +220,50 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
          Ref<ArrayList<ItemStack>> ref = new Ref<>();
          MMOItem mmoItem = this.fromCombinationWith(first, item, whoClicked, ref);
          if (count == 1 && event.getAction() != InventoryAction.MOVE_TO_OTHER_INVENTORY) {
-            MythicRecipeInventory mythicRecipeInventory2 = mythicBlueprintInventory.getResultInventory().clone();
-            mythicRecipeInventory2.setItemAt(
+            MythicRecipeInventory resultInventory = mythicBlueprintInventory.getResultInventory().clone();
+            resultInventory.setItemAt(
                vanillaInventoryMapping.getResultWidth(vanillaInventoryMapping.getResultInventoryStart()), vanillaInventoryMapping.getResultHeight(vanillaInventoryMapping.getResultInventoryStart()), mmoItem.newBuilder().build()
             );
             ItemStack cursor = event.getCursor();
-            this.processInventory(mythicRecipeInventory, mythicRecipeInventory2, 1);
+            this.processInventory(mythicRecipeInventory, resultInventory, 1);
             ItemStack itemAt = mythicRecipeInventory.getItemAt(vanillaInventoryMapping.getResultWidth(event.getSlot()), vanillaInventoryMapping.getResultHeight(event.getSlot()));
             if (itemAt == null) {
                itemAt = new ItemStack(Material.AIR);
             }
 
-            ItemStack item2 = itemAt.clone();
+            ItemStack itemCopy = itemAt.clone();
             if (!SilentNumbers.isAir(cursor)) {
-               if (!cursor.isSimilar(item2)) {
+               if (!cursor.isSimilar(itemCopy)) {
                   return;
                }
 
                int amount = cursor.getAmount();
-               int amount2 = item2.getAmount();
-               int maxStackSize = item2.getMaxStackSize();
-               if (amount + amount2 > maxStackSize) {
+               int itemAmount = itemCopy.getAmount();
+               int maxStackSize = itemCopy.getMaxStackSize();
+               if (amount + itemAmount > maxStackSize) {
                   return;
                }
 
-               item2.setAmount(amount + amount2);
+               itemCopy.setAmount(amount + itemAmount);
             }
 
             itemAt.setAmount(0);
             vanillaInventoryMapping.applyToResultInventory(event.getInventory(), mythicRecipeInventory, false);
-            VersionUtils.getView(event).setCursor(item2);
+            VersionUtils.getView(event).setCursor(itemCopy);
             this.consumeIngredients(mythicBlueprintInventory, mythicCachedResult, event.getInventory(), vanillaInventoryMapping, 1);
             if (this.hasInputConsumption()) {
                ArrayList list = new ArrayList();
                if (this.getMainInputConsumption() != null) {
                   MythicRecipeInventory mainMythicInventory = vanillaInventoryMapping.getMainMythicInventory(event.getInventory());
-                  MythicRecipeInventory mythicRecipeInventory3 = this.generateResultOf(this.getMainInputConsumption());
-                  list.addAll(MRORecipe.stackWhatsPossible(mainMythicInventory, mythicRecipeInventory3));
+                  MythicRecipeInventory mainConsumption = this.generateResultOf(this.getMainInputConsumption());
+                  list.addAll(MRORecipe.stackWhatsPossible(mainMythicInventory, mainConsumption));
                   vanillaInventoryMapping.applyToMainInventory(event.getInventory(), mainMythicInventory, false);
                }
 
                if (this.getIngotInputConsumption() != null) {
                   MythicRecipeInventory sideMythicInventory = vanillaInventoryMapping.getSideMythicInventory("ingot", event.getInventory());
-                  MythicRecipeInventory mythicRecipeInventory3 = this.generateResultOf(this.getIngotInputConsumption());
-                  list.addAll(MRORecipe.stackWhatsPossible(sideMythicInventory, mythicRecipeInventory3));
+                  MythicRecipeInventory ingotConsumption = this.generateResultOf(this.getIngotInputConsumption());
+                  list.addAll(MRORecipe.stackWhatsPossible(sideMythicInventory, ingotConsumption));
                   vanillaInventoryMapping.applyToSideInventory(event.getInventory(), sideMythicInventory, "ingot", false);
                }
 
@@ -272,52 +272,52 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
          } else {
             HashMap<Integer, ItemStack> map = null;
             PlayerInventory inventory = whoClicked.getInventory();
-            int count2 = 0;
+            int totalAmount = 0;
 
-            for (int i = 1; i <= count; count2 = i++) {
-               MythicRecipeInventory mythicRecipeInventory2 = mythicBlueprintInventory.getResultInventory().clone();
-               mythicRecipeInventory2.setItemAt(
+            for (int i = 1; i <= count; totalAmount = i++) {
+               MythicRecipeInventory resultInventory = mythicBlueprintInventory.getResultInventory().clone();
+               resultInventory.setItemAt(
                   vanillaInventoryMapping.getResultWidth(vanillaInventoryMapping.getResultInventoryStart()), vanillaInventoryMapping.getResultHeight(vanillaInventoryMapping.getResultInventoryStart()), mmoItem.newBuilder().build()
                );
-               ArrayList list = MRORecipe.toItemsList(mythicRecipeInventory2);
+               ArrayList list = MRORecipe.toItemsList(resultInventory);
                if (this.hasInputConsumption()) {
                   if (this.getMainInputConsumption() != null) {
-                     MythicRecipeInventory mythicRecipeInventory3 = this.generateResultOf(this.getMainInputConsumption());
-                     list.addAll(MRORecipe.toItemsList(mythicRecipeInventory3));
+                     MythicRecipeInventory mainConsumption = this.generateResultOf(this.getMainInputConsumption());
+                     list.addAll(MRORecipe.toItemsList(mainConsumption));
                   }
 
                   if (this.getIngotInputConsumption() != null) {
-                     MythicRecipeInventory mythicRecipeInventory3 = this.generateResultOf(this.getIngotInputConsumption());
-                     list.addAll(MRORecipe.toItemsList(mythicRecipeInventory3));
+                     MythicRecipeInventory ingotConsumption = this.generateResultOf(this.getIngotInputConsumption());
+                     list.addAll(MRORecipe.toItemsList(ingotConsumption));
                   }
                }
 
-               HashMap<Integer, ItemStack> map2 = MRORecipe.distributeInInventory(inventory, list, map);
-               if (map2 == null) {
+               HashMap<Integer, ItemStack> leftovers = MRORecipe.distributeInInventory(inventory, list, map);
+               if (leftovers == null) {
                   break;
                }
 
-               map = map2;
+               map = leftovers;
             }
 
-            if (count2 == 0) {
+            if (totalAmount == 0) {
                return;
             }
 
-            count = count2;
+            count = totalAmount;
 
             for (Integer key : map.keySet()) {
-               ItemStack item2 = (ItemStack)map.get(key);
-               inventory.setItem(key, item2);
+               ItemStack slotItem = (ItemStack)map.get(key);
+               inventory.setItem(key, slotItem);
             }
 
             this.consumeIngredients(mythicBlueprintInventory, mythicCachedResult, event.getInventory(), vanillaInventoryMapping, count);
          }
 
          if (this.isDropGemstones() && ref.getValue() != null && whoClicked.getLocation().getWorld() != null) {
-            for (ItemStack item2 : whoClicked.getInventory().addItem(ref.getValue().toArray(new ItemStack[0])).values()) {
-               if (!SilentNumbers.isAir(item2)) {
-                  whoClicked.getWorld().dropItem(whoClicked.getLocation(), item2);
+            for (ItemStack leftoverItem : whoClicked.getInventory().addItem(ref.getValue().toArray(new ItemStack[0])).values()) {
+               if (!SilentNumbers.isAir(leftoverItem)) {
+                  whoClicked.getWorld().dropItem(whoClicked.getLocation(), leftoverItem);
                }
             }
          }
@@ -327,110 +327,110 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
    @NotNull
    MMOItem fromCombinationWith(@Nullable ItemStack item, @Nullable ItemStack item2, @NotNull Player player, @Nullable Ref<ArrayList<ItemStack>> ref) {
       MMOItem mmoItem = this.fromStack(item);
-      MMOItem mmoItem2 = this.fromStack(item2);
-      MMOItem mmoItem3 = this.getOutputItem().newBuilder(0, null).build();
+      MMOItem inputMMOItem = this.fromStack(item2);
+      MMOItem outputMMOItem = this.getOutputItem().newBuilder(0, null).build();
       ArrayList<MMOItem> mmoItems = new ArrayList();
       if (mmoItem != null) {
          mmoItem.extractGemstones().forEach(var1x -> mmoItems.add(var1x.getValue()));
       }
 
-      if (mmoItem2 != null) {
-         mmoItem2.extractGemstones().forEach(var1x -> mmoItems.add(var1x.getValue()));
+      if (inputMMOItem != null) {
+         inputMMOItem.extractGemstones().forEach(var1x -> mmoItems.add(var1x.getValue()));
       }
 
       ArrayList list = new ArrayList();
 
-      for (MMOItem mmoItem4 : mmoItems) {
-         GemSocketsData data = (GemSocketsData)mmoItem3.getData(ItemStats.GEM_SOCKETS);
+      for (MMOItem sourceMMOItem : mmoItems) {
+         GemSocketsData data = (GemSocketsData)outputMMOItem.getData(ItemStats.GEM_SOCKETS);
          if (data != null && data.getEmptySlots().size() != 0) {
-            GemStone gemStone = new GemStone(PlayerData.get(player), mmoItem4.newBuilder().buildNBT());
-            GemStone.ApplyResult applyResult = gemStone.applyOntoItem(mmoItem3, mmoItem3.getType(), "", false, true);
+            GemStone gemStone = new GemStone(PlayerData.get(player), sourceMMOItem.newBuilder().buildNBT());
+            GemStone.ApplyResult applyResult = gemStone.applyOntoItem(outputMMOItem, outputMMOItem.getType(), "", false, true);
             if (applyResult.getType() == GemStone.ResultType.SUCCESS && applyResult.getResultAsMMOItem() != null) {
-               mmoItem3 = applyResult.getResultAsMMOItem();
+               outputMMOItem = applyResult.getResultAsMMOItem();
             } else {
-               list.add(mmoItem4.newBuilder().build());
+               list.add(sourceMMOItem.newBuilder().build());
             }
          } else {
-            list.add(mmoItem4.newBuilder().build());
+            list.add(sourceMMOItem.newBuilder().build());
          }
       }
 
       Ref.setValue(ref, list);
       if (this.getEnchantmentTreatment() != SmithingCombinationType.NONE) {
-         EnchantListData data = (EnchantListData)mmoItem3.getData(ItemStats.ENCHANTS);
+         EnchantListData data = (EnchantListData)outputMMOItem.getData(ItemStats.ENCHANTS);
          if (data == null) {
             data = (EnchantListData)ItemStats.ENCHANTS.getClearStatData();
          }
 
          EnchantListData enchantListData = mmoItem != null ? (EnchantListData)mmoItem.getData(ItemStats.ENCHANTS) : Enchants.fromVanilla(item);
-         EnchantListData enchantListData2 = mmoItem2 != null ? (EnchantListData)mmoItem2.getData(ItemStats.ENCHANTS) : Enchants.fromVanilla(item2);
+         EnchantListData outputEnchants = inputMMOItem != null ? (EnchantListData)inputMMOItem.getData(ItemStats.ENCHANTS) : Enchants.fromVanilla(item2);
 
          for (Enchantment enchantment : Enchantment.values()) {
             int level = data.getLevel(enchantment);
-            int level2 = enchantListData.getLevel(enchantment);
-            int level3 = enchantListData2.getLevel(enchantment);
+            int inputLevel = enchantListData.getLevel(enchantment);
+            int outputLevel = outputEnchants.getLevel(enchantment);
             int count;
             switch (this.getEnchantmentTreatment()) {
                case ADDITIVE:
-                  count = level2 + level3 + level;
+                  count = inputLevel + outputLevel + level;
                   break;
                case MAXIMUM:
                   if (level == 0) {
-                     level = level2;
+                     level = inputLevel;
                   }
 
-                  count = Math.max(level, Math.max(level2, level3));
+                  count = Math.max(level, Math.max(inputLevel, outputLevel));
                   break;
                case MINIMUM:
                   if (level == 0) {
-                     level = level2;
+                     level = inputLevel;
                   }
 
-                  count = Math.max(level, Math.min(level2, level3));
+                  count = Math.max(level, Math.min(inputLevel, outputLevel));
                   break;
                default:
                   if (level == 0) {
-                     count = SilentNumbers.ceil((level2 + level3) / 2.0);
+                     count = SilentNumbers.ceil((inputLevel + outputLevel) / 2.0);
                   } else {
-                     count = SilentNumbers.ceil((level2 + level3 + level) / 3.0);
+                     count = SilentNumbers.ceil((inputLevel + outputLevel + level) / 3.0);
                   }
             }
 
             data.addEnchant(enchantment, count);
          }
 
-         mmoItem3.setData(ItemStats.ENCHANTS, data);
+         outputMMOItem.setData(ItemStats.ENCHANTS, data);
       }
 
-      if (mmoItem3.hasUpgradeTemplate() && this.getUpgradeTreatment() != SmithingCombinationType.NONE) {
+      if (outputMMOItem.hasUpgradeTemplate() && this.getUpgradeTreatment() != SmithingCombinationType.NONE) {
          int count = 0;
          if (mmoItem != null) {
             count = mmoItem.getUpgradeLevel();
          }
 
-         int count2 = 0;
-         if (mmoItem2 != null) {
-            count2 = mmoItem2.getUpgradeLevel();
+         int matchedAmount = 0;
+         if (inputMMOItem != null) {
+            matchedAmount = inputMMOItem.getUpgradeLevel();
          }
 
-         int count3;
+         int remainingAmount;
          switch (this.getUpgradeTreatment()) {
             case ADDITIVE:
-               count3 = count + count2;
+               remainingAmount = count + matchedAmount;
                break;
             case MAXIMUM:
-               count3 = Math.max(count, count2);
+               remainingAmount = Math.max(count, matchedAmount);
                break;
             case MINIMUM:
-               count3 = Math.min(count, count2);
+               remainingAmount = Math.min(count, matchedAmount);
                break;
             default:
-               count3 = SilentNumbers.ceil((count + count2) / 2.0);
+               remainingAmount = SilentNumbers.ceil((count + matchedAmount) / 2.0);
          }
 
-         mmoItem3.getUpgradeTemplate().upgradeTo(mmoItem3, Math.min(count3, mmoItem3.getMaxUpgradeLevel()));
+         outputMMOItem.getUpgradeTemplate().upgradeTo(outputMMOItem, Math.min(remainingAmount, outputMMOItem.getMaxUpgradeLevel()));
       }
 
-      return mmoItem3;
+      return outputMMOItem;
    }
 }

@@ -67,11 +67,11 @@ public class BrowserDisplayIDX extends DoubleStat {
    public static MMOItemTemplate getAt(int count, @NotNull HashMap<Double, ArrayList<MMOItemTemplate>> map) {
       Entry<Double, ArrayList<MMOItemTemplate>> entry = null;
 
-      for (Entry<Double, ArrayList<MMOItemTemplate>> entry2 : map.entrySet()) {
-         if (entry2.getKey() == null) {
-            entry = entry2;
+      for (Entry<Double, ArrayList<MMOItemTemplate>> groupEntry : map.entrySet()) {
+         if (groupEntry.getKey() == null) {
+            entry = groupEntry;
          } else {
-            ArrayList<MMOItemTemplate> mmoItemTemplates = (ArrayList)entry2.getValue();
+            ArrayList<MMOItemTemplate> mmoItemTemplates = (ArrayList)groupEntry.getValue();
 
             while (mmoItemTemplates.size() % 4 != 0) {
                mmoItemTemplates.add(null);

@@ -61,11 +61,11 @@ public class ItemBrowser extends PluginInventory {
       if (this.type == null) {
          int[] counts = slots;
          int count = (this.page - 1) * counts.length;
-         int count2 = this.page * counts.length;
-         int count3 = 0;
+         int firstIndex = this.page * counts.length;
+         int slotIndex = 0;
          Inventory inventory = Bukkit.createInventory(this, 54, "Item Explorer");
 
-         for (int i = count; i < Math.min(count2, this.itemTypes.size()); i++) {
+         for (int i = count; i < Math.min(firstIndex, this.itemTypes.size()); i++) {
             Type type = this.itemTypes.get(i);
             int size = MMOItems.plugin.getTemplates().getTemplates(type).size();
             ItemStack item = type.getItem();
@@ -86,28 +86,28 @@ public class ItemBrowser extends PluginInventory {
             AdventureUtils.setLore(itemMeta, list);
             itemMeta.getPersistentDataContainer().set(TYPE_ID_KEY, PersistentDataType.STRING, type.getId());
             item.setItemMeta(itemMeta);
-            inventory.setItem(slots[count3++], item);
+            inventory.setItem(slots[slotIndex++], item);
          }
 
          ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
          ItemMeta itemMeta = item.getItemMeta();
          itemMeta.setDisplayName(ChatColor.RED + "- No type -");
          item.setItemMeta(itemMeta);
-         ItemStack item2 = new ItemStack(Material.ARROW);
-         ItemMeta itemMeta2 = item2.getItemMeta();
-         itemMeta2.setDisplayName(ChatColor.GREEN + "Next Page");
-         item2.setItemMeta(itemMeta2);
-         ItemStack item3 = new ItemStack(Material.ARROW);
-         ItemMeta itemMeta3 = item3.getItemMeta();
-         itemMeta3.setDisplayName(ChatColor.GREEN + "Previous Page");
-         item3.setItemMeta(itemMeta3);
+         ItemStack nextPageItem = new ItemStack(Material.ARROW);
+         ItemMeta nextPageMeta = nextPageItem.getItemMeta();
+         nextPageMeta.setDisplayName(ChatColor.GREEN + "Next Page");
+         nextPageItem.setItemMeta(nextPageMeta);
+         ItemStack previousPageItem = new ItemStack(Material.ARROW);
+         ItemMeta previousPageMeta = previousPageItem.getItemMeta();
+         previousPageMeta.setDisplayName(ChatColor.GREEN + "Previous Page");
+         previousPageItem.setItemMeta(previousPageMeta);
 
-         while (count3 < slots.length) {
-            inventory.setItem(slots[count3++], item);
+         while (slotIndex < slots.length) {
+            inventory.setItem(slots[slotIndex++], item);
          }
 
-         inventory.setItem(18, this.page > 1 ? item3 : null);
-         inventory.setItem(26, count2 >= MMOItems.plugin.getTypes().getAll().size() ? null : item2);
+         inventory.setItem(18, this.page > 1 ? previousPageItem : null);
+         inventory.setItem(26, firstIndex >= MMOItems.plugin.getTypes().getAll().size() ? null : nextPageItem);
          return inventory;
       } else {
          Inventory inventory = Bukkit.createInventory(
@@ -121,35 +121,35 @@ public class ItemBrowser extends PluginInventory {
          list.add("§§otrying to generate that item.");
          itemMeta.setLore(list);
          item.setItemMeta(itemMeta);
-         ItemStack item2 = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-         ItemMeta itemMeta2 = item2.getItemMeta();
-         itemMeta2.setDisplayName(ChatColor.RED + "- No Item -");
-         item2.setItemMeta(itemMeta2);
-         ItemStack item3 = new ItemStack(Material.ARROW);
-         ItemMeta itemMeta3 = item3.getItemMeta();
-         itemMeta3.setDisplayName(ChatColor.GREEN + "Next Page");
-         item3.setItemMeta(itemMeta3);
-         ItemStack item4 = new ItemStack(Material.ARROW);
-         ItemMeta itemMeta4 = item4.getItemMeta();
-         itemMeta4.setDisplayName(ChatColor.GREEN + "⇨" + " Back");
-         item4.setItemMeta(itemMeta4);
-         ItemStack item5 = new ItemStack(new ItemStack(Material.WRITABLE_BOOK));
-         ItemMeta itemMeta5 = item5.getItemMeta();
-         itemMeta5.setDisplayName(ChatColor.GREEN + "Create New");
-         item5.setItemMeta(itemMeta5);
-         ItemStack item6 = new ItemStack(new ItemStack(Material.CAULDRON));
-         ItemMeta itemMeta6 = item6.getItemMeta();
-         itemMeta6.setDisplayName(ChatColor.RED + (this.deleteMode ? "Cancel Deletion" : "Delete Item"));
-         item6.setItemMeta(itemMeta6);
-         ItemStack item7 = new ItemStack(Material.ARROW);
-         ItemMeta itemMeta7 = item7.getItemMeta();
-         itemMeta7.setDisplayName(ChatColor.GREEN + "Previous Page");
-         item7.setItemMeta(itemMeta7);
+         ItemStack noItemItem = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+         ItemMeta noItemMeta = noItemItem.getItemMeta();
+         noItemMeta.setDisplayName(ChatColor.RED + "- No Item -");
+         noItemItem.setItemMeta(noItemMeta);
+         ItemStack nextPageItem = new ItemStack(Material.ARROW);
+         ItemMeta nextPageMeta = nextPageItem.getItemMeta();
+         nextPageMeta.setDisplayName(ChatColor.GREEN + "Next Page");
+         nextPageItem.setItemMeta(nextPageMeta);
+         ItemStack arrowItem = new ItemStack(Material.ARROW);
+         ItemMeta arrowMeta = arrowItem.getItemMeta();
+         arrowMeta.setDisplayName(ChatColor.GREEN + "⇨" + " Back");
+         arrowItem.setItemMeta(arrowMeta);
+         ItemStack createNewItem = new ItemStack(new ItemStack(Material.WRITABLE_BOOK));
+         ItemMeta createNewMeta = createNewItem.getItemMeta();
+         createNewMeta.setDisplayName(ChatColor.GREEN + "Create New");
+         createNewItem.setItemMeta(createNewMeta);
+         ItemStack cancelDeletionItem = new ItemStack(new ItemStack(Material.CAULDRON));
+         ItemMeta cancelDeletionMeta = cancelDeletionItem.getItemMeta();
+         cancelDeletionMeta.setDisplayName(ChatColor.RED + (this.deleteMode ? "Cancel Deletion" : "Delete Item"));
+         cancelDeletionItem.setItemMeta(cancelDeletionMeta);
+         ItemStack previousPageItem = new ItemStack(Material.ARROW);
+         ItemMeta previousPageMeta = previousPageItem.getItemMeta();
+         previousPageMeta.setDisplayName(ChatColor.GREEN + "Previous Page");
+         previousPageItem.setItemMeta(previousPageMeta);
          if (this.type == Type.BLOCK) {
-            ItemStack item8 = new ItemStack(Material.HOPPER);
-            ItemMeta itemMeta8 = item8.getItemMeta();
-            itemMeta8.setDisplayName(ChatColor.GREEN + "Download Default Resourcepack");
-            itemMeta8.setLore(
+            ItemStack downloadDefaultResourcepackItem = new ItemStack(Material.HOPPER);
+            ItemMeta downloadDefaultResourcepackMeta = downloadDefaultResourcepackItem.getItemMeta();
+            downloadDefaultResourcepackMeta.setDisplayName(ChatColor.GREEN + "Download Default Resourcepack");
+            downloadDefaultResourcepackMeta.setLore(
                Arrays.asList(
                   ChatColor.LIGHT_PURPLE + "Only seeing stone blocks?",
                   "",
@@ -158,38 +158,38 @@ public class ItemBrowser extends PluginInventory {
                   ChatColor.RED + "You will still have to add it to your server!"
                )
             );
-            item8.setItemMeta(itemMeta8);
-            inventory.setItem(45, item8);
+            downloadDefaultResourcepackItem.setItemMeta(downloadDefaultResourcepackMeta);
+            inventory.setItem(45, downloadDefaultResourcepackItem);
          }
 
          HashMap<Double, ArrayList<MMOItemTemplate>> map = BrowserDisplayIDX.select(MMOItems.plugin.getTemplates().getTemplates(this.type));
          int[] counts = this.type.isFourGUIMode() ? slotsAlt : slots;
          int count = (this.page - 1) * counts.length;
-         int count2 = this.page * counts.length;
+         int firstIndex = this.page * counts.length;
          int index = 0;
-         int count3 = this.type.isFourGUIMode() ? 4 : 3;
-         int count4 = 0;
+         int rowCount = this.type.isFourGUIMode() ? 4 : 3;
+         int slotIndex = 0;
 
          for (Entry<Double, ArrayList<MMOItemTemplate>> entry : map.entrySet()) {
-            for (int i = ((ArrayList)entry.getValue()).size(); i > 0; i -= count3) {
-               count4 += count3;
+            for (int i = ((ArrayList)entry.getValue()).size(); i > 0; i -= rowCount) {
+               slotIndex += rowCount;
             }
          }
 
-         for (int i = count; i < Math.min(count2, count4); i++) {
+         for (int i = count; i < Math.min(firstIndex, slotIndex); i++) {
             MMOItemTemplate at = BrowserDisplayIDX.getAt(i, map);
             if (at == null) {
-               inventory.setItem(counts[index], item2);
+               inventory.setItem(counts[index], noItemItem);
                index += 7;
                if (index >= counts.length) {
-                  index -= 7 * count3;
+                  index -= 7 * rowCount;
                   index++;
                }
             } else {
-               ItemStack item8 = at.newBuilder(this.playerData.getRPG(), true).build().newBuilder().build();
-               if (item8 != null && !item8.getType().isAir() && item8.getType().isItem() && item8.getItemMeta() != null) {
-                  ItemMeta itemMeta8 = item8.getItemMeta();
-                  List lore = itemMeta8.getLore();
+               ItemStack templateItem = at.newBuilder(this.playerData.getRPG(), true).build().newBuilder().build();
+               if (templateItem != null && !templateItem.getType().isAir() && templateItem.getType().isItem() && templateItem.getItemMeta() != null) {
+                  ItemMeta templateMeta = templateItem.getItemMeta();
+                  List lore = templateMeta.getLore();
                   if (lore == null) {
                      lore = new ArrayList();
                   }
@@ -197,19 +197,19 @@ public class ItemBrowser extends PluginInventory {
                   lore.add("");
                   if (this.deleteMode) {
                      lore.add(ChatColor.RED + "✖" + " CLICK TO DELETE " + "✖");
-                     itemMeta8.setDisplayName(ChatColor.RED + "DELETE: " + (itemMeta8.hasDisplayName() ? itemMeta8.getDisplayName() : MMOUtils.getDisplayName(item8)));
+                     templateMeta.setDisplayName(ChatColor.RED + "DELETE: " + (templateMeta.hasDisplayName() ? templateMeta.getDisplayName() : MMOUtils.getDisplayName(templateItem)));
                   } else {
                      lore.add(ChatColor.YELLOW + "▸" + " Left click to obtain this item.");
                      lore.add(ChatColor.YELLOW + "▸" + " Right click to edit this item.");
                   }
 
-                  itemMeta8.setLore(lore);
-                  item8.setItemMeta(itemMeta8);
-                  this.cached.put(at.getId(), item8);
+                  templateMeta.setLore(lore);
+                  templateItem.setItemMeta(templateMeta);
+                  this.cached.put(at.getId(), templateItem);
                   inventory.setItem(counts[index], this.cached.get(at.getId()));
                   index += 7;
                   if (index >= counts.length) {
-                     index -= 7 * count3;
+                     index -= 7 * rowCount;
                      index++;
                   }
                } else {
@@ -217,7 +217,7 @@ public class ItemBrowser extends PluginInventory {
                   inventory.setItem(counts[index], item);
                   index += 7;
                   if (index >= counts.length) {
-                     index -= 7 * count3;
+                     index -= 7 * rowCount;
                      index++;
                   }
                }
@@ -225,17 +225,17 @@ public class ItemBrowser extends PluginInventory {
          }
 
          if (!this.deleteMode) {
-            inventory.setItem(51, item5);
+            inventory.setItem(51, createNewItem);
          }
 
-         inventory.setItem(47, item6);
-         inventory.setItem(49, item4);
-         inventory.setItem(18, this.page > 1 ? item7 : null);
-         inventory.setItem(26, count2 >= count4 ? null : item3);
+         inventory.setItem(47, cancelDeletionItem);
+         inventory.setItem(49, arrowItem);
+         inventory.setItem(18, this.page > 1 ? previousPageItem : null);
+         inventory.setItem(26, firstIndex >= slotIndex ? null : nextPageItem);
 
-         for (int index2 : counts) {
-            if (SilentNumbers.isAir(inventory.getItem(index2))) {
-               inventory.setItem(index2, item2);
+         for (int slot : counts) {
+            if (SilentNumbers.isAir(inventory.getItem(slot))) {
+               inventory.setItem(slot, noItemItem);
             }
          }
 

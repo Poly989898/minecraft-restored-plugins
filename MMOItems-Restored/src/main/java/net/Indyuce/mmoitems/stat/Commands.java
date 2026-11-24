@@ -46,8 +46,8 @@ public class Commands extends ItemStat<CommandListData, CommandListData> {
       CommandListData commandListData = new CommandListData();
 
       for (String key : section.getKeys(false)) {
-         ConfigurationSection section2 = section.getConfigurationSection(key);
-         commandListData.add(new CommandData(section2.getString("format"), section2.getDouble("delay"), section2.getBoolean("console"), section2.getBoolean("op")));
+         ConfigurationSection commandSection = section.getConfigurationSection(key);
+         commandListData.add(new CommandData(commandSection.getString("format"), commandSection.getDouble("delay"), commandSection.getBoolean("console"), commandSection.getBoolean("op")));
       }
 
       return commandListData;
@@ -65,40 +65,40 @@ public class Commands extends ItemStat<CommandListData, CommandListData> {
       } else {
          double value = 0.0;
          boolean flag = false;
-         boolean flag2 = false;
+         boolean opOnly = false;
          String[] texts = text.split(" ");
 
          for (int i = 0; i < texts.length && texts[i].startsWith("-"); i++) {
-            String text2 = texts[i];
-            if (text2.startsWith("-d:")) {
-               value = MMOUtils.parseDouble(text2.substring(3));
-               text = text.replaceFirst(text2 + " ", "");
-            } else if (text2.equalsIgnoreCase("-c")) {
+            String commandLine = texts[i];
+            if (commandLine.startsWith("-d:")) {
+               value = MMOUtils.parseDouble(commandLine.substring(3));
+               text = text.replaceFirst(commandLine + " ", "");
+            } else if (commandLine.equalsIgnoreCase("-c")) {
                flag = true;
-               text = text.replaceFirst(text2 + " ", "");
-            } else if (text2.equalsIgnoreCase("-op")) {
-               flag2 = true;
-               text = text.replaceFirst(text2 + " ", "");
+               text = text.replaceFirst(commandLine + " ", "");
+            } else if (commandLine.equalsIgnoreCase("-op")) {
+               opOnly = true;
+               text = text.replaceFirst(commandLine + " ", "");
             }
          }
 
          ConfigurationSection commands = editionInventory.getEditedSection().getConfigurationSection("commands");
-         String text2 = "cmd16";
+         String commandKey = "cmd16";
          if (commands == null) {
-            text2 = "cmd0";
+            commandKey = "cmd0";
          } else {
             for (int i = 0; i < 15; i++) {
                if (!commands.contains("cmd" + i)) {
-                  text2 = "cmd" + i;
+                  commandKey = "cmd" + i;
                   break;
                }
             }
          }
 
-         editionInventory.getEditedSection().set("commands." + text2 + ".format", text);
-         editionInventory.getEditedSection().set("commands." + text2 + ".delay", value);
-         editionInventory.getEditedSection().set("commands." + text2 + ".console", flag ? flag : null);
-         editionInventory.getEditedSection().set("commands." + text2 + ".op", flag2 ? flag2 : null);
+         editionInventory.getEditedSection().set("commands." + commandKey + ".format", text);
+         editionInventory.getEditedSection().set("commands." + commandKey + ".delay", value);
+         editionInventory.getEditedSection().set("commands." + commandKey + ".console", flag ? flag : null);
+         editionInventory.getEditedSection().set("commands." + commandKey + ".op", opOnly ? opOnly : null);
          editionInventory.registerTemplateEdition();
          editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Command successfully registered.");
       }

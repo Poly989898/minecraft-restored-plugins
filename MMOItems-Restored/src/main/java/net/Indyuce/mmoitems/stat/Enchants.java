@@ -176,16 +176,16 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
          for (String text : stringListFromTag) {
             String[] texts = text.split(" ");
             if (texts.length >= 2) {
-               String text2 = texts[0];
-               String text3 = texts[1];
+               String enchantName = texts[0];
+               String levelText = texts[1];
                Enchantment enchantment = null;
 
                try {
-                  enchantment = getEnchant(text2);
+                  enchantment = getEnchant(enchantName);
                } catch (Exception exception) {
                }
 
-               Integer value = SilentNumbers.IntegerParse(text3);
+               Integer value = SilentNumbers.IntegerParse(levelText);
                if (enchantment != null && value != null) {
                   enchantListData.addEnchant(enchantment, value);
                }
@@ -222,13 +222,13 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
    @NotNull
    public ArrayList<ItemTag> getAppliedNBT(@NotNull EnchantListData enchantListData) {
       ArrayList list = new ArrayList();
-      ArrayList list2 = new ArrayList();
+      ArrayList sortedEnchants = new ArrayList();
 
       for (Enchantment enchant : enchantListData.getEnchants()) {
-         list2.add(enchant.getKey().getKey() + " " + enchantListData.getLevel(enchant));
+         sortedEnchants.add(enchant.getKey().getKey() + " " + enchantListData.getLevel(enchant));
       }
 
-      list.add(ItemTag.fromStringList(this.getNBTPath(), list2));
+      list.add(ItemTag.fromStringList(this.getNBTPath(), sortedEnchants));
       return list;
    }
 
@@ -246,19 +246,19 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
          Enchants.EnchantUpgradeInfo enchantUpgradeInfo = (Enchants.EnchantUpgradeInfo)upgradeInfo;
 
          for (Enchantment affectedEnchantment : enchantUpgradeInfo.getAffectedEnchantments()) {
-            int count2 = count;
+            int levelCopy = count;
             double level = enchantListData.getLevel(affectedEnchantment);
             PlusMinusPercent pMP = enchantUpgradeInfo.getPMP(affectedEnchantment);
             if (pMP != null) {
-               if (count2 > 0) {
-                  while (count2 > 0) {
+               if (levelCopy > 0) {
+                  while (levelCopy > 0) {
                      level = pMP.apply(level);
-                     count2--;
+                     levelCopy--;
                   }
-               } else if (count2 < 0) {
-                  while (count2 < 0) {
+               } else if (levelCopy < 0) {
+                  while (levelCopy < 0) {
                      level = pMP.reverse(level);
-                     count2++;
+                     levelCopy++;
                   }
                }
 
@@ -283,25 +283,25 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
 
             for (Enchantment enchantment : Enchantment.values()) {
                int level = data.getLevel(enchantment);
-               int level2 = enchantListData.getLevel(enchantment);
+               int appliedLevel = enchantListData.getLevel(enchantment);
                if (flag) {
-                  int count = level - level2;
+                  int count = level - appliedLevel;
                   if (count != 0) {
                      map.put(enchantment, count);
                   }
-               } else if (level > level2) {
+               } else if (level > appliedLevel) {
                   map.put(enchantment, level);
                }
             }
 
             if (map.size() > 0) {
-               EnchantListData enchantListData2 = new EnchantListData();
+               EnchantListData mergedData = new EnchantListData();
 
                for (Enchantment key : map.keySet()) {
-                  enchantListData2.addEnchant(key, (Integer)map.get(key));
+                  mergedData.addEnchant(key, (Integer)map.get(key));
                }
 
-               statHistory.registerExternalData(enchantListData2);
+               statHistory.registerExternalData(mergedData);
             }
          }
       }
@@ -342,9 +342,9 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
          boolean flag = false;
          StringBuilder builder = new StringBuilder();
 
-         for (Object obj2 : (List)obj) {
-            if (obj2 instanceof String) {
-               texts.add((String)obj2);
+         for (Object element : (List)obj) {
+            if (element instanceof String) {
+               texts.add((String)element);
             } else {
                flag = true;
                builder.append(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), " Invalid list entry $i{0}$b;", new String[]{obj.toString()}));
@@ -364,23 +364,23 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
          Enchants.EnchantUpgradeInfo enchantUpgradeInfo = new Enchants.EnchantUpgradeInfo();
 
          for (String text : texts) {
-            String[] texts2 = text.split(" ");
-            if (texts2.length >= 2) {
-               String text2 = texts2[0];
-               String text3 = texts2[1];
-               char ch = text3.charAt(0);
+            String[] enchantParts = text.split(" ");
+            if (enchantParts.length >= 2) {
+               String enchantName = enchantParts[0];
+               String levelText = enchantParts[1];
+               char ch = levelText.charAt(0);
                if (ch == 's') {
-                  text3 = text3.substring(1);
+                  levelText = levelText.substring(1);
                } else if (ch != '+' && ch != '-' && ch != 'n') {
-                  text3 = '+' + text3;
+                  levelText = '+' + levelText;
                }
 
                FriendlyFeedbackProvider friendlyFeedbackProvider = new FriendlyFeedbackProvider(FFPMMOItems.get());
-               PlusMinusPercent plusMinusPercent = PlusMinusPercent.getFromString(text3, friendlyFeedbackProvider);
+               PlusMinusPercent plusMinusPercent = PlusMinusPercent.getFromString(levelText, friendlyFeedbackProvider);
                Enchantment enchantment = null;
 
                try {
-                  enchantment = Enchants.getEnchant(text2);
+                  enchantment = Enchants.getEnchant(enchantName);
                } catch (Exception exception) {
                }
 
@@ -390,7 +390,7 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
                }
 
                if (enchantment == null) {
-                  builder.append(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), " Invalid Enchantment $i{0}$b.", new String[]{text2}));
+                  builder.append(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), " Invalid Enchantment $i{0}$b.", new String[]{enchantName}));
                   flag = true;
                }
 

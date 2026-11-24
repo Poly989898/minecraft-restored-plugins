@@ -36,11 +36,11 @@ public class ActionLeftClick extends StringStat {
 
    @Override
    public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
-      String text2 = UtilityMethods.enumName(text);
-      MythicLib.plugin.getSkills().getHandlerOrThrow(text2);
-      editionInventory.getEditedSection().set(this.getPath(), text2);
+      String actionName = UtilityMethods.enumName(text);
+      MythicLib.plugin.getSkills().getHandlerOrThrow(actionName);
+      editionInventory.getEditedSection().set(this.getPath(), actionName);
       editionInventory.registerTemplateEdition();
-      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + this.getName() + " successfully changed to '" + text2 + "'");
+      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + this.getName() + " successfully changed to '" + actionName + "'");
    }
 
    @Override

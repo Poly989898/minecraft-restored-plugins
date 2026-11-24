@@ -104,11 +104,11 @@ public class Effects extends ItemStat<RandomPotionEffectListData, PotionEffectLi
             )
       );
       NumericStatFormula numericStatFormula = new NumericStatFormula(texts[1]);
-      NumericStatFormula numericStatFormula2 = texts.length > 2 ? new NumericStatFormula(texts[2]) : new NumericStatFormula(1.0, 0.0, 0.0, 0.0);
+      NumericStatFormula durationFormula = texts.length > 2 ? new NumericStatFormula(texts[2]) : new NumericStatFormula(1.0, 0.0, 0.0, 0.0);
       numericStatFormula.fillConfigurationSection(editionInventory.getEditedSection(), "effects." + potionEffectType.getName() + ".duration");
-      numericStatFormula2.fillConfigurationSection(editionInventory.getEditedSection(), "effects." + potionEffectType.getName() + ".amplifier");
+      durationFormula.fillConfigurationSection(editionInventory.getEditedSection(), "effects." + potionEffectType.getName() + ".amplifier");
       editionInventory.registerTemplateEdition();
-      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + potionEffectType.getName() + " " + numericStatFormula2 + " successfully added.");
+      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + potionEffectType.getName() + " " + durationFormula + " successfully added.");
    }
 
    @Override

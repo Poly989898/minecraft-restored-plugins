@@ -22,9 +22,9 @@ public class ItemTemplateDropItem extends ItemGenerationDropItem {
       String text = mmoLineConfig.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
       Validate.isTrue(MMOItems.plugin.getTypes().has(text), "Could not find item type with ID '" + text + "'");
       Type type = MMOItems.plugin.getTypes().get(text);
-      String text2 = mmoLineConfig.getString("id").replace("-", "_").toUpperCase();
-      Validate.isTrue(MMOItems.plugin.getTemplates().hasTemplate(type, text2), "Could not find MMOItem with ID '" + text2 + "'");
-      this.template = MMOItems.plugin.getTemplates().getTemplate(type, text2);
+      String itemId = mmoLineConfig.getString("id").replace("-", "_").toUpperCase();
+      Validate.isTrue(MMOItems.plugin.getTemplates().hasTemplate(type, itemId), "Could not find MMOItem with ID '" + itemId + "'");
+      this.template = MMOItems.plugin.getTemplates().getTemplate(type, itemId);
    }
 
    public void collect(LootBuilder lootBuilder) {

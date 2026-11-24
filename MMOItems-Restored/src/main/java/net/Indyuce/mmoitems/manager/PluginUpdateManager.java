@@ -65,33 +65,33 @@ public class PluginUpdateManager {
                            ArrayList list = new ArrayList();
 
                            for (String text : texts) {
-                              String[] texts2 = text.split(" ");
-                              if (texts2[0].equals("mmoitem")) {
-                                 String text2 = "mmoitem{type=" + texts2[1] + ",id=" + texts2[2];
-                                 if (texts2.length > 3) {
-                                    text2 = text2 + ",amount=" + texts2[3];
+                              String[] oldParts = text.split(" ");
+                              if (oldParts[0].equals("mmoitem")) {
+                                 String newCondition = "mmoitem{type=" + oldParts[1] + ",id=" + oldParts[2];
+                                 if (oldParts.length > 3) {
+                                    newCondition = newCondition + ",amount=" + oldParts[3];
                                  }
 
-                                 if (texts2.length > 4) {
-                                    text2 = text2 + ",display=\"" + texts2[4].replace("_", " ") + "\"";
+                                 if (oldParts.length > 4) {
+                                    newCondition = newCondition + ",display=\"" + oldParts[4].replace("_", " ") + "\"";
                                  }
 
-                                 list.add(text2 + "}");
-                              } else if (texts2[0].equals("vanilla")) {
-                                 String text2 = "vanilla{type=" + texts2[1];
-                                 if (texts2.length > 2 && !texts2[2].equals(".")) {
-                                    text2 = text2 + ",name=\"" + texts2[2] + "\"";
+                                 list.add(newCondition + "}");
+                              } else if (oldParts[0].equals("vanilla")) {
+                                 String newCondition = "vanilla{type=" + oldParts[1];
+                                 if (oldParts.length > 2 && !oldParts[2].equals(".")) {
+                                    newCondition = newCondition + ",name=\"" + oldParts[2] + "\"";
                                  }
 
-                                 if (texts2.length > 3) {
-                                    text2 = text2 + ",amount=" + texts2[3];
+                                 if (oldParts.length > 3) {
+                                    newCondition = newCondition + ",amount=" + oldParts[3];
                                  }
 
-                                 if (texts2.length > 4) {
-                                    text2 = text2 + ",display=\"" + texts2[4].replace("_", " ") + "\"";
+                                 if (oldParts.length > 4) {
+                                    newCondition = newCondition + ",display=\"" + oldParts[4].replace("_", " ") + "\"";
                                  }
 
-                                 list.add(text2 + "}");
+                                 list.add(newCondition + "}");
                               } else {
                                  MMOItems.plugin
                                     .getLogger()
@@ -104,23 +104,23 @@ public class PluginUpdateManager {
                            }
 
                            config.set("recipes." + key + ".ingredients", list);
-                           List<String> texts2 = config.getStringList("recipes." + key + ".conditions");
+                           List<String> conditions = config.getStringList("recipes." + key + ".conditions");
                            list = new ArrayList();
 
-                           for (String text : texts2) {
-                              String[] texts3 = text.split(" ");
-                              if (texts3[0].equalsIgnoreCase("class")) {
-                                 list.add("class{list=\"" + text.replace(texts3[0] + " ", "").replace(" ", ",") + "\"}");
-                              } else if (texts3[0].equalsIgnoreCase("perms")) {
-                                 list.add("permission{list=\"" + text.replace(texts3[0] + " ", "").replace(" ", ",") + "\"}");
-                              } else if (texts3[0].equalsIgnoreCase("food") || texts3[0].equals("mana") || texts3[0].equals("stamina")) {
-                                 list.add(texts3[0] + "{amount=" + texts3[1] + "}");
-                              } else if (texts3[0].equalsIgnoreCase("level")) {
-                                 list.add("level{level=" + texts3[1] + "}");
-                              } else if (texts3[0].equalsIgnoreCase("profession")) {
-                                 list.add("profession{profession=" + texts3[1] + ",level=" + texts3[2] + "}");
-                              } else if (texts3[0].equalsIgnoreCase("exp")) {
-                                 list.add("exp{profession=" + texts3[1] + ",amount=" + texts3[2] + "}");
+                           for (String text : conditions) {
+                              String[] conditionParts = text.split(" ");
+                              if (conditionParts[0].equalsIgnoreCase("class")) {
+                                 list.add("class{list=\"" + text.replace(conditionParts[0] + " ", "").replace(" ", ",") + "\"}");
+                              } else if (conditionParts[0].equalsIgnoreCase("perms")) {
+                                 list.add("permission{list=\"" + text.replace(conditionParts[0] + " ", "").replace(" ", ",") + "\"}");
+                              } else if (conditionParts[0].equalsIgnoreCase("food") || conditionParts[0].equals("mana") || conditionParts[0].equals("stamina")) {
+                                 list.add(conditionParts[0] + "{amount=" + conditionParts[1] + "}");
+                              } else if (conditionParts[0].equalsIgnoreCase("level")) {
+                                 list.add("level{level=" + conditionParts[1] + "}");
+                              } else if (conditionParts[0].equalsIgnoreCase("profession")) {
+                                 list.add("profession{profession=" + conditionParts[1] + ",level=" + conditionParts[2] + "}");
+                              } else if (conditionParts[0].equalsIgnoreCase("exp")) {
+                                 list.add("exp{profession=" + conditionParts[1] + ",amount=" + conditionParts[2] + "}");
                               } else {
                                  MMOItems.plugin
                                     .getLogger()
@@ -167,14 +167,14 @@ public class PluginUpdateManager {
             for (String key : configFile.getConfig().getKeys(false)) {
                ConfigurationSection section = configFile.getConfig().getConfigurationSection(key);
                if (section.contains("base.ability")) {
-                  for (String key2 : configFile.getConfig().getConfigurationSection(key + ".base.ability").getKeys(false)) {
-                     String text = configFile.getConfig().getString(key + ".base.ability." + key2 + ".mode");
+                  for (String abilityKey : configFile.getConfig().getConfigurationSection(key + ".base.ability").getKeys(false)) {
+                     String text = configFile.getConfig().getString(key + ".base.ability." + abilityKey + ".mode");
                      if (text == null) {
                         return;
                      }
 
-                     String text2 = text.equalsIgnoreCase("ON_HIT") ? "ATTACK" : (text.equalsIgnoreCase("WHEN_HIT") ? "DAMAGED" : text);
-                     configFile.getConfig().set(key + ".base.ability." + key2 + ".mode", text2);
+                     String newMode = text.equalsIgnoreCase("ON_HIT") ? "ATTACK" : (text.equalsIgnoreCase("WHEN_HIT") ? "DAMAGED" : text);
+                     configFile.getConfig().set(key + ".base.ability." + abilityKey + ".mode", newMode);
                   }
                }
             }
@@ -197,9 +197,9 @@ public class PluginUpdateManager {
                      if (!configFile.getConfig().getConfigurationSection(key).contains("base")) {
                         configFile.getConfig().createSection(key + ".base", configFile.getConfig().getConfigurationSection(key).getValues(false));
 
-                        for (String key2 : configFile.getConfig().getConfigurationSection(key).getKeys(false)) {
-                           if (!key2.equals("base")) {
-                              configFile.getConfig().set(key + "." + key2, null);
+                        for (String entryKey : configFile.getConfig().getConfigurationSection(key).getKeys(false)) {
+                           if (!entryKey.equals("base")) {
+                              configFile.getConfig().set(key + "." + entryKey, null);
                            }
                         }
 
@@ -212,11 +212,11 @@ public class PluginUpdateManager {
                         }
 
                         if (configFile.getConfig().getConfigurationSection(key + ".base").contains("effects")) {
-                           for (String key2 : configFile.getConfig().getConfigurationSection(key + ".base.effects").getKeys(false)) {
-                              String[] texts = configFile.getConfig().getString(key + ".base.effects." + key2).split(",");
+                           for (String effectKey : configFile.getConfig().getConfigurationSection(key + ".base.effects").getKeys(false)) {
+                              String[] texts = configFile.getConfig().getString(key + ".base.effects." + effectKey).split(",");
                               if (texts.length > 1) {
-                                 configFile.getConfig().set(key + ".base.new-effects." + key2 + ".duration", Double.parseDouble(texts[0]));
-                                 configFile.getConfig().set(key + ".base.new-effects." + key2 + ".amplifier", Double.parseDouble(texts[1]));
+                                 configFile.getConfig().set(key + ".base.new-effects." + effectKey + ".duration", Double.parseDouble(texts[0]));
+                                 configFile.getConfig().set(key + ".base.new-effects." + effectKey + ".amplifier", Double.parseDouble(texts[1]));
                               }
                            }
 
@@ -231,20 +231,20 @@ public class PluginUpdateManager {
                            configFile.getConfig().set(key + ".base.restore", null);
                         }
 
-                        for (String key2 : configFile.getConfig().getConfigurationSection(key + ".base").getKeys(false)) {
-                           String text = configFile.getConfig().getString(key + ".base." + key2);
+                        for (String statKey : configFile.getConfig().getConfigurationSection(key + ".base").getKeys(false)) {
+                           String text = configFile.getConfig().getString(key + ".base." + statKey);
                            if (text != null) {
                               try {
                                  String[] texts = text.split("=");
                                  Validate.isTrue(texts.length == 2);
                                  double value = Double.parseDouble(texts[0]);
-                                 double value2 = Double.parseDouble(texts[1]);
-                                 double value3 = (value + value2) / 2.0;
-                                 double value4 = Math.max(Math.abs(value), Math.abs(value2));
-                                 double value5 = (value4 - value3) / value4;
-                                 configFile.getConfig().set(key + ".base." + key2 + ".base", value3);
-                                 configFile.getConfig().set(key + ".base." + key2 + ".spread", value5 / 3.0);
-                                 configFile.getConfig().set(key + ".base." + key2 + ".max-spread", value5);
+                                 double maxValue = Double.parseDouble(texts[1]);
+                                 double average = (value + maxValue) / 2.0;
+                                 double largest = Math.max(Math.abs(value), Math.abs(maxValue));
+                                 double spread = (largest - average) / largest;
+                                 configFile.getConfig().set(key + ".base." + statKey + ".base", average);
+                                 configFile.getConfig().set(key + ".base." + statKey + ".spread", spread / 3.0);
+                                 configFile.getConfig().set(key + ".base." + statKey + ".max-spread", spread);
                               } catch (Exception exception) {
                               }
                            }
@@ -269,11 +269,11 @@ public class PluginUpdateManager {
 
                for (RegisteredSkill registeredSkill : MMOItems.plugin.getSkills().getAll()) {
                   ConfigFile configFile = new ConfigFile("/skill", registeredSkill.getHandler().getLowerCaseId());
-                  FileConfiguration config2 = configFile.getConfig();
-                  config2.set("name", Objects.requireNonNullElse(config.getString("ability." + registeredSkill.getHandler().getLowerCaseId()), registeredSkill.getName()));
+                  FileConfiguration updatedConfig = configFile.getConfig();
+                  updatedConfig.set("name", Objects.requireNonNullElse(config.getString("ability." + registeredSkill.getHandler().getLowerCaseId()), registeredSkill.getName()));
 
                   for (String modifier : registeredSkill.getHandler().getModifiers()) {
-                     config2.set("modifier." + modifier + ".name", Objects.requireNonNullElse(config.getString("modifier." + modifier), registeredSkill.getParameterName(modifier)));
+                     updatedConfig.set("modifier." + modifier + ".name", Objects.requireNonNullElse(config.getString("modifier." + modifier), registeredSkill.getParameterName(modifier)));
                   }
 
                   configFile.save();

@@ -62,31 +62,31 @@ public class RMGRR_SuperShaped implements RecipeRegistry {
       @NotNull Ref<NamespacedKey> ref,
       @NotNull FriendlyFeedbackProvider friendlyFeedbackProvider
    ) {
-      ConfigurationSection section2 = RecipeEditorGUI.moveInput(section, text);
+      ConfigurationSection inputSection = RecipeEditorGUI.moveInput(section, text);
       NamespacedKey namespacedKey = (NamespacedKey)ref.getValue();
       if (namespacedKey == null) {
          throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Illegal (Null) Namespace", new String[0]));
       }
 
-      ShapedRecipe shapedRecipe = superShapedRecipeFromList(namespacedKey.getKey(), new ArrayList<>(section2.getStringList("input")), friendlyFeedbackProvider);
+      ShapedRecipe shapedRecipe = superShapedRecipeFromList(namespacedKey.getKey(), new ArrayList<>(inputSection.getStringList("input")), friendlyFeedbackProvider);
       if (shapedRecipe == null) {
          throw new IllegalArgumentException(
             FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Shaped recipe containing only AIR, $fignored$b.", new String[0])
          );
       }
 
-      ShapedRecipe shapedRecipe2 = superShapedRecipeFromList(namespacedKey.getKey(), new ArrayList<>(section2.getStringList("output")), friendlyFeedbackProvider);
-      int amount = section2.getInt("amount", 1);
-      ShapedRecipe shapedRecipe3 = ShapedRecipe.single(
+      ShapedRecipe outputRecipe = superShapedRecipeFromList(namespacedKey.getKey(), new ArrayList<>(inputSection.getStringList("output")), friendlyFeedbackProvider);
+      int amount = inputSection.getInt("amount", 1);
+      ShapedRecipe singleRecipe = ShapedRecipe.single(
          namespacedKey.getKey(), new ProvidedUIFilter[]{new ProvidedUIFilter(MMOItemUIFilter.get(), mmoItemTemplate.getType().getId(), mmoItemTemplate.getId(), Math.max(amount, 1))}
       );
-      MRORecipe mroRecipe = new MRORecipe(shapedRecipe3, shapedRecipe2);
+      MRORecipe mroRecipe = new MRORecipe(singleRecipe, outputRecipe);
       MythicRecipeBlueprint mythicRecipeBlueprint = new MythicRecipeBlueprint(shapedRecipe, mroRecipe, namespacedKey);
       RandomStatData randomStatData = mmoItemTemplate.getBaseItemData().get(ItemStats.CRAFT_PERMISSION);
       if (randomStatData instanceof StringData) {
-         String text2 = ((StringData)randomStatData).getString();
-         if (text2 != null) {
-            mythicRecipeBlueprint.addRequiredPermission(text2);
+         String outputText = ((StringData)randomStatData).getString();
+         if (outputText != null) {
+            mythicRecipeBlueprint.addRequiredPermission(outputText);
          }
       }
 
@@ -101,54 +101,54 @@ public class RMGRR_SuperShaped implements RecipeRegistry {
       boolean flag = false;
       int count = 0;
 
-      for (String text2 : texts) {
-         String text3 = RMGRI_SuperShaped.updateRow(text2);
-         String[] texts2;
-         if (text3.contains("|")) {
-            texts2 = text3.split("\\|");
+      for (String row : texts) {
+         String updatedRow = RMGRI_SuperShaped.updateRow(row);
+         String[] rowCells;
+         if (updatedRow.contains("|")) {
+            rowCells = updatedRow.split("\\|");
          } else {
-            texts2 = text3.split(" ");
+            rowCells = updatedRow.split(" ");
          }
 
-         if (texts2.length != 5) {
-            throw new IllegalArgumentException("Invalid super crafting table row $u" + text3 + "$b ($fNot exactly 5 ingredients wide$b).");
+         if (rowCells.length != 5) {
+            throw new IllegalArgumentException("Invalid super crafting table row $u" + updatedRow + "$b ($fNot exactly 5 ingredients wide$b).");
          }
 
-         ProvidedUIFilter ingredientFrom = RecipeEditorGUI.readIngredientFrom(texts2[0], friendlyFeedbackProvider);
-         ProvidedUIFilter ingredientFrom2 = RecipeEditorGUI.readIngredientFrom(texts2[1], friendlyFeedbackProvider);
-         ProvidedUIFilter ingredientFrom3 = RecipeEditorGUI.readIngredientFrom(texts2[2], friendlyFeedbackProvider);
-         ProvidedUIFilter ingredientFrom4 = RecipeEditorGUI.readIngredientFrom(texts2[3], friendlyFeedbackProvider);
-         ProvidedUIFilter ingredientFrom5 = RecipeEditorGUI.readIngredientFrom(texts2[4], friendlyFeedbackProvider);
+         ProvidedUIFilter ingredientFrom = RecipeEditorGUI.readIngredientFrom(rowCells[0], friendlyFeedbackProvider);
+         ProvidedUIFilter secondFilter = RecipeEditorGUI.readIngredientFrom(rowCells[1], friendlyFeedbackProvider);
+         ProvidedUIFilter thirdFilter = RecipeEditorGUI.readIngredientFrom(rowCells[2], friendlyFeedbackProvider);
+         ProvidedUIFilter fourthFilter = RecipeEditorGUI.readIngredientFrom(rowCells[3], friendlyFeedbackProvider);
+         ProvidedUIFilter fifthFilter = RecipeEditorGUI.readIngredientFrom(rowCells[4], friendlyFeedbackProvider);
          if (!ingredientFrom.isAir()) {
             flag = true;
          }
 
-         if (!ingredientFrom2.isAir()) {
+         if (!secondFilter.isAir()) {
             flag = true;
          }
 
-         if (!ingredientFrom3.isAir()) {
+         if (!thirdFilter.isAir()) {
             flag = true;
          }
 
-         if (!ingredientFrom4.isAir()) {
+         if (!fourthFilter.isAir()) {
             flag = true;
          }
 
-         if (!ingredientFrom5.isAir()) {
+         if (!fifthFilter.isAir()) {
             flag = true;
          }
 
          ShapedIngredient shapedIngredient = new ShapedIngredient(ingredientFrom, 0, -count);
-         ShapedIngredient shapedIngredient2 = new ShapedIngredient(ingredientFrom2, 1, -count);
-         ShapedIngredient shapedIngredient3 = new ShapedIngredient(ingredientFrom3, 2, -count);
-         ShapedIngredient shapedIngredient4 = new ShapedIngredient(ingredientFrom4, 3, -count);
-         ShapedIngredient shapedIngredient5 = new ShapedIngredient(ingredientFrom5, 4, -count);
+         ShapedIngredient secondIngredient = new ShapedIngredient(secondFilter, 1, -count);
+         ShapedIngredient thirdIngredient = new ShapedIngredient(thirdFilter, 2, -count);
+         ShapedIngredient fourthIngredient = new ShapedIngredient(fourthFilter, 3, -count);
+         ShapedIngredient fifthIngredient = new ShapedIngredient(fifthFilter, 4, -count);
          list.add(shapedIngredient);
-         list.add(shapedIngredient2);
-         list.add(shapedIngredient3);
-         list.add(shapedIngredient4);
-         list.add(shapedIngredient5);
+         list.add(secondIngredient);
+         list.add(thirdIngredient);
+         list.add(fourthIngredient);
+         list.add(fifthIngredient);
          count++;
       }
 

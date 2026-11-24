@@ -34,34 +34,34 @@ public class ItemSet {
          if (section.getConfigurationSection("bonuses").contains(String.valueOf(i))) {
             String text = String.format("bonuses.%d", i);
             ItemSet.SetBonuses setBonuses = new ItemSet.SetBonuses();
-            ConfigurationSection section2 = section.getConfigurationSection(text);
-            Validate.notNull(section2, String.format("Item set '%s' is not a valid configuration section.", this.id));
+            ConfigurationSection setSection = section.getConfigurationSection(text);
+            Validate.notNull(setSection, String.format("Item set '%s' is not a valid configuration section.", this.id));
 
-            for (String text2 : section2.getStringList("granted-permissions")) {
-               setBonuses.addPermission(text2);
+            for (String permission : setSection.getStringList("granted-permissions")) {
+               setBonuses.addPermission(permission);
             }
 
-            for (String key : section2.getKeys(false)) {
+            for (String key : setSection.getKeys(false)) {
                if (!key.equals("granted-permissions")) {
                   try {
-                     String text2 = key.toUpperCase().replace("-", "_").replace(" ", "_");
+                     String normalizedKey = key.toUpperCase().replace("-", "_").replace(" ", "_");
                      if (key.startsWith("ability-")) {
-                        ConfigurationSection section3 = section.getConfigurationSection(String.format("%s.%s", text, key));
-                        Validate.notNull(section3, String.format("Ability '%s' is not a valid configuration section.", key));
-                        setBonuses.addAbility(new AbilityData(section3));
+                        ConfigurationSection partSection = section.getConfigurationSection(String.format("%s.%s", text, key));
+                        Validate.notNull(partSection, String.format("Ability '%s' is not a valid configuration section.", key));
+                        setBonuses.addAbility(new AbilityData(partSection));
                      } else if (key.startsWith("potion-")) {
-                        PotionEffectType potionEffectType = PotionEffectType.getByName(text2.substring("potion-".length()));
-                        Validate.notNull(potionEffectType, String.format("Could not load potion effect type from '%s'", text2));
+                        PotionEffectType potionEffectType = PotionEffectType.getByName(normalizedKey.substring("potion-".length()));
+                        Validate.notNull(potionEffectType, String.format("Could not load potion effect type from '%s'", normalizedKey));
                         setBonuses.addPotionEffect(
                            new PotionEffect(potionEffectType, MMOUtils.getEffectDuration(potionEffectType), section.getInt(String.format("%s.%s", text, key)) - 1, true, false)
                         );
                      } else if (key.startsWith("particle-")) {
-                        ConfigurationSection section3 = section.getConfigurationSection(String.format("bonuses.%d.%s", i, key));
-                        Validate.notNull(section3, String.format("Particle effect '%s' is not a valid configuration section.", key));
-                        setBonuses.addParticle(new ParticleData(section3));
+                        ConfigurationSection bonusSection = section.getConfigurationSection(String.format("bonuses.%d.%s", i, key));
+                        Validate.notNull(bonusSection, String.format("Particle effect '%s' is not a valid configuration section.", key));
+                        setBonuses.addParticle(new ParticleData(bonusSection));
                      } else {
-                        ItemStat itemStat = MMOItems.plugin.getStats().get(text2);
-                        Validate.notNull(itemStat, String.format("Could not find stat called '%s'", text2));
+                        ItemStat itemStat = MMOItems.plugin.getStats().get(normalizedKey);
+                        Validate.notNull(itemStat, String.format("Could not find stat called '%s'", normalizedKey));
                         setBonuses.addStat(itemStat, section.getDouble(String.format("bonuses.%d.%s", i, key)));
                      }
                   } catch (IllegalArgumentException exception) {
@@ -88,9 +88,9 @@ public class ItemSet {
       ItemSet.SetBonuses setBonuses = new ItemSet.SetBonuses();
 
       for (int i = 2; i <= Math.min(count, 10); i++) {
-         ItemSet.SetBonuses setBonuses2 = this.bonuses.get(i);
-         if (setBonuses2 != null) {
-            setBonuses.merge(setBonuses2);
+         ItemSet.SetBonuses currentBonuses = this.bonuses.get(i);
+         if (currentBonuses != null) {
+            setBonuses.merge(currentBonuses);
          }
       }
 

@@ -35,15 +35,15 @@ public class PluginHelp {
                   + "-------------------"
             );
          if (this.sender instanceof Player) {
-            int count2 = (count - 1) * 8;
-            int count3 = count * 8;
+            int startIndex = (count - 1) * 8;
+            int endIndex = count * 8;
 
-            int count4;
-            for (count4 = 0; count2 + count4 < count3 && count2 + count4 < PluginHelp.PluginCommand.values().length && count2 + count4 > -1; count4++) {
-               PluginHelp.PluginCommand.values()[count2 + count4].sendAsJson((Player)this.sender);
+            int endLimit;
+            for (endLimit = 0; startIndex + endLimit < endIndex && startIndex + endLimit < PluginHelp.PluginCommand.values().length && startIndex + endLimit > -1; endLimit++) {
+               PluginHelp.PluginCommand.values()[startIndex + endLimit].sendAsJson((Player)this.sender);
             }
 
-            while (count4++ < 8) {
+            while (endLimit++ < 8) {
                this.sender.sendMessage("");
             }
 

@@ -45,8 +45,8 @@ public class SoundsEdition extends EditionInventory {
 
          list.add("");
          String text = customSound.getName().replace(" ", "-").toLowerCase();
-         String text2 = this.getEditedSection().getString("sounds." + text + ".sound");
-         if (text2 != null) {
+         String soundName = this.getEditedSection().getString("sounds." + text + ".sound");
+         if (soundName != null) {
             list.add(ChatColor.GRAY + "Current Values:");
             list.add(
                ChatColor.GRAY + " - Sound Name: '" + ChatColor.GREEN + this.getEditedSection().getString("sounds." + text + ".sound") + ChatColor.GRAY + "'"

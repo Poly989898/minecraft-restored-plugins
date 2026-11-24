@@ -61,8 +61,8 @@ public class PotionEffectListData implements StatData, Mergeable<PotionEffectLis
          if (effect != null) {
             boolean flag = true;
 
-            for (PotionEffectData effect2 : this.getEffects()) {
-               if (effect.equals(effect2)) {
+            for (PotionEffectData effectEntry : this.getEffects()) {
+               if (effect.equals(effectEntry)) {
                   flag = false;
                   break;
                }

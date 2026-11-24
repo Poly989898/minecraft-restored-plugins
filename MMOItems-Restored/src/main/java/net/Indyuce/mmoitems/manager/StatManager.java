@@ -174,8 +174,8 @@ public class StatManager {
 
    public void register(@NotNull ItemStat<?, ?> itemStat) {
       if (itemStat.isEnabled()) {
-         this.stats.compute(itemStat.getId(), (var1x, itemStat2) -> {
-            Validate.isTrue(itemStat2 == null, "A stat with ID '" + var1x + "' already exists");
+         this.stats.compute(itemStat.getId(), (var1x, existingStat) -> {
+            Validate.isTrue(existingStat == null, "A stat with ID '" + var1x + "' already exists");
             return itemStat;
          });
 
@@ -216,19 +216,19 @@ public class StatManager {
       Validate.notNull(section, "Cannot register a custom stat from a null section");
       Validate.notNull(name, "Cannot register a custom stat without a name");
       Validate.notNull(type, "Cannot register a custom stat without a type");
-      Class<? extends ItemStat> type2;
+      Class<? extends ItemStat> statClass;
       switch (type.toLowerCase()) {
          case "double":
-            type2 = DoubleStat.class;
+            statClass = DoubleStat.class;
             break;
          case "boolean":
-            type2 = BooleanStat.class;
+            statClass = BooleanStat.class;
             break;
          case "text":
-            type2 = StringStat.class;
+            statClass = StringStat.class;
             break;
          case "text-list":
-            type2 = StringListStat.class;
+            statClass = StringListStat.class;
             break;
          default:
             throw new RuntimeException("Cannot register a custom stat of type " + type);
@@ -243,7 +243,7 @@ public class StatManager {
       }
 
       try {
-         ItemStat instance = type2.getConstructor(String.class, Material.class, String.class, String[].class, String[].class, Material[].class)
+         ItemStat instance = statClass.getConstructor(String.class, Material.class, String.class, String[].class, String[].class, Material[].class)
             .newInstance(text, Material.PAPER, name, texts, new String[]{"!miscellaneous", "!block", "all"}, new Material[0]);
          this.register(instance);
       } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException exception) {

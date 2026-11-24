@@ -76,17 +76,17 @@ public class RMGRR_LegacyBurning implements RecipeRegistry {
       @NotNull FriendlyFeedbackProvider friendlyFeedbackProvider
    ) {
       Validate.isTrue(ref.getValue() != null);
-      ConfigurationSection section2 = RecipeEditorGUI.getSection(section, text);
-      String item = section2.getString("item");
+      ConfigurationSection recipeSection = RecipeEditorGUI.getSection(section, text);
+      String item = recipeSection.getString("item");
       if (item == null) {
          throw new IllegalArgumentException("Missing input ingredient");
       }
 
       WorkbenchIngredient workbenchIngredient = RecipeManager.getWorkbenchIngredient(item);
-      int amount = section2.getInt("amount", 1);
-      double exp = section2.getDouble("exp", 0.35);
-      int time = section2.getInt("time", SilentNumbers.round(200.0));
-      boolean hidden = section2.getBoolean("hidden", false);
+      int amount = recipeSection.getInt("amount", 1);
+      double exp = recipeSection.getDouble("exp", 0.35);
+      int time = recipeSection.getInt("time", SilentNumbers.round(200.0));
+      boolean hidden = recipeSection.getBoolean("hidden", false);
       BurningRecipeInformation burningRecipeInformation = new BurningRecipeInformation(workbenchIngredient, (float)exp, time);
       MMOItems.plugin
          .getRecipes()

@@ -115,16 +115,16 @@ public class ParticleData implements StatData, RandomStatData<ParticleData> {
       jsonObject.addProperty("Particle", this.getParticle().name());
       jsonObject.addProperty("Type", this.getType().name());
       if (MMOUtils.isColorable(this.particle)) {
-         JsonObject jsonObject2 = new JsonObject();
-         jsonObject2.addProperty("Red", this.getColor().getRed());
-         jsonObject2.addProperty("Green", this.getColor().getGreen());
-         jsonObject2.addProperty("Blue", this.getColor().getBlue());
-         jsonObject.add("Color", jsonObject2);
+         JsonObject colorJson = new JsonObject();
+         colorJson.addProperty("Red", this.getColor().getRed());
+         colorJson.addProperty("Green", this.getColor().getGreen());
+         colorJson.addProperty("Blue", this.getColor().getBlue());
+         jsonObject.add("Color", colorJson);
       }
 
-      JsonObject jsonObject2 = new JsonObject();
-      this.getModifiers().forEach(var2x -> jsonObject2.addProperty(var2x, this.getModifier(var2x)));
-      jsonObject.add("Modifiers", jsonObject2);
+      JsonObject colorJson = new JsonObject();
+      this.getModifiers().forEach(var2x -> colorJson.addProperty(var2x, this.getModifier(var2x)));
+      jsonObject.add("Modifiers", colorJson);
       return jsonObject;
    }
 

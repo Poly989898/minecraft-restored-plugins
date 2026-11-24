@@ -44,12 +44,12 @@ public abstract class RBA_DoubleButton extends RecipeButtonAction {
    public void primaryProcessInput(@NotNull String text, Object... objs) {
       Double value;
       if (this.requireInteger()) {
-         Integer value2 = SilentNumbers.IntegerParse(text);
-         if (value2 == null) {
+         Integer parsedValue = SilentNumbers.IntegerParse(text);
+         if (parsedValue == null) {
             throw new IllegalArgumentException("Expected integer number instead of $u" + text);
          }
 
-         value = (double)value2.intValue();
+         value = (double)parsedValue.intValue();
       } else {
          value = SilentNumbers.DoubleParse(text);
          if (value == null) {

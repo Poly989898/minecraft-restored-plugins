@@ -66,14 +66,14 @@ public class CraftingStationPreview extends PluginInventory {
       }
 
       int count = (this.page - 1) * slots.length;
-      int count2 = this.page * slots.length;
+      int firstRecipeIndex = this.page * slots.length;
 
-      for (int i = count; i < count2 && i < this.ingredients.size(); i++) {
+      for (int i = count; i < firstRecipeIndex && i < this.ingredients.size(); i++) {
          inventory.setItem(slots[i - count], this.ingredients.get(i));
       }
 
-      for (int count3 : fill) {
-         inventory.setItem(count3, ConfigItems.FILL.getItem());
+      for (int slot : fill) {
+         inventory.setItem(slot, ConfigItems.FILL.getItem());
       }
 
       if (this.recipe.getRecipe() instanceof CraftingRecipe) {
@@ -105,7 +105,7 @@ public class CraftingStationPreview extends PluginInventory {
       item.setItemMeta(itemMeta);
       inventory.setItem(28, item);
       inventory.setItem(20, this.page > 1 ? ConfigItems.PREVIOUS_PAGE.getItem() : ConfigItems.FILL.getItem());
-      inventory.setItem(24, count2 < this.ingredients.size() ? ConfigItems.NEXT_PAGE.getItem() : ConfigItems.FILL.getItem());
+      inventory.setItem(24, firstRecipeIndex < this.ingredients.size() ? ConfigItems.NEXT_PAGE.getItem() : ConfigItems.FILL.getItem());
       return inventory;
    }
 

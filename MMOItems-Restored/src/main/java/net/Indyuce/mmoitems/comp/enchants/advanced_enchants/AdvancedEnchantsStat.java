@@ -92,11 +92,11 @@ public class AdvancedEnchantsStat extends ItemStat<RandomStatData<AdvancedEnchan
 
          for (NamespacedKey key : itemMeta.getPersistentDataContainer().getKeys()) {
             if (key.getNamespace().equals(this.aeNamespace)) {
-               String key2 = key.getKey();
-               if (key2.startsWith("ae_enchantment-")) {
+               String enchantKey = key.getKey();
+               if (enchantKey.startsWith("ae_enchantment-")) {
                   Integer value = (Integer)itemMeta.getPersistentDataContainer().get(key, PersistentDataType.INTEGER);
                   if (value != null && value != 0) {
-                     String text = key2.substring("ae_enchantment-".length());
+                     String text = enchantKey.substring("ae_enchantment-".length());
                      advancedEnchantMap.enchants.put(text, value);
                   }
                }

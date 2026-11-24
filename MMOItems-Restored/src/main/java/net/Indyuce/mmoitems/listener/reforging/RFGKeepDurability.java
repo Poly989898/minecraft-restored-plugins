@@ -20,9 +20,9 @@ public class RFGKeepDurability implements Listener {
             newMMOItem.setData(ItemStats.CUSTOM_DURABILITY, data);
          }
 
-         StatData data2 = oldMMOItem.getData(ItemStats.ITEM_DAMAGE);
-         if (data2 != null) {
-            newMMOItem.setData(ItemStats.ITEM_DAMAGE, data2);
+         StatData newDamageData = oldMMOItem.getData(ItemStats.ITEM_DAMAGE);
+         if (newDamageData != null) {
+            newMMOItem.setData(ItemStats.ITEM_DAMAGE, newDamageData);
          }
       }
    }

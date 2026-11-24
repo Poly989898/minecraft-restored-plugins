@@ -79,22 +79,22 @@ public class ItemParticles extends ItemStat<ParticleData, ParticleData> {
 
    @Override
    public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
-      String text2 = (String)objs[0];
-      String text3 = text.toUpperCase().replace("-", "_").replace(" ", "_");
-      if (text2.equals("particle-type")) {
-         ParticleType particleType = ParticleType.valueOf(text3);
+      String particleName = (String)objs[0];
+      String normalizedType = text.toUpperCase().replace("-", "_").replace(" ", "_");
+      if (particleName.equals("particle-type")) {
+         ParticleType particleType = ParticleType.valueOf(normalizedType);
          editionInventory.getEditedSection().set("item-particles.type", particleType.name());
          editionInventory.registerTemplateEdition();
          editionInventory.getPlayer()
             .sendMessage(MMOItems.plugin.getPrefix() + "Particle type successfully set to " + ChatColor.GOLD + particleType.getDefaultName() + ChatColor.GRAY + ".");
-      } else if (text2.equals("particle-color")) {
+      } else if (particleName.equals("particle-color")) {
          String[] texts = text.split(" ");
          int count = Integer.parseInt(texts[0]);
-         int count2 = Integer.parseInt(texts[1]);
-         int count3 = Integer.parseInt(texts[2]);
+         int amount = Integer.parseInt(texts[1]);
+         int speed = Integer.parseInt(texts[2]);
          editionInventory.getEditedSection().set("item-particles.color.red", count);
-         editionInventory.getEditedSection().set("item-particles.color.green", count2);
-         editionInventory.getEditedSection().set("item-particles.color.blue", count3);
+         editionInventory.getEditedSection().set("item-particles.color.green", amount);
+         editionInventory.getEditedSection().set("item-particles.color.blue", speed);
          editionInventory.registerTemplateEdition();
          editionInventory.getPlayer()
             .sendMessage(
@@ -107,17 +107,17 @@ public class ItemParticles extends ItemStat<ParticleData, ParticleData> {
                   + " - "
                   + ChatColor.GREEN
                   + ChatColor.BOLD
-                  + count2
+                  + amount
                   + ChatColor.GRAY
                   + " - "
                   + ChatColor.BLUE
                   + ChatColor.BOLD
-                  + count3
+                  + speed
                   + ChatColor.GRAY
                   + "."
             );
-      } else if (text2.equals("particle")) {
-         Particle particle = Particle.valueOf(text3);
+      } else if (particleName.equals("particle")) {
+         Particle particle = Particle.valueOf(normalizedType);
          editionInventory.getEditedSection().set("item-particles.particle", particle.name());
          editionInventory.registerTemplateEdition();
          editionInventory.getPlayer()
@@ -131,13 +131,13 @@ public class ItemParticles extends ItemStat<ParticleData, ParticleData> {
             );
       } else {
          double value = MMOUtils.parseDouble(text);
-         editionInventory.getEditedSection().set("item-particles." + text2, value);
+         editionInventory.getEditedSection().set("item-particles." + particleName, value);
          editionInventory.registerTemplateEdition();
          editionInventory.getPlayer()
             .sendMessage(
                MMOItems.plugin.getPrefix()
                   + ChatColor.GOLD
-                  + UtilityMethods.caseOnWords(text2.replace("-", " "))
+                  + UtilityMethods.caseOnWords(particleName.replace("-", " "))
                   + ChatColor.GRAY
                   + " set to "
                   + ChatColor.GOLD

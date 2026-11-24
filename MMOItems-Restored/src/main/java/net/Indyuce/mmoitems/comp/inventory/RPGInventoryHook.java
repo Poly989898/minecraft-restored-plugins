@@ -41,10 +41,10 @@ public class RPGInventoryHook implements PlayerInventory, Listener {
 
       @Override
       public void setItem(@Nullable ItemStack item) {
-         ItemStack item2 = this.getNBT().getItem();
-         item2.setType(item.getType());
-         item2.setAmount(item.getAmount());
-         item2.setItemMeta(item2.getItemMeta());
+         ItemStack slotItem = this.getNBT().getItem();
+         slotItem.setType(item.getType());
+         slotItem.setAmount(item.getAmount());
+         slotItem.setItemMeta(slotItem.getItemMeta());
       }
    }
 }

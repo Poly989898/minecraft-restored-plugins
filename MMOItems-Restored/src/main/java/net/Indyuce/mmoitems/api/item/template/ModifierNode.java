@@ -235,10 +235,10 @@ public class ModifierNode implements PreloadedObject {
          values[i] = value;
       }
 
-      double value2 = RANDOM.nextDouble() * value;
+      double randomValue = RANDOM.nextDouble() * value;
 
       for (int i = 0; i < modifierNodes.size(); i++) {
-         if (value2 <= values[i]) {
+         if (randomValue <= values[i]) {
             return i;
          }
       }
