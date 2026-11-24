@@ -8,6 +8,7 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.Particle.DustOptions;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.ConfigurationSection;
@@ -48,6 +49,14 @@ public class CastingParticle {
          return 1.0F;
       } else if (type == Integer.class) {
          return 0;
+      } else if (type == Particle.DustOptions.class) {
+         return new Particle.DustOptions(Color.WHITE, 1.0F);
+      } else if (type == Particle.DustTransition.class) {
+         return new Particle.DustTransition(Color.WHITE, Color.WHITE, 1.0F);
+      } else if (type == BlockData.class) {
+         return Material.STONE.createBlockData();
+      } else if (type == ItemStack.class) {
+         return new ItemStack(Material.STONE);
       }
       return null;
    }

@@ -272,7 +272,7 @@ public class MMOCore extends MMOPlugin {
 
       this.playerDataManager.close();
       this.mineManager.resetRemainingBlocks();
-      this.lootChests.getActive().forEach(chest -> chest.expire(false));
+      new java.util.ArrayList<>(this.lootChests.getActive()).stream().filter(net.Indyuce.mmocore.loot.chest.LootChest::isActive).forEach(chest -> chest.expire(false));
    }
 
    public void initializePlugin(boolean clearBefore) {

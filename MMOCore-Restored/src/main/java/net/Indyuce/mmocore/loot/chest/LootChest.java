@@ -56,6 +56,7 @@ public class LootChest {
    public void expire(boolean player) {
       Validate.isTrue(this.active, "Chest has already expired");
       this.active = false;
+      MMOCore.plugin.lootChests.unregister(this);
       if (!this.closeRunnable.isCancelled()) {
          this.closeRunnable.cancel();
       }

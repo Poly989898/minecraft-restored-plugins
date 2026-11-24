@@ -42,9 +42,26 @@ gradle shadowJar
 
 JDK 25 is required (Gradle toolchain).
 
+## Runtime checks
+
+Run on a scratch Paper 26.3 server with the restored MythicLib, using an in-process fake player (no real client) driven by a throwaway test plugin that calls the plugin API and fires Bukkit events:
+
+- Skills: class change, binding, casting `FIRE_STORM` (target skill, mana spent), `FIREBALL` and a location skill without a target (correctly fails).
+- Professions: woodcutting experience from `mineblock` sources, level-up, custom mining of gold ore (drops, experience, temporary block regeneration), professions JSON round trip.
+- Loot chests: spawning with `OFFSET`/`HELIX`/`GALAXY` effects and `FLAME`/`INSTANT_EFFECT`/`DUST` particles, opening and closing, break protection, expiry. Every `Particle` constant was spawned with the default data; only `VIBRATION`, `TRAIL` and the `GEYSER*` ones still need data the plugin cannot invent.
+- Quests: `goto`, `mineblock` and `killmob` objectives, triggers (item, experience, message), finished-quest persistence.
+- SQL backend (MariaDB): table creation, save on quit, load on join (class, level, experience, points, professions, skill tree nodes, unlocked items).
+- Skill trees: maxing out a node and opening both skill tree GUIs.
+
+Fixes found by these checks:
+
+- `LootChest.expire` never removed the chest from `LootChestManager`, as in the original. Expired chests stayed in the active map and the shutdown loop then threw "Chest has already expired". Chests now unregister themselves and the shutdown loop works on a copy of active chests only.
+- The shipped `skill-tree.yml` and `specific-skill-tree-default.yml` had no `maxed-out` status, which logged one warning per path/node type and made the skill tree GUI throw (`has no icon for the type ... and the status MAXED_OUT`) as soon as a node reached its maximum level. The default files now define `maxed-out` icons (green concrete for nodes) and a `Maxed Out` status name. Existing servers keep their own copies of these files and need the same section added.
+- `CastingParticle.defaultData` also supplies data for `DUST`, `DUST_COLOR_TRANSITION`, block and item particles.
+
 ## Not verified
 
-- Anything that needs a real client: real clicks, chat input prompts such as friend requests or party invites, drag events.
-- Skill casting and combat, professions (mining, fishing, ...), loot chests, quest objectives, the SQL data backend.
-- All integrations: Vault, MythicMobs, MMOItems, MMOProfiles, WorldGuard, PlaceholderAPI, Residence, Citizens, parties and guilds plugins.
-- The default `skill-tree.yml` GUI config does not define a `maxed-out` status, so the console shows "Missing path type ... for status: maxed-out" warnings on load; this comes from the shipped configuration. Other warnings at startup (`region` condition, `mmoitem` drops, `talkto`/`getitem` objectives) appear because the plugins that provide them are not installed.
+- Anything that needs a real client: real clicks, chat input prompts such as friend requests or party invites, drag events, the visual look of particles, GUIs and holograms. The fake player has no client, so messages sent to it were not read.
+- Fishing, farming, smelting, alchemy, enchanting and smithing professions, the `goto`/`clickon` objectives against real movement, skill casting through key combos or the skill bar, combat damage numbers.
+- All integrations: Vault, MythicMobs, MMOItems, MMOProfiles, WorldGuard, PlaceholderAPI, Residence, Citizens, parties and guilds plugins. Startup warnings (`region` condition, `mmoitem` drops, `talkto`/`getitem`/`killmythicmob` objectives) appear because the plugins that provide them are not installed.
+- SQL mode was checked only against MariaDB on one server; multi-server synchronisation and the YAML-to-SQL export command were not run.

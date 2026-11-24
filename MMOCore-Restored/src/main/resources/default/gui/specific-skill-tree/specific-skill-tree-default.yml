@@ -80,11 +80,34 @@ status-names:
   unlockable: 'Unlockable'
   locked: 'Locked'
   fully-locked: 'Fully Locked'
+  maxed-out: 'Maxed Out'
 
 
 display:
   paths:
     unlocked:
+      up:
+        item: "WHITE_DYE"
+        custom-model-data: 0
+      up-right:
+        item: "WHITE_DYE"
+        custom-model-data: 0
+      up-left:
+        item: "WHITE_DYE"
+        custom-model-data: 0
+      down-right:
+        item: "WHITE_DYE"
+        custom-model-data: 0
+      down-left:
+        item: "WHITE_DYE"
+        custom-model-data: 0
+      right:
+        item: "WHITE_DYE"
+        custom-model-data: 0
+      default:
+        item: "WHITE_DYE"
+        custom-model-data: 0
+    maxed-out:
       up:
         item: "WHITE_DYE"
         custom-model-data: 0
@@ -221,6 +244,55 @@ display:
         custom-model-data: 0
       no-path:
         item: "WHITE_CONCRETE"
+        custom-model-data: 0
+    maxed-out:
+      up-right-down-left:
+        item: "GREEN_CONCRETE"
+        custom-model-data: 0
+      up-right-down:
+        item: "GREEN_CONCRETE"
+        custom-model-data: 0
+      up-right-left:
+        item: "GREEN_CONCRETE"
+        custom-model-data: 0
+      up-down-left:
+        item: "GREEN_CONCRETE"
+        custom-model-data: 0
+      down-right-left:
+        item: "GREEN_CONCRETE"
+        custom-model-data: 0
+      up-right:
+        item: "GREEN_CONCRETE"
+        custom-model-data: 0
+      up-down:
+        item: "GREEN_CONCRETE"
+        custom-model-data: 0
+      up-left:
+        item: "GREEN_CONCRETE"
+        custom-model-data: 0
+      down-right:
+        item: "GREEN_CONCRETE"
+        custom-model-data: 0
+      down-left:
+        item: "GREEN_CONCRETE"
+        custom-model-data: 0
+      right-left:
+        item: "GREEN_CONCRETE"
+        custom-model-data: 0
+      right:
+        item: "GREEN_CONCRETE"
+        custom-model-data: 0
+      left:
+        item: "GREEN_CONCRETE"
+        custom-model-data: 0
+      up:
+        item: "GREEN_CONCRETE"
+        custom-model-data: 0
+      down:
+        item: "GREEN_CONCRETE"
+        custom-model-data: 0
+      no-path:
+        item: "GREEN_CONCRETE"
         custom-model-data: 0
     locked:
       up-right-down-left:
