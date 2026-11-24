@@ -54,5 +54,5 @@ public abstract class Objective {
       return this.triggers;
    }
 
-   public abstract ObjectiveProgress newProgress(QuestProgress var1);
+   public abstract ObjectiveProgress newProgress(QuestProgress questProgress);
 }

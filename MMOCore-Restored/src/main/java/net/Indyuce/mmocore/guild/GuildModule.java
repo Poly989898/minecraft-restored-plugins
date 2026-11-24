@@ -8,8 +8,8 @@ import org.jetbrains.annotations.Nullable;
 
 public interface GuildModule {
    @Nullable
-   AbstractGuild getGuild(PlayerData var1);
+   AbstractGuild getGuild(PlayerData playerData);
 
    @NotNull
-   Relationship getRelationship(Player var1, Player var2);
+   Relationship getRelationship(Player player, Player player2);
 }

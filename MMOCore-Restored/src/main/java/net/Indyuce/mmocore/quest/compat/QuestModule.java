@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 public interface QuestModule<T extends AbstractQuest> {
    @Nullable
-   T getQuestOrThrow(String var1);
+   T getQuestOrThrow(String text);
 
-   boolean hasCompletedQuest(String var1, Player var2);
+   boolean hasCompletedQuest(String text, Player player);
 }

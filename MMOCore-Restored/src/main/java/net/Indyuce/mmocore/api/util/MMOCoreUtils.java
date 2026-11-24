@@ -123,7 +123,7 @@ public class MMOCoreUtils {
 
       try {
          meta.setAttributeModifiers(MultimapBuilder.hashKeys(0).hashSetValues(0).build());
-      } catch (Exception var2) {
+      } catch (Exception exception) {
       }
    }
 

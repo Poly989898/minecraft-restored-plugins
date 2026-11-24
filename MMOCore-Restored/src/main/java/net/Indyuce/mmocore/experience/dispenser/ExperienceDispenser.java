@@ -9,9 +9,9 @@ import org.jetbrains.annotations.Nullable;
 
 @Deprecated
 public interface ExperienceDispenser {
-   void giveExperience(PlayerData var1, double var2, @Nullable Location var4, @NotNull EXPSource var5);
+   void giveExperience(PlayerData playerData, double value, @Nullable Location location, @NotNull EXPSource expSource);
 
-   boolean shouldHandle(PlayerData var1);
+   boolean shouldHandle(PlayerData playerData);
 
    @Nullable
    default Location getPlayerLocation(PlayerData player) {

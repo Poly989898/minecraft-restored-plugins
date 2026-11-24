@@ -5,18 +5,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface BlockType {
-   void place(@NotNull BlockInfo.RegeneratingBlock var1);
+   void place(@NotNull BlockInfo.RegeneratingBlock regeneratingBlock);
 
-   void regenerate(@NotNull BlockInfo.RegeneratingBlock var1);
+   void regenerate(@NotNull BlockInfo.RegeneratingBlock regeneratingBlock);
 
    @NotNull
    String display();
 
-   boolean breakRestrictions(@NotNull Block var1);
+   boolean breakRestrictions(@NotNull Block block);
 
    @Override
    int hashCode();
 
    @Override
-   boolean equals(@Nullable Object var1);
+   boolean equals(@Nullable Object obj);
 }

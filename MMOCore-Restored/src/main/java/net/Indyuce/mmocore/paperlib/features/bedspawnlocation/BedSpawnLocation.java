@@ -5,5 +5,5 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public interface BedSpawnLocation {
-   CompletableFuture<Location> getBedSpawnLocationAsync(Player var1, boolean var2);
+   CompletableFuture<Location> getBedSpawnLocationAsync(Player player, boolean flag);
 }

@@ -4,5 +4,5 @@ import org.bukkit.event.Listener;
 
 @Deprecated
 public interface EventTriggerHandler extends Listener {
-   boolean handles(String var1);
+   boolean handles(String text);
 }

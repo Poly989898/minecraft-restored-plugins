@@ -21,5 +21,5 @@ public abstract class ExperienceSource<T> {
       return this.getDispenser().shouldHandle(player) && this.matchesParameter(player, obj);
    }
 
-   public abstract boolean matchesParameter(PlayerData var1, T var2);
+   public abstract boolean matchesParameter(PlayerData playerData, T value);
 }

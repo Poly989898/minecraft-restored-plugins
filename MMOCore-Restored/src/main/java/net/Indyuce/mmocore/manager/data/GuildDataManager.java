@@ -64,11 +64,11 @@ public abstract class GuildDataManager {
       this.config = new GuildDataManager.GuildConfiguration();
    }
 
-   public abstract void save(Guild var1);
+   public abstract void save(Guild guild);
 
    public abstract void load();
 
-   public abstract void delete(Guild var1);
+   public abstract void delete(Guild guild);
 
    public GuildDataManager.GuildConfiguration getConfig() {
       return this.config == null ? (this.config = new GuildDataManager.GuildConfiguration()) : this.config;

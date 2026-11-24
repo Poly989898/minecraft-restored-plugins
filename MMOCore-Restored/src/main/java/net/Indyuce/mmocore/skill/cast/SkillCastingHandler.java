@@ -28,7 +28,7 @@ public abstract class SkillCastingHandler implements Listener {
    public abstract SkillCastingMode getCastingMode();
 
    @NotNull
-   public abstract SkillCastingInstance newInstance(@NotNull PlayerData var1);
+   public abstract SkillCastingInstance newInstance(@NotNull PlayerData playerData);
 
    public void onSkillBound(@NotNull PlayerData player) {
    }

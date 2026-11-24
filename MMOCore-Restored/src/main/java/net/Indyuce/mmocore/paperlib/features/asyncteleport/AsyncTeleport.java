@@ -6,5 +6,5 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 public interface AsyncTeleport {
-   CompletableFuture<Boolean> teleportAsync(Entity var1, Location var2, TeleportCause var3);
+   CompletableFuture<Boolean> teleportAsync(Entity entity, Location location, TeleportCause teleportCause);
 }

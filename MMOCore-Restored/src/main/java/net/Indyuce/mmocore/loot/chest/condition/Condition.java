@@ -13,5 +13,5 @@ public abstract class Condition {
       return this.id;
    }
 
-   public abstract boolean isMet(ConditionInstance var1);
+   public abstract boolean isMet(ConditionInstance conditionInstance);
 }

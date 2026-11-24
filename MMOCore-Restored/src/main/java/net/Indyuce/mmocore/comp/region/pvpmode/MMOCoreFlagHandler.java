@@ -26,7 +26,7 @@ public abstract class MMOCoreFlagHandler extends FlagValueChangeHandler<State> {
       try {
          this.playerData = PlayerData.get(player.getUniqueId());
          this.onSetValue(player, player.getLocation(), player.getLocation(), set, value, State.DENY, MoveType.TELEPORT);
-      } catch (Exception var5) {
+      } catch (Exception exception) {
       }
    }
 

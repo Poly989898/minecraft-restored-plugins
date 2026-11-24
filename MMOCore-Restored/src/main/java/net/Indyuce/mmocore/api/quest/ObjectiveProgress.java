@@ -38,5 +38,5 @@ public abstract class ObjectiveProgress implements Closeable {
       }
    }
 
-   public abstract String formatLore(String var1);
+   public abstract String formatLore(String text);
 }

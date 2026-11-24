@@ -33,7 +33,7 @@ public class PaperEnvironment extends SpigotEnvironment {
             this.asyncChunksHandler = new AsyncChunksPaper_15();
             HumanEntity.class.getDeclaredMethod("getPotentialBedLocation");
             this.bedSpawnLocationHandler = new BedSpawnLocationPaper();
-         } catch (NoSuchMethodException var2) {
+         } catch (NoSuchMethodException exception) {
          }
       }
    }

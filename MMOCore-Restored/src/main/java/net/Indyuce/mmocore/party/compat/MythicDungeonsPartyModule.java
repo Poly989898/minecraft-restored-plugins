@@ -52,7 +52,7 @@ public class MythicDungeonsPartyModule implements PartyModule, Listener {
          for (Player member : this.party.getPlayers()) {
             try {
                list.add(PlayerData.get(member.getPlayer()));
-            } catch (Exception var5) {
+            } catch (Exception exception) {
             }
          }
 

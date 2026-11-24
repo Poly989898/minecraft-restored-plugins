@@ -6,9 +6,9 @@ import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.player.profess.PlayerClass;
 
 public interface OfflinePlayerData extends OfflineDataHolder {
-   void removeFriend(UUID var1);
+   void removeFriend(UUID uuid);
 
-   boolean hasFriend(UUID var1);
+   boolean hasFriend(UUID uuid);
 
    PlayerClass getProfess();
 

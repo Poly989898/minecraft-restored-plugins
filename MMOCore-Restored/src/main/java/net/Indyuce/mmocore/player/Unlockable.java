@@ -7,7 +7,7 @@ public interface Unlockable {
 
    boolean isUnlockedByDefault();
 
-   void whenLocked(PlayerData var1);
+   void whenLocked(PlayerData playerData);
 
-   void whenUnlocked(PlayerData var1);
+   void whenUnlocked(PlayerData playerData);
 }

@@ -469,9 +469,9 @@ public class PlayerClass implements ExperienceObject, PreloadedObject {
    }
 
    @NotNull
-   private LinearValue getStatInfo(String var1) {
-      LinearValue var2 = this.stats.get(var1);
-      return var2 == null ? StatInfo.valueOf(var1).getDefaultFormula() : var2;
+   private LinearValue getStatInfo(String text) {
+      LinearValue linearValue = this.stats.get(text);
+      return linearValue == null ? StatInfo.valueOf(text).getDefaultFormula() : linearValue;
    }
 
    @Override

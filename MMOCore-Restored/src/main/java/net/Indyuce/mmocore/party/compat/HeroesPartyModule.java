@@ -40,7 +40,7 @@ public class HeroesPartyModule implements PartyModule, Listener {
          for (Hero hero : this.party.getMembers()) {
             try {
                list.add(PlayerData.get(hero.getPlayer()));
-            } catch (Exception var5) {
+            } catch (Exception exception) {
             }
          }
 

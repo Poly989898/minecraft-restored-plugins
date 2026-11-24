@@ -45,5 +45,5 @@ public abstract class DropItem {
       return randomValue < Math.pow(this.chance, Math.pow(1.0 + effectiveLuck, 0.33333333333));
    }
 
-   public abstract void collect(LootBuilder var1);
+   public abstract void collect(LootBuilder lootBuilder);
 }

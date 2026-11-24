@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 public interface PartyModule {
    @Nullable
-   AbstractParty getParty(@NotNull PlayerData var1);
+   AbstractParty getParty(@NotNull PlayerData playerData);
 
    @Deprecated
    default void applyStatBonuses(PlayerData player, int memberCount) {

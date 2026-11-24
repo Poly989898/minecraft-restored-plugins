@@ -9,5 +9,5 @@ public interface AsyncChunks {
       return this.getChunkAtAsync(world, x, z, gen, false);
    }
 
-   CompletableFuture<Chunk> getChunkAtAsync(World var1, int var2, int var3, boolean var4, boolean var5);
+   CompletableFuture<Chunk> getChunkAtAsync(World world, int count, int count2, boolean flag, boolean flag2);
 }

@@ -857,10 +857,10 @@ public class PlayerData extends SynchronizedDataHolder implements OfflinePlayerD
                      if (!this.equals(var1x)
                         && !var1x.hasReachedMaxLevel()
                         && Math.abs(var1x.getLevel() - this.getLevel()) <= MMOCore.plugin.configManager.maxPartyLevelDifference) {
-                        double var2 = MMOCore.plugin.configManager.partyMaxExpSplitRange;
-                        return var2 <= 0.0
+                        double partyMaxExpSplitRange = MMOCore.plugin.configManager.partyMaxExpSplitRange;
+                        return partyMaxExpSplitRange <= 0.0
                            || var1x.getPlayer().getWorld().equals(this.getPlayer().getWorld())
-                              && var1x.getPlayer().getLocation().distanceSquared(this.getPlayer().getLocation()) < var2 * var2;
+                              && var1x.getPlayer().getLocation().distanceSquared(this.getPlayer().getLocation()) < partyMaxExpSplitRange * partyMaxExpSplitRange;
                      } else {
                         return false;
                      }

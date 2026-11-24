@@ -157,16 +157,16 @@ public class MMOCore extends MMOPlugin {
       new SpigotPlugin(70575, this).checkForUpdate();
       new Metrics(this);
       this.saveDefaultConfig();
-      int var1 = this.getConfig().contains("config-version", true) ? this.getConfig().getInt("config-version") : -1;
-      int var2 = this.getConfig().getDefaults().getInt("config-version");
-      if (var1 != var2) {
+      int count = this.getConfig().contains("config-version", true) ? this.getConfig().getInt("config-version") : -1;
+      int configVersion = this.getConfig().getDefaults().getInt("config-version");
+      if (count != configVersion) {
          this.getLogger().warning("You may be using an outdated config.yml!");
-         this.getLogger().warning("(Your config version: '" + var1 + "' | Expected config version: '" + var2 + "')");
+         this.getLogger().warning("(Your config version: '" + count + "' | Expected config version: '" + configVersion + "')");
       }
 
       if (this.getConfig().isConfigurationSection("mysql") && this.getConfig().getBoolean("mysql.enabled")) {
-         SQLDataSource var4 = new SQLDataSource(this);
-         this.playerDataManager.setDataHandler(new SQLDataHandler(var4));
+         SQLDataSource sqlDataSource = new SQLDataSource(this);
+         this.playerDataManager.setDataHandler(new SQLDataHandler(sqlDataSource));
       }
 
       if (this.getConfig().isConfigurationSection("default-playerdata")) {
@@ -222,47 +222,47 @@ public class MMOCore extends MMOPlugin {
          this.initializePlugin(false);
 
          try {
-            String var3 = UtilityMethods.enumName(this.getConfig().getString("party-plugin"));
-            PartyModuleType var5 = PartyModuleType.valueOf(var3);
-            Validate.isTrue(var5.isValid(), "Plugin " + var5.getPluginName() + " is not installed");
-            this.partyModule = var5.provideModule();
-            this.getLogger().log(Level.INFO, "Hooked parties onto " + var5.getPluginName());
-         } catch (Throwable var10) {
-            this.getLogger().log(Level.WARNING, "Could not initialize party module: " + var10.getMessage());
+            String text = UtilityMethods.enumName(this.getConfig().getString("party-plugin"));
+            PartyModuleType partyModuleType = PartyModuleType.valueOf(text);
+            Validate.isTrue(partyModuleType.isValid(), "Plugin " + partyModuleType.getPluginName() + " is not installed");
+            this.partyModule = partyModuleType.provideModule();
+            this.getLogger().log(Level.INFO, "Hooked parties onto " + partyModuleType.getPluginName());
+         } catch (Throwable exception) {
+            this.getLogger().log(Level.WARNING, "Could not initialize party module: " + exception.getMessage());
             this.partyModule = new MMOCorePartyModule();
          }
 
          try {
-            String var11 = UtilityMethods.enumName(this.getConfig().getString("guild-plugin"));
-            GuildModuleType var6 = GuildModuleType.valueOf(var11);
-            Validate.isTrue(var6.isValid(), "Plugin '" + var6.name() + "' is not installed");
-            this.guildModule = var6.provideModule();
-            this.getLogger().log(Level.INFO, "Hooked guilds onto " + var6.getPluginName());
-         } catch (RuntimeException var9) {
-            this.getLogger().log(Level.WARNING, "Could not initialize guild module: " + var9.getMessage());
+            String text = UtilityMethods.enumName(this.getConfig().getString("guild-plugin"));
+            GuildModuleType guildModuleType = GuildModuleType.valueOf(text);
+            Validate.isTrue(guildModuleType.isValid(), "Plugin '" + guildModuleType.name() + "' is not installed");
+            this.guildModule = guildModuleType.provideModule();
+            this.getLogger().log(Level.INFO, "Hooked guilds onto " + guildModuleType.getPluginName());
+         } catch (RuntimeException exception) {
+            this.getLogger().log(Level.WARNING, "Could not initialize guild module: " + exception.getMessage());
             this.guildModule = new MMOCoreGuildModule();
          }
 
          try {
-            SkillCastingMode var12 = SkillCastingMode.valueOf(UtilityMethods.enumName(this.getConfig().getString("skill-casting.mode")));
-            var12.setCurrent(this.getConfig().getConfigurationSection("skill-casting"));
-         } catch (RuntimeException var8) {
-            this.getLogger().log(Level.WARNING, "Could not load skill casting: " + var8.getMessage());
+            SkillCastingMode skillCastingMode = SkillCastingMode.valueOf(UtilityMethods.enumName(this.getConfig().getString("skill-casting.mode")));
+            skillCastingMode.setCurrent(this.getConfig().getConfigurationSection("skill-casting"));
+         } catch (RuntimeException exception) {
+            this.getLogger().log(Level.WARNING, "Could not load skill casting: " + exception.getMessage());
          }
 
          try {
             Class.forName("net.Indyuce.mmocore.MMOCoreBukkit").getConstructor(MMOCore.class).newInstance(this);
-         } catch (Throwable var7) {
-            var7.printStackTrace();
+         } catch (Throwable exception) {
+            exception.printStackTrace();
             throw new RuntimeException("Cannot run an API build on Spigot!");
          }
 
          this.playerDataManager.initialize(EventPriority.LOW, EventPriority.NORMAL);
          this.nativeGuildManager.load();
          ToggleableCommand.register();
-         MMOCoreCommandTreeRoot var13 = new MMOCoreCommandTreeRoot();
-         this.getCommand("mmocore").setExecutor(var13);
-         this.getCommand("mmocore").setTabCompleter(var13);
+         MMOCoreCommandTreeRoot mmoCoreCommandTreeRoot = new MMOCoreCommandTreeRoot();
+         this.getCommand("mmocore").setExecutor(mmoCoreCommandTreeRoot);
+         this.getCommand("mmocore").setTabCompleter(mmoCoreCommandTreeRoot);
       }
    }
 

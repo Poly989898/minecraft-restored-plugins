@@ -17,7 +17,7 @@ public class MMOCoreAttributeStatHandler extends StatHandler {
       try {
          PlayerData playerData = PlayerData.get(instance.getMap().getPlayerData());
          playerData.getAttributes().getInstance(this.attr).updateStats();
-      } catch (NullPointerException var3) {
+      } catch (NullPointerException exception) {
       }
    }
 }

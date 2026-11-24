@@ -31,5 +31,5 @@ public abstract class SpecificProfessionManager implements MMOCoreManager {
       return this.key;
    }
 
-   public abstract void loadProfessionConfiguration(ConfigurationSection var1);
+   public abstract void loadProfessionConfiguration(ConfigurationSection section);
 }

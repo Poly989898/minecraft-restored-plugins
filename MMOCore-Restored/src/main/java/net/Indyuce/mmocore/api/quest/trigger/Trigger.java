@@ -29,5 +29,5 @@ public abstract class Trigger {
       }
    }
 
-   public abstract void apply(PlayerData var1);
+   public abstract void apply(PlayerData playerData);
 }

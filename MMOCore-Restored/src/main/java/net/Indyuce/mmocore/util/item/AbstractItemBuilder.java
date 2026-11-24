@@ -71,9 +71,9 @@ public abstract class AbstractItemBuilder {
       return nbtItem.toItem();
    }
 
-   public abstract void whenBuildingMeta(ItemStack var1, ItemMeta var2);
+   public abstract void whenBuildingMeta(ItemStack item, ItemMeta itemMeta);
 
-   public abstract void whenBuildingNBT(NBTItem var1);
+   public abstract void whenBuildingNBT(NBTItem nbtItem);
 
    public String applyPlaceholders(String string) {
       for (String placeholder : this.placeholders.keySet()) {

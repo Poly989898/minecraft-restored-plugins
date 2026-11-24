@@ -92,7 +92,7 @@ public abstract class SkillTree implements RegisteredObject {
             try {
                String configPath = "display.paths." + MMOCoreUtils.ymlName(status.name()) + "." + MMOCoreUtils.ymlName(pathType.name());
                this.icons.put(new PathDisplayInfo(pathType, status), Icon.from(config.get(configPath)));
-            } catch (Exception var13) {
+            } catch (Exception exception) {
             }
          }
       }
@@ -108,7 +108,7 @@ public abstract class SkillTree implements RegisteredObject {
                try {
                   String configPath = "display.nodes." + MMOCoreUtils.ymlName(status.name()) + "." + MMOCoreUtils.ymlName(nodeType.name());
                   this.icons.put(new NodeDisplayInfo(nodeType, status), Icon.from(config.get(configPath)));
-               } catch (Exception var12) {
+               } catch (Exception exception) {
                }
             }
          }

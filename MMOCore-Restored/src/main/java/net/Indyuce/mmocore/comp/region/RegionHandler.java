@@ -4,5 +4,5 @@ import java.util.List;
 import org.bukkit.Location;
 
 public interface RegionHandler {
-   List<String> getRegions(Location var1);
+   List<String> getRegions(Location location);
 }
