@@ -52,7 +52,7 @@ public class ParabolicProjectile extends BukkitRunnable {
          target.clone().subtract(source).toVector().multiply(0.1).setY(6).normalize().multiply(0.3),
          () -> {},
          1,
-         loc -> loc.getWorld().spawnParticle(particle, loc, 0)
+         loc -> loc.getWorld().spawnParticle(particle, loc, 0, CastingParticle.defaultData(particle))
       );
    }
 
@@ -63,12 +63,12 @@ public class ParabolicProjectile extends BukkitRunnable {
          target.clone().subtract(source).toVector().multiply(0.1).setY(6).normalize().multiply(0.3),
          end,
          speed,
-         loc -> loc.getWorld().spawnParticle(particle, loc, 0)
+         loc -> loc.getWorld().spawnParticle(particle, loc, 0, CastingParticle.defaultData(particle))
       );
    }
 
    public ParabolicProjectile(Location source, Location target, Vector vec, Runnable end, int speed, Particle particle) {
-      this(source, target, vec, end, speed, loc -> loc.getWorld().spawnParticle(particle, loc, 0));
+      this(source, target, vec, end, speed, loc -> loc.getWorld().spawnParticle(particle, loc, 0, CastingParticle.defaultData(particle)));
    }
 
    private ParabolicProjectile(Location source, Location target, Vector vec, Runnable end, int speed, Consumer<Location> display) {

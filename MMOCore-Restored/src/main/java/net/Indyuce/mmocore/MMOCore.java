@@ -153,7 +153,6 @@ public class MMOCore extends MMOPlugin {
    }
 
    public void onEnable() {
-      System.out.println("\u001b[36m[Spigotunlocked.com] - Hello");
       new SpigotPlugin(70575, this).checkForUpdate();
       new Metrics(this);
       this.saveDefaultConfig();

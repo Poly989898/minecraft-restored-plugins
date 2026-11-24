@@ -27,12 +27,29 @@ public class CastingParticle {
          Material material = Material.valueOf(UtilityMethods.enumName(Objects.requireNonNull(config.getString("material"), "Particle requires a block")));
          this.display = loc -> loc.getWorld().spawnParticle(particle, loc, 1, material.createBlockData());
       } else {
-         this.display = loc -> loc.getWorld().spawnParticle(particle, loc, 0);
+         Object data = defaultData(particle);
+         this.display = loc -> loc.getWorld().spawnParticle(particle, loc, 0, data);
       }
    }
 
    public CastingParticle(Particle particle) {
-      this.display = loc -> loc.getWorld().spawnParticle(particle, loc, 0);
+      Object data = defaultData(particle);
+      this.display = loc -> loc.getWorld().spawnParticle(particle, loc, 0, data);
+   }
+
+   // Recent versions require data for some particles (e.g. INSTANT_EFFECT takes a Particle.Spell)
+   static Object defaultData(Particle particle) {
+      Class<?> type = particle.getDataType();
+      if (type == Particle.Spell.class) {
+         return new Particle.Spell(Color.WHITE, 1.0F);
+      } else if (type == Color.class) {
+         return Color.WHITE;
+      } else if (type == Float.class) {
+         return 1.0F;
+      } else if (type == Integer.class) {
+         return 0;
+      }
+      return null;
    }
 
    public void display(Location loc) {
