@@ -7,5 +7,5 @@ import org.jetbrains.annotations.NotNull;
 
 public interface VanillaBookableRecipe {
    @NotNull
-   Recipe getBukkitRecipe(@NotNull NamespacedKey var1, @NotNull ItemStack var2) throws IllegalArgumentException;
+   Recipe getBukkitRecipe(@NotNull NamespacedKey namespacedKey, @NotNull ItemStack item) throws IllegalArgumentException;
 }

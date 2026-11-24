@@ -6,5 +6,5 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface UIFilterCountermatch {
-   boolean preventsMatching(@NotNull ItemStack var1, @Nullable FriendlyFeedbackProvider var2);
+   boolean preventsMatching(@NotNull ItemStack item, @Nullable FriendlyFeedbackProvider friendlyFeedbackProvider);
 }

@@ -279,7 +279,7 @@ public class UtilityMethods {
       for (String candidate : candidates) {
          try {
             return Objects.requireNonNull(resolver.apply(candidate));
-         } catch (Throwable var8) {
+         } catch (Throwable exception) {
          }
       }
 

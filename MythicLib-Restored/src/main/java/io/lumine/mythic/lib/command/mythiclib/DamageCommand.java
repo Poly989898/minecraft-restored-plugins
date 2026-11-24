@@ -69,7 +69,7 @@ public class DamageCommand extends CommandTreeNode {
          if (temp instanceof LivingEntity) {
             return (LivingEntity)temp;
          }
-      } catch (Throwable var6) {
+      } catch (Throwable exception) {
       }
 
       return null;

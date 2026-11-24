@@ -14,7 +14,7 @@ public class FriendlyFeedbackMessage implements Cloneable {
    public FriendlyFeedbackMessage clone() {
       try {
          super.clone();
-      } catch (CloneNotSupportedException var2) {
+      } catch (CloneNotSupportedException exception) {
       }
 
       return new FriendlyFeedbackMessage(this.getMessage(), this.hasPrefix(), this.getSubdivision());

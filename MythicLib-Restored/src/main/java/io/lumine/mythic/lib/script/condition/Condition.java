@@ -14,5 +14,5 @@ public abstract class Condition {
       return this.reversed ? !this.isMet(meta) : this.isMet(meta);
    }
 
-   public abstract boolean isMet(SkillMetadata var1);
+   public abstract boolean isMet(SkillMetadata skillMetadata);
 }

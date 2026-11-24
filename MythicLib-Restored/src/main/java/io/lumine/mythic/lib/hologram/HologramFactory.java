@@ -6,5 +6,5 @@ import org.jetbrains.annotations.NotNull;
 
 public interface HologramFactory {
    @NotNull
-   Hologram newHologram(@NotNull Location var1, @NotNull List<String> var2);
+   Hologram newHologram(@NotNull Location location, @NotNull List<String> texts);
 }

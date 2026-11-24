@@ -90,9 +90,9 @@ public abstract class Skill implements CooldownObject {
    }
 
    @NotNull
-   public abstract boolean getResult(@NotNull SkillMetadata var1);
+   public abstract boolean getResult(@NotNull SkillMetadata skillMetadata);
 
-   public abstract void whenCast(@NotNull SkillMetadata var1);
+   public abstract void whenCast(@NotNull SkillMetadata skillMetadata);
 
    @NotNull
    public SkillHandler<?> getHandler() {

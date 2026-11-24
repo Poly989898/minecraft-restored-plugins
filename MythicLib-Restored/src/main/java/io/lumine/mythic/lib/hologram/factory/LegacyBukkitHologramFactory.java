@@ -90,8 +90,8 @@ public class LegacyBukkitHologramFactory implements HologramFactory {
                if (SET_CAN_TICK != null) {
                   try {
                      SET_CAN_TICK.invoke(as, false);
-                  } catch (Exception var9) {
-                     var9.printStackTrace();
+                  } catch (Exception exception) {
+                     exception.printStackTrace();
                   }
                }
 
@@ -180,7 +180,7 @@ public class LegacyBukkitHologramFactory implements HologramFactory {
 
          try {
             setCanTick = ArmorStand.class.getDeclaredMethod("setCanTick", boolean.class);
-         } catch (Throwable var2) {
+         } catch (Throwable exception) {
          }
 
          SET_CAN_TICK = setCanTick;

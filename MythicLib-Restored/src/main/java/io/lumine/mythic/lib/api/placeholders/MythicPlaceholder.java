@@ -11,7 +11,7 @@ public interface MythicPlaceholder {
    String getMythicIdentifier();
 
    @Nullable
-   String parse(@NotNull String var1, @NotNull Object var2);
+   String parse(@NotNull String text, @NotNull Object obj);
 
-   boolean forUseWith(@NotNull Object var1);
+   boolean forUseWith(@NotNull Object obj);
 }

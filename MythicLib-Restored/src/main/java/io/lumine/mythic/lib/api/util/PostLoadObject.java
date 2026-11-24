@@ -30,5 +30,5 @@ public abstract class PostLoadObject {
    }
 
    @Deprecated
-   protected abstract void whenPostLoaded(@NotNull ConfigurationSection var1);
+   protected abstract void whenPostLoaded(@NotNull ConfigurationSection section);
 }

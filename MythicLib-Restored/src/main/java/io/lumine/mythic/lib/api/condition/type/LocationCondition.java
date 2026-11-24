@@ -5,7 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public interface LocationCondition extends PlayerCondition, BlockCondition {
-   boolean check(Location var1);
+   boolean check(Location location);
 
    @Override
    default boolean check(Player player) {

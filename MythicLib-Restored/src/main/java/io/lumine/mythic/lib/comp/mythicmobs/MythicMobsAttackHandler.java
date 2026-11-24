@@ -38,7 +38,7 @@ public class MythicMobsAttackHandler implements AttackHandler {
             for (DamagePacket packet : damageMeta.getPackets()) {
                packet.setElement(element);
             }
-         } catch (Exception var10) {
+         } catch (Exception exception) {
          }
       }
 

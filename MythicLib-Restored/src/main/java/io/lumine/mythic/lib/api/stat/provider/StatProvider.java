@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public interface StatProvider {
-   double getStat(String var1);
+   double getStat(String text);
 
    LivingEntity getEntity();
 

@@ -4,7 +4,7 @@ import io.lumine.mythic.lib.version.VInventoryView;
 import org.jetbrains.annotations.NotNull;
 
 public interface CustomInventoryCheck {
-   boolean isTargetInventory(@NotNull VInventoryView var1);
+   boolean isTargetInventory(@NotNull VInventoryView vInventoryView);
 
    @NotNull
    String getCustomStationKey();

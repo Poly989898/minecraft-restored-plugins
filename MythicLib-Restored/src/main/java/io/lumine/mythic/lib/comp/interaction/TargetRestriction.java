@@ -6,5 +6,5 @@ import org.bukkit.entity.Player;
 @Deprecated
 public interface TargetRestriction {
    @Deprecated
-   boolean canTarget(Player var1, LivingEntity var2, InteractionType var3);
+   boolean canTarget(Player player, LivingEntity entity, InteractionType interactionType);
 }

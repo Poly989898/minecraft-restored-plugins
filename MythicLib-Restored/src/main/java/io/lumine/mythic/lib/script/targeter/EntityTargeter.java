@@ -6,5 +6,5 @@ import org.bukkit.entity.Entity;
 
 @FunctionalInterface
 public interface EntityTargeter {
-   List<Entity> findTargets(SkillMetadata var1);
+   List<Entity> findTargets(SkillMetadata skillMetadata);
 }

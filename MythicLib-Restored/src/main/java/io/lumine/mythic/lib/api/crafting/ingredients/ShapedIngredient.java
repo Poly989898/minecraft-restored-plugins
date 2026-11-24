@@ -83,7 +83,7 @@ public class ShapedIngredient extends MythicRecipeIngredient implements Cloneabl
    public ShapedIngredient clone() {
       try {
          super.clone();
-      } catch (CloneNotSupportedException var2) {
+      } catch (CloneNotSupportedException exception) {
       }
 
       return new ShapedIngredient(this.getIngredient().clone(), this.getHorizontalOffset(), this.getVerticalOffset());

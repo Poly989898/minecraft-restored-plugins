@@ -60,7 +60,7 @@ public abstract class CommandTreeNode {
    }
 
    @NotNull
-   public abstract CommandTreeNode.CommandResult execute(CommandSender var1, String[] var2);
+   public abstract CommandTreeNode.CommandResult execute(CommandSender sender, String[] texts);
 
    public List<String> calculateTabCompletion(CommandTreeExplorer explorer, int parameterIndex) {
       List<String> list = new ArrayList<>();

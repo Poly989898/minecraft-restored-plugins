@@ -13,7 +13,7 @@ public abstract class Hologram {
 
    public abstract boolean isSpawned();
 
-   public abstract void updateLocation(@NotNull Location var1);
+   public abstract void updateLocation(@NotNull Location location);
 
    public void flyOut(@NotNull final GameIndicators settings, @NotNull final Vector dir) {
       (new BukkitRunnable() {
@@ -40,7 +40,7 @@ public abstract class Hologram {
       }).runTaskTimer(MythicLib.plugin, 0L, settings.tickPeriod);
    }
 
-   public abstract void updateLines(List<String> var1);
+   public abstract void updateLines(List<String> texts);
 
    public abstract List<String> getLines();
 

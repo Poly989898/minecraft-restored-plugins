@@ -207,7 +207,7 @@ public abstract class SynchronizedDataManager<H extends SynchronizedDataHolder, 
       return playerData.isSynchronized() ? this.saveData(playerData) : CompletableFuture.completedFuture(null);
    }
 
-   public abstract H newPlayerData(@NotNull MMOPlayerData var1);
+   public abstract H newPlayerData(@NotNull MMOPlayerData mmoPlayerData);
 
    public abstract Object newProfileDataModule();
 

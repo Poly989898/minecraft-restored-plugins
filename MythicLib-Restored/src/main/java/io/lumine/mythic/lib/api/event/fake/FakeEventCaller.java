@@ -5,5 +5,5 @@ import org.jetbrains.annotations.NotNull;
 
 @FunctionalInterface
 public interface FakeEventCaller<E extends Event> {
-   boolean isFake(@NotNull E var1);
+   boolean isFake(@NotNull E value);
 }

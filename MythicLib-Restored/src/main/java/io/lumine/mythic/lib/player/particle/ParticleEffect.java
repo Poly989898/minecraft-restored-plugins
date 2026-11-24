@@ -39,7 +39,7 @@ public abstract class ParticleEffect extends PlayerModifier implements Closeable
       return this.particleUsed;
    }
 
-   public abstract void tick(Player var1);
+   public abstract void tick(Player player);
 
    @Override
    public void register(MMOPlayerData playerData) {

@@ -75,9 +75,9 @@ public abstract class SkillHandler<T extends SkillResult> {
    }
 
    @NotNull
-   public abstract T getResult(SkillMetadata var1);
+   public abstract T getResult(SkillMetadata skillMetadata);
 
-   public abstract void whenCast(T var1, SkillMetadata var2);
+   public abstract void whenCast(T value, SkillMetadata skillMetadata);
 
    @Override
    public boolean equals(Object o) {

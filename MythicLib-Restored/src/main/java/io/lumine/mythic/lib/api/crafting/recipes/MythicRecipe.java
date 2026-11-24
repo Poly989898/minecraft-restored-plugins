@@ -14,7 +14,7 @@ public abstract class MythicRecipe {
    final String name;
    boolean live = false;
 
-   public abstract void addIngredient(@NotNull MythicRecipeIngredient var1);
+   public abstract void addIngredient(@NotNull MythicRecipeIngredient mythicRecipeIngredient);
 
    @NotNull
    public ArrayList<MythicRecipeIngredient> getIngredients() {
@@ -50,7 +50,7 @@ public abstract class MythicRecipe {
    }
 
    @Nullable
-   public abstract MythicRecipeInventory matches(@NotNull MythicRecipeInventory var1, @Nullable Ref<Integer> var2);
+   public abstract MythicRecipeInventory matches(@NotNull MythicRecipeInventory mythicRecipeInventory, @Nullable Ref<Integer> ref);
 
    public void load() {
       MythicCraftingManager.loadRecipe(this);

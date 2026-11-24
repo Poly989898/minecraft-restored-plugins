@@ -12,21 +12,21 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface ConfigObject {
-   String getString(String var1);
+   String getString(String text);
 
-   String getString(String var1, String var2);
+   String getString(String text, String text2);
 
-   double getDouble(String var1);
+   double getDouble(String text);
 
-   double getDouble(String var1, double var2);
+   double getDouble(String text, double value);
 
-   int getInt(String var1);
+   int getInt(String text);
 
-   int getInt(String var1, int var2);
+   int getInt(String text, int count);
 
-   boolean getBoolean(String var1);
+   boolean getBoolean(String text);
 
-   boolean getBoolean(String var1, boolean var2);
+   boolean getBoolean(String text, boolean flag);
 
    default DoubleFormula getDoubleFormula(String key) {
       return new DoubleFormula(this.getString(key));
@@ -57,12 +57,12 @@ public interface ConfigObject {
    }
 
    @NotNull
-   ConfigObject getObject(String var1);
+   ConfigObject getObject(String text);
 
    @NotNull
-   ConfigObject adaptObject(String var1);
+   ConfigObject adaptObject(String text);
 
-   boolean contains(String var1);
+   boolean contains(String text);
 
    @NotNull
    Set<String> getKeys();

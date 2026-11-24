@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 public interface WorldCondition extends LocationCondition {
-   boolean check(World var1);
+   boolean check(World world);
 
    @Override
    default boolean check(Location location) {

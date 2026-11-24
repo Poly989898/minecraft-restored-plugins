@@ -63,7 +63,7 @@ public class NumericalExpression<C> {
 
       try {
          expressionObject = this.decorateAndCompile(new ExpressionBuilder(preprocessor.preprocess(expression)));
-      } catch (Exception var5) {
+      } catch (Exception exception) {
       }
 
       this.precompiled = expressionObject;

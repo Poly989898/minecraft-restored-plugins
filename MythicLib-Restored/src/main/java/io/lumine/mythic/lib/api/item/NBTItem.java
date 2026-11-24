@@ -20,29 +20,29 @@ public abstract class NBTItem {
       return this.item;
    }
 
-   public abstract Object get(String var1);
+   public abstract Object get(String text);
 
-   public abstract String getString(String var1);
+   public abstract String getString(String text);
 
-   public abstract boolean hasTag(String var1);
+   public abstract boolean hasTag(String text);
 
-   public abstract boolean getBoolean(String var1);
+   public abstract boolean getBoolean(String text);
 
-   public abstract double getDouble(String var1);
+   public abstract double getDouble(String text);
 
-   public abstract int getInteger(String var1);
+   public abstract int getInteger(String text);
 
-   public abstract NBTCompound getNBTCompound(String var1);
+   public abstract NBTCompound getNBTCompound(String text);
 
-   public abstract NBTItem addTag(List<ItemTag> var1);
+   public abstract NBTItem addTag(List<ItemTag> itemTags);
 
-   public abstract NBTItem removeTag(String... var1);
+   public abstract NBTItem removeTag(String... texts);
 
    public abstract Set<String> getTags();
 
    public abstract ItemStack toItem();
 
-   public abstract int getTypeId(String var1);
+   public abstract int getTypeId(String text);
 
    public NBTItem addTag(ItemTag... tags) {
       return this.addTag(Arrays.asList(tags));

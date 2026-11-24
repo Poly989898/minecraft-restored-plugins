@@ -9,10 +9,10 @@ public interface ExpressionPreprocessor<C> {
    ExpressionPreprocessor<OfflinePlayer> PLAYER = new PlayerPreprocessor();
 
    @NotNull
-   String preprocess(@NotNull String var1);
+   String preprocess(@NotNull String text);
 
-   void process(@NotNull Expression var1, @NotNull C var2);
+   void process(@NotNull Expression expression, @NotNull C value);
 
    @NotNull
-   String quickProcess(@NotNull String var1, @NotNull C var2);
+   String quickProcess(@NotNull String text, @NotNull C value);
 }

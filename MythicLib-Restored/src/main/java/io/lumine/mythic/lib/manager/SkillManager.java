@@ -447,7 +447,7 @@ public class SkillManager {
             ConfigurationSection config = script.getPostLoadAction().getCachedConfig();
             script.getPostLoadAction().performAction();
             this.registerSkillHandler(new MythicLibSkillHandler(config, script));
-         } catch (PostLoadException var6) {
+         } catch (PostLoadException exception) {
          } catch (RuntimeException exception) {
             MythicLib.plugin.getLogger().log(Level.WARNING, "Could not load script '" + script.getId() + "': " + exception.getMessage());
          }

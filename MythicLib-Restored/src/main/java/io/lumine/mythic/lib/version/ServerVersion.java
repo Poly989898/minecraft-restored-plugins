@@ -60,7 +60,7 @@ public class ServerVersion {
       try {
          Class.forName("com.destroystokyo.paper.ParticleBuilder");
          isPaper = true;
-      } catch (ClassNotFoundException var6) {
+      } catch (ClassNotFoundException exception) {
       }
 
       this.paper = isPaper;
@@ -96,13 +96,13 @@ public class ServerVersion {
          Class<?> bukkitServerClass = Bukkit.getServer().getClass();
          String rev = bukkitServerClass.getPackage().getName().replace(".", ",").split(",")[3];
          return Integer.parseInt(rev.split("_")[2].replaceAll("[^0-9]", ""));
-      } catch (Throwable var4) {
+      } catch (Throwable exception) {
          for (int revNumber = 1; revNumber < 10; revNumber++) {
             try {
                String candidate = this.craftBukkitVersion(revNumber);
                Class.forName("org.bukkit.craftbukkit." + candidate + "." + "CraftServer");
                return revNumber;
-            } catch (Throwable var3) {
+            } catch (Throwable exception2) {
             }
          }
 

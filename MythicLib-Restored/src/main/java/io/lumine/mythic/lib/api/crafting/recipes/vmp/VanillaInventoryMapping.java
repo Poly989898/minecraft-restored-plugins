@@ -20,11 +20,11 @@ public abstract class VanillaInventoryMapping {
    @NotNull
    static ArrayList<VanillaInventoryMapping> customInventoryMappings = new ArrayList<>();
 
-   public abstract int getMainWidth(int var1) throws IllegalArgumentException;
+   public abstract int getMainWidth(int count) throws IllegalArgumentException;
 
-   public abstract int getMainHeight(int var1) throws IllegalArgumentException;
+   public abstract int getMainHeight(int count) throws IllegalArgumentException;
 
-   public abstract int getMainSlot(int var1, int var2) throws IllegalArgumentException;
+   public abstract int getMainSlot(int count, int count2) throws IllegalArgumentException;
 
    public abstract int getMainInventoryStart();
 
@@ -53,11 +53,11 @@ public abstract class VanillaInventoryMapping {
       return main;
    }
 
-   public abstract int getResultWidth(int var1) throws IllegalArgumentException;
+   public abstract int getResultWidth(int count) throws IllegalArgumentException;
 
-   public abstract int getResultHeight(int var1) throws IllegalArgumentException;
+   public abstract int getResultHeight(int count) throws IllegalArgumentException;
 
-   public abstract int getResultSlot(int var1, int var2) throws IllegalArgumentException;
+   public abstract int getResultSlot(int count, int count2) throws IllegalArgumentException;
 
    public int getResultInventorySize() {
       return this.getResultInventoryHeight() * this.getResultInventoryWidth();
@@ -86,21 +86,21 @@ public abstract class VanillaInventoryMapping {
       return result;
    }
 
-   public abstract int getSideWidth(@NotNull String var1, int var2) throws IllegalArgumentException;
+   public abstract int getSideWidth(@NotNull String text, int count) throws IllegalArgumentException;
 
-   public abstract int getSideHeight(@NotNull String var1, int var2) throws IllegalArgumentException;
+   public abstract int getSideHeight(@NotNull String text, int count) throws IllegalArgumentException;
 
-   public abstract int getSideSlot(@NotNull String var1, int var2, int var3) throws IllegalArgumentException;
+   public abstract int getSideSlot(@NotNull String text, int count, int count2) throws IllegalArgumentException;
 
-   public abstract int getSideInventoryStart(@NotNull String var1) throws IllegalArgumentException;
+   public abstract int getSideInventoryStart(@NotNull String text) throws IllegalArgumentException;
 
    public int getSideInventorySize(@NotNull String side) throws IllegalArgumentException {
       return this.getSideInventoryHeight(side) * this.getSideInventoryWidth(side);
    }
 
-   public abstract int getSideInventoryWidth(@NotNull String var1) throws IllegalArgumentException;
+   public abstract int getSideInventoryWidth(@NotNull String text) throws IllegalArgumentException;
 
-   public abstract int getSideInventoryHeight(@NotNull String var1) throws IllegalArgumentException;
+   public abstract int getSideInventoryHeight(@NotNull String text) throws IllegalArgumentException;
 
    @NotNull
    public MythicRecipeInventory getSideMythicInventory(@NotNull String side, @NotNull Inventory inventory) throws IllegalArgumentException {
@@ -209,7 +209,7 @@ public abstract class VanillaInventoryMapping {
       return inventory;
    }
 
-   public abstract boolean isResultSlot(int var1);
+   public abstract boolean isResultSlot(int count);
 
    public abstract boolean mainIsResult();
 

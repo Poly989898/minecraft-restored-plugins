@@ -4,9 +4,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 
 public interface GlowModule {
-   void setGlowing(Entity var1, ChatColor var2);
+   void setGlowing(Entity entity, ChatColor chatColor);
 
-   void disableGlowing(Entity var1);
+   void disableGlowing(Entity entity);
 
    void enable();
 

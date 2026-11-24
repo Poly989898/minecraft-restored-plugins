@@ -25,5 +25,5 @@ public abstract class LocationTargeter {
       return this.oriented;
    }
 
-   public abstract List<Location> findTargets(SkillMetadata var1);
+   public abstract List<Location> findTargets(SkillMetadata skillMetadata);
 }

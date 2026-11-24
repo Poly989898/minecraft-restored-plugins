@@ -14,7 +14,7 @@ public interface VInventoryView {
 
    Inventory getBottomInventory();
 
-   void setCursor(ItemStack var1);
+   void setCursor(ItemStack item);
 
    HumanEntity getPlayer();
 

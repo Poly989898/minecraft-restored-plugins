@@ -5,5 +5,5 @@ import org.jetbrains.annotations.NotNull;
 
 public interface RelationshipHandler {
    @NotNull
-   Relationship getRelationship(Player var1, Player var2);
+   Relationship getRelationship(Player player, Player player2);
 }

@@ -41,30 +41,30 @@ public class ConfigurationUpdater {
                      changed = true;
                   }
                }
-            } catch (Throwable var10) {
+            } catch (Throwable exception) {
                try {
                   reader.close();
-               } catch (Throwable var9) {
-                  var10.addSuppressed(var9);
+               } catch (Throwable exception2) {
+                  exception.addSuppressed(exception2);
                }
 
-               throw var10;
+               throw exception;
             }
 
             reader.close();
             if (changed) {
                configuration.save(this.configurationFile.toFile());
             }
-         } catch (Throwable var11) {
+         } catch (Throwable exception) {
             if (inputStream != null) {
                try {
                   inputStream.close();
-               } catch (Throwable var8) {
-                  var11.addSuppressed(var8);
+               } catch (Throwable exception2) {
+                  exception.addSuppressed(exception2);
                }
             }
 
-            throw var11;
+            throw exception;
          }
 
          if (inputStream != null) {

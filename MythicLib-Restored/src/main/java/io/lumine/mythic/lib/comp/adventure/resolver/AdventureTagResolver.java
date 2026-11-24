@@ -7,5 +7,5 @@ import org.jetbrains.annotations.Nullable;
 @FunctionalInterface
 public interface AdventureTagResolver {
    @Nullable
-   String resolve(@NotNull String var1, @NotNull AdventureArgumentQueue var2);
+   String resolve(@NotNull String text, @NotNull AdventureArgumentQueue adventureArgumentQueue);
 }

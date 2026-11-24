@@ -51,15 +51,15 @@ public interface UIFilter {
       }
    }
 
-   boolean matches(@NotNull ItemStack var1, @NotNull String var2, @NotNull String var3, @Nullable FriendlyFeedbackProvider var4);
+   boolean matches(@NotNull ItemStack item, @NotNull String text, @NotNull String text2, @Nullable FriendlyFeedbackProvider friendlyFeedbackProvider);
 
-   boolean isValid(@NotNull String var1, @NotNull String var2, @Nullable FriendlyFeedbackProvider var3);
-
-   @NotNull
-   ArrayList<String> tabCompleteArgument(@NotNull String var1);
+   boolean isValid(@NotNull String text, @NotNull String text2, @Nullable FriendlyFeedbackProvider friendlyFeedbackProvider);
 
    @NotNull
-   ArrayList<String> tabCompleteData(@NotNull String var1, @NotNull String var2);
+   ArrayList<String> tabCompleteArgument(@NotNull String text);
+
+   @NotNull
+   ArrayList<String> tabCompleteData(@NotNull String text, @NotNull String text2);
 
    boolean fullyDefinesItem();
 
@@ -68,13 +68,13 @@ public interface UIFilter {
    }
 
    @Nullable
-   ItemStack getItemStack(@NotNull String var1, @NotNull String var2, @Nullable FriendlyFeedbackProvider var3);
+   ItemStack getItemStack(@NotNull String text, @NotNull String text2, @Nullable FriendlyFeedbackProvider friendlyFeedbackProvider);
 
    @NotNull
-   ItemStack getDisplayStack(@NotNull String var1, @NotNull String var2, @Nullable FriendlyFeedbackProvider var3);
+   ItemStack getDisplayStack(@NotNull String text, @NotNull String text2, @Nullable FriendlyFeedbackProvider friendlyFeedbackProvider);
 
    @NotNull
-   ArrayList<String> getDescription(@NotNull String var1, @NotNull String var2);
+   ArrayList<String> getDescription(@NotNull String text, @NotNull String text2);
 
    default boolean determinateGeneration() {
       return true;

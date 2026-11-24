@@ -35,16 +35,16 @@ public class MclogsAPI {
 
       try {
          os.write(out);
-      } catch (Throwable var11) {
+      } catch (Throwable exception) {
          if (os != null) {
             try {
                os.close();
-            } catch (Throwable var10) {
-               var11.addSuppressed(var10);
+            } catch (Throwable exception2) {
+               exception.addSuppressed(exception2);
             }
          }
 
-         throw var11;
+         throw exception;
       }
 
       if (os != null) {

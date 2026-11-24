@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 public interface VariableRegistry<T> {
    @NotNull
-   Variable<?> accessVariable(@NotNull T var1, @NotNull String var2);
+   Variable<?> accessVariable(@NotNull T value, @NotNull String text);
 
-   boolean hasVariable(String var1);
+   boolean hasVariable(String text);
 }

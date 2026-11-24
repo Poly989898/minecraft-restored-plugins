@@ -12,16 +12,16 @@ import org.jetbrains.annotations.NotNull;
 public abstract class MythicRecipeOutput {
    @NotNull
    public abstract MythicRecipeInventory applyDisplay(
-      @NotNull MythicBlueprintInventory var1, @NotNull InventoryClickEvent var2, @NotNull VanillaInventoryMapping var3
+      @NotNull MythicBlueprintInventory mythicBlueprintInventory, @NotNull InventoryClickEvent event, @NotNull VanillaInventoryMapping vanillaInventoryMapping
    );
 
    public abstract void applyResult(
-      @NotNull MythicRecipeInventory var1,
-      @NotNull MythicBlueprintInventory var2,
-      @NotNull MythicCachedResult var3,
-      @NotNull InventoryClickEvent var4,
-      @NotNull VanillaInventoryMapping var5,
-      int var6
+      @NotNull MythicRecipeInventory mythicRecipeInventory,
+      @NotNull MythicBlueprintInventory mythicBlueprintInventory,
+      @NotNull MythicCachedResult mythicCachedResult,
+      @NotNull InventoryClickEvent event,
+      @NotNull VanillaInventoryMapping vanillaInventoryMapping,
+      int count
    );
 
    public void consumeIngredients(

@@ -142,7 +142,7 @@ public abstract class SQLDataSynchronizer<H extends SynchronizedDataHolder> {
       }
    }
 
-   public abstract void loadData(ResultSet var1) throws SQLException, IOException, ClassNotFoundException;
+   public abstract void loadData(ResultSet resultSet) throws SQLException, IOException, ClassNotFoundException;
 
    public abstract void loadEmptyData();
 }

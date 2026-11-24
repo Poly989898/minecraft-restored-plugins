@@ -84,11 +84,11 @@ public class ItemFactory {
    public ItemFactory lore(String... lines) {
       return this.transformMeta(meta -> {
          List<String> lore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
-         String[] var3 = lines;
-         int var4 = lines.length;
+         String[] texts = lines;
+         int length = lines.length;
 
-         for (int var5 = 0; var5 < var4; var5++) {
-            String line = var3[var5];
+         for (int i = 0; i < length; i++) {
+            String line = texts[i];
             lore.add(this.colorize(line));
          }
 
@@ -165,8 +165,8 @@ public class ItemFactory {
 
    public ItemFactory clearEnchantments() {
       return this.transform(itemStack -> {
-         Set<Enchantment> var10000 = itemStack.getEnchantments().keySet();
-         var10000.forEach(itemStack::removeEnchantment);
+         Set<Enchantment> enchantments = itemStack.getEnchantments().keySet();
+         enchantments.forEach(itemStack::removeEnchantment);
       });
    }
 

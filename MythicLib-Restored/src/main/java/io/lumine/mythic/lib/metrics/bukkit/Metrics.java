@@ -67,7 +67,7 @@ public class Metrics {
 
          try {
             config.save(configFile);
-         } catch (IOException var9) {
+         } catch (IOException exception) {
          }
       }
 
@@ -84,7 +84,7 @@ public class Metrics {
                service.getField("B_STATS_VERSION");
                found = true;
                break;
-            } catch (NoSuchFieldException var10) {
+            } catch (NoSuchFieldException exception) {
             }
          }
 
@@ -202,10 +202,10 @@ public class Metrics {
                         }
                      }
                   }
-               } catch (NullPointerException | NoSuchMethodException | IllegalAccessException | InvocationTargetException var13) {
+               } catch (NullPointerException | NoSuchMethodException | IllegalAccessException | InvocationTargetException exception) {
                }
             }
-         } catch (NoSuchFieldException var14) {
+         } catch (NoSuchFieldException exception) {
          }
       }
 

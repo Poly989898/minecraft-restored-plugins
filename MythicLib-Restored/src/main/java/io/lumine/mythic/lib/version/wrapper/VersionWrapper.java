@@ -31,23 +31,23 @@ import org.jetbrains.annotations.NotNull;
 public interface VersionWrapper {
    String PLAYER_PROFILE_NAME = "SkullTexture";
 
-   Object getProfile(SkullMeta var1);
+   Object getProfile(SkullMeta skullMeta);
 
-   void setProfile(SkullMeta var1, Object var2);
+   void setProfile(SkullMeta skullMeta, Object obj);
 
-   Object newProfile(UUID var1, String var2);
+   Object newProfile(UUID uuid, String text);
 
-   OreDrops getOreDrops(Material var1);
+   OreDrops getOreDrops(Material material);
 
-   int getFoodRestored(ItemStack var1);
+   int getFoodRestored(ItemStack item);
 
-   float getAttackCooldown(Player var1);
+   float getAttackCooldown(Player player);
 
-   boolean isGeneratorOutput(Material var1);
+   boolean isGeneratorOutput(Material material);
 
-   float getSaturationRestored(ItemStack var1);
+   float getSaturationRestored(ItemStack item);
 
-   FurnaceRecipe getFurnaceRecipe(String var1, ItemStack var2, Material var3, float var4, int var5);
+   FurnaceRecipe getFurnaceRecipe(String text, ItemStack item, Material material, float value, int count);
 
    @Deprecated
    default NBTItem copyTexture(NBTItem item) {
@@ -63,67 +63,67 @@ public interface VersionWrapper {
       return stack;
    }
 
-   Enchantment getEnchantmentFromString(String var1);
+   Enchantment getEnchantmentFromString(String text);
 
-   FurnaceRecipe getFurnaceRecipe(NamespacedKey var1, ItemStack var2, Material var3, float var4, int var5);
+   FurnaceRecipe getFurnaceRecipe(NamespacedKey namespacedKey, ItemStack item, Material material, float value, int count);
 
-   boolean isCropFullyGrown(Block var1);
+   boolean isCropFullyGrown(Block block);
 
-   boolean isUndead(Entity var1);
+   boolean isUndead(Entity entity);
 
-   NBTItem getNBTItem(ItemStack var1);
+   NBTItem getNBTItem(ItemStack item);
 
-   boolean isHelmet(Material var1);
+   boolean isHelmet(Material material);
 
    default void sendActionBar(Player player, String message) {
       this.sendActionBarRaw(player, "{\"text\": \"" + message + "\"}");
    }
 
-   void sendActionBarRaw(Player var1, String var2);
+   void sendActionBarRaw(Player player, String text);
 
-   void sendJson(Player var1, String var2);
-
-   @Deprecated
-   int getNextContainerId(Player var1);
+   void sendJson(Player player, String text);
 
    @Deprecated
-   void handleInventoryCloseEvent(Player var1);
+   int getNextContainerId(Player player);
 
    @Deprecated
-   void sendPacketOpenWindow(Player var1, int var2);
+   void handleInventoryCloseEvent(Player player);
 
    @Deprecated
-   void sendPacketCloseWindow(Player var1, int var2);
+   void sendPacketOpenWindow(Player player, int count);
 
    @Deprecated
-   void setActiveContainerDefault(Player var1);
+   void sendPacketCloseWindow(Player player, int count);
 
    @Deprecated
-   void setActiveContainer(Player var1, Object var2);
+   void setActiveContainerDefault(Player player);
 
    @Deprecated
-   void setActiveContainerId(Object var1, int var2);
+   void setActiveContainer(Player player, Object obj);
 
    @Deprecated
-   void addActiveContainerSlotListener(Object var1, Player var2);
+   void setActiveContainerId(Object obj, int count);
 
    @Deprecated
-   Inventory toBukkitInventory(Object var1);
+   void addActiveContainerSlotListener(Object obj, Player player);
 
    @Deprecated
-   Object newContainerAnvil(Player var1);
+   Inventory toBukkitInventory(Object obj);
 
-   void playArmAnimation(Player var1);
+   @Deprecated
+   Object newContainerAnvil(Player player);
 
-   Sound getBlockPlaceSound(Block var1);
+   void playArmAnimation(Player player);
 
-   String getSkullValue(Block var1);
+   Sound getBlockPlaceSound(Block block);
 
-   void setSkullValue(Block var1, String var2);
+   String getSkullValue(Block block);
 
-   void setUUID(Player var1, UUID var2);
+   void setSkullValue(Block block, String text);
 
-   GameProfile getGameProfile(Player var1);
+   void setUUID(Player player, UUID uuid);
+
+   GameProfile getGameProfile(Player player);
 
    default AttributeModifier newAttributeModifier(@NotNull NamespacedKey key, double amount, @NotNull Operation operation) {
       String str = key.toString();
@@ -134,11 +134,11 @@ public interface VersionWrapper {
       return modifier.getName().equals(key.toString());
    }
 
-   VInventoryView getView(InventoryEvent var1);
+   VInventoryView getView(InventoryEvent event);
 
-   VInventoryView getOpenInventory(@NotNull Player var1);
+   VInventoryView getOpenInventory(@NotNull Player player);
 
    InventoryClickEvent newInventoryClickEvent(
-      @NotNull VInventoryView var1, @NotNull SlotType var2, int var3, @NotNull ClickType var4, @NotNull InventoryAction var5
+      @NotNull VInventoryView vInventoryView, @NotNull SlotType slotType, int count, @NotNull ClickType clickType, @NotNull InventoryAction inventoryAction
    );
 }

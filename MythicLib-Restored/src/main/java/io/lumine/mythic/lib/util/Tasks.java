@@ -45,7 +45,7 @@ public class Tasks {
          if (worker.getOwner().equals(plugin)) {
             try {
                Thread.sleep(50L);
-            } catch (InterruptedException var7) {
+            } catch (InterruptedException exception) {
             } finally {
                continue;
             }

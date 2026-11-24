@@ -4,5 +4,5 @@ import org.jetbrains.annotations.Nullable;
 
 public interface VariableContainer {
    @Nullable
-   Variable getVariable(String var1);
+   Variable getVariable(String text);
 }

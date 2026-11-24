@@ -74,17 +74,17 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
    }
 
    public boolean isSet(String key) {
-      ConfigurationSection var10000 = this.fc;
-      String var10001 = this.getNode(key);
-      return var10000.isSet(var10001 + key);
+      ConfigurationSection fc = this.fc;
+      String node = this.getNode(key);
+      return fc.isSet(node + key);
    }
 
    public String determineWhichKeyToUse(String def, String... keys) {
-      String[] var3 = keys;
-      int var4 = keys.length;
+      String[] texts = keys;
+      int length = keys.length;
 
-      for (int var5 = 0; var5 < var4; var5++) {
-         String key = var3[var5];
+      for (int i = 0; i < length; i++) {
+         String key = texts[i];
          if (this.isSet(key)) {
             return key;
          }
@@ -137,8 +137,8 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
    }
 
    public String getString(String field) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
+      String node = this.getNode(field);
+      String key = node + field;
       return this.fc.getString(key, this.fc.getString(key.toLowerCase()));
    }
 
@@ -147,17 +147,17 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
    }
 
    public String getString(String field, String def) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
+      String node = this.getNode(field);
+      String key = node + field;
       return this.fc.getString(key, this.fc.getString(key.toLowerCase(), def));
    }
 
    public String getString(String[] keysToCheck, String finalDefaultValue, String... defaultValues) {
-      String[] var4 = keysToCheck;
-      int var5 = keysToCheck.length;
+      String[] texts = keysToCheck;
+      int length = keysToCheck.length;
 
-      for (int var6 = 0; var6 < var5; var6++) {
-         String value = var4[var6];
+      for (int i = 0; i < length; i++) {
+         String value = texts[i];
          if (!this.isConfigurationSection(value)) {
             String get = this.getString(value, (String)null);
             if (get != null) {
@@ -166,11 +166,11 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
          }
       }
 
-      var4 = defaultValues;
-      var5 = defaultValues.length;
+      texts = defaultValues;
+      length = defaultValues.length;
 
-      for (int var11 = 0; var11 < var5; var11++) {
-         String value = var4[var11];
+      for (int i = 0; i < length; i++) {
+         String value = texts[i];
          if (value != null) {
             return value;
          }
@@ -189,22 +189,22 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
    }
 
    public PlaceholderString getPlaceholderString(String field) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
+      String node = this.getNode(field);
+      String key = node + field;
       String s = this.fc.getString(key);
       return s == null ? null : PlaceholderString.of(s);
    }
 
    public PlaceholderString getPlaceholderString(String field, String def) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
+      String node = this.getNode(field);
+      String key = node + field;
       String s = this.fc.getString(key, def);
       return s == null ? null : PlaceholderString.of(s);
    }
 
    public String getColorString(String field) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
+      String node = this.getNode(field);
+      String key = node + field;
       String s = this.fc.getString(key);
       if (s != null) {
          s = Text.colorizeLegacy(s);
@@ -214,8 +214,8 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
    }
 
    public String getColorString(String field, String def) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
+      String node = this.getNode(field);
+      String key = node + field;
       String s = this.fc.getString(key, def);
       if (s != null) {
          s = Text.colorizeLegacy(s);
@@ -225,11 +225,11 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
    }
 
    public boolean getBoolean(String field) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
-      ConfigurationSection var3 = this.fc;
-      String var10001 = this.getNode(field);
-      return var3.getBoolean(var10001 + field);
+      String node = this.getNode(field);
+      String key = node + field;
+      ConfigurationSection fc = this.fc;
+      String node2 = this.getNode(field);
+      return fc.getBoolean(node2 + field);
    }
 
    public boolean getBoolean(String field, boolean def) {
@@ -237,29 +237,29 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
    }
 
    public PlaceholderBoolean getPlaceholderBoolean(String field) {
-      ConfigurationSection var10000 = this.fc;
-      String var10001 = this.getNode(field);
-      if (var10000.isSet(var10001 + field)) {
-         var10000 = this.fc;
-         var10001 = this.getNode(field);
-         return PlaceholderBooleanImpl.of(var10000.getString(var10001 + field));
+      ConfigurationSection fc = this.fc;
+      String node = this.getNode(field);
+      if (fc.isSet(node + field)) {
+         fc = this.fc;
+         node = this.getNode(field);
+         return PlaceholderBooleanImpl.of(fc.getString(node + field));
       } else {
          return null;
       }
    }
 
    public PlaceholderBoolean getPlaceholderBoolean(String[] strings) {
-      String[] var2 = strings;
-      int var3 = strings.length;
+      String[] texts = strings;
+      int length = strings.length;
 
-      for (int var4 = 0; var4 < var3; var4++) {
-         String key = var2[var4];
-         ConfigurationSection var10000 = this.fc;
-         String var10001 = this.getNode(key);
-         if (var10000.isSet(var10001 + key)) {
-            var10000 = this.fc;
-            var10001 = this.getNode(key);
-            return PlaceholderBooleanImpl.of(var10000.getString(var10001 + key));
+      for (int i = 0; i < length; i++) {
+         String key = texts[i];
+         ConfigurationSection fc = this.fc;
+         String node = this.getNode(key);
+         if (fc.isSet(node + key)) {
+            fc = this.fc;
+            node = this.getNode(key);
+            return PlaceholderBooleanImpl.of(fc.getString(node + key));
          }
       }
 
@@ -267,29 +267,29 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
    }
 
    public PlaceholderBoolean getPlaceholderBoolean(String field, Boolean def) {
-      ConfigurationSection var10000 = this.fc;
-      String var10001 = this.getNode(field);
-      if (var10000.isSet(var10001 + field)) {
-         var10000 = this.fc;
-         var10001 = this.getNode(field);
-         return PlaceholderBooleanImpl.of(var10000.getString(var10001 + field));
+      ConfigurationSection fc = this.fc;
+      String node = this.getNode(field);
+      if (fc.isSet(node + field)) {
+         fc = this.fc;
+         node = this.getNode(field);
+         return PlaceholderBooleanImpl.of(fc.getString(node + field));
       } else {
          return def == null ? null : PlaceholderBoolean.of(def.toString());
       }
    }
 
    public PlaceholderBoolean getPlaceholderBoolean(String[] field, Boolean def) {
-      String[] var3 = field;
-      int var4 = field.length;
+      String[] texts = field;
+      int length = field.length;
 
-      for (int var5 = 0; var5 < var4; var5++) {
-         String key = var3[var5];
-         ConfigurationSection var10000 = this.fc;
-         String var10001 = this.getNode(key);
-         if (var10000.isSet(var10001 + key)) {
-            var10000 = this.fc;
-            var10001 = this.getNode(key);
-            return PlaceholderBooleanImpl.of(var10000.getString(var10001 + key));
+      for (int i = 0; i < length; i++) {
+         String key = texts[i];
+         ConfigurationSection fc = this.fc;
+         String node = this.getNode(key);
+         if (fc.isSet(node + key)) {
+            fc = this.fc;
+            node = this.getNode(key);
+            return PlaceholderBooleanImpl.of(fc.getString(node + key));
          }
       }
 
@@ -297,29 +297,29 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
    }
 
    public Boolean getBooleanNullable(String field) {
-      ConfigurationSection var10000 = this.fc;
-      String var10001 = this.getNode(field);
-      if (var10000.isSet(var10001 + field)) {
-         var10000 = this.fc;
-         var10001 = this.getNode(field);
-         return var10000.getBoolean(var10001 + field);
+      ConfigurationSection fc = this.fc;
+      String node = this.getNode(field);
+      if (fc.isSet(node + field)) {
+         fc = this.fc;
+         node = this.getNode(field);
+         return fc.getBoolean(node + field);
       } else {
          return null;
       }
    }
 
    public Boolean getBooleanNullable(String[] field) {
-      String[] var2 = field;
-      int var3 = field.length;
+      String[] texts = field;
+      int length = field.length;
 
-      for (int var4 = 0; var4 < var3; var4++) {
-         String key = var2[var4];
-         ConfigurationSection var10000 = this.fc;
-         String var10001 = this.getNode(key);
-         if (var10000.isSet(var10001 + key)) {
-            var10000 = this.fc;
-            var10001 = this.getNode(key);
-            return var10000.getBoolean(var10001 + key);
+      for (int i = 0; i < length; i++) {
+         String key = texts[i];
+         ConfigurationSection fc = this.fc;
+         String node = this.getNode(key);
+         if (fc.isSet(node + key)) {
+            fc = this.fc;
+            node = this.getNode(key);
+            return fc.getBoolean(node + key);
          }
       }
 
@@ -327,25 +327,25 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
    }
 
    public int getInteger(String field) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
+      String node = this.getNode(field);
+      String key = node + field;
       return this.fc.getInt(key, this.fc.getInt(key.toLowerCase()));
    }
 
    public int getInteger(String field, int def) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
+      String node = this.getNode(field);
+      String key = node + field;
       return this.fc.getInt(key, this.fc.getInt(key.toLowerCase(), def));
    }
 
    public int getInteger(String[] keys, int def) {
-      String[] var3 = keys;
-      int var4 = keys.length;
+      String[] texts = keys;
+      int length = keys.length;
 
-      for (int var5 = 0; var5 < var4; var5++) {
-         String key = var3[var5];
-         String var10000 = this.getNode(key);
-         key = var10000 + key;
+      for (int i = 0; i < length; i++) {
+         String key = texts[i];
+         String node = this.getNode(key);
+         key = node + key;
          if (this.fc.isInt(key)) {
             return this.fc.getInt(key);
          }
@@ -356,17 +356,17 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
 
    @Deprecated
    public int getInt(String field) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
-      ConfigurationSection var3 = this.fc;
-      String var10001 = this.getNode(field);
-      return var3.getInt(var10001 + field);
+      String node = this.getNode(field);
+      String key = node + field;
+      ConfigurationSection fc = this.fc;
+      String node2 = this.getNode(field);
+      return fc.getInt(node2 + field);
    }
 
    @Deprecated
    public int getInt(String field, int def) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
+      String node = this.getNode(field);
+      String key = node + field;
       return this.fc.getInt(this.getNode(field) + field, def);
    }
 
@@ -379,47 +379,47 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
    }
 
    public double getDouble(String field) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
-      ConfigurationSection var3 = this.fc;
-      String var10001 = this.getNode(field);
-      return var3.getDouble(var10001 + field);
+      String node = this.getNode(field);
+      String key = node + field;
+      ConfigurationSection fc = this.fc;
+      String node2 = this.getNode(field);
+      return fc.getDouble(node2 + field);
    }
 
    public double getDouble(String field, double def) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
+      String node = this.getNode(field);
+      String key = node + field;
       return this.fc.getDouble(this.getNode(field) + field, def);
    }
 
    public List<String> getStringList(String field) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
-      ConfigurationSection var3 = this.fc;
-      String var10001 = this.getNode(field);
-      return var3.getStringList(var10001 + field);
+      String node = this.getNode(field);
+      String key = node + field;
+      ConfigurationSection fc = this.fc;
+      String node2 = this.getNode(field);
+      return fc.getStringList(node2 + field);
    }
 
    public List<String> getStringList(String field, List<String> def) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
-      ConfigurationSection var4 = this.fc;
-      String var10001 = this.getNode(field);
-      if (var4.isSet(var10001 + field)) {
-         var4 = this.fc;
-         var10001 = this.getNode(field);
-         return var4.getStringList(var10001 + field);
+      String node = this.getNode(field);
+      String key = node + field;
+      ConfigurationSection fc = this.fc;
+      String node2 = this.getNode(field);
+      if (fc.isSet(node2 + field)) {
+         fc = this.fc;
+         node2 = this.getNode(field);
+         return fc.getStringList(node2 + field);
       } else {
          return def;
       }
    }
 
    public List<String> getColorStringList(String field) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
-      ConfigurationSection var7 = this.fc;
-      String var10001 = this.getNode(field);
-      List<String> list = var7.getStringList(var10001 + field);
+      String node = this.getNode(field);
+      String key = node + field;
+      ConfigurationSection fc = this.fc;
+      String node2 = this.getNode(field);
+      List<String> list = fc.getStringList(node2 + field);
       List<String> parsed = new ArrayList<>();
       if (list != null) {
          for (String str : list) {
@@ -431,11 +431,11 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
    }
 
    public List<PlaceholderString> getPlaceholderStringList(String field) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
-      ConfigurationSection var7 = this.fc;
-      String var10001 = this.getNode(field);
-      List<String> list = var7.getStringList(var10001 + field);
+      String node = this.getNode(field);
+      String key = node + field;
+      ConfigurationSection fc = this.fc;
+      String node2 = this.getNode(field);
+      List<String> list = fc.getStringList(node2 + field);
       List<PlaceholderString> parsed = new ArrayList<>();
       if (list != null) {
          for (String str : list) {
@@ -447,8 +447,8 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
    }
 
    public List<PlaceholderString> getPlaceholderStringList(String field, List<String> def) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
+      String node = this.getNode(field);
+      String key = node + field;
       List<String> list = this.getStringList(field, def);
       List<PlaceholderString> parsed = new ArrayList<>();
       if (list != null) {
@@ -461,8 +461,8 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
    }
 
    public List<PlaceholderString> getPlaceholderStringListAlt(String field, List<PlaceholderString> def) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
+      String node = this.getNode(field);
+      String key = node + field;
       List<String> list = this.getStringList(field);
       if (list != null && !list.isEmpty()) {
          List<PlaceholderString> parsed = new ArrayList<>();
@@ -479,16 +479,16 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
    }
 
    public List<Map<?, ?>> getMapList(String field) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
-      ConfigurationSection var3 = this.fc;
-      String var10001 = this.getNode(field);
-      return var3.getMapList(var10001 + field);
+      String node = this.getNode(field);
+      String key = node + field;
+      ConfigurationSection fc = this.fc;
+      String node2 = this.getNode(field);
+      return fc.getMapList(node2 + field);
    }
 
    public List<?> getList(String field) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
+      String node = this.getNode(field);
+      String key = node + field;
       if (this.fc.isSet(key)) {
          return this.fc.getList(key);
       } else {
@@ -497,8 +497,8 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
    }
 
    public List<Byte> getByteList(String field) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
+      String node = this.getNode(field);
+      String key = node + field;
       if (this.fc.isSet(key)) {
          return this.fc.getByteList(key);
       } else {
@@ -507,8 +507,8 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
    }
 
    public ItemStack getItemStack(String field, String def) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
+      String node = this.getNode(field);
+      String key = node + field;
       if (this.fc.isSet(key)) {
          return this.fc.getItemStack(key);
       }
@@ -519,14 +519,14 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
 
       try {
          return new ItemStack(Material.valueOf(def));
-      } catch (Exception var5) {
+      } catch (Exception exception) {
          return null;
       }
    }
 
    public boolean isConfigurationSection(String field) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
+      String node = this.getNode(field);
+      String key = node + field;
       return this.fc.isConfigurationSection(key);
    }
 
@@ -535,14 +535,14 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
    }
 
    public Set<String> getKeys(String field) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
+      String node = this.getNode(field);
+      String key = node + field;
       return this.fc.getConfigurationSection(key).getKeys(false);
    }
 
    public boolean isList(String field) {
-      String var10000 = this.getNode(field);
-      String key = var10000 + field;
+      String node = this.getNode(field);
+      String key = node + field;
       return this.fc.isList(key);
    }
 
@@ -585,7 +585,7 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
 
          Enum value = Enum.valueOf(clazz, in.toUpperCase());
          return (T)(value == null ? def : value);
-      } catch (Error | Exception var6) {
+      } catch (Error | Exception exception) {
          return def;
       }
    }

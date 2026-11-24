@@ -36,7 +36,7 @@ public abstract class JSONSynchronizedDataHandler<H extends SynchronizedDataHold
       return true;
    }
 
-   public abstract void loadFromObject(@NotNull H var1, @NotNull JsonObject var2);
+   public abstract void loadFromObject(@NotNull H value, @NotNull JsonObject jsonObject);
 
    private JsonFile getUserFile(H playerData) {
       return new JsonFile(this.owning, "/userdata", playerData.getEffectiveId().toString());

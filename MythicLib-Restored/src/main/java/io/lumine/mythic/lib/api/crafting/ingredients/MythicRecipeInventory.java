@@ -135,7 +135,7 @@ public class MythicRecipeInventory implements Cloneable {
    public MythicRecipeInventory clone() {
       try {
          super.clone();
-      } catch (CloneNotSupportedException var7) {
+      } catch (CloneNotSupportedException exception) {
       }
 
       MythicRecipeInventory ret = new MythicRecipeInventory();

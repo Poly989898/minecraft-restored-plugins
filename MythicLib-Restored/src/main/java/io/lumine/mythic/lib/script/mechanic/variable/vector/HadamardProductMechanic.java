@@ -26,9 +26,9 @@ public class HadamardProductMechanic extends VariableMechanic {
       Variable var1x = meta.getVariable(this.varName1);
       Validate.isTrue(var1x instanceof PositionVariable, "Variable '" + this.varName1 + "' is not a vector");
       Position pos1 = (Position)var1x.getStored();
-      Variable var2 = meta.getVariable(this.varName2);
-      Validate.isTrue(var2 instanceof PositionVariable, "Variable '" + this.varName2 + "' is not a vector");
-      Position pos2 = (Position)var2.getStored();
+      Variable variable = meta.getVariable(this.varName2);
+      Validate.isTrue(variable instanceof PositionVariable, "Variable '" + this.varName2 + "' is not a vector");
+      Position pos2 = (Position)variable.getStored();
       this.getTargetVariableList(meta).registerVariable(new PositionVariable(this.getVariableName(), this.hadamardProduct(pos1, pos2)));
    }
 

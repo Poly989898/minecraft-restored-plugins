@@ -25,5 +25,5 @@ public abstract class LocationMechanic extends Mechanic {
       }
    }
 
-   public abstract void cast(SkillMetadata var1, Location var2);
+   public abstract void cast(SkillMetadata skillMetadata, Location location);
 }

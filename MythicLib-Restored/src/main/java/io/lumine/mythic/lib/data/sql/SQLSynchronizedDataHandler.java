@@ -22,12 +22,12 @@ public abstract class SQLSynchronizedDataHandler<H extends SynchronizedDataHolde
    }
 
    @Override
-   public abstract void saveData(@NotNull H var1, boolean var2);
+   public abstract void saveData(@NotNull H value, boolean flag);
 
    @Override
    public void close() {
       this.getDataSource().close();
    }
 
-   public abstract SQLDataSynchronizer newDataSynchronizer(@NotNull H var1);
+   public abstract SQLDataSynchronizer newDataSynchronizer(@NotNull H value);
 }

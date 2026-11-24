@@ -18,5 +18,5 @@ public abstract class LocationCondition extends Condition {
       return this.isMet(meta, meta.getSkillLocation(this.source));
    }
 
-   public abstract boolean isMet(SkillMetadata var1, Location var2);
+   public abstract boolean isMet(SkillMetadata skillMetadata, Location location);
 }

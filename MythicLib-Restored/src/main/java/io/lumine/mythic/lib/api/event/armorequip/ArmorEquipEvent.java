@@ -32,7 +32,7 @@ public final class ArmorEquipEvent extends PlayerEvent implements Cancellable {
       try {
          InputStream inputStream = plugin.getResource("armorequipevent-blocked.txt");
 
-         List var3;
+         List list;
          label77: {
             try {
                assert inputStream != null;
@@ -41,31 +41,31 @@ public final class ArmorEquipEvent extends PlayerEvent implements Cancellable {
                   BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
                   try {
-                     var3 = reader.lines().collect(Collectors.toList());
-                  } catch (Throwable var7) {
+                     list = reader.lines().collect(Collectors.toList());
+                  } catch (Throwable exception) {
                      try {
                         reader.close();
-                     } catch (Throwable var6) {
-                        var7.addSuppressed(var6);
+                     } catch (Throwable exception2) {
+                        exception.addSuppressed(exception2);
                      }
 
-                     throw var7;
+                     throw exception;
                   }
 
                   reader.close();
                   break label77;
-               } catch (Exception var8) {
+               } catch (Exception exception) {
                }
-            } catch (Throwable var9) {
+            } catch (Throwable exception) {
                if (inputStream != null) {
                   try {
                      inputStream.close();
-                  } catch (Throwable var5) {
-                     var9.addSuppressed(var5);
+                  } catch (Throwable exception2) {
+                     exception.addSuppressed(exception2);
                   }
                }
 
-               throw var9;
+               throw exception;
             }
 
             if (inputStream != null) {
@@ -79,8 +79,8 @@ public final class ArmorEquipEvent extends PlayerEvent implements Cancellable {
             inputStream.close();
          }
 
-         return var3;
-      } catch (IOException var10) {
+         return list;
+      } catch (IOException exception) {
          return new ArrayList<>();
       }
    }

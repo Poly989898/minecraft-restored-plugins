@@ -48,9 +48,9 @@ public abstract class PlayerModifier {
       return this.source;
    }
 
-   public abstract void register(@NotNull MMOPlayerData var1);
+   public abstract void register(@NotNull MMOPlayerData mmoPlayerData);
 
-   public abstract void unregister(@NotNull MMOPlayerData var1);
+   public abstract void unregister(@NotNull MMOPlayerData mmoPlayerData);
 
    @Override
    public boolean equals(Object o) {

@@ -27,9 +27,9 @@ public class DotProductMechanic extends VariableMechanic {
       Variable var1x = meta.getVariable(this.varName1);
       Validate.isTrue(var1x instanceof PositionVariable, "Variable '" + this.varName1 + "' is not a vector");
       Position vec1 = (Position)var1x.getStored();
-      Variable var2 = meta.getVariable(this.varName2);
-      Validate.isTrue(var2 instanceof PositionVariable, "Variable '" + this.varName2 + "' is not a vector");
-      Position vec2 = (Position)var2.getStored();
+      Variable variable = meta.getVariable(this.varName2);
+      Validate.isTrue(variable instanceof PositionVariable, "Variable '" + this.varName2 + "' is not a vector");
+      Position vec2 = (Position)variable.getStored();
       this.getTargetVariableList(meta).registerVariable(new DoubleVariable(this.getVariableName(), vec1.dot(vec2)));
    }
 }

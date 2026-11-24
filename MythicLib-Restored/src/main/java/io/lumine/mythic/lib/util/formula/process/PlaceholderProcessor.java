@@ -6,5 +6,5 @@ import org.jetbrains.annotations.NotNull;
 @FunctionalInterface
 public interface PlaceholderProcessor {
    @NotNull
-   void processPlaceholder(@NotNull String var1);
+   void processPlaceholder(@NotNull String text);
 }

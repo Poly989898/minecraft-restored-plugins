@@ -25,5 +25,5 @@ public abstract class TargetMechanic extends Mechanic {
       }
    }
 
-   public abstract void cast(SkillMetadata var1, Entity var2);
+   public abstract void cast(SkillMetadata skillMetadata, Entity entity);
 }

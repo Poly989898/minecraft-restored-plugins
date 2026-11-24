@@ -106,10 +106,10 @@ public abstract class LightInjector {
    }
 
    @Nullable
-   protected abstract Object onPacketReceiveAsync(@Nullable Player var1, @NotNull Channel var2, @NotNull Object var3);
+   protected abstract Object onPacketReceiveAsync(@Nullable Player player, @NotNull Channel channel, @NotNull Object obj);
 
    @Nullable
-   protected abstract Object onPacketSendAsync(@Nullable Player var1, @NotNull Channel var2, @NotNull Object var3);
+   protected abstract Object onPacketSendAsync(@Nullable Player player, @NotNull Channel channel, @NotNull Object obj);
 
    public final void sendPacket(@NotNull Player receiver, @NotNull Object packet) {
       Objects.requireNonNull(receiver, "Player is null.");
@@ -308,15 +308,15 @@ public abstract class LightInjector {
          if (pending.getType() == Queue.class || pending.getType() == List.class) {
             return pending;
          }
-      } catch (Exception var4) {
+      } catch (Exception exception) {
       }
 
       try {
          return getField(serverConnectionClass, Queue.class, 1);
-      } catch (Exception var3) {
+      } catch (Exception exception) {
          try {
             return getField(serverConnectionClass, List.class, 3);
-         } catch (Exception var2) {
+         } catch (Exception exception2) {
             return null;
          }
       }

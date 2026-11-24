@@ -329,15 +329,15 @@ public class ShapedRecipe extends MythicRecipe implements VanillaBookableRecipe 
 
          String row = rowString.toString();
          boolean notBlanc = false;
-         char[] var14 = row.toCharArray();
-         int var15 = var14.length;
-         int var16 = 0;
+         char[] chars2 = row.toCharArray();
+         int length = chars2.length;
+         int index = 0;
 
          while (true) {
-            if (var16 < var15) {
-               char c = var14[var16];
+            if (index < length) {
+               char c = chars2[index];
                if (c == ' ') {
-                  var16++;
+                  index++;
                   continue;
                }
 
@@ -394,7 +394,7 @@ public class ShapedRecipe extends MythicRecipe implements VanillaBookableRecipe 
                if (ingredient != null) {
                   try {
                      ret.setIngredient(chars[w], ingredient.toBukkit());
-                  } catch (IllegalArgumentException var18) {
+                  } catch (IllegalArgumentException exception) {
                   }
                }
             }

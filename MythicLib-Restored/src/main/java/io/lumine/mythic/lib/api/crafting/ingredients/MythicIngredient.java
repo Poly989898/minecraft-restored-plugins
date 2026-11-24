@@ -257,7 +257,7 @@ public class MythicIngredient implements Cloneable {
    public MythicIngredient clone() {
       try {
          super.clone();
-      } catch (CloneNotSupportedException var2) {
+      } catch (CloneNotSupportedException exception) {
       }
 
       return new MythicIngredient(this.getName(), this.getSubstitutes());

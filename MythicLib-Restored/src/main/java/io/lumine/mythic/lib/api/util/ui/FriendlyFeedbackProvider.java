@@ -101,7 +101,7 @@ public class FriendlyFeedbackProvider {
    }
 
    public void sendAllTo(@NotNull ConsoleCommandSender console) {
-      this.sendAllTo(console);
+      this.sendAllTo((CommandSender) console);
    }
 
    public void sendTo(@NotNull FriendlyFeedbackCategory category, @NotNull ConsoleCommandSender console) {

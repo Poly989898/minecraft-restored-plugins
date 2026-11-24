@@ -14,7 +14,7 @@ public interface PlayerStatProvider extends StatProvider {
    }
 
    @NotNull
-   PlayerMetadata cache(@NotNull EquipmentSlot var1);
+   PlayerMetadata cache(@NotNull EquipmentSlot equipmentSlot);
 
    @NotNull
    MMOPlayerData getData();

@@ -40,5 +40,5 @@ public abstract class DirectionMechanic extends Mechanic {
       }
    }
 
-   public abstract void cast(SkillMetadata var1, Location var2, Vector var3);
+   public abstract void cast(SkillMetadata skillMetadata, Location location, Vector vector);
 }

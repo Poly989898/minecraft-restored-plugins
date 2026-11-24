@@ -7,7 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public interface ItemType {
-   boolean matches(ItemStack var1);
+   boolean matches(ItemStack item);
 
    String display();
 
@@ -15,7 +15,7 @@ public interface ItemType {
    int hashCode();
 
    @Override
-   boolean equals(Object var1);
+   boolean equals(Object obj);
 
    static ItemType fromString(String input) {
       if (!input.contains(".") && !input.contains("%") && !input.contains("?")) {

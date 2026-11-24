@@ -90,7 +90,7 @@ public class ShapelessItem implements Cloneable {
    public ShapelessItem clone() {
       try {
          super.clone();
-      } catch (CloneNotSupportedException var2) {
+      } catch (CloneNotSupportedException exception) {
       }
 
       ShapelessItem ret = new ShapelessItem(

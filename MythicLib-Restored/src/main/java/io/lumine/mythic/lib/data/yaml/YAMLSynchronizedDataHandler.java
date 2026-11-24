@@ -28,7 +28,7 @@ public abstract class YAMLSynchronizedDataHandler<H extends SynchronizedDataHold
       configFile.save();
    }
 
-   public abstract void saveInSection(@NotNull H var1, @NotNull ConfigurationSection var2);
+   public abstract void saveInSection(@NotNull H value, @NotNull ConfigurationSection section);
 
    @Override
    public boolean loadData(@NotNull H playerData) {
@@ -36,7 +36,7 @@ public abstract class YAMLSynchronizedDataHandler<H extends SynchronizedDataHold
       return true;
    }
 
-   public abstract void loadFromSection(@NotNull H var1, @NotNull ConfigurationSection var2);
+   public abstract void loadFromSection(@NotNull H value, @NotNull ConfigurationSection section);
 
    private ConfigFile getUserFile(@NotNull H playerData) {
       return new ConfigFile(this.owning, "/userdata", playerData.getEffectiveId().toString());
