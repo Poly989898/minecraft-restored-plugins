@@ -115,21 +115,21 @@ public class CraftingStationView extends PluginInventory {
                if (inventory.getViewers().isEmpty()) {
                   this.cancel();
                } else {
-                  for (int var1x = CraftingStationView.this.queueOffset;
-                     var1x < CraftingStationView.this.queueOffset + CraftingStationView.this.layout.getQueueSlots().size();
-                     var1x++
+                  for (int queueIndex = CraftingStationView.this.queueOffset;
+                     queueIndex < CraftingStationView.this.queueOffset + CraftingStationView.this.layout.getQueueSlots().size();
+                     queueIndex++
                   ) {
-                     if (var1x >= queue.getCrafts().size()) {
+                     if (queueIndex >= queue.getCrafts().size()) {
                         inventory.setItem(
-                           CraftingStationView.this.layout.getQueueSlots().get(var1x - CraftingStationView.this.queueOffset),
+                           CraftingStationView.this.layout.getQueueSlots().get(queueIndex - CraftingStationView.this.queueOffset),
                            CraftingStationView.this.station.getItemOptions().hasNoQueueItem()
                               ? CraftingStationView.this.station.getItemOptions().getNoQueueItem()
                               : null
                         );
                      } else {
                         inventory.setItem(
-                           CraftingStationView.this.layout.getQueueSlots().get(var1x - CraftingStationView.this.queueOffset),
-                           ConfigItems.QUEUE_ITEM_DISPLAY.newBuilder(queue.getCrafts().get(var1x), var1x + 1).build()
+                           CraftingStationView.this.layout.getQueueSlots().get(queueIndex - CraftingStationView.this.queueOffset),
+                           ConfigItems.QUEUE_ITEM_DISPLAY.newBuilder(queue.getCrafts().get(queueIndex), queueIndex + 1).build()
                         );
                      }
                   }
@@ -190,7 +190,7 @@ public class CraftingStationView extends PluginInventory {
                      }
 
                      this.playerData.getCrafting().getQueue(this.station).remove(craft);
-                     recipe.whenClaimed().forEach(var1x -> var1x.whenCrafting(this.playerData));
+                     recipe.whenClaimed().forEach(trigger -> trigger.whenCrafting(this.playerData));
                      CustomSoundListener.playSound(item, CustomSound.ON_CRAFT, this.player);
                      if (!recipe.hasOption(Recipe.RecipeOption.SILENT_CRAFT)) {
                         this.player.playSound(this.player.getLocation(), this.station.getSound(), 1.0F, 1.0F);
@@ -207,7 +207,7 @@ public class CraftingStationView extends PluginInventory {
                      }
 
                      this.playerData.getCrafting().getQueue(this.station).remove(craft);
-                     recipe.whenCanceled().forEach(var1x -> var1x.whenCrafting(this.playerData));
+                     recipe.whenCanceled().forEach(trigger -> trigger.whenCrafting(this.playerData));
                      if (!recipe.hasOption(Recipe.RecipeOption.SILENT_CRAFT)) {
                         this.player.playSound(this.player.getLocation(), this.station.getSound(), 1.0F, 1.0F);
                      }
@@ -220,7 +220,7 @@ public class CraftingStationView extends PluginInventory {
                         .stream()
                         .filter(condition -> condition instanceof MoneyCondition)
                         .map(condition -> (MoneyCondition)condition)
-                        .forEach(var1x -> MMOItems.plugin.getVault().getEconomy().depositPlayer(this.player, var1x.getAmount()));
+                        .forEach(moneyCondition -> MMOItems.plugin.getVault().getEconomy().depositPlayer(this.player, moneyCondition.getAmount()));
                   }
 
                   this.updateData();
@@ -243,8 +243,8 @@ public class CraftingStationView extends PluginInventory {
       } else {
          if (checkedRecipe.getRecipe().whenUsed(this.playerData, this.ingredients, checkedRecipe, this.station)) {
             checkedRecipe.getIngredients().forEach(checkedIngredient -> checkedIngredient.takeAway());
-            checkedRecipe.getConditions().forEach(var1x -> var1x.getCondition().whenCrafting(this.playerData));
-            checkedRecipe.getRecipe().whenUsed().forEach(var1x -> var1x.whenCrafting(this.playerData));
+            checkedRecipe.getConditions().forEach(checkedCondition -> checkedCondition.getCondition().whenCrafting(this.playerData));
+            checkedRecipe.getRecipe().whenUsed().forEach(trigger -> trigger.whenCrafting(this.playerData));
             this.updateData();
          }
       }

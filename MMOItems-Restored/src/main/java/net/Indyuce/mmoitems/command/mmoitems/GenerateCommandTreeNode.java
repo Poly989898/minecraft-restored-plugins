@@ -36,7 +36,7 @@ public class GenerateCommandTreeNode extends CommandTreeNode {
       this.addParameter(
          new Parameter(
             "(extra-args)",
-            (commandTreeExplorer, var1x) -> var1x.addAll(Arrays.asList("-matchlevel", "-matchclass", "-level:", "-class:", "-type:", "-id:", "-tier:", "-tierset:", "-gimme"))
+            (commandTreeExplorer, texts) -> texts.addAll(Arrays.asList("-matchlevel", "-matchclass", "-level:", "-class:", "-type:", "-id:", "-tier:", "-tierset:", "-gimme"))
          )
       );
    }

@@ -134,8 +134,8 @@ public class PermanentEffects extends ItemStat<RandomPotionEffectListData, Potio
       String generalStatFormat = this.getGeneralStatFormat();
       potionEffectListData.getEffects()
          .forEach(
-            var2x -> list.add(
-               generalStatFormat.replace("{effect}", MMOItems.plugin.getLanguage().getPotionEffectName(var2x.getType()) + " " + MMOUtils.intToRoman(var2x.getLevel()))
+            effect -> list.add(
+               generalStatFormat.replace("{effect}", MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType()) + " " + MMOUtils.intToRoman(effect.getLevel()))
             )
          );
       itemStackBuilder.getLore().insert("perm-effects", list);
@@ -182,7 +182,7 @@ public class PermanentEffects extends ItemStat<RandomPotionEffectListData, Potio
             JsonElement jsonElement = new JsonParser().parse((String)tagAtPath.getValue());
             jsonElement.getAsJsonObject()
                .entrySet()
-               .forEach(var1x -> potionEffectListData.add(new PotionEffectData(PotionEffectType.getByName((String)var1x.getKey()), ((JsonElement)var1x.getValue()).getAsInt())));
+               .forEach(entry -> potionEffectListData.add(new PotionEffectData(PotionEffectType.getByName((String)entry.getKey()), ((JsonElement)entry.getValue()).getAsInt())));
             return potionEffectListData;
          } catch (JsonSyntaxException | IllegalStateException exception) {
          }

@@ -67,7 +67,7 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
    public void refreshStats(PlayerData playerData) {
       this.statExtra
          .forEach(
-            (var1x, itemStat) -> AureliumAPI.addStatModifier(playerData.getPlayer(), "mmoitems_" + var1x.name(), var1x, playerData.getStats().getStat((ItemStat<?, ?>)itemStat))
+            (stat, itemStat) -> AureliumAPI.addStatModifier(playerData.getPlayer(), "mmoitems_" + stat.name(), stat, playerData.getStats().getStat((ItemStat<?, ?>)itemStat))
          );
    }
 

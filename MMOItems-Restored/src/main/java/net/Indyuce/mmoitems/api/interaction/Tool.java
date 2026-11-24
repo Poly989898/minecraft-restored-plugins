@@ -81,9 +81,9 @@ public class Tool extends Weapon {
 
                this.curr = this.findBestBlock();
                if (this.curr.getType() != Material.AIR && !MMOItems.plugin.getLanguage().isBlacklisted(this.curr.getType())) {
-                  BouncingCrackBlockBreakEvent var1x = new BouncingCrackBlockBreakEvent(this.curr, Tool.this.player);
-                  Bukkit.getPluginManager().callEvent(var1x);
-                  if (var1x.isCancelled()) {
+                  BouncingCrackBlockBreakEvent breakEvent = new BouncingCrackBlockBreakEvent(this.curr, Tool.this.player);
+                  Bukkit.getPluginManager().callEvent(breakEvent);
+                  if (breakEvent.isCancelled()) {
                      this.cancel();
                   } else {
                      this.curr.breakNaturally(Tool.this.getItem());
@@ -94,24 +94,24 @@ public class Tool extends Weapon {
 
             @NotNull
             private Block findBestBlock() {
-               Block var1x = null;
-               double var2x = Double.MAX_VALUE;
+               Block best = null;
+               double bestCost = Double.MAX_VALUE;
 
                for (BlockFace blockFace : Tool.NEIGHBORS) {
                   Block relative = this.curr.getRelative(blockFace);
                   double cost = this.findCost(blockFace, relative);
-                  if (cost < var2x) {
-                     var2x = cost;
-                     var1x = relative;
+                  if (cost < bestCost) {
+                     bestCost = cost;
+                     best = relative;
                   }
                }
 
-               return var1x;
+               return best;
             }
 
-            private double findCost(BlockFace var1x, Block var2x) {
-               Vector3D vector3D = Tool.this.toJava(var2x.getLocation().add(0.5, 0.5, 0.5).toVector());
-               return this.line.distance(vector3D) - this.products[var1x.ordinal()];
+            private double findCost(BlockFace face, Block neighbor) {
+               Vector3D vector3D = Tool.this.toJava(neighbor.getLocation().add(0.5, 0.5, 0.5).toVector());
+               return this.line.distance(vector3D) - this.products[face.ordinal()];
             }
          }).runTaskTimer(MMOItems.plugin, 0L, 1L);
       }

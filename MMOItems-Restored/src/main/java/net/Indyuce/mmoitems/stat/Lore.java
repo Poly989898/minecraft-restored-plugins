@@ -67,9 +67,9 @@ public class Lore extends StringListStat implements GemStoneStat {
 
    @Override
    public void whenDisplayed(List<String> texts, Optional<StringListData> optional) {
-      optional.ifPresentOrElse(var1x -> {
+      optional.ifPresentOrElse(stringListData -> {
          texts.add(ChatColor.GRAY + "Current Value:");
-         texts.addAll(MythicLib.plugin.parseColors(var1x.getList().stream().map(var0x -> ChatColor.GRAY + var0x).toList()));
+         texts.addAll(MythicLib.plugin.parseColors(stringListData.getList().stream().map(text -> ChatColor.GRAY + text).toList()));
       }, () -> texts.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None"));
       texts.add("");
       texts.add(ChatColor.YELLOW + "►" + " Click to add a line.");

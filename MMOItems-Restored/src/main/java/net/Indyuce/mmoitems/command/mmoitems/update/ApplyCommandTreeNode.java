@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 public class ApplyCommandTreeNode extends CommandTreeNode {
    public ApplyCommandTreeNode(CommandTreeNode commandTreeNode) {
       super(commandTreeNode, "apply");
-      this.addParameter(new Parameter("<id>", (commandTreeExplorer, var1x) -> MMOItems.plugin.getUpdates().getAll().forEach(var1xx -> var1x.add("" + var1xx.getId()))));
+      this.addParameter(new Parameter("<id>", (commandTreeExplorer, texts) -> MMOItems.plugin.getUpdates().getAll().forEach(updateId -> texts.add("" + updateId.getId()))));
    }
 
    public CommandResult execute(CommandSender sender, String[] texts) {

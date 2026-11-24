@@ -76,11 +76,11 @@ public class Type implements CooldownObject, PreloadedObject {
    private boolean meleeAttacks;
    private boolean hideInGame;
    private final List<ItemStat> available = new ArrayList<>();
-   private final PostLoadAction postLoadAction = new PostLoadAction(true, var1x -> {
-      this.onLeftClick = var1x.contains("on-left-click") ? MythicLib.plugin.getSkills().loadSkillHandler(var1x.get("on-left-click")) : null;
-      this.onRightClick = var1x.contains("on-right-click") ? MythicLib.plugin.getSkills().loadSkillHandler(var1x.get("on-right-click")) : null;
-      this.onAttack = var1x.contains("on-attack") ? MythicLib.plugin.getSkills().loadSkillHandler(var1x.get("on-attack")) : null;
-      this.onEntityInteract = var1x.contains("on-entity-interact") ? MythicLib.plugin.getSkills().loadSkillHandler(var1x.get("on-entity-interact")) : null;
+   private final PostLoadAction postLoadAction = new PostLoadAction(true, config -> {
+      this.onLeftClick = config.contains("on-left-click") ? MythicLib.plugin.getSkills().loadSkillHandler(config.get("on-left-click")) : null;
+      this.onRightClick = config.contains("on-right-click") ? MythicLib.plugin.getSkills().loadSkillHandler(config.get("on-right-click")) : null;
+      this.onAttack = config.contains("on-attack") ? MythicLib.plugin.getSkills().loadSkillHandler(config.get("on-attack")) : null;
+      this.onEntityInteract = config.contains("on-entity-interact") ? MythicLib.plugin.getSkills().loadSkillHandler(config.get("on-entity-interact")) : null;
    });
 
    public Type(@NotNull String text, @NotNull ModifierSource modifierSource) {

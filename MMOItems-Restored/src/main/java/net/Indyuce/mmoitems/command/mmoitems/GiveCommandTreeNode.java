@@ -34,11 +34,11 @@ public class GiveCommandTreeNode extends CommandTreeNode {
       this.addParameter(MMOItemsCommandTreeRoot.TYPE);
       this.addParameter(MMOItemsCommandTreeRoot.ID_2);
       this.addParameter(Parameter.PLAYER_OPTIONAL);
-      this.addParameter(new Parameter("(min-max)", (commandTreeExplorer, var1x) -> var1x.addAll(Arrays.asList("1-3", "1", "10", "32", "64"))));
-      this.addParameter(new Parameter("(unidentify-chance)", (commandTreeExplorer, var1x) -> var1x.add("(unidentify-chance)")));
-      this.addParameter(new Parameter("(drop-chance)", (commandTreeExplorer, var1x) -> var1x.add("(drop-chance)")));
-      this.addParameter(new Parameter("(soulbound-chance)", (commandTreeExplorer, var1x) -> var1x.add("(soulbound-chance)")));
-      this.addParameter(new Parameter("(silent)", (commandTreeExplorer, var1x) -> var1x.addAll(Arrays.asList("silent", "s"))));
+      this.addParameter(new Parameter("(min-max)", (commandTreeExplorer, texts) -> texts.addAll(Arrays.asList("1-3", "1", "10", "32", "64"))));
+      this.addParameter(new Parameter("(unidentify-chance)", (commandTreeExplorer, texts) -> texts.add("(unidentify-chance)")));
+      this.addParameter(new Parameter("(drop-chance)", (commandTreeExplorer, texts) -> texts.add("(drop-chance)")));
+      this.addParameter(new Parameter("(soulbound-chance)", (commandTreeExplorer, texts) -> texts.add("(soulbound-chance)")));
+      this.addParameter(new Parameter("(silent)", (commandTreeExplorer, texts) -> texts.addAll(Arrays.asList("silent", "s"))));
    }
 
    public CommandResult execute(CommandSender sender, String[] texts) {

@@ -28,7 +28,7 @@ public class GemSocketsData implements StatData, Mergeable<GemSocketsData>, Rand
 
    public GemSocketsData(@NotNull JsonArray jsonArray) {
       this.emptySlots = new ArrayList<>();
-      jsonArray.forEach(var1x -> this.emptySlots.add(var1x.getAsString()));
+      jsonArray.forEach(element -> this.emptySlots.add(element.getAsString()));
    }
 
    public boolean canReceive(@NotNull String text) {
@@ -107,7 +107,7 @@ public class GemSocketsData implements StatData, Mergeable<GemSocketsData>, Rand
       this.getEmptySlots().forEach(jsonArray::add);
       jsonObject.add("EmptySlots", jsonArray);
       JsonArray gemstonesJson = new JsonArray();
-      this.gems.forEach(var1x -> gemstonesJson.add(var1x.toJson()));
+      this.gems.forEach(gemstone -> gemstonesJson.add(gemstone.toJson()));
       jsonObject.add("Gemstones", gemstonesJson);
       return jsonObject;
    }

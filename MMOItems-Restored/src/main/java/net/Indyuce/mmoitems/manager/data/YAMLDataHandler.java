@@ -28,9 +28,9 @@ public class YAMLDataHandler extends YAMLSynchronizedDataHandler<PlayerData, Def
 
       if (MMOItems.plugin.hasPermissions() && section.contains("permissions-from-items")) {
          Permission permissions = MMOItems.plugin.getVault().getPermissions();
-         section.getStringList("permissions-from-items").forEach(var2x -> {
-            if (permissions.has(playerData.getPlayer(), var2x)) {
-               permissions.playerRemove(playerData.getPlayer(), var2x);
+         section.getStringList("permissions-from-items").forEach(permission -> {
+            if (permissions.has(playerData.getPlayer(), permission)) {
+               permissions.playerRemove(playerData.getPlayer(), permission);
             }
          });
       }

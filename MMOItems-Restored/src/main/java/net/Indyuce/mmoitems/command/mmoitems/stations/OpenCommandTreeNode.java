@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 public class OpenCommandTreeNode extends CommandTreeNode {
    public OpenCommandTreeNode(CommandTreeNode commandTreeNode) {
       super(commandTreeNode, "open");
-      this.addParameter(new Parameter("<station>", (commandTreeExplorer, var1x) -> MMOItems.plugin.getCrafting().getStations().forEach(var1xx -> var1x.add(var1xx.getId()))));
+      this.addParameter(new Parameter("<station>", (commandTreeExplorer, texts) -> MMOItems.plugin.getCrafting().getStations().forEach(station -> texts.add(station.getId()))));
    }
 
    public CommandResult execute(CommandSender sender, String[] texts) {

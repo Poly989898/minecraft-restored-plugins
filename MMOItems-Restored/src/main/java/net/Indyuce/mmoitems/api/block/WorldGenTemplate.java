@@ -30,9 +30,9 @@ public class WorldGenTemplate {
    public WorldGenTemplate(ConfigurationSection section) {
       Validate.notNull(section, "Could not read gen template config");
       this.id = section.getName().toLowerCase().replace(" ", "-").replace("_", "-");
-      section.getStringList("replace").forEach(var1x -> this.replaceable.add(Material.valueOf(var1x.toUpperCase().replace("-", "_").replace(" ", "_"))));
-      section.getStringList("bordering").forEach(var1x -> this.bordering.add(Material.valueOf(var1x.toUpperCase().replace("-", "_").replace(" ", "_"))));
-      section.getStringList("not-bordering").forEach(var1x -> this.notBordering.add(Material.valueOf(var1x.toUpperCase().replace("-", "_").replace(" ", "_"))));
+      section.getStringList("replace").forEach(materialName -> this.replaceable.add(Material.valueOf(materialName.toUpperCase().replace("-", "_").replace(" ", "_"))));
+      section.getStringList("bordering").forEach(materialName -> this.bordering.add(Material.valueOf(materialName.toUpperCase().replace("-", "_").replace(" ", "_"))));
+      section.getStringList("not-bordering").forEach(materialName -> this.notBordering.add(Material.valueOf(materialName.toUpperCase().replace("-", "_").replace(" ", "_"))));
 
       for (String text : section.getStringList("worlds")) {
          (text.startsWith("!") ? this.worldBlacklist : this.worldWhitelist).add(text.toLowerCase().replace("_", "-"));

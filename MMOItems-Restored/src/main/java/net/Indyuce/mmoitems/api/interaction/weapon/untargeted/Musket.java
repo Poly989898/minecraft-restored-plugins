@@ -48,7 +48,7 @@ public class Musket extends Weapon implements LegacyWeapon {
       location.setPitch((float)(location.getPitch() + (RANDOM.nextDouble() - 0.5) * 2.0 * recoil));
       location.setYaw((float)(location.getYaw() + (RANDOM.nextDouble() - 0.5) * 2.0 * recoil));
       RayTrace rayTrace = new RayTrace(
-         location, location.getDirection(), value, var1x -> UtilityMethods.canTarget(playerMetadata.getPlayer(), var1x, InteractionType.OFFENSE_ACTION)
+         location, location.getDirection(), value, target -> UtilityMethods.canTarget(playerMetadata.getPlayer(), target, InteractionType.OFFENSE_ACTION)
       );
       if (rayTrace.hasHit()) {
          playerMetadata.attack(rayTrace.getHit(), playerMetadata.getStat("ATTACK_DAMAGE"), new DamageType[]{DamageType.WEAPON, DamageType.PHYSICAL, DamageType.PROJECTILE});

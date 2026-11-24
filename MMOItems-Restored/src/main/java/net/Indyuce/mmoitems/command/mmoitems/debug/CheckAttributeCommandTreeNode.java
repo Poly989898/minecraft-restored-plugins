@@ -17,7 +17,7 @@ public class CheckAttributeCommandTreeNode extends CommandTreeNode {
 
    public CheckAttributeCommandTreeNode(CommandTreeNode commandTreeNode) {
       super(commandTreeNode, "checkattribute");
-      this.addParameter(new Parameter("<attribute>", (commandTreeExplorer, var1x) -> Arrays.asList(Attribute.values()).forEach(var1xx -> var1x.add(var1xx.name()))));
+      this.addParameter(new Parameter("<attribute>", (commandTreeExplorer, texts) -> Arrays.asList(Attribute.values()).forEach(attribute -> texts.add(attribute.name()))));
    }
 
    public CommandResult execute(CommandSender sender, String[] texts) {

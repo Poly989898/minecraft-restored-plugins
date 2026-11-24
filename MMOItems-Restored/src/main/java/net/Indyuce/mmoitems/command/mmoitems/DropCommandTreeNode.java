@@ -21,13 +21,13 @@ public class DropCommandTreeNode extends CommandTreeNode {
       super(commandTreeNode, "drop");
       this.addParameter(MMOItemsCommandTreeRoot.TYPE);
       this.addParameter(MMOItemsCommandTreeRoot.ID_2);
-      this.addParameter(new Parameter("<world>", (commandTreeExplorer, var1x) -> Bukkit.getWorlds().forEach(var1xx -> var1x.add(var1xx.getName()))));
-      this.addParameter(new Parameter("<x>", (commandTreeExplorer, var1x) -> var1x.add("<x>")));
-      this.addParameter(new Parameter("<y>", (commandTreeExplorer, var1x) -> var1x.add("<y>")));
-      this.addParameter(new Parameter("<z>", (commandTreeExplorer, var1x) -> var1x.add("<z>")));
-      this.addParameter(new Parameter("<drop-chance>", (commandTreeExplorer, var1x) -> var1x.add("<drop-chance>")));
-      this.addParameter(new Parameter("<min-max>", (commandTreeExplorer, var1x) -> var1x.add("1-3")));
-      this.addParameter(new Parameter("<unidentify-chance>", (commandTreeExplorer, var1x) -> var1x.add("<unidentify-chance>")));
+      this.addParameter(new Parameter("<world>", (commandTreeExplorer, texts) -> Bukkit.getWorlds().forEach(world -> texts.add(world.getName()))));
+      this.addParameter(new Parameter("<x>", (commandTreeExplorer, texts) -> texts.add("<x>")));
+      this.addParameter(new Parameter("<y>", (commandTreeExplorer, texts) -> texts.add("<y>")));
+      this.addParameter(new Parameter("<z>", (commandTreeExplorer, texts) -> texts.add("<z>")));
+      this.addParameter(new Parameter("<drop-chance>", (commandTreeExplorer, texts) -> texts.add("<drop-chance>")));
+      this.addParameter(new Parameter("<min-max>", (commandTreeExplorer, texts) -> texts.add("1-3")));
+      this.addParameter(new Parameter("<unidentify-chance>", (commandTreeExplorer, texts) -> texts.add("<unidentify-chance>")));
    }
 
    public CommandResult execute(CommandSender sender, String[] texts) {

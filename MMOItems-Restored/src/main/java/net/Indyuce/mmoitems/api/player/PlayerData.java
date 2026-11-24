@@ -113,9 +113,9 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
          this.overridingItemParticles = null;
          if (MMOItems.plugin.hasPermissions()) {
             Permission permissions = MMOItems.plugin.getVault().getPermissions();
-            this.permissions.forEach(var2x -> {
-               if (permissions.has(this.getPlayer(), var2x)) {
-                  permissions.playerRemove(this.getPlayer(), var2x);
+            this.permissions.forEach(permission -> {
+               if (permissions.has(this.getPlayer(), permission)) {
+                  permissions.playerRemove(this.getPlayer(), permission);
                }
             });
          }
@@ -144,9 +144,9 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
                }
 
                if (cached.hasData(ItemStats.PERM_EFFECTS)) {
-                  ((PotionEffectListData)cached.getData(ItemStats.PERM_EFFECTS)).getEffects().forEach(var1x -> {
-                     if (this.getPermanentPotionEffectAmplifier(var1x.getType()) < var1x.getLevel() - 1) {
-                        this.permanentEffects.put(var1x.getType(), var1x.toEffect());
+                  ((PotionEffectListData)cached.getData(ItemStats.PERM_EFFECTS)).getEffects().forEach(effect -> {
+                     if (this.getPermanentPotionEffectAmplifier(effect.getType()) < effect.getLevel() - 1) {
+                        this.permanentEffects.put(effect.getType(), effect.toEffect());
                      }
                   });
                }
@@ -165,9 +165,9 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
                if (MMOItems.plugin.hasPermissions() && cached.hasData(ItemStats.GRANTED_PERMISSIONS)) {
                   Permission permissions = MMOItems.plugin.getVault().getPermissions();
                   this.permissions.addAll(((StringListData)cached.getData(ItemStats.GRANTED_PERMISSIONS)).getList());
-                  this.permissions.forEach(var2x -> {
-                     if (!permissions.has(this.getPlayer(), var2x)) {
-                        permissions.playerAdd(this.getPlayer(), var2x);
+                  this.permissions.forEach(permission -> {
+                     if (!permissions.has(this.getPlayer(), permission)) {
+                        permissions.playerAdd(this.getPlayer(), permission);
                      }
                   });
                }
@@ -222,7 +222,7 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
          }
 
          this.stats.updateStats();
-         MMOItems.plugin.getRPGs().forEach(var1x -> var1x.refreshStats(this));
+         MMOItems.plugin.getRPGs().forEach(rpg -> rpg.refreshStats(this));
          this.inventory.helmet = this.getPlayer().getInventory().getHelmet();
          this.inventory.chestplate = this.getPlayer().getInventory().getChestplate();
          this.inventory.leggings = this.getPlayer().getInventory().getLeggings();

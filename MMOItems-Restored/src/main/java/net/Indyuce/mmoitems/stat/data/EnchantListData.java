@@ -77,12 +77,12 @@ public class EnchantListData implements StatData, Mergeable<EnchantListData> {
    public String toString() {
       StringBuilder builder = new StringBuilder("EnchantList{");
       AtomicBoolean atomicBoolean = new AtomicBoolean();
-      this.enchants.forEach((var2x, value) -> {
+      this.enchants.forEach((enchant, value) -> {
          if (atomicBoolean.get()) {
             builder.append(",");
          }
 
-         builder.append(var2x).append("=").append(value);
+         builder.append(enchant).append("=").append(value);
          atomicBoolean.set(true);
       });
       builder.append("}");

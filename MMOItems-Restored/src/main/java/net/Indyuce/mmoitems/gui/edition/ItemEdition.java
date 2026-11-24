@@ -41,7 +41,7 @@ public class ItemEdition extends EditionInventory {
       int slotIndex = 0;
       List list = new ArrayList<>(this.getEdited().getType().getAvailableStats())
          .stream()
-         .filter(var1x -> var1x.hasValidMaterial(this.getCachedItem()) && !(var1x instanceof InternalStat))
+         .filter(stat -> stat.hasValidMaterial(this.getCachedItem()) && !(stat instanceof InternalStat))
          .collect(Collectors.toList());
 
       for (int i = count; i < Math.min(list.size(), firstIndex); i++) {

@@ -13,13 +13,13 @@ public class RFGKeepRNG implements Listener {
    @EventHandler
    public void onReforge(MMOItemReforgeEvent event) {
       if (!event.getOptions().shouldReRoll()) {
-         event.getOldMMOItem().getStats().forEach(var1x -> {
-            RandomStatData randomStatData = event.getReforger().getTemplate().getBaseItemData().get(var1x);
+         event.getOldMMOItem().getStats().forEach(stat -> {
+            RandomStatData randomStatData = event.getReforger().getTemplate().getBaseItemData().get(stat);
             if (randomStatData != null && randomStatData instanceof UpdatableRandomStatData) {
-               StatHistory statHistory = event.getOldMMOItem().computeStatHistory((ItemStat<?, ?>)var1x);
-               StatData statData = ((UpdatableRandomStatData)randomStatData).reroll(var1x, statHistory.getOriginalData(), event.getReforger().getGenerationItemLevel());
+               StatHistory statHistory = event.getOldMMOItem().computeStatHistory((ItemStat<?, ?>)stat);
+               StatData statData = ((UpdatableRandomStatData)randomStatData).reroll(stat, statHistory.getOriginalData(), event.getReforger().getGenerationItemLevel());
                if (statData != null) {
-                  StatHistory newHistory = event.getNewMMOItem().computeStatHistory((ItemStat<?, ?>)var1x);
+                  StatHistory newHistory = event.getNewMMOItem().computeStatHistory((ItemStat<?, ?>)stat);
                   newHistory.setOriginalData(statData);
                }
             }

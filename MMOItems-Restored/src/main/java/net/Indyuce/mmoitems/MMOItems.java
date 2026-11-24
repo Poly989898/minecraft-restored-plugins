@@ -165,7 +165,7 @@ public class MMOItems extends MMOPlugin {
          this.getLogger().warning("(Your config version: '" + configVersion + "' | Expected config version: '" + expectedVersion + "')");
       }
 
-      PluginUtils.hookDependencyIfPresent("MythicMobs", var1x -> {
+      PluginUtils.hookDependencyIfPresent("MythicMobs", plugin -> {
          new MythicMobsCompatibility();
          if (this.getConfig().getBoolean("lootsplosion.enabled")) {
             Bukkit.getPluginManager().registerEvents(new LootsplosionListener(), this);
@@ -183,7 +183,7 @@ public class MMOItems extends MMOPlugin {
       this.worldGenManager = new WorldGenManager();
       this.blockManager = new BlockManager();
       this.statManager.reload(false);
-      PluginUtils.hookDependencyIfPresent("Vault", var1x -> this.vaultSupport = new VaultSupport());
+      PluginUtils.hookDependencyIfPresent("Vault", plugin -> this.vaultSupport = new VaultSupport());
       this.getLogger().log(Level.INFO, "Loading crafting stations, please wait..");
       this.layoutManager.reload();
       this.stationRecipeManager.reload();
@@ -202,15 +202,15 @@ public class MMOItems extends MMOPlugin {
          }
       };
       Bukkit.getScheduler().runTaskTimer(this, inventoryUpdate, 100L, this.getConfig().getInt("inventory-update-delay"));
-      PluginUtils.isDependencyPresent("mcMMO", var1x -> Bukkit.getPluginManager().registerEvents(new McMMONonRPGHook(), this));
+      PluginUtils.isDependencyPresent("mcMMO", plugin -> Bukkit.getPluginManager().registerEvents(new McMMONonRPGHook(), this));
       this.getInventory().register(new DefaultPlayerInventory());
-      PluginUtils.hookDependencyIfPresent("RPGInventory", var1x -> this.getInventory().register(new RPGInventoryHook()));
+      PluginUtils.hookDependencyIfPresent("RPGInventory", plugin -> this.getInventory().register(new RPGInventoryHook()));
       if (plugin.getConfig().getBoolean("iterate-whole-inventory")) {
          this.getInventory().register(new OrnamentPlayerInventory());
       }
 
-      PluginUtils.hookDependencyIfPresent("CrazyEnchantments", var1x -> this.getStats().register(new CrazyEnchantsStat()));
-      PluginUtils.hookDependencyIfPresent("AdvancedEnchantments", var1x -> Bukkit.getPluginManager().registerEvents(new AdvancedEnchantmentsHook(), this));
+      PluginUtils.hookDependencyIfPresent("CrazyEnchantments", plugin -> this.getStats().register(new CrazyEnchantsStat()));
+      PluginUtils.hookDependencyIfPresent("AdvancedEnchantments", plugin -> Bukkit.getPluginManager().registerEvents(new AdvancedEnchantmentsHook(), this));
       PluginUtils.hookDependencyIfPresent("PlaceholderAPI", voidValue -> new MMOItemsPlaceholders().register());
       if (Bukkit.getPluginManager().getPlugin("BossShopPro") != null) {
          this.getLogger().log(Level.INFO, "Hooked onto BossShopPro");

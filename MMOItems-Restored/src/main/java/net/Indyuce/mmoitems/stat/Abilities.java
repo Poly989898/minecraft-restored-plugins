@@ -93,24 +93,24 @@ public class Abilities extends ItemStat<RandomAbilityListData, AbilityListData> 
       ArrayList list = new ArrayList();
       abilityListData.getAbilities()
          .forEach(
-            var3x -> {
+            abilityData -> {
                StringBuilder builder = new StringBuilder(
                   this.generalFormat
-                     .replace("{trigger}", MMOItems.plugin.getLanguage().getTriggerTypeName(var3x.getTrigger()))
-                     .replace("{ability}", var3x.getAbility().getName())
+                     .replace("{trigger}", MMOItems.plugin.getLanguage().getTriggerTypeName(abilityData.getTrigger()))
+                     .replace("{ability}", abilityData.getAbility().getName())
                );
-               if (!var3x.getModifiers().isEmpty()) {
+               if (!abilityData.getModifiers().isEmpty()) {
                   builder.append(this.modifierIfAny);
                }
 
                boolean flag = false;
                int count = 0;
 
-               for (String modifier : var3x.getModifiers()) {
-                  String text = MythicLib.plugin.getMMOConfig().decimals.format(var3x.getParameter(modifier));
-                  itemStackBuilder.getLore().registerPlaceholder("ability_" + var3x.getAbility().getHandler().getId().toLowerCase() + "_" + modifier, text);
+               for (String modifier : abilityData.getModifiers()) {
+                  String text = MythicLib.plugin.getMMOConfig().decimals.format(abilityData.getParameter(modifier));
+                  itemStackBuilder.getLore().registerPlaceholder("ability_" + abilityData.getAbility().getHandler().getId().toLowerCase() + "_" + modifier, text);
                   builder.append(flag ? this.modifierNewLine : this.modifierSplitter);
-                  builder.append(this.modifierForEach.replace("{modifier}", var3x.getAbility().getParameterName(modifier)).replace("{value}", text));
+                  builder.append(this.modifierForEach.replace("{modifier}", abilityData.getAbility().getParameterName(modifier)).replace("{value}", text));
                   flag = false;
                   if (this.modifiersPerLine > 0 && ++count >= this.modifiersPerLine) {
                      count = 0;

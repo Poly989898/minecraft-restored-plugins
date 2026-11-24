@@ -74,7 +74,7 @@ public class CanBreak extends ItemStat<StringListData, StringListData> {
    public void whenDisplayed(List<String> texts, Optional<StringListData> optional) {
       if (optional.isPresent()) {
          texts.add(ChatColor.GRAY + "Current Value:");
-         ((StringListData)optional.get()).getList().forEach(var1x -> texts.add(ChatColor.GRAY + "* " + var1x));
+         ((StringListData)optional.get()).getList().forEach(line -> texts.add(ChatColor.GRAY + "* " + line));
       } else {
          texts.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "Cannot mine any item (adventure mode).");
       }
@@ -91,7 +91,7 @@ public class CanBreak extends ItemStat<StringListData, StringListData> {
 
    public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull StringListData stringListData) {
       List<Material> materials = stringListData.getList().stream().map(Material::valueOf).collect(Collectors.toList());
-      itemStackBuilder.addFutureAction(var1x -> var1x.setCanMine(materials));
+      itemStackBuilder.addFutureAction(meta -> meta.setCanMine(materials));
       itemStackBuilder.addItemTag(this.getAppliedNBT(stringListData));
    }
 

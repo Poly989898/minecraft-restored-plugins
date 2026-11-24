@@ -38,7 +38,7 @@ public class RandomEnchantListData implements RandomStatData<EnchantListData> {
 
    public EnchantListData randomize(MMOItemBuilder mmoItemBuilder) {
       EnchantListData enchantListData = new EnchantListData();
-      this.enchants.forEach((var2x, numericStatFormula) -> enchantListData.addEnchant(var2x, (int)Math.max(numericStatFormula.calculate(mmoItemBuilder.getLevel()), var2x.getStartLevel())));
+      this.enchants.forEach((enchant, numericStatFormula) -> enchantListData.addEnchant(enchant, (int)Math.max(numericStatFormula.calculate(mmoItemBuilder.getLevel()), enchant.getStartLevel())));
       return enchantListData;
    }
 }

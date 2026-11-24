@@ -95,17 +95,17 @@ public class CustomSounds extends ItemStat<SoundListData, SoundListData> impleme
          SoundListData soundListData = (SoundListData)optional.get();
          soundListData.mapData()
             .forEach(
-               (var1x, var2x) -> texts.add(
+               (soundType, sound) -> texts.add(
                   ChatColor.GRAY
                      + "* "
                      + ChatColor.GREEN
-                     + UtilityMethods.caseOnWords(var1x.getName().toLowerCase().replace("-", " ").replace("_", " "))
+                     + UtilityMethods.caseOnWords(soundType.getName().toLowerCase().replace("-", " ").replace("_", " "))
                      + ChatColor.GRAY
                      + ": "
                      + ChatColor.RED
-                     + var2x.getVolume()
+                     + sound.getVolume()
                      + " "
-                     + var2x.getPitch()
+                     + sound.getPitch()
                )
             );
       } else {
@@ -130,11 +130,11 @@ public class CustomSounds extends ItemStat<SoundListData, SoundListData> impleme
    public ArrayList<ItemTag> getAppliedNBT(@NotNull SoundListData soundListData) {
       ArrayList list = new ArrayList();
       SoundListData soundData = soundListData;
-      soundData.getCustomSounds().forEach(var2x -> {
-         SoundData var3x = soundData.get(var2x);
-         list.add(new ItemTag("MMOITEMS_SOUND_" + var2x.name(), var3x.getSound()));
-         list.add(new ItemTag("MMOITEMS_SOUND_" + var2x.name() + "_VOL", var3x.getVolume()));
-         list.add(new ItemTag("MMOITEMS_SOUND_" + var2x.name() + "_PIT", var3x.getPitch()));
+      soundData.getCustomSounds().forEach(soundType -> {
+         SoundData sound = soundData.get(soundType);
+         list.add(new ItemTag("MMOITEMS_SOUND_" + soundType.name(), sound.getSound()));
+         list.add(new ItemTag("MMOITEMS_SOUND_" + soundType.name() + "_VOL", sound.getVolume()));
+         list.add(new ItemTag("MMOITEMS_SOUND_" + soundType.name() + "_PIT", sound.getPitch()));
       });
       return list;
    }

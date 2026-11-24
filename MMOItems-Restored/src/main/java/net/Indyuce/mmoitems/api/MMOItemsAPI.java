@@ -47,7 +47,7 @@ public class MMOItemsAPI {
       Player player, RegisteredSkill registeredSkill, @NotNull Map<String, Double> map, @Nullable LivingEntity entity, @Nullable AttackMetadata attackMetadata
    ) {
       AbilityData abilityData = new AbilityData(registeredSkill, TriggerType.CAST);
-      map.forEach((var1x, var2x) -> abilityData.setModifier(var1x, var2x));
+      map.forEach((modifier, value) -> abilityData.setModifier(modifier, value));
       PlayerMetadata playerMetadata = MMOPlayerData.get(player).getStatMap().cache(EquipmentSlot.MAIN_HAND);
       return abilityData.cast(new TriggerMetadata(playerMetadata, entity, attackMetadata));
    }

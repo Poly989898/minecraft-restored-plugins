@@ -39,9 +39,9 @@ public class CircularLuteAttack implements LuteAttackHandler {
                this.cancel();
             }
 
-            List<Entity> var1x = MMOUtils.getNearbyChunkEntities(this.loc);
+            List<Entity> nearby = MMOUtils.getNearbyChunkEntities(this.loc);
 
-            for (int var2x = 0; var2x < 3; var2x++) {
+            for (int i = 0; i < 3; i++) {
                this.loc.add(this.vec.add(vector));
                if (this.loc.getBlock().getType().isSolid()) {
                   this.cancel();
@@ -49,16 +49,16 @@ public class CircularLuteAttack implements LuteAttackHandler {
                }
 
                double step = this.ti / 3.0;
-               Vector var5x = MMOUtils.rotateFunc(new Vector(Math.cos(step), Math.sin(step), 0.0).multiply(0.3), this.loc);
-               projectileParticlesData.shootParticle(this.loc.clone().add(var5x));
-               projectileParticlesData.shootParticle(this.loc.clone().add(var5x.multiply(-1)));
-               if (var2x == 0) {
+               Vector offset = MMOUtils.rotateFunc(new Vector(Math.cos(step), Math.sin(step), 0.0).multiply(0.3), this.loc);
+               projectileParticlesData.shootParticle(this.loc.clone().add(offset));
+               projectileParticlesData.shootParticle(this.loc.clone().add(offset.multiply(-1)));
+               if (i == 0) {
                   soundReader.play(this.loc, 2.0F, (float)(0.5 + this.ti / duration));
                }
 
-               for (Entity var7x : var1x) {
-                  if (UtilityMethods.canTarget(playerMetadata.getPlayer(), this.loc, var7x, InteractionType.OFFENSE_ACTION)) {
-                     playerMetadata.attack((LivingEntity)var7x, value, new DamageType[]{DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE});
+               for (Entity entity : nearby) {
+                  if (UtilityMethods.canTarget(playerMetadata.getPlayer(), this.loc, entity, InteractionType.OFFENSE_ACTION)) {
+                     playerMetadata.attack((LivingEntity)entity, value, new DamageType[]{DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE});
                      this.cancel();
                      return;
                   }

@@ -36,7 +36,7 @@ public class StringListData implements StatData, Mergeable<StringListData>, Rand
    }
 
    public StringListData(@NotNull JsonArray jsonArray) {
-      jsonArray.forEach(var1x -> this.list.add(var1x.getAsString()));
+      jsonArray.forEach(element -> this.list.add(element.getAsString()));
    }
 
    public StringListData(@NotNull List<String> texts) {

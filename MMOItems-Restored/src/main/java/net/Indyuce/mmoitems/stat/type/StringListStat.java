@@ -119,7 +119,7 @@ public class StringListStat extends ItemStat<StringListData, StringListData> {
       if (optional.isPresent()) {
          texts.add(ChatColor.GRAY + "Current Value:");
          StringListData stringListData = (StringListData)optional.get();
-         stringListData.getList().forEach(var1x -> texts.add(ChatColor.GRAY + MythicLib.plugin.parseColors(var1x)));
+         stringListData.getList().forEach(line -> texts.add(ChatColor.GRAY + MythicLib.plugin.parseColors(line)));
       } else {
          texts.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
       }

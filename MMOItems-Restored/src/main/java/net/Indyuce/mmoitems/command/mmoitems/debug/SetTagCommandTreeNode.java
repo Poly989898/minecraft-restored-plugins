@@ -12,8 +12,8 @@ import org.bukkit.entity.Player;
 public class SetTagCommandTreeNode extends CommandTreeNode {
    public SetTagCommandTreeNode(CommandTreeNode commandTreeNode) {
       super(commandTreeNode, "settag");
-      this.addParameter(new Parameter("<path>", (commandTreeExplorer, var1x) -> var1x.add("TagPath")));
-      this.addParameter(new Parameter("<value>", (commandTreeExplorer, var1x) -> var1x.add("TagValue")));
+      this.addParameter(new Parameter("<path>", (commandTreeExplorer, texts) -> texts.add("TagPath")));
+      this.addParameter(new Parameter("<value>", (commandTreeExplorer, texts) -> texts.add("TagValue")));
    }
 
    public CommandResult execute(CommandSender sender, String[] texts) {

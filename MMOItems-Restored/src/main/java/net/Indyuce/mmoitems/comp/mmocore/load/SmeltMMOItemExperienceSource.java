@@ -50,7 +50,7 @@ public class SmeltMMOItemExperienceSource extends SpecificExperienceSource<NBTIt
    }
 
    private Optional<Player> getNearbyPlayer(Location location) {
-      return location.getWorld().getPlayers().stream().filter(var1x -> var1x.getLocation().distanceSquared(location) < 100.0).findAny();
+      return location.getWorld().getPlayers().stream().filter(player -> player.getLocation().distanceSquared(location) < 100.0).findAny();
    }
 
    public boolean matchesParameter(PlayerData playerData, NBTItem nbtItem) {

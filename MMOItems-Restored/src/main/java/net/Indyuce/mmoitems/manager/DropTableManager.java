@@ -114,8 +114,8 @@ public class DropTableManager implements Listener, Reloadable {
                }
 
                Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> {
-                  for (ItemStack var3x : items) {
-                     UtilityMethods.dropItemNaturally(block.getLocation(), var3x);
+                  for (ItemStack drop : items) {
+                     UtilityMethods.dropItemNaturally(block.getLocation(), drop);
                   }
                }, 2L);
             }
@@ -129,8 +129,8 @@ public class DropTableManager implements Listener, Reloadable {
             }
 
             Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> {
-               for (ItemStack var3x : items) {
-                  UtilityMethods.dropItemNaturally(block.getLocation(), var3x);
+               for (ItemStack drop : items) {
+                  UtilityMethods.dropItemNaturally(block.getLocation(), drop);
                }
             }, 2L);
          }

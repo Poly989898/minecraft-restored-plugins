@@ -120,7 +120,7 @@ public class Commands extends ItemStat<CommandListData, CommandListData> {
       itemStackBuilder.addItemTag(this.getAppliedNBT(commandListData));
       ArrayList list = new ArrayList();
       String generalStatFormat = this.getGeneralStatFormat();
-      commandListData.getCommands().forEach(var2x -> list.add(generalStatFormat.replace("{format}", "/" + var2x.getCommand()).replace("{cooldown}", String.valueOf(var2x.getDelay()))));
+      commandListData.getCommands().forEach(command -> list.add(generalStatFormat.replace("{format}", "/" + command.getCommand()).replace("{cooldown}", String.valueOf(command.getDelay()))));
       itemStackBuilder.getLore().insert("commands", list);
    }
 

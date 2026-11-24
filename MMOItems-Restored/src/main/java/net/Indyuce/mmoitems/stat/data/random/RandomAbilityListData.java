@@ -23,7 +23,7 @@ public class RandomAbilityListData implements RandomStatData<AbilityListData> {
 
    public AbilityListData randomize(MMOItemBuilder mmoItemBuilder) {
       AbilityListData abilityListData = new AbilityListData();
-      this.abilities.forEach(var2x -> abilityListData.add(var2x.randomize(mmoItemBuilder)));
+      this.abilities.forEach(randomAbility -> abilityListData.add(randomAbility.randomize(mmoItemBuilder)));
       return abilityListData;
    }
 }

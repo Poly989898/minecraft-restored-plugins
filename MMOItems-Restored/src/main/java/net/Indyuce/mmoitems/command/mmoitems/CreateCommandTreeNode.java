@@ -16,7 +16,7 @@ public class CreateCommandTreeNode extends CommandTreeNode {
    public CreateCommandTreeNode(CommandTreeNode commandTreeNode) {
       super(commandTreeNode, "create");
       this.addParameter(MMOItemsCommandTreeRoot.TYPE);
-      this.addParameter(new Parameter("<id>", (commandTreeExplorer, var1x) -> var1x.add("ITEM_ID")));
+      this.addParameter(new Parameter("<id>", (commandTreeExplorer, texts) -> texts.add("ITEM_ID")));
    }
 
    public CommandResult execute(CommandSender sender, String[] texts) {

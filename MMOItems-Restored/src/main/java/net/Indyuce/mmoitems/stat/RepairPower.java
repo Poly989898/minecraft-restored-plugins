@@ -39,7 +39,7 @@ public class RepairPower extends DoubleStat implements ConsumableItemInteraction
       @NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem nbtItem, Type type
    ) {
       int stat = (int)consumable.getNBTItem().getStat(ItemStats.REPAIR.getId());
-      return stat <= 0 ? false : handleRepair(playerData, consumable, nbtItem, var1x -> stat);
+      return stat <= 0 ? false : handleRepair(playerData, consumable, nbtItem, repairedItem -> stat);
    }
 
    public static boolean handleRepair(

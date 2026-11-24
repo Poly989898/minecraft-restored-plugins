@@ -145,14 +145,14 @@ public class ArrowPotionEffects extends ItemStat<RandomPotionEffectListData, Pot
       String generalStatFormat = this.getGeneralStatFormat();
       potionEffectListData.getEffects()
          .forEach(
-            var2x -> list.add(
+            effect -> list.add(
                generalStatFormat.replace(
                   "{effect}",
-                  MMOItems.plugin.getLanguage().getPotionEffectName(var2x.getType())
+                  MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType())
                      + " "
-                     + MMOUtils.intToRoman(var2x.getLevel())
+                     + MMOUtils.intToRoman(effect.getLevel())
                      + "("
-                     + MythicLib.plugin.getMMOConfig().decimal.format(var2x.getDuration())
+                     + MythicLib.plugin.getMMOConfig().decimal.format(effect.getDuration())
                      + "s)"
                )
             )
@@ -165,12 +165,12 @@ public class ArrowPotionEffects extends ItemStat<RandomPotionEffectListData, Pot
    public ArrayList<ItemTag> getAppliedNBT(@NotNull PotionEffectListData potionEffectListData) {
       ArrayList list = new ArrayList();
       JsonArray jsonArray = new JsonArray();
-      potionEffectListData.getEffects().forEach(var1x -> {
-         JsonObject var2x = new JsonObject();
-         var2x.addProperty("type", var1x.getType().getName());
-         var2x.addProperty("level", var1x.getLevel());
-         var2x.addProperty("duration", var1x.getDuration());
-         jsonArray.add(var2x);
+      potionEffectListData.getEffects().forEach(effect -> {
+         JsonObject effectJson = new JsonObject();
+         effectJson.addProperty("type", effect.getType().getName());
+         effectJson.addProperty("level", effect.getLevel());
+         effectJson.addProperty("duration", effect.getDuration());
+         jsonArray.add(effectJson);
       });
       list.add(new ItemTag(this.getNBTPath(), jsonArray.toString()));
       return list;

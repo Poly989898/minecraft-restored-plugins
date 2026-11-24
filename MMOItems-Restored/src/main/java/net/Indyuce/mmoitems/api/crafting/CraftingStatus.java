@@ -82,11 +82,11 @@ public class CraftingStatus {
    }
 
    public void save(ConfigurationSection section) {
-      this.queues.forEach((var1x, craftingQueue) -> {
+      this.queues.forEach((station, craftingQueue) -> {
          for (CraftingStatus.CraftingQueue.QueueItem craft : craftingQueue.getCrafts()) {
-            section.set(var1x.getId() + ".recipe-" + craft.getUniqueId().toString() + ".recipe", craft.getRecipe().getId());
-            section.set(var1x.getId() + ".recipe-" + craft.getUniqueId().toString() + ".start", craft.start);
-            section.set(var1x.getId() + ".recipe-" + craft.getUniqueId().toString() + ".completion", craft.completion);
+            section.set(station.getId() + ".recipe-" + craft.getUniqueId().toString() + ".recipe", craft.getRecipe().getId());
+            section.set(station.getId() + ".recipe-" + craft.getUniqueId().toString() + ".start", craft.start);
+            section.set(station.getId() + ".recipe-" + craft.getUniqueId().toString() + ".completion", craft.completion);
          }
       });
    }

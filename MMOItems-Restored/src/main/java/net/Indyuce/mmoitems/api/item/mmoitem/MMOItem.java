@@ -110,7 +110,7 @@ public class MMOItem implements ItemReference {
    public MMOItem clone() {
       MMOItem mmoItem = new MMOItem(this.type, this.id);
       mmoItem.stats.putAll(this.stats);
-      this.mergeableStatHistory.forEach((var1x, statHistory) -> mmoItem.mergeableStatHistory.put((ItemStat<?, ?>)var1x, statHistory.clone().setParent(mmoItem)));
+      this.mergeableStatHistory.forEach((stat, statHistory) -> mmoItem.mergeableStatHistory.put((ItemStat<?, ?>)stat, statHistory.clone().setParent(mmoItem)));
       return mmoItem;
    }
 
@@ -125,10 +125,10 @@ public class MMOItem implements ItemReference {
 
    @NotNull
    public StatHistory computeStatHistory(@NotNull ItemStat<?, ?> itemStat) {
-      return this.mergeableStatHistory.computeIfAbsent(itemStat, var1x -> {
-         StatData data = this.computeData((ItemStat<?, ?>)var1x);
-         Validate.isTrue(data instanceof Mergeable, "Stat " + var1x.getId() + " is not mergeable");
-         return new StatHistory(this, var1x, data);
+      return this.mergeableStatHistory.computeIfAbsent(itemStat, stat -> {
+         StatData data = this.computeData((ItemStat<?, ?>)stat);
+         Validate.isTrue(data instanceof Mergeable, "Stat " + stat.getId() + " is not mergeable");
+         return new StatHistory(this, stat, data);
       });
    }
 

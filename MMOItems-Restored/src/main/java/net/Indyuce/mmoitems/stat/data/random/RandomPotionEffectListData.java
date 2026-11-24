@@ -68,7 +68,7 @@ public class RandomPotionEffectListData implements RandomStatData<PotionEffectLi
 
    public PotionEffectListData randomize(MMOItemBuilder mmoItemBuilder) {
       PotionEffectListData potionEffectListData = new PotionEffectListData();
-      this.effects.forEach(var2x -> potionEffectListData.add(var2x.randomize(mmoItemBuilder)));
+      this.effects.forEach(randomEffect -> potionEffectListData.add(randomEffect.randomize(mmoItemBuilder)));
       return potionEffectListData;
    }
 }

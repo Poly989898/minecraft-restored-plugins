@@ -76,9 +76,9 @@ public class AuraSkillsHook implements RPGHandler, Listener {
 
       this.statExtra
          .forEach(
-            (var2x, var3x) -> this.aSkills
+            (stat, itemStat) -> this.aSkills
                .getUser(playerData.getPlayer().getUniqueId())
-               .addStatModifier(new StatModifier("mmoitems_" + var2x.name(), var2x, playerData.getStats().getStat((ItemStat<?, ?>)var3x)))
+               .addStatModifier(new StatModifier("mmoitems_" + stat.name(), stat, playerData.getStats().getStat((ItemStat<?, ?>)itemStat)))
          );
    }
 

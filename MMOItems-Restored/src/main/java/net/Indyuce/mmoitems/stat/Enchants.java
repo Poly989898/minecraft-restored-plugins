@@ -104,8 +104,8 @@ public class Enchants extends ItemStat<RandomEnchantListData, EnchantListData> i
          RandomEnchantListData randomEnchantListData = (RandomEnchantListData)optional.get();
          randomEnchantListData.getEnchants()
             .forEach(
-               var2x -> texts.add(
-                  ChatColor.GRAY + "* " + UtilityMethods.caseOnWords(var2x.getKey().getKey().replace("_", " ")) + " " + randomEnchantListData.getLevel(var2x).toString()
+               enchant -> texts.add(
+                  ChatColor.GRAY + "* " + UtilityMethods.caseOnWords(enchant.getKey().getKey().replace("_", " ")) + " " + randomEnchantListData.getLevel(enchant).toString()
                )
             );
       } else {

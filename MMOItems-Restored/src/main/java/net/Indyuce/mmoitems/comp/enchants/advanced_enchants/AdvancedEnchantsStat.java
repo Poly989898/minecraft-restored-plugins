@@ -46,10 +46,10 @@ public class AdvancedEnchantsStat extends ItemStat<RandomStatData<AdvancedEnchan
    }
 
    public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull AdvancedEnchantMap advancedEnchantMap) {
-      advancedEnchantMap.enchants.forEach((var2x, value) -> {
-         if (var2x != null && value != null && !var2x.isEmpty()) {
-            itemStackBuilder.getLore().insert(0, AEAPI.getEnchantLore(var2x, value));
-            itemStackBuilder.getMeta().getPersistentDataContainer().set(new NamespacedKey(this.ae, "ae_enchantment-" + var2x), PersistentDataType.INTEGER, value);
+      advancedEnchantMap.enchants.forEach((enchantId, value) -> {
+         if (enchantId != null && value != null && !enchantId.isEmpty()) {
+            itemStackBuilder.getLore().insert(0, AEAPI.getEnchantLore(enchantId, value));
+            itemStackBuilder.getMeta().getPersistentDataContainer().set(new NamespacedKey(this.ae, "ae_enchantment-" + enchantId), PersistentDataType.INTEGER, value);
          }
       });
    }

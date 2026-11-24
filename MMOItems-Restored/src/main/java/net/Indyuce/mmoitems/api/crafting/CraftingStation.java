@@ -32,12 +32,12 @@ public class CraftingStation implements PreloadedObject {
    private final int maxQueueSize;
    private final Map<String, Recipe> recipes = new LinkedHashMap<>();
    private CraftingStation parent;
-   private final PostLoadAction postLoadAction = new PostLoadAction(var1x -> {
-      if (var1x.contains("parent")) {
-         String var2x = var1x.getString("parent").toLowerCase().replace(" ", "-").replace("_", "-");
-         Validate.isTrue(!var2x.equals(this.getId()), "Station cannot use itself as parent");
-         Validate.isTrue(MMOItems.plugin.getCrafting().hasStation(var2x), "Could not find parent station with ID '" + var2x + "'");
-         this.parent = MMOItems.plugin.getCrafting().getStation(var2x);
+   private final PostLoadAction postLoadAction = new PostLoadAction(config -> {
+      if (config.contains("parent")) {
+         String parentId = config.getString("parent").toLowerCase().replace(" ", "-").replace("_", "-");
+         Validate.isTrue(!parentId.equals(this.getId()), "Station cannot use itself as parent");
+         Validate.isTrue(MMOItems.plugin.getCrafting().hasStation(parentId), "Could not find parent station with ID '" + parentId + "'");
+         this.parent = MMOItems.plugin.getCrafting().getStation(parentId);
       }
    });
 

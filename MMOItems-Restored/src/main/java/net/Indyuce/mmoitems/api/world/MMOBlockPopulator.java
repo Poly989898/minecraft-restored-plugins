@@ -28,12 +28,12 @@ public class MMOBlockPopulator extends BlockPopulator {
       Map<CustomBlock, WorldGenTemplate> map = this.manager.assigned();
       map.entrySet()
          .stream()
-         .filter(var1x -> ((WorldGenTemplate)var1x.getValue()).canGenerateInWorld(worldInfo.getName()))
-         .filter(var1x -> ((WorldGenTemplate)var1x.getValue()).getMinDepth() >= worldInfo.getMinHeight())
-         .filter(var1x -> ((WorldGenTemplate)var1x.getValue()).getMaxDepth() <= worldInfo.getMaxHeight())
-         .forEach(var5x -> {
-            CustomBlock var6x = (CustomBlock)var5x.getKey();
-            WorldGenTemplate worldGenTemplate = (WorldGenTemplate)var5x.getValue();
+         .filter(entry -> ((WorldGenTemplate)entry.getValue()).canGenerateInWorld(worldInfo.getName()))
+         .filter(entry -> ((WorldGenTemplate)entry.getValue()).getMinDepth() >= worldInfo.getMinHeight())
+         .filter(entry -> ((WorldGenTemplate)entry.getValue()).getMaxDepth() <= worldInfo.getMaxHeight())
+         .forEach(entry -> {
+            CustomBlock customBlock = (CustomBlock)entry.getKey();
+            WorldGenTemplate worldGenTemplate = (WorldGenTemplate)entry.getValue();
             if (!(random.nextDouble() > worldGenTemplate.getChunkChance())) {
                for (int i = 0; i < worldGenTemplate.getVeinCount(); i++) {
                   int worldX = count * 16 + random.nextInt(16);
@@ -46,8 +46,8 @@ public class MMOBlockPopulator extends BlockPopulator {
                      for (int j = 0; j < worldGenTemplate.getVeinSize(); j++) {
                         if (limitedRegion.isInRegion(blockAt.getLocation())) {
                            if (worldGenTemplate.canReplace(limitedRegion.getType(blockAt.getLocation()))) {
-                              limitedRegion.setType(blockAt.getLocation(), var6x.getState().getType());
-                              limitedRegion.setBlockData(blockAt.getLocation(), var6x.getState().getBlockData());
+                              limitedRegion.setType(blockAt.getLocation(), customBlock.getState().getType());
+                              limitedRegion.setBlockData(blockAt.getLocation(), customBlock.getState().getBlockData());
                            }
 
                            BlockFace blockFace = faces[random.nextInt(faces.length)];

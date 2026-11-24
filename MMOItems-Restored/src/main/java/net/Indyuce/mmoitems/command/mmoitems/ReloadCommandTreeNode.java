@@ -17,11 +17,11 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
       this.addChild(new ReloadCommandTreeNode.SubReloadCommandTreeNode("recipes", this, this::reloadRecipes));
       this.addChild(new ReloadCommandTreeNode.SubReloadCommandTreeNode("stations", this, this::reloadStations));
       this.addChild(new ReloadCommandTreeNode.SubReloadCommandTreeNode("skills", this, this::reloadSkills));
-      this.addChild(new ReloadCommandTreeNode.SubReloadCommandTreeNode("all", this, var1x -> {
-         this.reloadMain(var1x);
-         this.reloadRecipes(var1x);
-         this.reloadStations(var1x);
-         this.reloadSkills(var1x);
+      this.addChild(new ReloadCommandTreeNode.SubReloadCommandTreeNode("all", this, sender -> {
+         this.reloadMain(sender);
+         this.reloadRecipes(sender);
+         this.reloadStations(sender);
+         this.reloadSkills(sender);
       }));
    }
 

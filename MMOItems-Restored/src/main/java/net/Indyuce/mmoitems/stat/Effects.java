@@ -114,10 +114,10 @@ public class Effects extends ItemStat<RandomPotionEffectListData, PotionEffectLi
    @Override
    public void whenDisplayed(List<String> texts, Optional<RandomPotionEffectListData> optional) {
       optional.ifPresentOrElse(
-         var1x -> {
+         effectListData -> {
             texts.add(ChatColor.GRAY + "Current Value:");
 
-            for (RandomPotionEffectData effect : var1x.getEffects()) {
+            for (RandomPotionEffectData effect : effectListData.getEffects()) {
                texts.add(
                   ChatColor.GRAY
                      + "* "
@@ -151,13 +151,13 @@ public class Effects extends ItemStat<RandomPotionEffectListData, PotionEffectLi
       String generalStatFormat = this.getGeneralStatFormat();
       potionEffectListData.getEffects()
          .forEach(
-            var2x -> list.add(
+            effect -> list.add(
                generalStatFormat.replace(
                      "{effect}",
-                     MMOItems.plugin.getLanguage().getPotionEffectName(var2x.getType())
-                        + (var2x.getLevel() < 2 ? "" : " " + MMOUtils.intToRoman(var2x.getLevel()))
+                     MMOItems.plugin.getLanguage().getPotionEffectName(effect.getType())
+                        + (effect.getLevel() < 2 ? "" : " " + MMOUtils.intToRoman(effect.getLevel()))
                   )
-                  .replace("{duration}", MythicLib.plugin.getMMOConfig().decimal.format(var2x.getDuration()))
+                  .replace("{duration}", MythicLib.plugin.getMMOConfig().decimal.format(effect.getDuration()))
             )
          );
       itemStackBuilder.getLore().insert("effects", list);

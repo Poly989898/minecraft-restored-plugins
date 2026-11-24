@@ -65,7 +65,7 @@ public class CompatibleTypes extends ItemStat<StringListData, StringListData> {
    public void whenDisplayed(List<String> texts, Optional<StringListData> optional) {
       if (optional.isPresent()) {
          texts.add(ChatColor.GRAY + "Current Value:");
-         ((StringListData)optional.get()).getList().forEach(var1x -> texts.add(ChatColor.GRAY + "* " + var1x));
+         ((StringListData)optional.get()).getList().forEach(line -> texts.add(ChatColor.GRAY + "* " + line));
       } else {
          texts.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "Compatible with any item.");
       }

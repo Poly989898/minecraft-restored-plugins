@@ -34,10 +34,10 @@ public class TemplateExplorer {
    }
 
    public Optional<MMOItem> rollItem(RPGPlayer rpgPlayer) {
-      return this.rollLoot().map(var1x -> var1x.newBuilder(rpgPlayer).build());
+      return this.rollLoot().map(template -> template.newBuilder(rpgPlayer).build());
    }
 
    private <T> Predicate<T> not(Predicate<T> predicate) {
-      return var1x -> !predicate.test(var1x);
+      return template -> !predicate.test(template);
    }
 }

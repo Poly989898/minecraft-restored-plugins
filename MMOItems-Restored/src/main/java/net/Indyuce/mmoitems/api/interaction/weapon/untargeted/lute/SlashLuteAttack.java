@@ -40,10 +40,10 @@ public class SlashLuteAttack implements LuteAttackHandler {
 
             soundReader.play(this.loc, 2.0F, (float)(0.5 + this.ti / duration));
 
-            for (byte var1x = -30; var1x < 30; var1x += 3) {
+            for (byte angle = -30; angle < 30; angle += 3) {
                if (LuteAttackHandler.RANDOM.nextBoolean()) {
                   this.loc.setDirection(this.vec);
-                  this.loc.setYaw(this.loc.getYaw() + var1x);
+                  this.loc.setYaw(this.loc.getYaw() + angle);
                   this.loc.setPitch(playerMetadata.getPlayer().getEyeLocation().getPitch());
                   projectileParticlesData.shootParticle(this.loc.clone().add(this.loc.getDirection().multiply(1.5 * this.ti)));
                }

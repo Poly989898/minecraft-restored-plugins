@@ -52,7 +52,7 @@ public class ItemSkin extends UseItem {
 
       if (this.mmoitem.hasData(ItemStats.COMPATIBLE_TYPES)) {
          List<String> texts = ((StringListData)this.mmoitem.getData(ItemStats.COMPATIBLE_TYPES)).getList();
-         if (texts.size() > 0 && texts.stream().noneMatch(var1x -> var1x.equalsIgnoreCase(type.getId()))) {
+         if (texts.size() > 0 && texts.stream().noneMatch(text -> text.equalsIgnoreCase(type.getId()))) {
             this.player.playSound(this.player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 2.0F);
             Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(nbtItem.getItem())).send(this.player);
             return new ItemSkin.ApplyResult(ItemSkin.ResultType.NONE);
@@ -62,7 +62,7 @@ public class ItemSkin extends UseItem {
       if (this.mmoitem.hasData(ItemStats.COMPATIBLE_IDS)) {
          List<String> texts = ((StringListData)this.mmoitem.getData(ItemStats.COMPATIBLE_IDS)).getList();
          String mMOITEMSITEMID = nbtItem.getString("MMOITEMS_ITEM_ID");
-         if (texts.size() > 0 && texts.stream().noneMatch(var1x -> var1x.equalsIgnoreCase(mMOITEMSITEMID))) {
+         if (texts.size() > 0 && texts.stream().noneMatch(text -> text.equalsIgnoreCase(mMOITEMSITEMID))) {
             this.player.playSound(this.player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 2.0F);
             Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(nbtItem.getItem())).send(this.player);
             return new ItemSkin.ApplyResult(ItemSkin.ResultType.NONE);
@@ -71,7 +71,7 @@ public class ItemSkin extends UseItem {
 
       if (this.mmoitem.hasData(ItemStats.COMPATIBLE_MATERIALS)) {
          List<String> texts = ((StringListData)this.mmoitem.getData(ItemStats.COMPATIBLE_MATERIALS)).getList();
-         if (texts.size() > 0 && texts.stream().noneMatch(var1x -> var1x.equalsIgnoreCase(nbtItem.getItem().getType().name()))) {
+         if (texts.size() > 0 && texts.stream().noneMatch(text -> text.equalsIgnoreCase(nbtItem.getItem().getType().name()))) {
             this.player.playSound(this.player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 2.0F);
             Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(nbtItem.getItem())).send(this.player);
             return new ItemSkin.ApplyResult(ItemSkin.ResultType.NONE);

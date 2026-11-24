@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 
 public class RevisionIDCommandTreeNode extends CommandTreeNode {
    public static final Parameter TYPE_OR_ALL = new Parameter("<type>", (commandTreeExplorer, texts) -> {
-      MMOItems.plugin.getTypes().getAll().forEach(var1x -> texts.add(var1x.getId()));
+      MMOItems.plugin.getTypes().getAll().forEach(type -> texts.add(type.getId()));
       texts.add("ALL");
    });
 

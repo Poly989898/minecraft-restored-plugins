@@ -37,7 +37,7 @@ public class ParticleData implements StatData, RandomStatData<ParticleData> {
          this.color = Color.fromRGB(255, 0, 0);
       }
 
-      jsonObject.getAsJsonObject("Modifiers").entrySet().forEach(var1x -> this.setModifier((String)var1x.getKey(), ((JsonElement)var1x.getValue()).getAsDouble()));
+      jsonObject.getAsJsonObject("Modifiers").entrySet().forEach(entry -> this.setModifier((String)entry.getKey(), ((JsonElement)entry.getValue()).getAsDouble()));
    }
 
    public ParticleData(ConfigurationSection section) {
@@ -123,7 +123,7 @@ public class ParticleData implements StatData, RandomStatData<ParticleData> {
       }
 
       JsonObject colorJson = new JsonObject();
-      this.getModifiers().forEach(var2x -> colorJson.addProperty(var2x, this.getModifier(var2x)));
+      this.getModifiers().forEach(modifier -> colorJson.addProperty(modifier, this.getModifier(modifier)));
       jsonObject.add("Modifiers", colorJson);
       return jsonObject;
    }

@@ -136,8 +136,8 @@ public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPattern
          );
          shieldPatternData.getPatterns()
             .forEach(
-               var1x -> texts.add(
-                  ChatColor.GRAY + "* " + ChatColor.GREEN + var1x.getPattern().name() + ChatColor.GRAY + " - " + ChatColor.GREEN + var1x.getColor().name()
+               patternData -> texts.add(
+                  ChatColor.GRAY + "* " + ChatColor.GREEN + patternData.getPattern().name() + ChatColor.GRAY + " - " + ChatColor.GREEN + patternData.getColor().name()
                )
             );
       } else {

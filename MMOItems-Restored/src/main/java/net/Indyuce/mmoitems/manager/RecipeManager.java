@@ -179,8 +179,8 @@ public class RecipeManager implements Reloadable {
                   try {
                      mythicRecipeBlueprint.disable();
                      Bukkit.removeRecipe(mythicRecipeBlueprint.getNk());
-                  } catch (Throwable var2x) {
-                     MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not unregister knowledge book recipe '" + mythicRecipeBlueprint.getNk() + "': " + var2x.getMessage());
+                  } catch (Throwable exception) {
+                     MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not unregister knowledge book recipe '" + mythicRecipeBlueprint.getNk() + "': " + exception.getMessage());
                   }
                });
                this.customRecipes.clear();
@@ -276,7 +276,7 @@ public class RecipeManager implements Reloadable {
             throw new IllegalArgumentException(
                SilentNumbers.collapseList(
                   SilentNumbers.transcribeList(
-                     friendlyFeedbackProvider.getFeedbackOf(FriendlyFeedbackCategory.ERROR), var0x -> ((FriendlyFeedbackMessage)var0x).forConsole(FFPMMOItems.get())
+                     friendlyFeedbackProvider.getFeedbackOf(FriendlyFeedbackCategory.ERROR), message -> ((FriendlyFeedbackMessage)message).forConsole(FFPMMOItems.get())
                   ),
                   ". "
                )

@@ -49,7 +49,7 @@ public class MMOItemBuilder extends Buildable<MMOItem> {
             : (itemTier != null && itemTier.hasCapacity() ? itemTier.getModifierCapacity() : MMOItems.plugin.getLanguage().defaultItemCapacity))
          .calculate(count);
       this.mmoitem = new MMOItem(mmoItemTemplate.getType(), mmoItemTemplate.getId());
-      mmoItemTemplate.getBaseItemData().forEach((var1x, var2x) -> this.applyData(var1x, var2x.randomize(this)));
+      mmoItemTemplate.getBaseItemData().forEach((stat, data) -> this.applyData(stat, data.randomize(this)));
       if (itemTier != null) {
          this.mmoitem.setData(ItemStats.TIER, new StringData(itemTier.getId()));
       }
@@ -92,7 +92,7 @@ public class MMOItemBuilder extends Buildable<MMOItem> {
    protected MMOItem whenBuilt() {
       if (!this.nameModifiers.isEmpty()) {
          StatHistory statHistory = this.mmoitem.computeStatHistory(ItemStats.NAME);
-         this.nameModifiers.forEach((var1x, nameModifier) -> {
+         this.nameModifiers.forEach((modifierId, nameModifier) -> {
             NameData nameData = new NameData(null);
             if (nameModifier.getType() == NameModifier.ModifierType.PREFIX) {
                nameData.addPrefix(nameModifier.getFormat());
@@ -100,7 +100,7 @@ public class MMOItemBuilder extends Buildable<MMOItem> {
                nameData.addSuffix(nameModifier.getFormat());
             }
 
-            statHistory.registerModifierBonus(var1x, nameData);
+            statHistory.registerModifierBonus(modifierId, nameData);
          });
          this.mmoitem.setData(ItemStats.NAME, statHistory.recalculate(this.mmoitem.getUpgradeLevel()));
       }

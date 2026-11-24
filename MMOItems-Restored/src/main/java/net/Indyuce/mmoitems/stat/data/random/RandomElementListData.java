@@ -50,7 +50,7 @@ public class RandomElementListData implements RandomStatData<ElementListData>, U
 
    public ElementListData randomize(MMOItemBuilder mmoItemBuilder) {
       ElementListData elementListData = new ElementListData();
-      this.stats.forEach((var2x, numericStatFormula) -> elementListData.setStat(var2x.getKey(), var2x.getValue(), numericStatFormula.calculate(mmoItemBuilder.getLevel())));
+      this.stats.forEach((element, numericStatFormula) -> elementListData.setStat(element.getKey(), element.getValue(), numericStatFormula.calculate(mmoItemBuilder.getLevel())));
       return elementListData;
    }
 

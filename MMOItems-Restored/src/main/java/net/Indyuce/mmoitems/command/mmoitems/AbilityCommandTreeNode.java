@@ -20,19 +20,19 @@ public class AbilityCommandTreeNode extends CommandTreeNode {
    public AbilityCommandTreeNode(CommandTreeNode commandTreeNode) {
       super(commandTreeNode, "ability");
       this.addParameter(
-         new Parameter("<ability>", (commandTreeExplorer, var1x) -> MMOItems.plugin.getSkills().getAll().forEach(var1xx -> var1x.add(var1xx.getHandler().getId())))
+         new Parameter("<ability>", (commandTreeExplorer, suggestions) -> MMOItems.plugin.getSkills().getAll().forEach(skill -> suggestions.add(skill.getHandler().getId())))
       );
       this.addParameter(Parameter.PLAYER_OPTIONAL);
 
       for (int i = 0; i < 10; i++) {
-         this.addParameter(new Parameter("<modifier>", (commandTreeExplorer, var1x) -> {
+         this.addParameter(new Parameter("<modifier>", (commandTreeExplorer, suggestions) -> {
             try {
-               RegisteredSkill var2x = MMOItems.plugin.getSkills().getSkillOrThrow(commandTreeExplorer.getArguments()[1].toUpperCase().replace("-", "_"));
-               var1x.addAll(var2x.getHandler().getModifiers());
+               RegisteredSkill skill = MMOItems.plugin.getSkills().getSkillOrThrow(commandTreeExplorer.getArguments()[1].toUpperCase().replace("-", "_"));
+               suggestions.addAll(skill.getHandler().getModifiers());
             } catch (Exception exception) {
             }
          }));
-         this.addParameter(new Parameter("<value>", (commandTreeExplorer, var1x) -> var1x.add("0")));
+         this.addParameter(new Parameter("<value>", (commandTreeExplorer, suggestions) -> suggestions.add("0")));
       }
    }
 

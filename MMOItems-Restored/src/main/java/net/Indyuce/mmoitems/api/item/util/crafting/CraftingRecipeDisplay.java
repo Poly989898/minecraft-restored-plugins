@@ -92,7 +92,7 @@ public class CraftingRecipeDisplay extends ConfigItem {
 
          int ingredientsIndex = this.lore.indexOf("#ingredients#");
          this.lore.remove(ingredientsIndex);
-         this.recipe.getIngredients().forEach(var2x -> this.lore.add(ingredientsIndex, var2x.format()));
+         this.recipe.getIngredients().forEach(ingredient -> this.lore.add(ingredientsIndex, ingredient.format()));
          if (count >= 0) {
             for (CheckedCondition condition : this.recipe.getConditions()) {
                ConditionalDisplay display = condition.getCondition().getDisplay();

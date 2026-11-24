@@ -36,35 +36,35 @@ public class ModifierNode implements PreloadedObject {
    private final ModifierNode referenceNode;
    private final PostLoadAction postLoadAction = new PostLoadAction(this::loadChildrenAndStats);
 
-   private void loadChildrenAndStats(ConfigurationSection var1x) {
-      ConfigurationSection var2x = var1x.getConfigurationSection("modifiers");
-      if (var2x != null) {
-         for (String var4x : var2x.getKeys(false)) {
+   private void loadChildrenAndStats(ConfigurationSection config) {
+      ConfigurationSection modifiers = config.getConfigurationSection("modifiers");
+      if (modifiers != null) {
+         for (String key : modifiers.getKeys(false)) {
             try {
-               ModifierNode modifierNode = fromConfig(var4x, var1x.get("modifiers." + var4x));
+               ModifierNode modifierNode = fromConfig(key, config.get("modifiers." + key));
                modifierNode.getPostLoadAction().performAction();
                this.children.add(modifierNode);
             } catch (RuntimeException exception) {
                MMOItems.plugin
                   .getLogger()
-                  .log(Level.SEVERE, "Could not load parent modifier node '" + var4x + "' of modifier group '" + this.getId() + "': " + exception.getMessage());
+                  .log(Level.SEVERE, "Could not load parent modifier node '" + key + "' of modifier group '" + this.getId() + "': " + exception.getMessage());
             }
          }
       }
 
       Validate.notNull(this.data, "Internal error");
-      ConfigurationSection stats = var1x.getConfigurationSection("stats");
+      ConfigurationSection stats = config.getConfigurationSection("stats");
       if (stats != null) {
          for (String key : stats.getKeys(false)) {
             try {
-               String var6x = UtilityMethods.enumName(key);
-               ItemStat var7x = MMOItems.plugin.getStats().get(var6x);
-               Validate.notNull(var7x, "Could not find stat with ID '" + var6x + "'");
-               this.data.put(var7x, var7x.whenInitialized(stats.get(key)));
-            } catch (IllegalArgumentException var8x) {
+               String statId = UtilityMethods.enumName(key);
+               ItemStat stat = MMOItems.plugin.getStats().get(statId);
+               Validate.notNull(stat, "Could not find stat with ID '" + statId + "'");
+               this.data.put(stat, stat.whenInitialized(stats.get(key)));
+            } catch (IllegalArgumentException exception) {
                MMOItems.plugin
                   .getLogger()
-                  .log(Level.SEVERE, "An error occurred while trying to load modifier node " + this.getId() + ": " + var8x.getMessage());
+                  .log(Level.SEVERE, "An error occurred while trying to load modifier node " + this.getId() + ": " + exception.getMessage());
             }
          }
       }
@@ -185,7 +185,7 @@ public class ModifierNode implements PreloadedObject {
    }
 
    public void whenCollected(@NotNull MMOItemBuilder mmoItemBuilder, @NotNull UUID uuid) {
-      this.data.forEach((var2x, var3x) -> mmoItemBuilder.addModifierData(var2x, var3x.randomize(mmoItemBuilder), uuid));
+      this.data.forEach((stat, data) -> mmoItemBuilder.addModifierData(stat, data.randomize(mmoItemBuilder), uuid));
       ArrayList list = new ArrayList<>(this.children);
       if (mmoItemBuilder.getTemplate().hasOption(MMOItemTemplate.TemplateOption.ROLL_MODIFIER_CHECK_ORDER)) {
          Collections.shuffle(list);

@@ -73,26 +73,26 @@ public class ItemListener implements Listener {
             .runTaskLater(
                MMOItems.plugin,
                () -> {
-                  List<ItemStack> var4x = Arrays.stream(inventory.getMatrix()).filter(Objects::nonNull).filter(var0x -> !var0x.getType().isAir()).collect(Collectors.toList());
-                  long var5x = var4x.stream().filter(var0x -> NBTItem.get(var0x).hasTag("MMOITEMS_ITEM_ID")).count();
-                  if (var5x == 0L) {
+                  List<ItemStack> craftingItems = Arrays.stream(inventory.getMatrix()).filter(Objects::nonNull).filter(craftingItem -> !craftingItem.getType().isAir()).collect(Collectors.toList());
+                  long mmoItemCount = craftingItems.stream().filter(craftingItem -> NBTItem.get(craftingItem).hasTag("MMOITEMS_ITEM_ID")).count();
+                  if (mmoItemCount == 0L) {
                      inventory.setResult(result);
                      player.updateInventory();
-                  } else if (var5x != 1L
-                     && NBTItem.get((ItemStack)var4x.get(0))
+                  } else if (mmoItemCount != 1L
+                     && NBTItem.get((ItemStack)craftingItems.get(0))
                         .getString("MMOITEMS_ITEM_ID")
-                        .equals(NBTItem.get((ItemStack)var4x.get(1)).getString("MMOITEMS_ITEM_ID"))) {
+                        .equals(NBTItem.get((ItemStack)craftingItems.get(1)).getString("MMOITEMS_ITEM_ID"))) {
                      inventory.setResult(result);
-                     boolean flag = var4x.stream().allMatch(var0x -> {
-                        NBTItem var1xx = NBTItem.get(var0x);
-                        return var1xx.hasTag("MMOITEMS_DISABLE_REPAIRING") && var1xx.getBoolean("MMOITEMS_DISABLE_REPAIRING");
+                     boolean flag = craftingItems.stream().allMatch(craftingItem -> {
+                        NBTItem nbtItem = NBTItem.get(craftingItem);
+                        return nbtItem.hasTag("MMOITEMS_DISABLE_REPAIRING") && nbtItem.getBoolean("MMOITEMS_DISABLE_REPAIRING");
                      });
-                     boolean allValid = var4x.stream().allMatch(var1xx -> new DurabilityItem(player, var1xx).isValid());
+                     boolean allValid = craftingItems.stream().allMatch(stack -> new DurabilityItem(player, stack).isValid());
                      if (flag) {
                         inventory.setResult(item);
                      } else if (allValid) {
-                        DurabilityItem durabilityItem = new DurabilityItem(player, (ItemStack)var4x.get(0));
-                        int count = var4x.stream().map(var1xx -> new DurabilityItem(player, var1xx)).map(DurabilityItem::getDurability).reduce(0, Integer::sum);
+                        DurabilityItem durabilityItem = new DurabilityItem(player, (ItemStack)craftingItems.get(0));
+                        int count = craftingItems.stream().map(stack -> new DurabilityItem(player, stack)).map(DurabilityItem::getDurability).reduce(0, Integer::sum);
                         int remainingDurability = durabilityItem.getMaxDurability() - Math.min(durabilityItem.getMaxDurability(), count);
                         if (remainingDurability > 0) {
                            durabilityItem.addDurability(remainingDurability);

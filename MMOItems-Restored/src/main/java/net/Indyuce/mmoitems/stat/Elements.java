@@ -95,15 +95,15 @@ public class Elements extends ItemStat<RandomElementListData, ElementListData> i
          RandomElementListData randomElementListData = (RandomElementListData)optional.get();
          randomElementListData.getKeys()
             .forEach(
-               var2x -> texts.add(
+               element -> texts.add(
                   ChatColor.GRAY
                      + "* "
-                     + var2x.getKey().getName()
+                     + element.getKey().getName()
                      + " "
-                     + var2x.getValue().getName()
+                     + element.getValue().getName()
                      + ": "
                      + ChatColor.RED
-                     + randomElementListData.getStat(var2x.getKey(), var2x.getValue())
+                     + randomElementListData.getStat(element.getKey(), element.getValue())
                )
             );
       } else {

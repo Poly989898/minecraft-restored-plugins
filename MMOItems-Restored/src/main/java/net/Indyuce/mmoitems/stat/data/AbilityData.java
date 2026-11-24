@@ -34,7 +34,7 @@ public class AbilityData extends Skill {
       super(MMOUtils.backwardsCompatibleTriggerType(jsonObject.get("CastMode").getAsString()));
       this.ability = MMOItems.plugin.getSkills().getSkill(jsonObject.get("Id").getAsString());
       JsonObject asJsonObject = jsonObject.getAsJsonObject("Modifiers");
-      asJsonObject.entrySet().forEach(var1x -> this.setModifier((String)var1x.getKey(), ((JsonElement)var1x.getValue()).getAsDouble()));
+      asJsonObject.entrySet().forEach(entry -> this.setModifier((String)entry.getKey(), ((JsonElement)entry.getValue()).getAsDouble()));
    }
 
    public AbilityData(@NotNull ConfigurationSection section) {
@@ -148,7 +148,7 @@ public class AbilityData extends Skill {
       jsonObject.addProperty("Id", this.ability.getHandler().getId());
       jsonObject.addProperty("CastMode", this.getTrigger().name());
       JsonObject modifiersJson = new JsonObject();
-      this.modifiers.keySet().forEach(var2x -> modifiersJson.addProperty(var2x, this.getParameter(var2x)));
+      this.modifiers.keySet().forEach(modifier -> modifiersJson.addProperty(modifier, this.getParameter(modifier)));
       jsonObject.add("Modifiers", modifiersJson);
       return jsonObject;
    }

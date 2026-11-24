@@ -219,8 +219,8 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
             }
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, () -> {
-               for (Arrow var2x : arrows) {
-                  var2x.remove();
+               for (Arrow arrow : arrows) {
+                  arrow.remove();
                }
 
                arrows.clear();

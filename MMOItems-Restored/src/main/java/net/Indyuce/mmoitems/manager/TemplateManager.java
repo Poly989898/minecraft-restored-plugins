@@ -217,12 +217,12 @@ public class TemplateManager implements Reloadable {
 
       friendlyFeedbackProvider.activatePrefix(true, "Item Templates");
       friendlyFeedbackProvider.log(FriendlyFeedbackCategory.INFORMATION, "Loading item templates, please wait...", new String[0]);
-      this.templates.forEach(var1x -> {
+      this.templates.forEach(template -> {
          try {
-            var1x.getPostLoadAction().performAction();
-         } catch (Exception var3x) {
-            friendlyFeedbackProvider.activatePrefix(true, "Item Templates §8($r" + var1x.getType().getId() + "§8)");
-            friendlyFeedbackProvider.log(FriendlyFeedbackCategory.INFORMATION, "Could not post-load item template '" + var1x.getId() + "': " + var3x.getMessage(), new String[0]);
+            template.getPostLoadAction().performAction();
+         } catch (Exception exception) {
+            friendlyFeedbackProvider.activatePrefix(true, "Item Templates §8($r" + template.getType().getId() + "§8)");
+            friendlyFeedbackProvider.log(FriendlyFeedbackCategory.INFORMATION, "Could not post-load item template '" + template.getId() + "': " + exception.getMessage(), new String[0]);
          }
       });
       friendlyFeedbackProvider.sendAllTo((org.bukkit.command.CommandSender) MMOItems.getConsole());

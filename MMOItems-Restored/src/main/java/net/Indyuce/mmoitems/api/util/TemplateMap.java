@@ -46,13 +46,13 @@ public class TemplateMap<C> {
    }
 
    public void forEach(@NotNull Consumer<C> consumer) {
-      this.typeMap.values().forEach(var1x -> var1x.idMap.values().forEach(consumer));
+      this.typeMap.values().forEach(typeTemplates -> typeTemplates.idMap.values().forEach(consumer));
    }
 
    @NotNull
    public Collection<C> collectValues() {
       HashSet set = new HashSet();
-      this.typeMap.values().forEach(var1x -> set.addAll(var1x.idMap.values()));
+      this.typeMap.values().forEach(typeTemplates -> set.addAll(typeTemplates.idMap.values()));
       return set;
    }
 

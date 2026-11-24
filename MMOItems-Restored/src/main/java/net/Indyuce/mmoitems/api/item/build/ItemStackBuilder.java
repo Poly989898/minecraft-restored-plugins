@@ -181,7 +181,7 @@ public class ItemStackBuilder {
       this.item.setItemMeta(this.meta);
       NBTItem nbtItem = NBTItem.get(this.item).addTag(this.tags);
       if (this.futureActions != null) {
-         this.futureActions.forEach(var1x -> var1x.accept(nbtItem));
+         this.futureActions.forEach(action -> action.accept(nbtItem));
       }
 
       return nbtItem;

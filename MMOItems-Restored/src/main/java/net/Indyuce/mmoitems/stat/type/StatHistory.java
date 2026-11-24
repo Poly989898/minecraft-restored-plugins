@@ -438,9 +438,9 @@ public class StatHistory {
    @NotNull
    public StatHistory clone() {
       StatHistory statHistory = new StatHistory(this.getMMOItem(), this.getItemStat(), ((Mergeable)this.getOriginalData()).clone());
-      this.perGemstoneData.forEach((var1x, statData) -> statHistory.perGemstoneData.put(var1x, ((Mergeable)statData).clone()));
-      this.perExternalData.forEach(var1x -> statHistory.perExternalData.add(((Mergeable)var1x).clone()));
-      this.perModifierBonus.forEach((var1x, statData) -> statHistory.perModifierBonus.put(var1x, ((Mergeable)statData).clone()));
+      this.perGemstoneData.forEach((type, statData) -> statHistory.perGemstoneData.put(type, ((Mergeable)statData).clone()));
+      this.perExternalData.forEach(data -> statHistory.perExternalData.add(((Mergeable)data).clone()));
+      this.perModifierBonus.forEach((modifier, statData) -> statHistory.perModifierBonus.put(modifier, ((Mergeable)statData).clone()));
       return statHistory;
    }
 

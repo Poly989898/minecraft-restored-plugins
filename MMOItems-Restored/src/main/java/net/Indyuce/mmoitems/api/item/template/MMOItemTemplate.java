@@ -37,55 +37,55 @@ public class MMOItemTemplate implements ItemReference, PreloadedObject {
    private ModifierNode modifierGroup;
    private final Set<MMOItemTemplate.TemplateOption> options = new HashSet<>();
    private final PostLoadAction postLoadAction = new PostLoadAction(
-      var1x -> {
-         FriendlyFeedbackProvider var2x = new FriendlyFeedbackProvider(FFPMMOItems.get());
-         var2x.activatePrefix(true, this.getType().getId() + " " + this.getId());
-         if (var1x.contains("option")) {
-            if (var1x.contains("option.capacity", true)) {
+      config -> {
+         FriendlyFeedbackProvider feedback = new FriendlyFeedbackProvider(FFPMMOItems.get());
+         feedback.activatePrefix(true, this.getType().getId() + " " + this.getId());
+         if (config.contains("option")) {
+            if (config.contains("option.capacity", true)) {
                try {
-                  this.modifierCapacity = new NumericStatFormula(var1x.getConfigurationSection("option.capacity"));
+                  this.modifierCapacity = new NumericStatFormula(config.getConfigurationSection("option.capacity"));
                } catch (RuntimeException exception) {
-                  var2x.log(FriendlyFeedbackCategory.ERROR, "Could not load modifier capacity: {0}", new String[]{exception.getMessage()});
+                  feedback.log(FriendlyFeedbackCategory.ERROR, "Could not load modifier capacity: {0}", new String[]{exception.getMessage()});
                }
             }
 
             for (MMOItemTemplate.TemplateOption templateOption : MMOItemTemplate.TemplateOption.values()) {
-               if (var1x.getBoolean("option." + templateOption.name().toLowerCase().replace("_", "-"))) {
+               if (config.getBoolean("option." + templateOption.name().toLowerCase().replace("_", "-"))) {
                   this.options.add(templateOption);
                }
             }
          }
 
          try {
-            this.modifierGroup = var1x.contains("modifiers") ? new ModifierNode(this.getId(), var1x) : null;
+            this.modifierGroup = config.contains("modifiers") ? new ModifierNode(this.getId(), config) : null;
             if (this.modifierGroup != null) {
                this.modifierGroup.getPostLoadAction().performAction();
             }
          } catch (Exception exception) {
-            var2x.log(FriendlyFeedbackCategory.ERROR, "Could not load modifier group: {0}", new String[]{exception.getMessage()});
+            feedback.log(FriendlyFeedbackCategory.ERROR, "Could not load modifier group: {0}", new String[]{exception.getMessage()});
          }
 
          Validate.notNull(
-            var1x.getConfigurationSection("base"), FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Could not find base item data", new String[0])
+            config.getConfigurationSection("base"), FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Could not find base item data", new String[0])
          );
 
-         for (String key : var1x.getConfigurationSection("base").getKeys(false)) {
+         for (String key : config.getConfigurationSection("base").getKeys(false)) {
             try {
                String text = UtilityMethods.enumName(key);
                ItemStat itemStat = MMOItems.plugin.getStats().get(text);
                Validate.notNull(
                   itemStat, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Could not find stat with ID '$i{0}$b'", new String[]{text})
                );
-               RandomStatData randomStatData = itemStat.whenInitialized(var1x.get("base." + key));
+               RandomStatData randomStatData = itemStat.whenInitialized(config.get("base." + key));
                if (randomStatData != null) {
                   this.base.put(itemStat, randomStatData);
                }
             } catch (IllegalArgumentException exception) {
-               var2x.log(FriendlyFeedbackCategory.INFORMATION, "Could not load base item data '$f{0}$b': {1}", new String[]{key, exception.getMessage()});
+               feedback.log(FriendlyFeedbackCategory.INFORMATION, "Could not load base item data '$f{0}$b': {1}", new String[]{key, exception.getMessage()});
             }
          }
 
-         var2x.sendTo(FriendlyFeedbackCategory.INFORMATION, MMOItems.getConsole());
+         feedback.sendTo(FriendlyFeedbackCategory.INFORMATION, MMOItems.getConsole());
       }
    );
 
@@ -143,7 +143,7 @@ public class MMOItemTemplate implements ItemReference, PreloadedObject {
    }
 
    private void exploreMap(Map<String, ModifierNode> map, ModifierNode modifierNode) {
-      modifierNode.getChildren().forEach(var2x -> this.exploreMap(map, var2x));
+      modifierNode.getChildren().forEach(child -> this.exploreMap(map, child));
       map.put(modifierNode.getId(), modifierNode);
    }
 

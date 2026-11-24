@@ -17,7 +17,7 @@ public class CopyCommandTreeNode extends CommandTreeNode {
       super(commandTreeNode, "copy");
       this.addParameter(MMOItemsCommandTreeRoot.TYPE);
       this.addParameter(MMOItemsCommandTreeRoot.ID_2);
-      this.addParameter(new Parameter("<new-id>", (commandTreeExplorer, var1x) -> {}));
+      this.addParameter(new Parameter("<new-id>", (commandTreeExplorer, texts) -> {}));
    }
 
    public CommandResult execute(CommandSender sender, String[] texts) {

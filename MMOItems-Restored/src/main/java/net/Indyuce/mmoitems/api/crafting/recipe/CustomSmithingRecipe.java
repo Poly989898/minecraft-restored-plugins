@@ -331,11 +331,11 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
       MMOItem outputMMOItem = this.getOutputItem().newBuilder(0, null).build();
       ArrayList<MMOItem> mmoItems = new ArrayList();
       if (mmoItem != null) {
-         mmoItem.extractGemstones().forEach(var1x -> mmoItems.add(var1x.getValue()));
+         mmoItem.extractGemstones().forEach(gemstone -> mmoItems.add(gemstone.getValue()));
       }
 
       if (inputMMOItem != null) {
-         inputMMOItem.extractGemstones().forEach(var1x -> mmoItems.add(var1x.getValue()));
+         inputMMOItem.extractGemstones().forEach(gemstone -> mmoItems.add(gemstone.getValue()));
       }
 
       ArrayList list = new ArrayList();

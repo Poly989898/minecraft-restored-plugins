@@ -65,7 +65,7 @@ public class RandomAbilityData {
 
    public AbilityData randomize(MMOItemBuilder mmoItemBuilder) {
       AbilityData abilityData = new AbilityData(this.ability, this.triggerType);
-      this.modifiers.forEach((var2x, numericStatFormula) -> abilityData.setModifier(var2x, numericStatFormula.calculate(mmoItemBuilder.getLevel())));
+      this.modifiers.forEach((modifier, numericStatFormula) -> abilityData.setModifier(modifier, numericStatFormula.calculate(mmoItemBuilder.getLevel())));
       return abilityData;
    }
 }

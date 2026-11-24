@@ -22,8 +22,8 @@ public class GiveAllCommandTreeNode extends CommandTreeNode {
       super(commandTreeNode, "giveall");
       this.addParameter(MMOItemsCommandTreeRoot.TYPE);
       this.addParameter(MMOItemsCommandTreeRoot.ID_2);
-      this.addParameter(new Parameter("<min-max>", (commandTreeExplorer, var1x) -> var1x.add("1-3")));
-      this.addParameter(new Parameter("<unidentify-chance>", (commandTreeExplorer, var1x) -> var1x.add("<unidentify-chance>")));
+      this.addParameter(new Parameter("<min-max>", (commandTreeExplorer, texts) -> texts.add("1-3")));
+      this.addParameter(new Parameter("<unidentify-chance>", (commandTreeExplorer, texts) -> texts.add("<unidentify-chance>")));
    }
 
    public CommandResult execute(CommandSender sender, String[] texts) {

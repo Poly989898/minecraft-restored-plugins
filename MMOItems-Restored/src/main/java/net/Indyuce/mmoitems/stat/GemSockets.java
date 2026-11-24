@@ -84,7 +84,7 @@ public class GemSockets extends ItemStat<GemSocketsData, GemSocketsData> {
          list.add(this.filledGemSocketFormat.replace("{name}", name));
       }
 
-      gemSocketsData.getEmptySlots().forEach(var2x -> list.add(this.emptyGemSocketFormat.replace("{name}", var2x)));
+      gemSocketsData.getEmptySlots().forEach(socket -> list.add(this.emptyGemSocketFormat.replace("{name}", socket)));
       itemStackBuilder.getLore().insert("gem-stones", list);
    }
 
@@ -122,7 +122,7 @@ public class GemSockets extends ItemStat<GemSocketsData, GemSocketsData> {
             JsonObject asJsonObject = new JsonParser().parse((String)tagAtPath.getValue()).getAsJsonObject();
             GemSocketsData gemSocketsData = new GemSocketsData(asJsonObject.getAsJsonArray("EmptySlots"));
             JsonArray asJsonArray = asJsonObject.getAsJsonArray("Gemstones");
-            asJsonArray.forEach(var1x -> gemSocketsData.add(new GemstoneData(var1x.getAsJsonObject())));
+            asJsonArray.forEach(element -> gemSocketsData.add(new GemstoneData(element.getAsJsonObject())));
             return gemSocketsData;
          } catch (JsonSyntaxException | IllegalStateException exception) {
          }
@@ -165,7 +165,7 @@ public class GemSockets extends ItemStat<GemSocketsData, GemSocketsData> {
       if (optional.isPresent()) {
          texts.add(ChatColor.GRAY + "Current Value:");
          GemSocketsData gemSocketsData = (GemSocketsData)optional.get();
-         gemSocketsData.getEmptySlots().forEach(var1x -> texts.add(ChatColor.GRAY + "* " + ChatColor.GREEN + var1x + " Gem Socket"));
+         gemSocketsData.getEmptySlots().forEach(socket -> texts.add(ChatColor.GRAY + "* " + ChatColor.GREEN + socket + " Gem Socket"));
       } else {
          texts.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "No Sockets");
       }

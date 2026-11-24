@@ -176,7 +176,7 @@ public class CraftingRecipe extends Recipe {
             return false;
          }
 
-         checkedRecipe.getRecipe().whenClaimed().forEach(var1x -> var1x.whenCrafting(playerData));
+         checkedRecipe.getRecipe().whenClaimed().forEach(trigger -> trigger.whenCrafting(playerData));
          if (item != null) {
             new SmartGive(playerData.getPlayer()).give(new ItemStack[]{item});
          }

@@ -69,7 +69,7 @@ public class UnidentifiedItem extends ConfigItem {
             this.name = this.name.replace("#prefix#", "");
          }
 
-         this.lore.removeIf(var2x -> var2x.startsWith("{tier}") && itemTier == null || var2x.startsWith("{range}") && (itemTier == null || count < 0));
+         this.lore.removeIf(line -> line.startsWith("{tier}") && itemTier == null || line.startsWith("{range}") && (itemTier == null || count < 0));
 
          for (String key : map.keySet()) {
             this.name = this.name.replace("#" + key + "#", (CharSequence)map.get(key));

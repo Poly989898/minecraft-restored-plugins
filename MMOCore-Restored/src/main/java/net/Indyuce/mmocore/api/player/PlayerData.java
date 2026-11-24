@@ -853,14 +853,14 @@ public class PlayerData extends SynchronizedDataHolder implements OfflinePlayerD
             List<PlayerData> nearbyMembers = party.getOnlineMembers()
                .stream()
                .filter(
-                  var1x -> {
-                     if (!this.equals(var1x)
-                        && !var1x.hasReachedMaxLevel()
-                        && Math.abs(var1x.getLevel() - this.getLevel()) <= MMOCore.plugin.configManager.maxPartyLevelDifference) {
+                  candidate -> {
+                     if (!this.equals(candidate)
+                        && !candidate.hasReachedMaxLevel()
+                        && Math.abs(candidate.getLevel() - this.getLevel()) <= MMOCore.plugin.configManager.maxPartyLevelDifference) {
                         double partyMaxExpSplitRange = MMOCore.plugin.configManager.partyMaxExpSplitRange;
                         return partyMaxExpSplitRange <= 0.0
-                           || var1x.getPlayer().getWorld().equals(this.getPlayer().getWorld())
-                              && var1x.getPlayer().getLocation().distanceSquared(this.getPlayer().getLocation()) < partyMaxExpSplitRange * partyMaxExpSplitRange;
+                           || candidate.getPlayer().getWorld().equals(this.getPlayer().getWorld())
+                              && candidate.getPlayer().getLocation().distanceSquared(this.getPlayer().getLocation()) < partyMaxExpSplitRange * partyMaxExpSplitRange;
                      } else {
                         return false;
                      }

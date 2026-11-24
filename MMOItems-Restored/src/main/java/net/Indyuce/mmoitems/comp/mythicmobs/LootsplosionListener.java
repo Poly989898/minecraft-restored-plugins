@@ -85,9 +85,9 @@ public class LootsplosionListener implements Listener {
             entity.setVelocity(LootsplosionListener.this.randomVector());
             if (LootsplosionListener.this.colored) {
                Bukkit.getScheduler().runTask(MMOItems.plugin, () -> {
-                  NBTItem var2x = MythicLib.plugin.getVersion().getWrapper().getNBTItem(entity.getItemStack());
-                  if (var2x.hasTag("MMOITEMS_TIER")) {
-                     ItemTier itemTier = MMOItems.plugin.getTiers().get(var2x.getString("MMOITEMS_TIER"));
+                  NBTItem nbtItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(entity.getItemStack());
+                  if (nbtItem.hasTag("MMOITEMS_TIER")) {
+                     ItemTier itemTier = MMOItems.plugin.getTiers().get(nbtItem.getString("MMOITEMS_TIER"));
                      if (itemTier.hasColor()) {
                         LootsplosionListener.this.new LootColor(entity, itemTier.getColor());
                      }

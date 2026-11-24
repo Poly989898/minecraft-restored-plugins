@@ -62,7 +62,7 @@ public class LoreBuilder extends Buildable<List<String>> {
    public void insert(@NotNull String text, @NotNull List<String> texts) {
       int count = this.lore.indexOf("#" + text + "#");
       if (count >= 0) {
-         Lists.reverse(texts).forEach(var2x -> this.lore.add(count + 1, var2x));
+         Lists.reverse(texts).forEach(loreLine -> this.lore.add(count + 1, loreLine));
          this.lore.remove(count);
       }
    }

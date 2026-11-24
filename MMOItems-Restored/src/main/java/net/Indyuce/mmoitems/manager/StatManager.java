@@ -163,7 +163,7 @@ public class StatManager {
          return itemStat;
       }
 
-      itemStat = this.numericStats.stream().filter(var1x -> var1x.getId().equals(text)).findFirst().orElse(null);
+      itemStat = this.numericStats.stream().filter(stat -> stat.getId().equals(text)).findFirst().orElse(null);
       if (itemStat != null) {
          return itemStat;
       }
@@ -174,8 +174,8 @@ public class StatManager {
 
    public void register(@NotNull ItemStat<?, ?> itemStat) {
       if (itemStat.isEnabled()) {
-         this.stats.compute(itemStat.getId(), (var1x, existingStat) -> {
-            Validate.isTrue(existingStat == null, "A stat with ID '" + var1x + "' already exists");
+         this.stats.compute(itemStat.getId(), (statId, existingStat) -> {
+            Validate.isTrue(existingStat == null, "A stat with ID '" + statId + "' already exists");
             return itemStat;
          });
 
@@ -205,7 +205,7 @@ public class StatManager {
          }
 
          if (MMOItems.plugin.getTypes() != null) {
-            MMOItems.plugin.getTypes().getAll().stream().filter(itemStat::isCompatible).forEach(var1x -> var1x.getAvailableStats().add(itemStat));
+            MMOItems.plugin.getTypes().getAll().stream().filter(itemStat::isCompatible).forEach(type -> type.getAvailableStats().add(itemStat));
          }
       }
    }

@@ -72,7 +72,7 @@ public class Permission extends StringListStat implements ItemRestriction {
       if (optional.isPresent()) {
          texts.add(ChatColor.GRAY + "Current Value:");
          StringListData stringListData = (StringListData)optional.get();
-         stringListData.getList().forEach(var1x -> texts.add(ChatColor.GRAY + "* " + ChatColor.GREEN + var1x));
+         stringListData.getList().forEach(line -> texts.add(ChatColor.GRAY + "* " + ChatColor.GREEN + line));
       } else {
          texts.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
       }

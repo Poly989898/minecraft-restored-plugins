@@ -67,7 +67,7 @@ public class TypeManager {
          }
 
          type.getAvailableStats().clear();
-         MMOItems.plugin.getStats().getAll().stream().filter(var1x -> var1x.isCompatible(type)).forEach(var1x -> type.getAvailableStats().add(var1x));
+         MMOItems.plugin.getStats().getAll().stream().filter(stat -> stat.isCompatible(type)).forEach(stat -> type.getAvailableStats().add(stat));
       }
    }
 

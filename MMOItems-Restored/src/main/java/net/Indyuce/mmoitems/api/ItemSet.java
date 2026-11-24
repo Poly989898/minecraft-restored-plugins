@@ -175,7 +175,7 @@ public class ItemSet {
       }
 
       public void merge(ItemSet.SetBonuses setBonuses) {
-         setBonuses.getStats().forEach((var1x, value) -> this.stats.put((ItemStat<?, ?>)var1x, (this.stats.containsKey(var1x) ? this.stats.get(var1x) : 0.0) + value));
+         setBonuses.getStats().forEach((stat, value) -> this.stats.put((ItemStat<?, ?>)stat, (this.stats.containsKey(stat) ? this.stats.get(stat) : 0.0) + value));
 
          for (PotionEffect potionEffect : setBonuses.getPotionEffects()) {
             if (!this.permEffects.containsKey(potionEffect.getType()) || this.permEffects.get(potionEffect.getType()).getAmplifier() < potionEffect.getAmplifier()) {

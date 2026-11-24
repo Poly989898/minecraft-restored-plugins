@@ -23,11 +23,11 @@ public class UpdateItemCompletion implements TabCompleter {
       }
 
       if (texts.length == 2 && Type.isValid(texts[0])) {
-         Type.get(texts[0]).getConfigFile().getConfig().getKeys(false).forEach(var1x -> suggestions.add(var1x.toUpperCase()));
+         Type.get(texts[0]).getConfigFile().getConfig().getKeys(false).forEach(key -> suggestions.add(key.toUpperCase()));
       }
 
       return texts[texts.length - 1].isEmpty()
          ? suggestions
-         : suggestions.stream().filter(var1x -> var1x.toLowerCase().startsWith(texts[texts.length - 1].toLowerCase())).collect(Collectors.toList());
+         : suggestions.stream().filter(suggestion -> suggestion.toLowerCase().startsWith(texts[texts.length - 1].toLowerCase())).collect(Collectors.toList());
    }
 }

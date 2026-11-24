@@ -39,9 +39,9 @@ public class SimpleLuteAttack implements LuteAttackHandler {
                this.cancel();
             }
 
-            List<Entity> var1x = MMOUtils.getNearbyChunkEntities(this.loc);
+            List<Entity> nearby = MMOUtils.getNearbyChunkEntities(this.loc);
 
-            for (int var2x = 0; var2x < 3; var2x++) {
+            for (int i = 0; i < 3; i++) {
                this.loc.add(this.vec.add(vector));
                if (this.loc.getBlock().getType().isSolid()) {
                   this.cancel();
@@ -49,13 +49,13 @@ public class SimpleLuteAttack implements LuteAttackHandler {
                }
 
                projectileParticlesData.shootParticle(this.loc);
-               if (var2x == 0) {
+               if (i == 0) {
                   soundReader.play(this.loc, 2.0F, (float)(0.5 + this.ti / duration));
                }
 
-               for (Entity var4x : var1x) {
-                  if (UtilityMethods.canTarget(playerMetadata.getPlayer(), this.loc, var4x, InteractionType.OFFENSE_ACTION)) {
-                     playerMetadata.attack((LivingEntity)var4x, value, new DamageType[]{DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE});
+               for (Entity entity : nearby) {
+                  if (UtilityMethods.canTarget(playerMetadata.getPlayer(), this.loc, entity, InteractionType.OFFENSE_ACTION)) {
+                     playerMetadata.attack((LivingEntity)entity, value, new DamageType[]{DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE});
                      this.cancel();
                      return;
                   }

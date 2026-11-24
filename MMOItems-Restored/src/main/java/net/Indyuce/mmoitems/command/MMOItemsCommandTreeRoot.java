@@ -26,11 +26,11 @@ import net.Indyuce.mmoitems.command.mmoitems.stations.StationsCommandTreeNode;
 import net.Indyuce.mmoitems.command.mmoitems.update.UpdateCommandTreeNode;
 
 public class MMOItemsCommandTreeRoot extends CommandTreeRoot {
-   public static final Parameter TYPE = new Parameter("<type>", (commandTreeExplorer, texts) -> MMOItems.plugin.getTypes().getAll().forEach(var1x -> texts.add(var1x.getId())));
+   public static final Parameter TYPE = new Parameter("<type>", (commandTreeExplorer, texts) -> MMOItems.plugin.getTypes().getAll().forEach(type -> texts.add(type.getId())));
    public static final Parameter ID_2 = new Parameter("<id>", (commandTreeExplorer, texts) -> {
       try {
          Type type = Type.get(commandTreeExplorer.getArguments()[1]);
-         MMOItems.plugin.getTemplates().getTemplates(type).forEach(var1x -> texts.add(var1x.getId()));
+         MMOItems.plugin.getTemplates().getTemplates(type).forEach(template -> texts.add(template.getId()));
       } catch (Exception exception) {
       }
    });

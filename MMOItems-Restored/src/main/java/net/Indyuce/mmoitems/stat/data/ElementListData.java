@@ -29,7 +29,7 @@ public class ElementListData implements StatData, Mergeable<ElementListData> {
    }
 
    public void mergeWith(@NotNull ElementListData elementListData) {
-      elementListData.stats.forEach((var1x, value) -> this.stats.put((Pair<Element, ElementStatType>)var1x, value + this.stats.getOrDefault(var1x, 0.0)));
+      elementListData.stats.forEach((element, value) -> this.stats.put((Pair<Element, ElementStatType>)element, value + this.stats.getOrDefault(element, 0.0)));
    }
 
    @NotNull
