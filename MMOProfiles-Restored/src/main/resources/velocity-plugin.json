@@ -1,0 +1,11 @@
+{
+  "id": "mmoprofiles_proxy",
+  "name": "MMOProfiles-Proxy",
+  "version": "1.1.1-SNAPSHOT",
+  "description": "A RPG profile solution smoothly integrated to popular plugins.",
+  "authors": [
+    "PhoenixDevt"
+  ],
+  "dependencies": [],
+  "main": "fr.phoenixdevt.mmoprofiles.velocity.MMOProfiles"
+}

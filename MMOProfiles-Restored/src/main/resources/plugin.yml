@@ -1,0 +1,14 @@
+name: MMOProfiles
+main: fr.phoenixdevt.mmoprofiles.bukkit.MMOProfiles
+version: 1.1.1-SNAPSHOT
+description: A RPG profile solution smoothly integrated to popular plugins.
+api-version: 1.13
+softdepend: [ Vault, PlaceholderAPI, Essentials, ProtocolLib, Multiverse-Core ]
+depend: [ MythicLib ]
+commands:
+  mmoprofiles:
+    description: MMOProfiles main command.
+    permission: mythiclib.reload
+permissions:
+  mmoprofiles.command:
+    default: op
