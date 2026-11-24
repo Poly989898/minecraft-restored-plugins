@@ -16,10 +16,10 @@ esac; shift; done
 
 cat > "$work/init.gradle" <<'G'
 allprojects { afterEvaluate { p ->
-  if (p.plugins.hasPlugin('java')) p.tasks.register('printRenameCp') { doLast {
+  if (p.plugins.hasPlugin('java')) p.tasks.register('printRenameCp') { dependsOn p.sourceSets.main.compileClasspath; doLast {
     println('RENAME_CP=' + p.sourceSets.main.compileClasspath.asPath) } } } }
 G
-cp_line="$("$GRADLE" --offline -q -p "$plugin" -I "$work/init.gradle" printRenameCp | grep '^RENAME_CP=' | tail -1)"
+cp_line="$("$GRADLE" --offline -q -p "$plugin" -I "$work/init.gradle" :printRenameCp | grep '^RENAME_CP=' | tail -1)"
 cp="${cp_line#RENAME_CP=}"
 
 javac_all() { # <outdir>
