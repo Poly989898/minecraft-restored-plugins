@@ -6,6 +6,5 @@ import net.Indyuce.mmoitems.comp.inventory.PlayerInventoryHandler;
 public class MMOItems {
    public static MMOItems plugin;
    public PlayerInventoryHandler getInventory() { throw new UnsupportedOperationException(); }
-   public Language getLanguage() { throw new UnsupportedOperationException(); }
-   public static class Language { public boolean keepSoulboundOnDeath; }
+   public net.Indyuce.mmoitems.manager.ConfigManager getLanguage() { throw new UnsupportedOperationException(); }
 }
