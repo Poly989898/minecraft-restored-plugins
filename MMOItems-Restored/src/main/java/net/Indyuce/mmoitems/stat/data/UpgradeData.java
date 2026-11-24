@@ -45,39 +45,39 @@ public class UpgradeData implements StatData, RandomStatData<UpgradeData> {
       return this.min;
    }
 
-   public UpgradeData(@Nullable String var1, @Nullable String var2, boolean var3, boolean var4, int var5, double var6) {
-      this(var1, var2, var3, var4, var5, 0, var6);
+   public UpgradeData(@Nullable String text, @Nullable String text2, boolean flag, boolean flag2, int count, double value) {
+      this(text, text2, flag, flag2, count, 0, value);
    }
 
-   public UpgradeData(@Nullable String var1, @Nullable String var2, boolean var3, boolean var4, int var5, int var6, double var7) {
-      this.reference = var1;
-      this.template = var2;
-      this.workbench = var3;
-      this.destroy = var4;
-      this.max = var5;
-      this.min = var6;
-      this.success = var7;
+   public UpgradeData(@Nullable String text, @Nullable String text2, boolean flag, boolean flag2, int count, int count2, double value) {
+      this.reference = text;
+      this.template = text2;
+      this.workbench = flag;
+      this.destroy = flag2;
+      this.max = count;
+      this.min = count2;
+      this.success = value;
    }
 
-   public UpgradeData(ConfigurationSection var1) {
-      this.reference = var1.getString("reference");
-      this.template = var1.getString("template");
-      this.workbench = var1.getBoolean("workbench");
-      this.destroy = var1.getBoolean("destroy");
-      this.max = var1.getInt("max");
-      this.min = var1.getInt("min", 0);
-      this.success = var1.getDouble("success") / 100.0;
+   public UpgradeData(ConfigurationSection section) {
+      this.reference = section.getString("reference");
+      this.template = section.getString("template");
+      this.workbench = section.getBoolean("workbench");
+      this.destroy = section.getBoolean("destroy");
+      this.max = section.getInt("max");
+      this.min = section.getInt("min", 0);
+      this.success = section.getDouble("success") / 100.0;
    }
 
-   public UpgradeData(JsonObject var1) {
-      this.workbench = var1.get("Workbench").getAsBoolean();
-      this.destroy = var1.get("Destroy").getAsBoolean();
-      this.template = var1.has("Template") ? var1.get("Template").getAsString() : null;
-      this.reference = var1.has("Reference") ? var1.get("Reference").getAsString() : null;
-      this.level = var1.get("Level").getAsInt();
-      this.max = var1.get("Max").getAsInt();
-      this.min = var1.has("Min") ? var1.get("Min").getAsInt() : 0;
-      this.success = var1.get("Success").getAsDouble();
+   public UpgradeData(JsonObject jsonObject) {
+      this.workbench = jsonObject.get("Workbench").getAsBoolean();
+      this.destroy = jsonObject.get("Destroy").getAsBoolean();
+      this.template = jsonObject.has("Template") ? jsonObject.get("Template").getAsString() : null;
+      this.reference = jsonObject.has("Reference") ? jsonObject.get("Reference").getAsString() : null;
+      this.level = jsonObject.get("Level").getAsInt();
+      this.max = jsonObject.get("Max").getAsInt();
+      this.min = jsonObject.has("Min") ? jsonObject.get("Min").getAsInt() : 0;
+      this.success = jsonObject.get("Success").getAsDouble();
    }
 
    @Nullable
@@ -94,8 +94,8 @@ public class UpgradeData implements StatData, RandomStatData<UpgradeData> {
       return this.level;
    }
 
-   public void setLevel(int var1) {
-      this.level = var1;
+   public void setLevel(int count) {
+      this.level = count;
    }
 
    public int getMaxUpgrades() {
@@ -115,8 +115,8 @@ public class UpgradeData implements StatData, RandomStatData<UpgradeData> {
    }
 
    @Deprecated
-   public boolean matchesReference(UpgradeData var1) {
-      return MMOUtils.checkReference(this.reference, var1.reference);
+   public boolean matchesReference(UpgradeData upgradeData) {
+      return MMOUtils.checkReference(this.reference, upgradeData.reference);
    }
 
    @Override
@@ -124,31 +124,31 @@ public class UpgradeData implements StatData, RandomStatData<UpgradeData> {
       return false;
    }
 
-   public void upgrade(@NotNull MMOItem var1) {
+   public void upgrade(@NotNull MMOItem mmoItem) {
       if (this.getTemplate() == null) {
          MMOItems.plugin.getLogger().warning("Couldn't find upgrade template '" + this.template + "'. Does it exist?");
       } else {
-         this.getTemplate().upgrade(var1);
+         this.getTemplate().upgrade(mmoItem);
       }
    }
 
    public JsonObject toJson() {
-      JsonObject var1 = new JsonObject();
+      JsonObject jsonObject = new JsonObject();
       if (this.reference != null && !this.reference.isEmpty()) {
-         var1.addProperty("Reference", this.reference);
+         jsonObject.addProperty("Reference", this.reference);
       }
 
       if (this.template != null && !this.template.isEmpty()) {
-         var1.addProperty("Template", this.template);
+         jsonObject.addProperty("Template", this.template);
       }
 
-      var1.addProperty("Workbench", this.workbench);
-      var1.addProperty("Destroy", this.destroy);
-      var1.addProperty("Level", this.level);
-      var1.addProperty("Max", this.max);
-      var1.addProperty("Min", this.min);
-      var1.addProperty("Success", this.success);
-      return var1;
+      jsonObject.addProperty("Workbench", this.workbench);
+      jsonObject.addProperty("Destroy", this.destroy);
+      jsonObject.addProperty("Level", this.level);
+      jsonObject.addProperty("Max", this.max);
+      jsonObject.addProperty("Min", this.min);
+      jsonObject.addProperty("Success", this.success);
+      return jsonObject;
    }
 
    @Override
@@ -156,7 +156,7 @@ public class UpgradeData implements StatData, RandomStatData<UpgradeData> {
       return this.toJson().toString();
    }
 
-   public UpgradeData randomize(MMOItemBuilder var1) {
+   public UpgradeData randomize(MMOItemBuilder mmoItemBuilder) {
       return this;
    }
 

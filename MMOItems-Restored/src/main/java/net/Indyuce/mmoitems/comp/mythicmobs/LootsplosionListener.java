@@ -28,16 +28,16 @@ public class LootsplosionListener implements Listener {
    private final boolean colored = MMOItems.plugin.getConfig().getBoolean("lootsplosion.color");
 
    @EventHandler(priority = EventPriority.HIGH)
-   public void b(MythicMobDeathEvent var1) {
-      if (var1.getMob().getVariables().has("Lootsplosion")) {
-         new LootsplosionListener.LootsplosionHandler(var1);
+   public void b(MythicMobDeathEvent event) {
+      if (event.getMob().getVariables().has("Lootsplosion")) {
+         new LootsplosionListener.LootsplosionHandler(event);
       }
    }
 
    private Vector randomVector() {
-      double var1 = MMOItems.plugin.getConfig().getDouble("lootsplosion.offset");
-      double var3 = MMOItems.plugin.getConfig().getDouble("lootsplosion.height");
-      return new Vector(Math.cos(RANDOM.nextDouble() * Math.PI * 2.0) * var1, var3, Math.sin(RANDOM.nextDouble() * Math.PI * 2.0) * var1);
+      double lootsplosionOffset = MMOItems.plugin.getConfig().getDouble("lootsplosion.offset");
+      double lootsplosionHeight = MMOItems.plugin.getConfig().getDouble("lootsplosion.height");
+      return new Vector(Math.cos(RANDOM.nextDouble() * Math.PI * 2.0) * lootsplosionOffset, lootsplosionHeight, Math.sin(RANDOM.nextDouble() * Math.PI * 2.0) * lootsplosionOffset);
    }
 
    public class LootColor extends BukkitRunnable {
@@ -75,21 +75,21 @@ public class LootsplosionListener implements Listener {
       }
 
       @EventHandler
-      public void a(ItemSpawnEvent var1) {
-         Item var2 = var1.getEntity();
-         if (!this.drops.contains(var2.getItemStack())) {
+      public void a(ItemSpawnEvent event) {
+         Item entity = event.getEntity();
+         if (!this.drops.contains(entity.getItemStack())) {
             this.close();
          } else {
-            this.drops.remove(var2.getItemStack());
-            var2.teleport(var2.getLocation().add(0.0, this.offset, 0.0));
-            var2.setVelocity(LootsplosionListener.this.randomVector());
+            this.drops.remove(entity.getItemStack());
+            entity.teleport(entity.getLocation().add(0.0, this.offset, 0.0));
+            entity.setVelocity(LootsplosionListener.this.randomVector());
             if (LootsplosionListener.this.colored) {
                Bukkit.getScheduler().runTask(MMOItems.plugin, () -> {
-                  NBTItem var2x = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var2.getItemStack());
+                  NBTItem var2x = MythicLib.plugin.getVersion().getWrapper().getNBTItem(entity.getItemStack());
                   if (var2x.hasTag("MMOITEMS_TIER")) {
-                     ItemTier var3 = MMOItems.plugin.getTiers().get(var2x.getString("MMOITEMS_TIER"));
-                     if (var3.hasColor()) {
-                        LootsplosionListener.this.new LootColor(var2, var3.getColor());
+                     ItemTier itemTier = MMOItems.plugin.getTiers().get(var2x.getString("MMOITEMS_TIER"));
+                     if (itemTier.hasColor()) {
+                        LootsplosionListener.this.new LootColor(entity, itemTier.getColor());
                      }
                   }
                });

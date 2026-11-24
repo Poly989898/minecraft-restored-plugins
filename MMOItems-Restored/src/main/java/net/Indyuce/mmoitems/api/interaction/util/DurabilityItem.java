@@ -39,17 +39,17 @@ public class DurabilityItem {
    private int durability;
    private static final Random RANDOM = new Random();
 
-   public DurabilityItem(@NotNull Player var1, @NotNull ItemStack var2) {
-      this(var1, NBTItem.get(var2));
+   public DurabilityItem(@NotNull Player player, @NotNull ItemStack item) {
+      this(player, NBTItem.get(item));
    }
 
-   public DurabilityItem(@NotNull Player var1, @NotNull NBTItem var2) {
-      this.player = Objects.requireNonNull(var1, "Player cannot be null");
-      this.nbtItem = Objects.requireNonNull(var2, "Item cannot be null");
-      this.maxDurability = var2.getInteger("MMOITEMS_MAX_DURABILITY");
-      this.initialDurability = this.durability = var2.hasTag("MMOITEMS_DURABILITY") ? var2.getInteger("MMOITEMS_DURABILITY") : this.maxDurability;
-      this.barHidden = var2.getBoolean("MMOITEMS_DURABILITY_BAR");
-      this.unbreakingLevel = MMOUtils.getLevel(var2.getItem(), VEnchantment.UNBREAKING.get());
+   public DurabilityItem(@NotNull Player player, @NotNull NBTItem nbtItem) {
+      this.player = Objects.requireNonNull(player, "Player cannot be null");
+      this.nbtItem = Objects.requireNonNull(nbtItem, "Item cannot be null");
+      this.maxDurability = nbtItem.getInteger("MMOITEMS_MAX_DURABILITY");
+      this.initialDurability = this.durability = nbtItem.hasTag("MMOITEMS_DURABILITY") ? nbtItem.getInteger("MMOITEMS_DURABILITY") : this.maxDurability;
+      this.barHidden = nbtItem.getBoolean("MMOITEMS_DURABILITY_BAR");
+      this.unbreakingLevel = MMOUtils.getLevel(nbtItem.getItem(), VEnchantment.UNBREAKING.get());
    }
 
    public Player getPlayer() {
@@ -93,37 +93,37 @@ public class DurabilityItem {
    }
 
    @NotNull
-   public DurabilityItem addDurability(int var1) {
-      Validate.isTrue(var1 > 0, "Durability gain must be greater than 0");
-      ItemCustomRepairEvent var2 = new ItemCustomRepairEvent(this, var1);
-      Bukkit.getPluginManager().callEvent(var2);
-      if (var2.isCancelled()) {
+   public DurabilityItem addDurability(int count) {
+      Validate.isTrue(count > 0, "Durability gain must be greater than 0");
+      ItemCustomRepairEvent event = new ItemCustomRepairEvent(this, count);
+      Bukkit.getPluginManager().callEvent(event);
+      if (event.isCancelled()) {
          return this;
       }
 
-      this.durability = Math.min(this.durability + var1, this.maxDurability);
+      this.durability = Math.min(this.durability + count, this.maxDurability);
       return this;
    }
 
-   public DurabilityItem decreaseDurability(int var1) {
-      if (var1 == 0) {
+   public DurabilityItem decreaseDurability(int count) {
+      if (count == 0) {
          return this;
       }
 
       if (this.nbtItem.getItem().getType().getMaxDurability() == 0) {
-         int var2 = this.getUnbreakingLevel();
-         if (var2 > 0 && RANDOM.nextInt(var2 + 1) != 0) {
+         int unbreakingLevel = this.getUnbreakingLevel();
+         if (unbreakingLevel > 0 && RANDOM.nextInt(unbreakingLevel + 1) != 0) {
             return this;
          }
       }
 
-      CustomDurabilityDamage var3 = new CustomDurabilityDamage(this, var1);
-      Bukkit.getPluginManager().callEvent(var3);
-      if (var3.isCancelled()) {
+      CustomDurabilityDamage customDurabilityDamage = new CustomDurabilityDamage(this, count);
+      Bukkit.getPluginManager().callEvent(customDurabilityDamage);
+      if (customDurabilityDamage.isCancelled()) {
          return this;
       }
 
-      this.durability = Math.max(0, Math.min(this.durability - var1, this.maxDurability));
+      this.durability = Math.max(0, Math.min(this.durability - count, this.maxDurability));
       if (this.isBroken()) {
          this.player.getWorld().playSound(this.player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0F, 1.0F);
          PlayerData.get(this.player).getInventory().scheduleUpdate();
@@ -140,19 +140,19 @@ public class DurabilityItem {
          }
 
          if (this.isDowngradedWhenBroken()) {
-            ItemTag var1 = ItemTag.getTagAtPath(ItemStats.UPGRADE.getNBTPath(), this.getNBTItem(), SupportedNBTTagValues.STRING);
-            if (var1 != null) {
+            ItemTag tagAtPath = ItemTag.getTagAtPath(ItemStats.UPGRADE.getNBTPath(), this.getNBTItem(), SupportedNBTTagValues.STRING);
+            if (tagAtPath != null) {
                try {
-                  UpgradeData var8 = new UpgradeData(new JsonParser().parse((String)var1.getValue()).getAsJsonObject());
-                  if (var8.getLevel() <= var8.getMin()) {
+                  UpgradeData upgradeData = new UpgradeData(new JsonParser().parse((String)tagAtPath.getValue()).getAsJsonObject());
+                  if (upgradeData.getLevel() <= upgradeData.getMin()) {
                      return null;
                   }
 
-                  LiveMMOItem var10 = new LiveMMOItem(this.getNBTItem());
-                  var10.setData(ItemStats.CUSTOM_DURABILITY, new DoubleData(this.maxDurability));
-                  var10.getUpgradeTemplate().upgradeTo(var10, var8.getLevel() - 1);
-                  return var10.newBuilder().buildNBT().toItem();
-               } catch (JsonSyntaxException | IllegalStateException var5) {
+                  LiveMMOItem liveMMOItem = new LiveMMOItem(this.getNBTItem());
+                  liveMMOItem.setData(ItemStats.CUSTOM_DURABILITY, new DoubleData(this.maxDurability));
+                  liveMMOItem.getUpgradeTemplate().upgradeTo(liveMMOItem, upgradeData.getLevel() - 1);
+                  return liveMMOItem.newBuilder().buildNBT().toItem();
+               } catch (JsonSyntaxException | IllegalStateException exception) {
                }
             }
          }
@@ -163,19 +163,19 @@ public class DurabilityItem {
       }
 
       this.nbtItem.addTag(new ItemTag[]{new ItemTag("MMOITEMS_DURABILITY", this.durability)});
-      ItemStack var6 = this.nbtItem.toItem();
-      if (!this.barHidden && var6.getType().getMaxDurability() > 0) {
-         int var2 = this.durability == this.maxDurability
+      ItemStack item = this.nbtItem.toItem();
+      if (!this.barHidden && item.getType().getMaxDurability() > 0) {
+         int count = this.durability == this.maxDurability
             ? 0
             : Math.max(1, (int)((1.0 - (double)this.durability / this.maxDurability) * this.nbtItem.getItem().getType().getMaxDurability()));
-         ItemMeta var3 = var6.getItemMeta();
-         ((Damageable)var3).setDamage(var2);
-         var6.setItemMeta(var3);
+         ItemMeta itemMeta = item.getItemMeta();
+         ((Damageable)itemMeta).setDamage(count);
+         item.setItemMeta(itemMeta);
       }
 
-      String var7 = MythicLib.inst().parseColors(ItemStats.ITEM_DAMAGE.getGeneralStatFormat().replace("{max}", String.valueOf(this.maxDurability)));
-      String var9 = var7.replace("{current}", String.valueOf(this.initialDurability));
-      String var4 = var7.replace("{current}", String.valueOf(this.durability));
-      return new LoreUpdate(var6, var9, var4).updateLore();
+      String colors = MythicLib.inst().parseColors(ItemStats.ITEM_DAMAGE.getGeneralStatFormat().replace("{max}", String.valueOf(this.maxDurability)));
+      String text = colors.replace("{current}", String.valueOf(this.initialDurability));
+      String text2 = colors.replace("{current}", String.valueOf(this.durability));
+      return new LoreUpdate(item, text, text2).updateLore();
    }
 }

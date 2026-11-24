@@ -40,58 +40,58 @@ public class Soulbound extends ItemStat<RandomStatData<SoulboundData>, Soulbound
 
    @Nullable
    @Override
-   public RandomStatData<SoulboundData> whenInitialized(Object var1) {
+   public RandomStatData<SoulboundData> whenInitialized(Object obj) {
       throw new NotImplementedException();
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
       throw new NotImplementedException();
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
       throw new NotImplementedException();
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<RandomStatData<SoulboundData>> var2) {
+   public void whenDisplayed(List<String> texts, Optional<RandomStatData<SoulboundData>> optional) {
       throw new NotImplementedException();
    }
 
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull SoulboundData var2) {
-      var1.addItemTag(this.getAppliedNBT(var2));
-      String var3 = Message.SOULBOUND_ITEM_LORE.getFormatted().replace("#player#", var2.getName()).replace("#level#", MMOUtils.intToRoman(var2.getLevel()));
-      var1.getLore().insert("soulbound", var3.split(Pattern.quote("//")));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull SoulboundData soulboundData) {
+      itemStackBuilder.addItemTag(this.getAppliedNBT(soulboundData));
+      String text = Message.SOULBOUND_ITEM_LORE.getFormatted().replace("#player#", soulboundData.getName()).replace("#level#", MMOUtils.intToRoman(soulboundData.getLevel()));
+      itemStackBuilder.getLore().insert("soulbound", text.split(Pattern.quote("//")));
    }
 
    @NotNull
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull SoulboundData var1) {
-      ArrayList var2 = new ArrayList();
-      var2.add(new ItemTag(this.getNBTPath(), var1.toJson().toString()));
-      return var2;
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull SoulboundData soulboundData) {
+      ArrayList list = new ArrayList();
+      list.add(new ItemTag(this.getNBTPath(), soulboundData.toJson().toString()));
+      return list;
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      ArrayList var2 = new ArrayList();
-      if (var1.getNBT().hasTag(this.getNBTPath())) {
-         var2.add(ItemTag.getTagAtPath(this.getNBTPath(), var1.getNBT(), SupportedNBTTagValues.STRING));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      ArrayList list = new ArrayList();
+      if (readMMOItem.getNBT().hasTag(this.getNBTPath())) {
+         list.add(ItemTag.getTagAtPath(this.getNBTPath(), readMMOItem.getNBT(), SupportedNBTTagValues.STRING));
       }
 
-      SoulboundData var3 = this.getLoadedNBT(var2);
-      if (var3 != null) {
-         var1.setData(this, var3);
+      SoulboundData loadedNBT = this.getLoadedNBT(list);
+      if (loadedNBT != null) {
+         readMMOItem.setData(this, loadedNBT);
       }
    }
 
    @Nullable
-   public SoulboundData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
-      ItemTag var2 = ItemTag.getTagAtPath(this.getNBTPath(), var1);
-      if (var2 != null) {
+   public SoulboundData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
+      ItemTag tagAtPath = ItemTag.getTagAtPath(this.getNBTPath(), itemTags);
+      if (tagAtPath != null) {
          try {
-            return new SoulboundData(new JsonParser().parse((String)var2.getValue()).getAsJsonObject());
-         } catch (JsonSyntaxException | IllegalStateException var4) {
+            return new SoulboundData(new JsonParser().parse((String)tagAtPath.getValue()).getAsJsonObject());
+         } catch (JsonSyntaxException | IllegalStateException exception) {
          }
       }
 
@@ -104,15 +104,15 @@ public class Soulbound extends ItemStat<RandomStatData<SoulboundData>, Soulbound
    }
 
    @Override
-   public boolean canUse(RPGPlayer var1, NBTItem var2, boolean var3) {
-      if (var2.hasTag(ItemStats.SOULBOUND.getNBTPath())
-         && !var2.getString(ItemStats.SOULBOUND.getNBTPath()).contains(var1.getPlayer().getUniqueId().toString())
-         && !var1.getPlayer().hasPermission("mmoitems.bypass.soulbound")) {
-         if (var3) {
-            int var4 = new JsonParser().parse(var2.getString(ItemStats.SOULBOUND.getNBTPath())).getAsJsonObject().get("Level").getAsInt();
-            Message.SOULBOUND_RESTRICTION.format(ChatColor.RED).send(var1.getPlayer());
-            var1.getPlayer().playSound(var1.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);
-            var1.getPlayer().damage(MMOItems.plugin.getLanguage().soulboundBaseDamage + var4 * MMOItems.plugin.getLanguage().soulboundPerLvlDamage);
+   public boolean canUse(RPGPlayer rpgPlayer, NBTItem nbtItem, boolean flag) {
+      if (nbtItem.hasTag(ItemStats.SOULBOUND.getNBTPath())
+         && !nbtItem.getString(ItemStats.SOULBOUND.getNBTPath()).contains(rpgPlayer.getPlayer().getUniqueId().toString())
+         && !rpgPlayer.getPlayer().hasPermission("mmoitems.bypass.soulbound")) {
+         if (flag) {
+            int asInt = new JsonParser().parse(nbtItem.getString(ItemStats.SOULBOUND.getNBTPath())).getAsJsonObject().get("Level").getAsInt();
+            Message.SOULBOUND_RESTRICTION.format(ChatColor.RED).send(rpgPlayer.getPlayer());
+            rpgPlayer.getPlayer().playSound(rpgPlayer.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);
+            rpgPlayer.getPlayer().damage(MMOItems.plugin.getLanguage().soulboundBaseDamage + asInt * MMOItems.plugin.getLanguage().soulboundPerLvlDamage);
          }
 
          return false;

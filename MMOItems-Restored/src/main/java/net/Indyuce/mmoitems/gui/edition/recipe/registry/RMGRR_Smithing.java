@@ -46,51 +46,51 @@ public class RMGRR_Smithing implements RecipeRegistry {
    }
 
    @Override
-   public void openForPlayer(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      new RMG_Smithing(var1.getPlayer(), var1.getEdited(), var2, this).open(var1);
+   public void openForPlayer(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      new RMG_Smithing(editionInventory.getPlayer(), editionInventory.getEdited(), text, this).open(editionInventory);
    }
 
    @NotNull
    @Override
    public MythicRecipeBlueprint sendToMythicLib(
-      @NotNull MMOItemTemplate var1,
-      @NotNull ConfigurationSection var2,
-      @NotNull String var3,
-      @NotNull Ref<NamespacedKey> var4,
-      @NotNull FriendlyFeedbackProvider var5
+      @NotNull MMOItemTemplate mmoItemTemplate,
+      @NotNull ConfigurationSection section,
+      @NotNull String text,
+      @NotNull Ref<NamespacedKey> ref,
+      @NotNull FriendlyFeedbackProvider friendlyFeedbackProvider
    ) {
-      RecipeEditorGUI.moveInput(var2, var3);
-      ConfigurationSection var6 = RecipeEditorGUI.getSection(var2, var3);
-      NamespacedKey var7 = (NamespacedKey)var4.getValue();
-      if (var7 == null) {
+      RecipeEditorGUI.moveInput(section, text);
+      ConfigurationSection section2 = RecipeEditorGUI.getSection(section, text);
+      NamespacedKey namespacedKey = (NamespacedKey)ref.getValue();
+      if (namespacedKey == null) {
          throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Illegal (Null) Namespace", new String[0]));
       } else {
-         String var8 = RMGRI_Smithing.updateIngredients(var6.getString("input"));
-         String[] var9 = var8.split("\\|");
-         ProvidedUIFilter var10 = RecipeEditorGUI.readIngredientFrom(var9[0], var5);
-         ProvidedUIFilter var11 = RecipeEditorGUI.readIngredientFrom(var9[1], var5);
-         if (!var10.isAir() && !var11.isAir()) {
-            MythicRecipeIngredient var12 = new MythicRecipeIngredient(var10);
-            MythicRecipeIngredient var13 = new MythicRecipeIngredient(var11);
-            ShapelessRecipe var14 = new ShapelessRecipe(var7.getKey(), new MythicRecipeIngredient[]{var12});
-            ShapelessRecipe var15 = new ShapelessRecipe(var7.getKey(), new MythicRecipeIngredient[]{var13});
-            String var16 = RMGRI_Smithing.updateIngredients(var6.getString("output"));
-            String[] var17 = var16.split("\\|");
-            ProvidedUIFilter var18 = RecipeEditorGUI.readIngredientFrom(var17[0], var5);
-            ProvidedUIFilter var19 = RecipeEditorGUI.readIngredientFrom(var17[1], var5);
-            ShapedRecipe var20 = var18.isAir() ? null : ShapedRecipe.single(var7.getKey(), new ProvidedUIFilter[]{var18});
-            ShapedRecipe var21 = var19.isAir() ? null : ShapedRecipe.single(var7.getKey(), new ProvidedUIFilter[]{var19});
-            int var22 = var6.getInt("amount", 1);
-            boolean var23 = var6.getBoolean("drop-gems", false);
-            SmithingCombinationType var24 = this.readSCT(var6.getString("enchantments"));
-            SmithingCombinationType var25 = this.readSCT(var6.getString("upgrades"));
-            CustomSmithingRecipe var26 = new CustomSmithingRecipe(var1, var23, var24, var25, var22);
-            var26.setMainInputConsumption(var20);
-            var26.setIngotInputConsumption(var21);
-            MythicRecipeBlueprint var27 = new MythicRecipeBlueprint(var14, var26, var7);
-            var27.addSideCheck("ingot", var15);
-            var27.deploy(MythicRecipeStation.SMITHING, var4);
-            return var27;
+         String text2 = RMGRI_Smithing.updateIngredients(section2.getString("input"));
+         String[] texts = text2.split("\\|");
+         ProvidedUIFilter ingredientFrom = RecipeEditorGUI.readIngredientFrom(texts[0], friendlyFeedbackProvider);
+         ProvidedUIFilter ingredientFrom2 = RecipeEditorGUI.readIngredientFrom(texts[1], friendlyFeedbackProvider);
+         if (!ingredientFrom.isAir() && !ingredientFrom2.isAir()) {
+            MythicRecipeIngredient mythicRecipeIngredient = new MythicRecipeIngredient(ingredientFrom);
+            MythicRecipeIngredient mythicRecipeIngredient2 = new MythicRecipeIngredient(ingredientFrom2);
+            ShapelessRecipe shapelessRecipe = new ShapelessRecipe(namespacedKey.getKey(), new MythicRecipeIngredient[]{mythicRecipeIngredient});
+            ShapelessRecipe shapelessRecipe2 = new ShapelessRecipe(namespacedKey.getKey(), new MythicRecipeIngredient[]{mythicRecipeIngredient2});
+            String text3 = RMGRI_Smithing.updateIngredients(section2.getString("output"));
+            String[] texts2 = text3.split("\\|");
+            ProvidedUIFilter ingredientFrom3 = RecipeEditorGUI.readIngredientFrom(texts2[0], friendlyFeedbackProvider);
+            ProvidedUIFilter ingredientFrom4 = RecipeEditorGUI.readIngredientFrom(texts2[1], friendlyFeedbackProvider);
+            ShapedRecipe shapedRecipe = ingredientFrom3.isAir() ? null : ShapedRecipe.single(namespacedKey.getKey(), new ProvidedUIFilter[]{ingredientFrom3});
+            ShapedRecipe shapedRecipe2 = ingredientFrom4.isAir() ? null : ShapedRecipe.single(namespacedKey.getKey(), new ProvidedUIFilter[]{ingredientFrom4});
+            int amount = section2.getInt("amount", 1);
+            boolean dropGems = section2.getBoolean("drop-gems", false);
+            SmithingCombinationType sCT = this.readSCT(section2.getString("enchantments"));
+            SmithingCombinationType sCT2 = this.readSCT(section2.getString("upgrades"));
+            CustomSmithingRecipe customSmithingRecipe = new CustomSmithingRecipe(mmoItemTemplate, dropGems, sCT, sCT2, amount);
+            customSmithingRecipe.setMainInputConsumption(shapedRecipe);
+            customSmithingRecipe.setIngotInputConsumption(shapedRecipe2);
+            MythicRecipeBlueprint mythicRecipeBlueprint = new MythicRecipeBlueprint(shapelessRecipe, customSmithingRecipe, namespacedKey);
+            mythicRecipeBlueprint.addSideCheck("ingot", shapelessRecipe2);
+            mythicRecipeBlueprint.deploy(MythicRecipeStation.SMITHING, ref);
+            return mythicRecipeBlueprint;
          } else {
             throw new IllegalArgumentException(
                FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Smithing recipe containing AIR, $fignored$b.", new String[0])
@@ -100,14 +100,14 @@ public class RMGRR_Smithing implements RecipeRegistry {
    }
 
    @NotNull
-   SmithingCombinationType readSCT(@Nullable String var1) {
-      if (var1 == null) {
+   SmithingCombinationType readSCT(@Nullable String text) {
+      if (text == null) {
          return SmithingCombinationType.MAXIMUM;
       }
 
       try {
-         return SmithingCombinationType.valueOf(var1);
-      } catch (IllegalArgumentException var3) {
+         return SmithingCombinationType.valueOf(text);
+      } catch (IllegalArgumentException exception) {
          return SmithingCombinationType.MAXIMUM;
       }
    }

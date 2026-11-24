@@ -8,8 +8,8 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class RBA_BooleanButton extends RecipeButtonAction {
-   public RBA_BooleanButton(@NotNull RecipeEditorGUI var1) {
-      super(var1);
+   public RBA_BooleanButton(@NotNull RecipeEditorGUI recipeEditorGUI) {
+      super(recipeEditorGUI);
    }
 
    public boolean isEnabled() {
@@ -28,7 +28,7 @@ public abstract class RBA_BooleanButton extends RecipeButtonAction {
    }
 
    @Override
-   public void primaryProcessInput(@NotNull String var1, Object... var2) {
+   public void primaryProcessInput(@NotNull String text, Object... objs) {
    }
 
    @Override
@@ -40,7 +40,7 @@ public abstract class RBA_BooleanButton extends RecipeButtonAction {
    }
 
    @Override
-   public void secondaryProcessInput(@NotNull String var1, Object... var2) {
+   public void secondaryProcessInput(@NotNull String text, Object... objs) {
    }
 
    @NotNull
@@ -49,13 +49,13 @@ public abstract class RBA_BooleanButton extends RecipeButtonAction {
    @NotNull
    @Override
    public ItemStack getButton() {
-      String var1 = this.isEnabled() ? "§aTRUE" : "§cFALSE";
+      String text = this.isEnabled() ? "§aTRUE" : "§cFALSE";
       return RecipeEditorGUI.addLore(
          this.getBooleanButton().clone(),
          SilentNumbers.toArrayList(
             new String[]{
                "",
-               "§7Current Value: " + var1,
+               "§7Current Value: " + text,
                "",
                ChatColor.YELLOW + "►" + " Right click to reset §8(to§4 FALSE§8)§e.",
                ChatColor.YELLOW + "►" + " Left click to toggle this option."

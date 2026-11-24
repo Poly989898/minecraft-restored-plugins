@@ -16,16 +16,16 @@ public class RequiredLevel extends RequiredLevelStat {
    }
 
    @Override
-   public boolean canUse(RPGPlayer var1, NBTItem var2, boolean var3) {
-      int var4 = var2.getInteger(this.getNBTPath());
-      if (var4 <= 0) {
+   public boolean canUse(RPGPlayer rpgPlayer, NBTItem nbtItem, boolean flag) {
+      int count = nbtItem.getInteger(this.getNBTPath());
+      if (count <= 0) {
          return true;
       }
 
-      if (var1.getLevel() < var4 && !var1.getPlayer().hasPermission("mmoitems.bypass.level")) {
-         if (var3) {
-            Message.NOT_ENOUGH_LEVELS.format(ChatColor.RED).send(var1.getPlayer());
-            var1.getPlayer().playSound(var1.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);
+      if (rpgPlayer.getLevel() < count && !rpgPlayer.getPlayer().hasPermission("mmoitems.bypass.level")) {
+         if (flag) {
+            Message.NOT_ENOUGH_LEVELS.format(ChatColor.RED).send(rpgPlayer.getPlayer());
+            rpgPlayer.getPlayer().playSound(rpgPlayer.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);
          }
 
          return false;

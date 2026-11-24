@@ -33,26 +33,26 @@ public class ConfigItem {
    @Nullable
    protected Integer customModelData = null;
 
-   public ConfigItem(String var1, Material var2) {
-      this(var1, var2, null);
+   public ConfigItem(String text, Material material) {
+      this(text, material, null);
    }
 
-   public ConfigItem(String var1, Material var2, String var3, String... var4) {
-      Validate.notNull(var1, "ID cannot be null");
-      Validate.notNull(var2, "Material cannot be null");
-      this.id = var1;
-      this.icon = new ItemStack(var2);
-      this.name = var3;
-      this.lore = Arrays.asList(var4);
+   public ConfigItem(String text, Material material, String text2, String... texts) {
+      Validate.notNull(text, "ID cannot be null");
+      Validate.notNull(material, "Material cannot be null");
+      this.id = text;
+      this.icon = new ItemStack(material);
+      this.name = text2;
+      this.lore = Arrays.asList(texts);
    }
 
-   public ConfigItem(ConfigurationSection var1) {
-      Validate.notNull(var1, "Config cannot be null");
-      this.id = var1.getName();
-      Validate.isTrue(var1.contains("material"), "Could not find material");
-      this.icon = MMOUtils.readIcon(var1.getString("material"));
-      this.name = var1.getString("name", "");
-      this.lore = var1.getStringList("lore");
+   public ConfigItem(ConfigurationSection section) {
+      Validate.notNull(section, "Config cannot be null");
+      this.id = section.getName();
+      Validate.isTrue(section.contains("material"), "Could not find material");
+      this.icon = MMOUtils.readIcon(section.getString("material"));
+      this.name = section.getString("name", "");
+      this.lore = section.getStringList("lore");
       this.updateItem();
    }
 
@@ -61,42 +61,42 @@ public class ConfigItem {
    }
 
    @Deprecated
-   public void setup(ConfigurationSection var1) {
-      var1.set("name", this.getName());
-      var1.set("lore", this.getLore());
+   public void setup(ConfigurationSection section) {
+      section.set("name", this.getName());
+      section.set("lore", this.getLore());
    }
 
    @Deprecated
-   public void update(ConfigurationSection var1) {
-      Validate.notNull(var1, "Config cannot be null");
-      this.setName(var1.getString("name", ""));
-      this.setLore(var1.contains("lore") ? var1.getStringList("lore") : new ArrayList<>());
-      String var2 = var1.getString("material");
-      if (var2 != null && !var2.isEmpty()) {
+   public void update(ConfigurationSection section) {
+      Validate.notNull(section, "Config cannot be null");
+      this.setName(section.getString("name", ""));
+      this.setLore(section.contains("lore") ? section.getStringList("lore") : new ArrayList<>());
+      String material = section.getString("material");
+      if (material != null && !material.isEmpty()) {
          try {
-            Material var3 = Material.valueOf(var1.getString("material"));
-            if (var3.isItem()) {
-               this.setMaterial(var3);
+            Material material2 = Material.valueOf(section.getString("material"));
+            if (material2.isItem()) {
+               this.setMaterial(material2);
             }
-         } catch (IllegalArgumentException var4) {
+         } catch (IllegalArgumentException exception) {
          }
       }
 
-      this.setModel(SilentNumbers.IntegerParse(var1.getString("model")));
+      this.setModel(SilentNumbers.IntegerParse(section.getString("model")));
       this.updateItem();
    }
 
    public void updateItem() {
       this.setItem(this.icon);
       if (this.icon.getType() != Material.AIR) {
-         ItemMeta var1 = this.item.getItemMeta();
-         AdventureUtils.setDisplayName(var1, this.name);
-         var1.addItemFlags(ItemFlag.values());
+         ItemMeta itemMeta = this.item.getItemMeta();
+         AdventureUtils.setDisplayName(itemMeta, this.name);
+         itemMeta.addItemFlags(ItemFlag.values());
          if (this.hasLore()) {
-            AdventureUtils.setLore(var1, this.getLore().stream().map(var0 -> ChatColor.GRAY + var0).collect(Collectors.toList()));
+            AdventureUtils.setLore(itemMeta, this.getLore().stream().map(text -> ChatColor.GRAY + text).collect(Collectors.toList()));
          }
 
-         this.item.setItemMeta(var1);
+         this.item.setItemMeta(itemMeta);
          this.item = MythicLib.plugin.getVersion().getWrapper().getNBTItem(this.item).addTag(new ItemTag[]{new ItemTag("ItemId", this.id)}).toItem();
       }
    }
@@ -123,26 +123,26 @@ public class ConfigItem {
       return this.item.clone();
    }
 
-   protected void setName(String var1) {
-      this.name = var1;
+   protected void setName(String text) {
+      this.name = text;
    }
 
-   protected void setLore(List<String> var1) {
-      this.lore = var1;
-   }
-
-   @Deprecated
-   protected void setItem(ItemStack var1) {
-      this.item = var1;
+   protected void setLore(List<String> texts) {
+      this.lore = texts;
    }
 
    @Deprecated
-   protected void setMaterial(@Nullable Material var1) {
-      this.material = var1;
+   protected void setItem(ItemStack item) {
+      this.item = item;
    }
 
    @Deprecated
-   protected void setModel(@Nullable Integer var1) {
-      this.customModelData = var1;
+   protected void setMaterial(@Nullable Material material) {
+      this.material = material;
+   }
+
+   @Deprecated
+   protected void setModel(@Nullable Integer value) {
+      this.customModelData = value;
    }
 }

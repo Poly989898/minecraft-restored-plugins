@@ -11,23 +11,23 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class BrowseCommandTreeNode extends CommandTreeNode {
-   public BrowseCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "browse");
+   public BrowseCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "browse");
       this.addParameter(MMOItemsCommandTreeRoot.TYPE);
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      if (!(var1 instanceof Player)) {
-         var1.sendMessage(ChatColor.RED + "This command is only for players.");
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      if (!(sender instanceof Player)) {
+         sender.sendMessage(ChatColor.RED + "This command is only for players.");
          return CommandResult.FAILURE;
-      } else if (var2.length < 2) {
-         new ItemBrowser((Player)var1).open();
+      } else if (texts.length < 2) {
+         new ItemBrowser((Player)sender).open();
          return CommandResult.SUCCESS;
-      } else if (!Type.isValid(var2[1])) {
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Please specify a valid item type.");
+      } else if (!Type.isValid(texts[1])) {
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Please specify a valid item type.");
          return CommandResult.FAILURE;
       } else {
-         new ItemBrowser((Player)var1, Type.get(var2[1])).open();
+         new ItemBrowser((Player)sender, Type.get(texts[1])).open();
          return CommandResult.SUCCESS;
       }
    }

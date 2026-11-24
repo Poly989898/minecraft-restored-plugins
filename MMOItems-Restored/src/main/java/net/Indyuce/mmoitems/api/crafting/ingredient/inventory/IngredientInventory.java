@@ -20,18 +20,18 @@ import org.jetbrains.annotations.Nullable;
 public class IngredientInventory {
    private final Map<String, List<PlayerIngredient>> ingredients = new HashMap<>();
 
-   public IngredientInventory(Player var1) {
-      this(var1.getInventory());
+   public IngredientInventory(Player player) {
+      this(player.getInventory());
    }
 
-   public IngredientInventory(Inventory var1) {
-      for (ItemStack var5 : var1.getContents()) {
-         if (var5 != null && var5.getType() != Material.AIR && var5.getAmount() > 0) {
-            NBTItem var6 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var5);
+   public IngredientInventory(Inventory inventory) {
+      for (ItemStack content : inventory.getContents()) {
+         if (content != null && content.getType() != Material.AIR && content.getAmount() > 0) {
+            NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(content);
 
-            for (IngredientType var8 : MMOItems.plugin.getCrafting().getIngredients()) {
-               if (var8.check(var6)) {
-                  this.addIngredient(var6, var8);
+            for (IngredientType ingredient : MMOItems.plugin.getCrafting().getIngredients()) {
+               if (ingredient.check(nBTItem)) {
+                  this.addIngredient(nBTItem, ingredient);
                   break;
                }
             }
@@ -39,31 +39,31 @@ public class IngredientInventory {
       }
    }
 
-   public void addIngredient(NBTItem var1, IngredientType var2) {
-      String var3 = var2.getId();
-      List var4 = this.ingredients.computeIfAbsent(var3, var0 -> new ArrayList<>());
-      var4.add(var2.readPlayerIngredient(var1));
+   public void addIngredient(NBTItem nbtItem, IngredientType ingredientType) {
+      String id = ingredientType.getId();
+      List ifAbsent = this.ingredients.computeIfAbsent(id, text -> new ArrayList<>());
+      ifAbsent.add(ingredientType.readPlayerIngredient(nbtItem));
    }
 
    @Nullable
-   public CheckedIngredient findMatching(@NotNull Ingredient var1) {
-      ArrayList var2 = new ArrayList();
-      if (!this.ingredients.containsKey(var1.getId())) {
-         return new CheckedIngredient(var1, var2);
+   public CheckedIngredient findMatching(@NotNull Ingredient ingredient) {
+      ArrayList list = new ArrayList();
+      if (!this.ingredients.containsKey(ingredient.getId())) {
+         return new CheckedIngredient(ingredient, list);
       }
 
-      for (PlayerIngredient var4 : this.ingredients.get(var1.getId())) {
-         if (var1.matches(var4)) {
-            var2.add(var4);
+      for (PlayerIngredient playerIngredient : this.ingredients.get(ingredient.getId())) {
+         if (ingredient.matches(playerIngredient)) {
+            list.add(playerIngredient);
          }
       }
 
-      return new CheckedIngredient(var1, var2);
+      return new CheckedIngredient(ingredient, list);
    }
 
    @Deprecated
-   public boolean hasIngredient(Ingredient var1) {
-      return this.findMatching(var1).isHad();
+   public boolean hasIngredient(Ingredient ingredient) {
+      return this.findMatching(ingredient).isHad();
    }
 
    @Deprecated

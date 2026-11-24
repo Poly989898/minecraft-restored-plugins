@@ -27,13 +27,13 @@ import org.jetbrains.annotations.NotNull;
 public class Tool extends Weapon {
    private static final BlockFace[] NEIGHBORS = new BlockFace[]{BlockFace.NORTH, BlockFace.DOWN, BlockFace.EAST, BlockFace.UP, BlockFace.WEST, BlockFace.SOUTH};
 
-   public Tool(PlayerData var1, NBTItem var2) {
-      super(var1, var2);
+   public Tool(PlayerData playerData, NBTItem nbtItem) {
+      super(playerData, nbtItem);
    }
 
    @Deprecated
-   public Tool(Player var1, NBTItem var2) {
-      super(var1, var2);
+   public Tool(Player player, NBTItem nbtItem) {
+      super(player, nbtItem);
    }
 
    @Override
@@ -41,16 +41,16 @@ public class Tool extends Weapon {
       return CustomFlag.MI_TOOLS;
    }
 
-   public boolean miningEffects(@NotNull final Block var1) {
-      boolean var2 = false;
+   public boolean miningEffects(@NotNull final Block block) {
+      boolean flag = false;
       if (this.getNBTItem().getBoolean("MMOITEMS_AUTOSMELT")) {
-         OreDrops var3 = MythicLib.plugin.getVersion().getWrapper().getOreDrops(var1.getType());
-         if (var3 != null) {
-            int var4 = MMOUtils.getLevel(this.getItem(), VEnchantment.FORTUNE.get());
-            UtilityMethods.dropItemNaturally(var1.getLocation(), var3.generate(var4));
-            var1.getWorld().spawnParticle(Particle.LAVA, var1.getLocation().add(0.5, 0.5, 0.5), 4);
-            var1.setType(Material.AIR);
-            var2 = true;
+         OreDrops oreDrops = MythicLib.plugin.getVersion().getWrapper().getOreDrops(block.getType());
+         if (oreDrops != null) {
+            int level = MMOUtils.getLevel(this.getItem(), VEnchantment.FORTUNE.get());
+            UtilityMethods.dropItemNaturally(block.getLocation(), oreDrops.generate(level));
+            block.getWorld().spawnParticle(Particle.LAVA, block.getLocation().add(0.5, 0.5, 0.5), 4);
+            block.setType(Material.AIR);
+            flag = true;
          }
       }
 
@@ -58,7 +58,7 @@ public class Tool extends Weapon {
          this.getPlayerData().applyCooldown(PlayerData.CooldownType.BOUNCING_CRACK, 1.0);
          (new BukkitRunnable() {
             final Vector globalDirection = Tool.this.player.getEyeLocation().getDirection();
-            final Vector3D sourcePoint = Tool.this.toJava(var1.getLocation().add(0.5, 0.5, 0.5).toVector());
+            final Vector3D sourcePoint = Tool.this.toJava(block.getLocation().add(0.5, 0.5, 0.5).toVector());
             final Line line = new Line(this.sourcePoint, this.sourcePoint.add(Tool.this.toJava(this.globalDirection)), 1.0E-10);
             final double[] products = new double[Tool.NEIGHBORS.length];
             Block curr;
@@ -66,11 +66,11 @@ public class Tool extends Weapon {
             private static final int BLOCKS_BROKEN = 4;
 
             {
-               for (BlockFace var6 : Tool.NEIGHBORS) {
-                  this.products[var6.ordinal()] = var6.getDirection().dot(this.globalDirection);
+               for (BlockFace blockFace : Tool.NEIGHBORS) {
+                  this.products[blockFace.ordinal()] = blockFace.getDirection().dot(this.globalDirection);
                }
 
-               this.curr = var1;
+               this.curr = block;
                this.j = 0;
             }
 
@@ -97,12 +97,12 @@ public class Tool extends Weapon {
                Block var1x = null;
                double var2x = Double.MAX_VALUE;
 
-               for (BlockFace var7 : Tool.NEIGHBORS) {
-                  Block var8 = this.curr.getRelative(var7);
-                  double var9 = this.findCost(var7, var8);
-                  if (var9 < var2x) {
-                     var2x = var9;
-                     var1x = var8;
+               for (BlockFace blockFace : Tool.NEIGHBORS) {
+                  Block relative = this.curr.getRelative(blockFace);
+                  double cost = this.findCost(blockFace, relative);
+                  if (cost < var2x) {
+                     var2x = cost;
+                     var1x = relative;
                   }
                }
 
@@ -110,16 +110,16 @@ public class Tool extends Weapon {
             }
 
             private double findCost(BlockFace var1x, Block var2x) {
-               Vector3D var3 = Tool.this.toJava(var2x.getLocation().add(0.5, 0.5, 0.5).toVector());
-               return this.line.distance(var3) - this.products[var1x.ordinal()];
+               Vector3D vector3D = Tool.this.toJava(var2x.getLocation().add(0.5, 0.5, 0.5).toVector());
+               return this.line.distance(vector3D) - this.products[var1x.ordinal()];
             }
          }).runTaskTimer(MMOItems.plugin, 0L, 1L);
       }
 
-      return var2;
+      return flag;
    }
 
-   private Vector3D toJava(Vector var1) {
-      return new Vector3D(var1.getX(), var1.getY(), var1.getZ());
+   private Vector3D toJava(Vector vector) {
+      return new Vector3D(vector.getX(), vector.getY(), vector.getZ());
    }
 }

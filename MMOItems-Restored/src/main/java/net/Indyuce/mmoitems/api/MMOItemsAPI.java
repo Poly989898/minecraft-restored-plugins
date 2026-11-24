@@ -23,32 +23,32 @@ import org.jetbrains.annotations.Nullable;
 public class MMOItemsAPI {
    private final JavaPlugin plugin;
 
-   public MMOItemsAPI(JavaPlugin var1) {
-      this.plugin = var1;
+   public MMOItemsAPI(JavaPlugin javaPlugin) {
+      this.plugin = javaPlugin;
    }
 
-   public void registerSkill(RegisteredSkill var1) {
-      MMOItems.plugin.getSkills().registerSkill(var1);
+   public void registerSkill(RegisteredSkill registeredSkill) {
+      MMOItems.plugin.getSkills().registerSkill(registeredSkill);
    }
 
-   public RegisteredSkill getSkillById(String var1) {
-      return Objects.requireNonNull(MMOItems.plugin.getSkills().getSkill(var1), "Could not find skill with ID '" + var1 + "'");
+   public RegisteredSkill getSkillById(String text) {
+      return Objects.requireNonNull(MMOItems.plugin.getSkills().getSkill(text), "Could not find skill with ID '" + text + "'");
    }
 
-   public PlayerData getPlayerData(Player var1) {
-      return PlayerData.get(var1);
+   public PlayerData getPlayerData(Player player) {
+      return PlayerData.get(player);
    }
 
-   public RPGPlayer getRPGInfo(Player var1) {
-      return PlayerData.get(var1).getRPG();
+   public RPGPlayer getRPGInfo(Player player) {
+      return PlayerData.get(player).getRPG();
    }
 
    public SkillResult castSkill(
-      Player var1, RegisteredSkill var2, @NotNull Map<String, Double> var3, @Nullable LivingEntity var4, @Nullable AttackMetadata var5
+      Player player, RegisteredSkill registeredSkill, @NotNull Map<String, Double> map, @Nullable LivingEntity entity, @Nullable AttackMetadata attackMetadata
    ) {
-      AbilityData var6 = new AbilityData(var2, TriggerType.CAST);
-      var3.forEach((var1x, var2x) -> var6.setModifier(var1x, var2x));
-      PlayerMetadata var7 = MMOPlayerData.get(var1).getStatMap().cache(EquipmentSlot.MAIN_HAND);
-      return var6.cast(new TriggerMetadata(var7, var4, var5));
+      AbilityData abilityData = new AbilityData(registeredSkill, TriggerType.CAST);
+      map.forEach((var1x, var2x) -> abilityData.setModifier(var1x, var2x));
+      PlayerMetadata playerMetadata = MMOPlayerData.get(player).getStatMap().cache(EquipmentSlot.MAIN_HAND);
+      return abilityData.cast(new TriggerMetadata(playerMetadata, entity, attackMetadata));
    }
 }

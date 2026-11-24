@@ -34,31 +34,31 @@ public class LuteAttackEffectStat extends StringStat implements GemStoneStat {
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      if (var2.getAction() == InventoryAction.PICKUP_HALF) {
-         var1.getEditedSection().set("lute-attack-effect", null);
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed the lute attack effect.");
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      if (event.getAction() == InventoryAction.PICKUP_HALF) {
+         editionInventory.getEditedSection().set("lute-attack-effect", null);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed the lute attack effect.");
       } else {
-         new StatEdition(var1, this).enable("Write in the chat the text you want.");
+         new StatEdition(editionInventory, this).enable("Write in the chat the text you want.");
       }
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      LuteAttackEffectStat.LuteAttackEffect var4 = LuteAttackEffectStat.LuteAttackEffect.valueOf(var2.toUpperCase().replace(" ", "_").replace("-", "_"));
-      var1.getEditedSection().set("lute-attack-effect", var4.name());
-      var1.registerTemplateEdition();
-      var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Lute attack effect successfully changed to " + var4.getName() + ".");
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      LuteAttackEffectStat.LuteAttackEffect luteAttackEffect = LuteAttackEffectStat.LuteAttackEffect.valueOf(text.toUpperCase().replace(" ", "_").replace("-", "_"));
+      editionInventory.getEditedSection().set("lute-attack-effect", luteAttackEffect.name());
+      editionInventory.registerTemplateEdition();
+      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Lute attack effect successfully changed to " + luteAttackEffect.getName() + ".");
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull StringData var2) {
-      LuteAttackEffectStat.LuteAttackEffect var3 = LuteAttackEffectStat.LuteAttackEffect.valueOf(
-         var2.toString().toUpperCase().replace(" ", "_").replace("-", "_")
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull StringData stringData) {
+      LuteAttackEffectStat.LuteAttackEffect luteAttackEffect = LuteAttackEffectStat.LuteAttackEffect.valueOf(
+         stringData.toString().toUpperCase().replace(" ", "_").replace("-", "_")
       );
-      var1.addItemTag(new ItemTag("MMOITEMS_LUTE_ATTACK_EFFECT", var3.name()));
-      var1.getLore().insert("lute-attack-effect", var3.getName());
+      itemStackBuilder.addItemTag(new ItemTag("MMOITEMS_LUTE_ATTACK_EFFECT", luteAttackEffect.name()));
+      itemStackBuilder.getLore().insert("lute-attack-effect", luteAttackEffect.getName());
    }
 
    public enum LuteAttackEffect {
@@ -89,14 +89,14 @@ public class LuteAttackEffectStat extends StringStat implements GemStoneStat {
          return this.name;
       }
 
-      public void setName(@NotNull String var1) {
-         this.name = Objects.requireNonNull(var1);
+      public void setName(@NotNull String text) {
+         this.name = Objects.requireNonNull(text);
       }
 
-      public static LuteAttackEffectStat.LuteAttackEffect get(NBTItem var0) {
+      public static LuteAttackEffectStat.LuteAttackEffect get(NBTItem nbtItem) {
          try {
-            return valueOf(var0.getString("MMOITEMS_LUTE_ATTACK_EFFECT"));
-         } catch (IllegalArgumentException var2) {
+            return valueOf(nbtItem.getString("MMOITEMS_LUTE_ATTACK_EFFECT"));
+         } catch (IllegalArgumentException exception) {
             return null;
          }
       }

@@ -8,10 +8,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 @Deprecated
 public class NamedItemStack extends ItemStack {
    @Deprecated
-   public NamedItemStack(Material var1, String var2) {
-      super(var1);
-      ItemMeta var3 = this.getItemMeta();
-      var3.setDisplayName(MythicLib.plugin.parseColors(var2));
-      this.setItemMeta(var3);
+   public NamedItemStack(Material material, String text) {
+      super(material);
+      ItemMeta itemMeta = this.getItemMeta();
+      itemMeta.setDisplayName(MythicLib.plugin.parseColors(text));
+      this.setItemMeta(itemMeta);
    }
 }

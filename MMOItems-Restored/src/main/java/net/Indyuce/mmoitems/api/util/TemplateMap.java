@@ -14,51 +14,51 @@ import org.jetbrains.annotations.Nullable;
 public class TemplateMap<C> {
    private final Map<Type, TemplateMap<C>.Submap> typeMap = new HashMap<>();
 
-   public boolean hasValue(@Nullable Type var1, @Nullable String var2) {
-      return var1 != null && var2 != null ? this.typeMap.containsKey(var1) && this.typeMap.get(var1).idMap.containsKey(var2) : false;
+   public boolean hasValue(@Nullable Type type, @Nullable String text) {
+      return type != null && text != null ? this.typeMap.containsKey(type) && this.typeMap.get(type).idMap.containsKey(text) : false;
    }
 
    @Nullable
-   public C getValue(@Nullable Type var1, @Nullable String var2) {
-      if (var1 != null && var2 != null) {
-         TemplateMap<C>.Submap var3 = this.typeMap.get(var1);
-         return var3 == null ? null : var3.idMap.get(var2);
+   public C getValue(@Nullable Type type, @Nullable String text) {
+      if (type != null && text != null) {
+         TemplateMap<C>.Submap submap = this.typeMap.get(type);
+         return submap == null ? null : submap.idMap.get(text);
       } else {
          return null;
       }
    }
 
-   public void removeValue(@Nullable Type var1, @Nullable String var2) {
-      if (var1 != null && var2 != null) {
-         if (this.typeMap.containsKey(var1)) {
-            this.typeMap.get(var1).idMap.remove(var2);
+   public void removeValue(@Nullable Type type, @Nullable String text) {
+      if (type != null && text != null) {
+         if (this.typeMap.containsKey(type)) {
+            this.typeMap.get(type).idMap.remove(text);
          }
       }
    }
 
-   public void setValue(@NotNull Type var1, @NotNull String var2, @NotNull C var3) {
-      Validate.notNull(var3, "Value cannot be null");
-      if (!this.typeMap.containsKey(var1)) {
-         this.typeMap.put(var1, new TemplateMap.Submap());
+   public void setValue(@NotNull Type type, @NotNull String text, @NotNull C value) {
+      Validate.notNull(value, "Value cannot be null");
+      if (!this.typeMap.containsKey(type)) {
+         this.typeMap.put(type, new TemplateMap.Submap());
       }
 
-      this.typeMap.get(var1).idMap.put(var2, (C)var3);
+      this.typeMap.get(type).idMap.put(text, (C)value);
    }
 
-   public void forEach(@NotNull Consumer<C> var1) {
-      this.typeMap.values().forEach(var1x -> var1x.idMap.values().forEach(var1));
+   public void forEach(@NotNull Consumer<C> consumer) {
+      this.typeMap.values().forEach(var1x -> var1x.idMap.values().forEach(consumer));
    }
 
    @NotNull
    public Collection<C> collectValues() {
-      HashSet var1 = new HashSet();
-      this.typeMap.values().forEach(var1x -> var1.addAll(var1x.idMap.values()));
-      return var1;
+      HashSet set = new HashSet();
+      this.typeMap.values().forEach(var1x -> set.addAll(var1x.idMap.values()));
+      return set;
    }
 
    @NotNull
-   public Collection<C> collectValues(@NotNull Type var1) {
-      return this.typeMap.containsKey(var1) ? this.typeMap.get(var1).idMap.values() : new HashSet<>();
+   public Collection<C> collectValues(@NotNull Type type) {
+      return this.typeMap.containsKey(type) ? this.typeMap.get(type).idMap.values() : new HashSet<>();
    }
 
    public void clear() {

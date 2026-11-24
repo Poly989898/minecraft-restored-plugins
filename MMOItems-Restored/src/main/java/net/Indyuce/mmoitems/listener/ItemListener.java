@@ -61,50 +61,50 @@ public class ItemListener implements Listener {
    }
 
    @EventHandler
-   private void onItemCraftRepair(PrepareItemCraftEvent var1) {
-      VInventoryView var2 = VersionUtils.getView(var1);
-      if (var2.getPlayer() instanceof Player && var1.isRepair()) {
-         Player var3 = (Player)var2.getPlayer();
-         CraftingInventory var4 = var1.getInventory();
-         ItemStack var5 = new ItemStack(Material.AIR);
-         ItemStack var6 = var4.getResult();
-         var4.setResult(var5);
+   private void onItemCraftRepair(PrepareItemCraftEvent event) {
+      VInventoryView view = VersionUtils.getView(event);
+      if (view.getPlayer() instanceof Player && event.isRepair()) {
+         Player player = (Player)view.getPlayer();
+         CraftingInventory inventory = event.getInventory();
+         ItemStack item = new ItemStack(Material.AIR);
+         ItemStack result = inventory.getResult();
+         inventory.setResult(item);
          Bukkit.getScheduler()
             .runTaskLater(
                MMOItems.plugin,
                () -> {
-                  List<ItemStack> var4x = Arrays.stream(var4.getMatrix()).filter(Objects::nonNull).filter(var0x -> !var0x.getType().isAir()).collect(Collectors.toList());
+                  List<ItemStack> var4x = Arrays.stream(inventory.getMatrix()).filter(Objects::nonNull).filter(var0x -> !var0x.getType().isAir()).collect(Collectors.toList());
                   long var5x = var4x.stream().filter(var0x -> NBTItem.get(var0x).hasTag("MMOITEMS_ITEM_ID")).count();
                   if (var5x == 0L) {
-                     var4.setResult(var6);
-                     var3.updateInventory();
+                     inventory.setResult(result);
+                     player.updateInventory();
                   } else if (var5x != 1L
                      && NBTItem.get((ItemStack)var4x.get(0))
                         .getString("MMOITEMS_ITEM_ID")
                         .equals(NBTItem.get((ItemStack)var4x.get(1)).getString("MMOITEMS_ITEM_ID"))) {
-                     var4.setResult(var6);
-                     boolean var7 = var4x.stream().allMatch(var0x -> {
+                     inventory.setResult(result);
+                     boolean flag = var4x.stream().allMatch(var0x -> {
                         NBTItem var1xx = NBTItem.get(var0x);
                         return var1xx.hasTag("MMOITEMS_DISABLE_REPAIRING") && var1xx.getBoolean("MMOITEMS_DISABLE_REPAIRING");
                      });
-                     boolean var8 = var4x.stream().allMatch(var1xx -> new DurabilityItem(var3, var1xx).isValid());
-                     if (var7) {
-                        var4.setResult(var5);
-                     } else if (var8) {
-                        DurabilityItem var9 = new DurabilityItem(var3, (ItemStack)var4x.get(0));
-                        int var10 = var4x.stream().map(var1xx -> new DurabilityItem(var3, var1xx)).map(DurabilityItem::getDurability).reduce(0, Integer::sum);
-                        int var11 = var9.getMaxDurability() - Math.min(var9.getMaxDurability(), var10);
-                        if (var11 > 0) {
-                           var9.addDurability(var11);
+                     boolean flag2 = var4x.stream().allMatch(var1xx -> new DurabilityItem(player, var1xx).isValid());
+                     if (flag) {
+                        inventory.setResult(item);
+                     } else if (flag2) {
+                        DurabilityItem durabilityItem = new DurabilityItem(player, (ItemStack)var4x.get(0));
+                        int count = var4x.stream().map(var1xx -> new DurabilityItem(player, var1xx)).map(DurabilityItem::getDurability).reduce(0, Integer::sum);
+                        int count2 = durabilityItem.getMaxDurability() - Math.min(durabilityItem.getMaxDurability(), count);
+                        if (count2 > 0) {
+                           durabilityItem.addDurability(count2);
                         }
 
-                        var4.setResult(var9.toItem());
+                        inventory.setResult(durabilityItem.toItem());
                      }
 
-                     var3.updateInventory();
+                     player.updateInventory();
                   } else {
-                     var4.setResult(var5);
-                     var3.updateInventory();
+                     inventory.setResult(item);
+                     player.updateInventory();
                   }
                },
                1L
@@ -113,109 +113,109 @@ public class ItemListener implements Listener {
    }
 
    @EventHandler(ignoreCancelled = true)
-   private void itemPickup(EntityPickupItemEvent var1) {
-      if (var1.getEntity().getType().equals(EntityType.PLAYER)) {
-         ItemStack var2 = modifyItem(var1.getItem().getItemStack(), (Player)var1.getEntity(), ReforgeReason.PICKUP);
-         if (var2 != null) {
-            var1.getItem().setItemStack(var2);
+   private void itemPickup(EntityPickupItemEvent event) {
+      if (event.getEntity().getType().equals(EntityType.PLAYER)) {
+         ItemStack item = modifyItem(event.getItem().getItemStack(), (Player)event.getEntity(), ReforgeReason.PICKUP);
+         if (item != null) {
+            event.getItem().setItemStack(item);
          }
       }
    }
 
    @EventHandler(ignoreCancelled = true)
-   private void itemCraft(CraftItemEvent var1) {
-      if (var1.getWhoClicked() instanceof Player) {
-         ItemStack var2 = modifyItem(var1.getCurrentItem(), (Player)var1.getWhoClicked(), ReforgeReason.CRAFT);
-         if (var2 != null) {
-            var1.setCurrentItem(var2);
+   private void itemCraft(CraftItemEvent event) {
+      if (event.getWhoClicked() instanceof Player) {
+         ItemStack item = modifyItem(event.getCurrentItem(), (Player)event.getWhoClicked(), ReforgeReason.CRAFT);
+         if (item != null) {
+            event.setCurrentItem(item);
          }
       }
    }
 
    @EventHandler(ignoreCancelled = true)
-   private void inventoryMove(InventoryClickEvent var1) {
-      if (var1.getInventory().getType() == InventoryType.CRAFTING && var1.getWhoClicked() instanceof Player) {
-         ItemStack var2 = modifyItem(var1.getCurrentItem(), (Player)var1.getWhoClicked(), ReforgeReason.CLICK);
-         if (var2 != null) {
-            var1.setCurrentItem(var2);
+   private void inventoryMove(InventoryClickEvent event) {
+      if (event.getInventory().getType() == InventoryType.CRAFTING && event.getWhoClicked() instanceof Player) {
+         ItemStack item = modifyItem(event.getCurrentItem(), (Player)event.getWhoClicked(), ReforgeReason.CLICK);
+         if (item != null) {
+            event.setCurrentItem(item);
          }
       }
    }
 
    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-   public void playerJoin(PlayerJoinEvent var1) {
+   public void playerJoin(PlayerJoinEvent event) {
       if (!MythicLib.plugin.hasProfiles()) {
-         updateInventory(var1.getPlayer());
+         updateInventory(event.getPlayer());
       }
    }
 
-   public static void updateInventory(Player var0) {
-      ItemStack var1 = modifyItem(var0.getEquipment().getHelmet(), var0, ReforgeReason.JOIN);
-      if (var1 != null) {
-         var0.getEquipment().setHelmet(var1);
+   public static void updateInventory(Player player) {
+      ItemStack item = modifyItem(player.getEquipment().getHelmet(), player, ReforgeReason.JOIN);
+      if (item != null) {
+         player.getEquipment().setHelmet(item);
       }
 
-      var1 = modifyItem(var0.getEquipment().getChestplate(), var0, ReforgeReason.JOIN);
-      if (var1 != null) {
-         var0.getEquipment().setChestplate(var1);
+      item = modifyItem(player.getEquipment().getChestplate(), player, ReforgeReason.JOIN);
+      if (item != null) {
+         player.getEquipment().setChestplate(item);
       }
 
-      var1 = modifyItem(var0.getEquipment().getLeggings(), var0, ReforgeReason.JOIN);
-      if (var1 != null) {
-         var0.getEquipment().setLeggings(var1);
+      item = modifyItem(player.getEquipment().getLeggings(), player, ReforgeReason.JOIN);
+      if (item != null) {
+         player.getEquipment().setLeggings(item);
       }
 
-      var1 = modifyItem(var0.getEquipment().getBoots(), var0, ReforgeReason.JOIN);
-      if (var1 != null) {
-         var0.getEquipment().setBoots(var1);
+      item = modifyItem(player.getEquipment().getBoots(), player, ReforgeReason.JOIN);
+      if (item != null) {
+         player.getEquipment().setBoots(item);
       }
 
-      for (int var2 = 0; var2 < 9; var2++) {
-         var1 = modifyItem(var0.getInventory().getItem(var2), var0, ReforgeReason.JOIN);
-         if (var1 != null) {
-            var0.getInventory().setItem(var2, var1);
+      for (int i = 0; i < 9; i++) {
+         item = modifyItem(player.getInventory().getItem(i), player, ReforgeReason.JOIN);
+         if (item != null) {
+            player.getInventory().setItem(i, item);
          }
       }
 
-      var1 = modifyItem(var0.getEquipment().getItemInOffHand(), var0, ReforgeReason.JOIN);
-      if (var1 != null) {
-         var0.getEquipment().setItemInOffHand(var1);
+      item = modifyItem(player.getEquipment().getItemInOffHand(), player, ReforgeReason.JOIN);
+      if (item != null) {
+         player.getEquipment().setItemInOffHand(item);
       }
    }
 
    @Nullable
-   private static ItemStack modifyItem(@Nullable ItemStack var0, @NotNull Player var1, @NotNull ReforgeReason var2) {
-      if (var0 != null && var0.hasItemMeta()) {
-         MMOItemReforger var3 = new MMOItemReforger(var0);
-         if (!var3.hasTemplate()) {
+   private static ItemStack modifyItem(@Nullable ItemStack item, @NotNull Player player, @NotNull ReforgeReason reforgeReason) {
+      if (item != null && item.hasItemMeta()) {
+         MMOItemReforger mmoItemReforger = new MMOItemReforger(item);
+         if (!mmoItemReforger.hasTemplate()) {
             return null;
          }
 
-         if ("VANILLA".equals(var3.getNBTItem().getString("MMOITEMS_ITEM_ID"))) {
+         if ("VANILLA".equals(mmoItemReforger.getNBTItem().getString("MMOITEMS_ITEM_ID"))) {
             return null;
          }
 
-         if (MMOItems.plugin.getConfig().getBoolean("item-revision.disable-on." + var2.name().toLowerCase())) {
+         if (MMOItems.plugin.getConfig().getBoolean("item-revision.disable-on." + reforgeReason.name().toLowerCase())) {
             return null;
          }
 
-         int var4 = var3.getTemplate().getRevisionId();
-         int var5 = var3.getNBTItem().hasTag(ItemStats.REVISION_ID.getNBTPath()) ? var3.getNBTItem().getInteger(ItemStats.REVISION_ID.getNBTPath()) : 1;
-         if (var4 <= var5) {
+         int revisionId = mmoItemReforger.getTemplate().getRevisionId();
+         int count = mmoItemReforger.getNBTItem().hasTag(ItemStats.REVISION_ID.getNBTPath()) ? mmoItemReforger.getNBTItem().getInteger(ItemStats.REVISION_ID.getNBTPath()) : 1;
+         if (revisionId <= count) {
             return null;
          }
 
-         if (!var3.reforge(MMOItems.plugin.getLanguage().revisionOptions, var1)) {
+         if (!mmoItemReforger.reforge(MMOItems.plugin.getLanguage().revisionOptions, player)) {
             return null;
          }
 
-         for (ItemStack var7 : var1.getInventory().addItem(var3.getReforgingOutput().toArray(new ItemStack[0])).values()) {
-            if (!SilentNumbers.isAir(var7)) {
-               var1.getWorld().dropItem(var1.getLocation(), var7);
+         for (ItemStack item2 : player.getInventory().addItem(mmoItemReforger.getReforgingOutput().toArray(new ItemStack[0])).values()) {
+            if (!SilentNumbers.isAir(item2)) {
+               player.getWorld().dropItem(player.getLocation(), item2);
             }
          }
 
-         return var3.getResult();
+         return mmoItemReforger.getResult();
       } else {
          return null;
       }

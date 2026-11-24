@@ -12,11 +12,11 @@ public class RepairItemEvent extends PlayerDataEvent {
    private final NBTItem target;
    private int repaired;
 
-   public RepairItemEvent(PlayerData var1, VolatileMMOItem var2, NBTItem var3, int var4) {
-      super(var1);
-      this.consumable = var2;
-      this.target = var3;
-      this.repaired = var4;
+   public RepairItemEvent(PlayerData playerData, VolatileMMOItem volatileMMOItem, NBTItem nbtItem, int count) {
+      super(playerData);
+      this.consumable = volatileMMOItem;
+      this.target = nbtItem;
+      this.repaired = count;
    }
 
    public VolatileMMOItem getConsumable() {
@@ -33,13 +33,13 @@ public class RepairItemEvent extends PlayerDataEvent {
 
    @Deprecated
    public double getRepairedPercent() {
-      boolean var1 = this.target.hasTag("MMOITEMS_DURABILITY");
-      double var2 = var1 ? this.target.getDouble("MMOITEMS_MAX_DURABILITY") : this.target.getItem().getType().getMaxDurability();
-      return this.getRepaired() / var2;
+      boolean hasTag = this.target.hasTag("MMOITEMS_DURABILITY");
+      double value = hasTag ? this.target.getDouble("MMOITEMS_MAX_DURABILITY") : this.target.getItem().getType().getMaxDurability();
+      return this.getRepaired() / value;
    }
 
-   public void setRepaired(int var1) {
-      this.repaired = Math.max(0, var1);
+   public void setRepaired(int count) {
+      this.repaired = Math.max(0, count);
    }
 
    public HandlerList getHandlers() {

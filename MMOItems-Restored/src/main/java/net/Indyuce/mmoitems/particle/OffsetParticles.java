@@ -11,13 +11,13 @@ public class OffsetParticles extends ParticleRunnable {
    private final float height;
    private final int amount;
 
-   public OffsetParticles(ParticleData var1, PlayerData var2) {
-      super(var1, var2);
-      this.speed = (float)var1.getModifier("speed");
-      this.height = (float)var1.getModifier("height");
-      this.h_offset = (float)var1.getModifier("horizontal-offset");
-      this.v_offset = (float)var1.getModifier("vertical-offset");
-      this.amount = (int)var1.getModifier("amount");
+   public OffsetParticles(ParticleData particleData, PlayerData playerData) {
+      super(particleData, playerData);
+      this.speed = (float)particleData.getModifier("speed");
+      this.height = (float)particleData.getModifier("height");
+      this.h_offset = (float)particleData.getModifier("horizontal-offset");
+      this.v_offset = (float)particleData.getModifier("vertical-offset");
+      this.amount = (int)particleData.getModifier("amount");
    }
 
    @Override

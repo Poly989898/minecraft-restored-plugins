@@ -35,24 +35,24 @@ public class ItemTier {
    @NotNull
    private static final Random RANDOM = new Random();
 
-   public ItemTier(@NotNull ConfigurationSection var1) {
-      this.id = var1.getName().toUpperCase().replace("-", "_");
-      this.unparsedName = var1.getString("name");
+   public ItemTier(@NotNull ConfigurationSection section) {
+      this.id = section.getName().toUpperCase().replace("-", "_");
+      this.unparsedName = section.getString("name");
       this.name = MythicLib.plugin.parseColors(this.unparsedName);
-      this.deconstructTable = var1.contains("deconstruct-item") ? new DropTable(var1.getConfigurationSection("deconstruct-item")) : null;
-      ConfigurationSection var2 = var1.getConfigurationSection("unidentification");
-      this.unidentificationInfo = var2 == null ? ItemTier.UnidentificationInfo.DEFAULT : new ItemTier.UnidentificationInfo(var2);
-      if (var1.contains("item-glow")) {
-         this.itemHint = var1.getBoolean("item-glow.hint");
-         this.glowColor = ChatColor.valueOf(UtilityMethods.enumName(var1.getString("item-glow.color", "WHITE")));
+      this.deconstructTable = section.contains("deconstruct-item") ? new DropTable(section.getConfigurationSection("deconstruct-item")) : null;
+      ConfigurationSection unidentification = section.getConfigurationSection("unidentification");
+      this.unidentificationInfo = unidentification == null ? ItemTier.UnidentificationInfo.DEFAULT : new ItemTier.UnidentificationInfo(unidentification);
+      if (section.contains("item-glow")) {
+         this.itemHint = section.getBoolean("item-glow.hint");
+         this.glowColor = ChatColor.valueOf(UtilityMethods.enumName(section.getString("item-glow.color", "WHITE")));
       } else {
          this.itemHint = false;
          this.glowColor = null;
       }
 
-      this.tooltip = var1.isConfigurationSection("tooltip") ? new TooltipTexture(var1.getConfigurationSection("tooltip")) : null;
-      this.chance = var1.getDouble("generation.chance");
-      this.capacity = var1.contains("generation.capacity") ? new NumericStatFormula(var1.get("generation.capacity")) : null;
+      this.tooltip = section.isConfigurationSection("tooltip") ? new TooltipTexture(section.getConfigurationSection("tooltip")) : null;
+      this.chance = section.getDouble("generation.chance");
+      this.capacity = section.contains("generation.capacity") ? new NumericStatFormula(section.get("generation.capacity")) : null;
    }
 
    @NotNull
@@ -79,8 +79,8 @@ public class ItemTier {
       return this.tooltip;
    }
 
-   public List<ItemStack> getDeconstructedLoot(@NotNull PlayerData var1) {
-      return this.hasDropTable() ? this.deconstructTable.read(var1, false) : new ArrayList<>();
+   public List<ItemStack> getDeconstructedLoot(@NotNull PlayerData playerData) {
+      return this.hasDropTable() ? this.deconstructTable.read(playerData, false) : new ArrayList<>();
    }
 
    public boolean hasColor() {
@@ -120,9 +120,9 @@ public class ItemTier {
    }
 
    @Nullable
-   public static ItemTier ofItem(NBTItem var0) {
-      String var1 = var0.getString("MMOITEMS_TIER");
-      return var1 == null ? null : MMOItems.plugin.getTiers().get(var1);
+   public static ItemTier ofItem(NBTItem nbtItem) {
+      String mMOITEMSTIER = nbtItem.getString("MMOITEMS_TIER");
+      return mMOITEMSTIER == null ? null : MMOItems.plugin.getTiers().get(mMOITEMSTIER);
    }
 
    public static class UnidentificationInfo {
@@ -135,14 +135,14 @@ public class ItemTier {
       public static final String DEFAULT_PREFIX = "Unknown";
       public static final ItemTier.UnidentificationInfo DEFAULT = new ItemTier.UnidentificationInfo("Unidentified Item", "Unknown", 0);
 
-      public UnidentificationInfo(@NotNull ConfigurationSection var1) {
-         this(var1.getString("name", "Unidentified Item"), var1.getString("prefix", "Unknown"), var1.getInt("range"));
+      public UnidentificationInfo(@NotNull ConfigurationSection section) {
+         this(section.getString("name", "Unidentified Item"), section.getString("prefix", "Unknown"), section.getInt("range"));
       }
 
-      public UnidentificationInfo(@NotNull String var1, @NotNull String var2, int var3) {
-         this.name = var1;
-         this.prefix = var2;
-         this.range = var3;
+      public UnidentificationInfo(@NotNull String text, @NotNull String text2, int count) {
+         this.name = text;
+         this.prefix = text2;
+         this.range = count;
       }
 
       @NotNull
@@ -155,9 +155,9 @@ public class ItemTier {
          return this.name;
       }
 
-      public int[] calculateRange(int var1) {
-         int var2 = (int)Math.max(1.0, var1 - this.range * ItemTier.RANDOM.nextDouble());
-         return new int[]{var2, var2 + this.range};
+      public int[] calculateRange(int count) {
+         int count2 = (int)Math.max(1.0, count - this.range * ItemTier.RANDOM.nextDouble());
+         return new int[]{count2, count2 + this.range};
       }
    }
 }

@@ -7,16 +7,16 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 public class MessageTrigger extends Trigger {
    private final String message;
 
-   public MessageTrigger(MMOLineConfig var1) {
+   public MessageTrigger(MMOLineConfig mmoLineConfig) {
       super("message");
-      var1.validate(new String[]{"format"});
-      this.message = var1.getString("format");
+      mmoLineConfig.validate(new String[]{"format"});
+      this.message = mmoLineConfig.getString("format");
    }
 
    @Override
-   public void whenCrafting(PlayerData var1) {
-      if (var1.isOnline()) {
-         var1.getPlayer().sendMessage(MythicLib.plugin.getPlaceholderParser().parse(var1.getPlayer(), this.message));
+   public void whenCrafting(PlayerData playerData) {
+      if (playerData.isOnline()) {
+         playerData.getPlayer().sendMessage(MythicLib.plugin.getPlaceholderParser().parse(playerData.getPlayer(), this.message));
       }
    }
 }

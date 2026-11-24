@@ -6,17 +6,17 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
 
 public class RPGPlayerLevelingHook implements RPGHandler {
    @Override
-   public void refreshStats(PlayerData var1) {
+   public void refreshStats(PlayerData playerData) {
    }
 
    @Override
-   public RPGPlayer getInfo(PlayerData var1) {
-      return new RPGPlayerLevelingHook.RPGPlayerLevelingPlayer(var1);
+   public RPGPlayer getInfo(PlayerData playerData) {
+      return new RPGPlayerLevelingHook.RPGPlayerLevelingPlayer(playerData);
    }
 
    public static class RPGPlayerLevelingPlayer extends RPGPlayer {
-      public RPGPlayerLevelingPlayer(PlayerData var1) {
-         super(var1);
+      public RPGPlayerLevelingPlayer(PlayerData playerData) {
+         super(playerData);
       }
 
       @Override
@@ -40,13 +40,13 @@ public class RPGPlayerLevelingHook implements RPGHandler {
       }
 
       @Override
-      public void setMana(double var1) {
-         new API().setMana(this.getPlayer(), (int)var1);
+      public void setMana(double value) {
+         new API().setMana(this.getPlayer(), (int)value);
       }
 
       @Override
-      public void setStamina(double var1) {
-         new API().setPower(this.getPlayer(), (int)var1);
+      public void setStamina(double value) {
+         new API().setPower(this.getPlayer(), (int)value);
       }
    }
 }

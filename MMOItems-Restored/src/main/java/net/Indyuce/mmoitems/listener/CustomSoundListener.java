@@ -27,85 +27,85 @@ import org.jetbrains.annotations.Nullable;
 
 public class CustomSoundListener implements Listener {
    @EventHandler(priority = EventPriority.HIGH)
-   public void a(EntityDamageByEntityEvent var1) {
-      if (var1.getDamager() instanceof Player && var1.getEntity() instanceof LivingEntity) {
-         Player var2 = (Player)var1.getDamager();
-         playSound(var2.getInventory().getItemInMainHand(), CustomSound.ON_ATTACK, var2);
+   public void a(EntityDamageByEntityEvent event) {
+      if (event.getDamager() instanceof Player && event.getEntity() instanceof LivingEntity) {
+         Player damager = (Player)event.getDamager();
+         playSound(damager.getInventory().getItemInMainHand(), CustomSound.ON_ATTACK, damager);
       }
    }
 
    @EventHandler(priority = EventPriority.HIGH)
-   public void b(EntityPickupItemEvent var1) {
-      if (var1.getEntityType().equals(EntityType.PLAYER)) {
-         playSound(var1.getItem().getItemStack(), CustomSound.ON_PICKUP, (Player)var1.getEntity());
+   public void b(EntityPickupItemEvent event) {
+      if (event.getEntityType().equals(EntityType.PLAYER)) {
+         playSound(event.getItem().getItemStack(), CustomSound.ON_PICKUP, (Player)event.getEntity());
       }
    }
 
    @EventHandler(priority = EventPriority.HIGH)
-   public void c(BlockBreakEvent var1) {
-      playSound(var1.getPlayer().getInventory().getItemInMainHand(), CustomSound.ON_BLOCK_BREAK, var1.getPlayer());
+   public void c(BlockBreakEvent event) {
+      playSound(event.getPlayer().getInventory().getItemInMainHand(), CustomSound.ON_BLOCK_BREAK, event.getPlayer());
    }
 
    @EventHandler
-   public void d(PlayerInteractEvent var1) {
-      if (var1.getAction() != Action.PHYSICAL && var1.hasItem()) {
-         if (var1.getAction().name().contains("RIGHT_CLICK")) {
-            playSound(var1.getItem(), CustomSound.ON_RIGHT_CLICK, var1.getPlayer());
+   public void d(PlayerInteractEvent event) {
+      if (event.getAction() != Action.PHYSICAL && event.hasItem()) {
+         if (event.getAction().name().contains("RIGHT_CLICK")) {
+            playSound(event.getItem(), CustomSound.ON_RIGHT_CLICK, event.getPlayer());
          }
 
-         if (var1.getAction().name().contains("LEFT_CLICK")) {
-            playSound(var1.getItem(), CustomSound.ON_LEFT_CLICK, var1.getPlayer());
+         if (event.getAction().name().contains("LEFT_CLICK")) {
+            playSound(event.getItem(), CustomSound.ON_LEFT_CLICK, event.getPlayer());
          }
       }
    }
 
    @EventHandler(priority = EventPriority.HIGH)
-   public void e(CraftItemEvent var1) {
-      playSound(var1.getInventory().getResult(), CustomSound.ON_CRAFT, var1.getWhoClicked().getLocation());
+   public void e(CraftItemEvent event) {
+      playSound(event.getInventory().getResult(), CustomSound.ON_CRAFT, event.getWhoClicked().getLocation());
    }
 
    @EventHandler(priority = EventPriority.HIGH)
-   public void f(FurnaceSmeltEvent var1) {
-      playSound(var1.getResult(), CustomSound.ON_CRAFT, var1.getBlock().getLocation());
+   public void f(FurnaceSmeltEvent event) {
+      playSound(event.getResult(), CustomSound.ON_CRAFT, event.getBlock().getLocation());
    }
 
    @EventHandler(priority = EventPriority.HIGH)
-   public void g(PlayerItemConsumeEvent var1) {
-      playSound(var1.getItem(), CustomSound.ON_CONSUME, var1.getPlayer());
+   public void g(PlayerItemConsumeEvent event) {
+      playSound(event.getItem(), CustomSound.ON_CONSUME, event.getPlayer());
    }
 
    @EventHandler(priority = EventPriority.HIGH)
-   public void h1(PlayerItemBreakEvent var1) {
-      playSound(var1.getBrokenItem(), CustomSound.ON_ITEM_BREAK, var1.getPlayer());
+   public void h1(PlayerItemBreakEvent event) {
+      playSound(event.getBrokenItem(), CustomSound.ON_ITEM_BREAK, event.getPlayer());
    }
 
    @EventHandler(priority = EventPriority.MONITOR)
-   public void i(BlockPlaceEvent var1) {
-      playSound(var1.getItemInHand(), CustomSound.ON_PLACED, var1.getPlayer());
+   public void i(BlockPlaceEvent event) {
+      playSound(event.getItemInHand(), CustomSound.ON_PLACED, event.getPlayer());
    }
 
-   public static void playSound(@Nullable ItemStack var0, @NotNull CustomSound var1, @NotNull Player var2) {
-      playSound(var0, var1, var2.getLocation(), null);
+   public static void playSound(@Nullable ItemStack item, @NotNull CustomSound customSound, @NotNull Player player) {
+      playSound(item, customSound, player.getLocation(), null);
    }
 
-   public static void playSound(@Nullable ItemStack var0, @NotNull CustomSound var1, @NotNull Player var2, @Nullable Sound var3) {
-      playSound(var0, var1, var2.getLocation(), var3);
+   public static void playSound(@Nullable ItemStack item, @NotNull CustomSound customSound, @NotNull Player player, @Nullable Sound sound) {
+      playSound(item, customSound, player.getLocation(), sound);
    }
 
-   public static void playSound(@Nullable ItemStack var0, @NotNull CustomSound var1, @NotNull Location var2) {
-      playSound(var0, var1, var2, null);
+   public static void playSound(@Nullable ItemStack item, @NotNull CustomSound customSound, @NotNull Location location) {
+      playSound(item, customSound, location, null);
    }
 
-   public static void playSound(@Nullable ItemStack var0, @NotNull CustomSound var1, @NotNull Location var2, @Nullable Sound var3) {
-      if (var0 != null) {
-         NBTItem var4 = NBTItem.get(var0);
-         String var5 = var4.getString("MMOITEMS_SOUND_" + var1.name());
-         if (var5 != null && !var5.isEmpty()) {
-            SoundReader var6 = new SoundReader(var5, var3);
-            var6.play(var2, (float)var4.getDouble("MMOITEMS_SOUND_" + var1.name() + "_VOL"), (float)var4.getDouble("MMOITEMS_SOUND_" + var1.name() + "_PIT"));
+   public static void playSound(@Nullable ItemStack item, @NotNull CustomSound customSound, @NotNull Location location, @Nullable Sound sound) {
+      if (item != null) {
+         NBTItem nbtItem = NBTItem.get(item);
+         String text = nbtItem.getString("MMOITEMS_SOUND_" + customSound.name());
+         if (text != null && !text.isEmpty()) {
+            SoundReader soundReader = new SoundReader(text, sound);
+            soundReader.play(location, (float)nbtItem.getDouble("MMOITEMS_SOUND_" + customSound.name() + "_VOL"), (float)nbtItem.getDouble("MMOITEMS_SOUND_" + customSound.name() + "_PIT"));
          } else {
-            if (var3 != null) {
-               var2.getWorld().playSound(var2, var3, 1.0F, 1.0F);
+            if (sound != null) {
+               location.getWorld().playSound(location, sound, 1.0F, 1.0F);
             }
          }
       }

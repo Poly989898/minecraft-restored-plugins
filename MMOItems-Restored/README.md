@@ -6,7 +6,7 @@ Readable sources of MMOItems 6.10 (`net.Indyuce.mmoitems`), recovered from the o
 
 - Compiles with 0 errors against Paper API `26.3.build.254-stable` (bytecode: Java 21, built on JDK 25) and builds `build/libs/MMOItems-6.10-restored.jar`.
 - The build was checked from a clean state (`rm -rf build`, then `gradle --offline shadowJar`).
-- The set of top-level classes in the jar is identical to the original jar. Resources (`plugin.yml`, `config.yml`, `default/`) are taken from the original jar. The original jar is not an input of the build.
+- The set of top-level classes in the jar is identical to the original jar; the anonymous class `TemplateMap$1` (removed with the lambda fix) and the `META-INF/maven` pom files are the only other differences. Resources (`plugin.yml`, `config.yml`, `default/`) are taken from the original jar. The original jar is not an input of the build.
 - Started on a Paper 26.3 server (build 253, offline mode) together with the restored MythicLib 1.7; see "Verified in-server" below.
 - Not verified: the integrations (Denizen, BossShop, Heroes, AuraSkills, MMOCore, ...) were compiled against hand-written stubs only and never run against the real plugins.
 

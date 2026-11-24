@@ -28,42 +28,42 @@ public class ItemSetStat extends StringStat implements GemStoneStat {
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      super.whenClicked(var1, var2);
-      if (var2.getAction() != InventoryAction.PICKUP_HALF) {
-         var1.getPlayer().sendMessage(ChatColor.GREEN + "Available Item Sets:");
-         StringBuilder var3 = new StringBuilder();
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      super.whenClicked(editionInventory, event);
+      if (event.getAction() != InventoryAction.PICKUP_HALF) {
+         editionInventory.getPlayer().sendMessage(ChatColor.GREEN + "Available Item Sets:");
+         StringBuilder builder = new StringBuilder();
 
-         for (ItemSet var5 : MMOItems.plugin.getSets().getAll()) {
-            var3.append(ChatColor.GREEN).append(var5.getId()).append(ChatColor.GRAY).append(" (").append(var5.getName()).append(ChatColor.GRAY).append("), ");
+         for (ItemSet itemSet : MMOItems.plugin.getSets().getAll()) {
+            builder.append(ChatColor.GREEN).append(itemSet.getId()).append(ChatColor.GRAY).append(" (").append(itemSet.getName()).append(ChatColor.GRAY).append("), ");
          }
 
-         if (var3.length() > 1) {
-            var3.setLength(var3.length() - 2);
+         if (builder.length() > 1) {
+            builder.setLength(builder.length() - 2);
          }
 
-         var1.getPlayer().sendMessage(var3.toString());
+         editionInventory.getPlayer().sendMessage(builder.toString());
       }
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull StringData var2) {
-      ItemSet var3 = MMOItems.plugin.getSets().get(var2.toString());
-      if (var3 != null) {
-         var1.getLore().insert("set", var3.getLoreTag());
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull StringData stringData) {
+      ItemSet itemSet = MMOItems.plugin.getSets().get(stringData.toString());
+      if (itemSet != null) {
+         itemStackBuilder.getLore().insert("set", itemSet.getLoreTag());
       }
 
-      var1.addItemTag(this.getAppliedNBT(var2));
+      itemStackBuilder.addItemTag(this.getAppliedNBT(stringData));
    }
 
    @NotNull
    @Override
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull StringData var1) {
-      ItemSet var2 = MMOItems.plugin.getSets().get(var1.toString());
-      Validate.notNull(var2, String.format("Could not find item set with ID '%s'", var1));
-      ArrayList var3 = new ArrayList();
-      var3.add(new ItemTag(this.getNBTPath(), var1.toString()));
-      return var3;
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull StringData stringData) {
+      ItemSet itemSet = MMOItems.plugin.getSets().get(stringData.toString());
+      Validate.notNull(itemSet, String.format("Could not find item set with ID '%s'", stringData));
+      ArrayList list = new ArrayList();
+      list.add(new ItemTag(this.getNBTPath(), stringData.toString()));
+      return list;
    }
 
    @NotNull
@@ -73,9 +73,9 @@ public class ItemSetStat extends StringStat implements GemStoneStat {
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      ItemSet var4 = MMOItems.plugin.getSets().get(var2);
-      Validate.notNull(var4, String.format("Couldn't find the set named '%s'.", var2));
-      super.whenInput(var1, var2, var3);
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      ItemSet itemSet = MMOItems.plugin.getSets().get(text);
+      Validate.notNull(itemSet, String.format("Couldn't find the set named '%s'.", text));
+      super.whenInput(editionInventory, text, objs);
    }
 }

@@ -19,10 +19,10 @@ public class UpgradeManager implements Reloadable {
    @Override
    public void reload() {
       this.templates.clear();
-      FileConfiguration var1 = new ConfigFile("upgrade-templates").getConfig();
+      FileConfiguration config = new ConfigFile("upgrade-templates").getConfig();
 
-      for (String var3 : var1.getKeys(false)) {
-         this.registerTemplate(new UpgradeTemplate(var1.getConfigurationSection(var3)));
+      for (String key : config.getKeys(false)) {
+         this.registerTemplate(new UpgradeTemplate(config.getConfigurationSection(key)));
       }
    }
 
@@ -31,15 +31,15 @@ public class UpgradeManager implements Reloadable {
    }
 
    @Nullable
-   public UpgradeTemplate getTemplate(@NotNull String var1) {
-      return this.templates.get(var1);
+   public UpgradeTemplate getTemplate(@NotNull String text) {
+      return this.templates.get(text);
    }
 
-   public boolean hasTemplate(String var1) {
-      return this.templates.containsKey(var1);
+   public boolean hasTemplate(String text) {
+      return this.templates.containsKey(text);
    }
 
-   public void registerTemplate(UpgradeTemplate var1) {
-      this.templates.put(var1.getId(), var1);
+   public void registerTemplate(UpgradeTemplate upgradeTemplate) {
+      this.templates.put(upgradeTemplate.getId(), upgradeTemplate);
    }
 }

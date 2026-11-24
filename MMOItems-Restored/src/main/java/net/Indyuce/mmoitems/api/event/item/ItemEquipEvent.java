@@ -11,9 +11,9 @@ public class ItemEquipEvent extends PlayerDataEvent implements Cancellable {
    private static final HandlerList handlers = new HandlerList();
    private final ItemStack item;
 
-   public ItemEquipEvent(Player var1, ItemStack var2) {
-      super(PlayerData.get(var1));
-      this.item = var2;
+   public ItemEquipEvent(Player player, ItemStack item) {
+      super(PlayerData.get(player));
+      this.item = item;
    }
 
    public ItemStack getItem() {

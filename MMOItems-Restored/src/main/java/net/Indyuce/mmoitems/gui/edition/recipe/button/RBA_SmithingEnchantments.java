@@ -20,8 +20,8 @@ public class RBA_SmithingEnchantments extends RBA_ChooseableButton {
       .build();
    public static final String SMITH_ENCHANTS = "enchantments";
 
-   public RBA_SmithingEnchantments(@NotNull RecipeEditorGUI var1) {
-      super(var1);
+   public RBA_SmithingEnchantments(@NotNull RecipeEditorGUI recipeEditorGUI) {
+      super(recipeEditorGUI);
    }
 
    @NotNull
@@ -50,15 +50,15 @@ public class RBA_SmithingEnchantments extends RBA_ChooseableButton {
 
    @NotNull
    @Override
-   public String getChooseableDefinition(@NotNull String var1) {
-      SmithingCombinationType var2 = SmithingCombinationType.MAXIMUM;
+   public String getChooseableDefinition(@NotNull String text) {
+      SmithingCombinationType smithingCombinationType = SmithingCombinationType.MAXIMUM;
 
       try {
-         var2 = SmithingCombinationType.valueOf(this.getCurrentChooseableValue());
-      } catch (IllegalArgumentException var4) {
+         smithingCombinationType = SmithingCombinationType.valueOf(this.getCurrentChooseableValue());
+      } catch (IllegalArgumentException exception) {
       }
 
-      switch (var2) {
+      switch (smithingCombinationType) {
          case EVEN:
             return "For each enchantment, will take the average of that enchantment's level across the ingredients.";
          case NONE:

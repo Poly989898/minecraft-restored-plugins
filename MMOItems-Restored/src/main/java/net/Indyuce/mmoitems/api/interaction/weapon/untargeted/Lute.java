@@ -25,31 +25,31 @@ import org.bukkit.util.Vector;
 @Deprecated
 public class Lute extends Weapon implements LegacyWeapon {
    @Deprecated
-   public Lute(Player var1, NBTItem var2) {
-      super(var1, var2);
+   public Lute(Player player, NBTItem nbtItem) {
+      super(player, nbtItem);
    }
 
-   public Lute(PlayerData var1, NBTItem var2) {
-      super(var1, var2);
-   }
-
-   @Override
-   public boolean canAttack(boolean var1, EquipmentSlot var2) {
-      return var1;
+   public Lute(PlayerData playerData, NBTItem nbtItem) {
+      super(playerData, nbtItem);
    }
 
    @Override
-   public void applyAttackEffect(final PlayerMetadata var1, EquipmentSlot var2) {
-      final double var3 = this.requireNonZero(var1.getStat("ATTACK_DAMAGE"), 7.0);
-      final double var5 = this.requireNonZero(var1.getStat("RANGE"), MMOItems.plugin.getConfig().getDouble("default.range"));
-      final Vector var7 = new Vector(0.0, -0.003 * var1.getStat("NOTE_WEIGHT"), 0.0);
-      LuteAttackEffectStat.LuteAttackEffect var8 = LuteAttackEffectStat.LuteAttackEffect.get(this.getNBTItem());
-      final SoundReader var9 = new SoundReader(this.getNBTItem().getString("MMOITEMS_LUTE_ATTACK_SOUND"), VSound.BLOCK_NOTE_BLOCK_BELL.get());
-      final ProjectileParticlesData var10 = this.getNBTItem().hasTag("MMOITEMS_PROJECTILE_PARTICLES")
+   public boolean canAttack(boolean flag, EquipmentSlot equipmentSlot) {
+      return flag;
+   }
+
+   @Override
+   public void applyAttackEffect(final PlayerMetadata playerMetadata, EquipmentSlot equipmentSlot) {
+      final double value = this.requireNonZero(playerMetadata.getStat("ATTACK_DAMAGE"), 7.0);
+      final double value2 = this.requireNonZero(playerMetadata.getStat("RANGE"), MMOItems.plugin.getConfig().getDouble("default.range"));
+      final Vector vector = new Vector(0.0, -0.003 * playerMetadata.getStat("NOTE_WEIGHT"), 0.0);
+      LuteAttackEffectStat.LuteAttackEffect luteAttackEffect = LuteAttackEffectStat.LuteAttackEffect.get(this.getNBTItem());
+      final SoundReader soundReader = new SoundReader(this.getNBTItem().getString("MMOITEMS_LUTE_ATTACK_SOUND"), VSound.BLOCK_NOTE_BLOCK_BELL.get());
+      final ProjectileParticlesData projectileParticlesData = this.getNBTItem().hasTag("MMOITEMS_PROJECTILE_PARTICLES")
          ? new ProjectileParticlesData(this.getNBTItem().getString("MMOITEMS_PROJECTILE_PARTICLES"))
          : ProjectileParticlesData.DEFAULT;
-      if (var8 != null) {
-         var8.getAttack().handle(var1, var3, this.getNBTItem(), var5, var7, var9, var10);
+      if (luteAttackEffect != null) {
+         luteAttackEffect.getAttack().handle(playerMetadata, value, this.getNBTItem(), value2, vector, soundReader, projectileParticlesData);
       } else {
          (new BukkitRunnable() {
             final Vector vec = Lute.this.getPlayer().getEyeLocation().getDirection().multiply(0.4);
@@ -57,24 +57,24 @@ public class Lute extends Weapon implements LegacyWeapon {
             int ti = 0;
 
             public void run() {
-               if (this.ti++ > var5) {
+               if (this.ti++ > value2) {
                   this.cancel();
                }
 
-               var10.shootParticle(this.loc);
-               var9.play(this.loc, 2.0F, (float)(0.5 + this.ti / var5));
+               projectileParticlesData.shootParticle(this.loc);
+               soundReader.play(this.loc, 2.0F, (float)(0.5 + this.ti / value2));
                List<Entity> var1x = MMOUtils.getNearbyChunkEntities(this.loc);
 
                for (int var2x = 0; var2x < 3; var2x++) {
-                  this.loc.add(this.vec.add(var7));
+                  this.loc.add(this.vec.add(vector));
                   if (this.loc.getBlock().getType().isSolid()) {
                      this.cancel();
                      break;
                   }
 
-                  for (Entity var4 : var1x) {
-                     if (UtilityMethods.canTarget(Lute.this.getPlayer(), this.loc, var4, InteractionType.OFFENSE_ACTION)) {
-                        var1.attack((LivingEntity)var4, var3, new DamageType[]{DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE});
+                  for (Entity entity : var1x) {
+                     if (UtilityMethods.canTarget(Lute.this.getPlayer(), this.loc, entity, InteractionType.OFFENSE_ACTION)) {
+                        playerMetadata.attack((LivingEntity)entity, value, new DamageType[]{DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE});
                         this.cancel();
                         return;
                      }

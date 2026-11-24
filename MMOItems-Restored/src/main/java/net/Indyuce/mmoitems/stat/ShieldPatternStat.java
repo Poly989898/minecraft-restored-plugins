@@ -33,133 +33,133 @@ public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPattern
       super("SHIELD_PATTERN", Material.SHIELD, "Shield Pattern", new String[]{"The color & patterns", "of your shield."}, new String[0], Material.SHIELD);
    }
 
-   public ShieldPatternData whenInitialized(Object var1) {
-      Validate.isTrue(var1 instanceof ConfigurationSection, "Must specify a config section");
-      ConfigurationSection var2 = (ConfigurationSection)var1;
-      ShieldPatternData var3 = new ShieldPatternData(
-         var2.contains("color") ? org.bukkit.DyeColor.valueOf(var2.getString("color").toUpperCase().replace("-", "_").replace(" ", "_")) : null
+   public ShieldPatternData whenInitialized(Object obj) {
+      Validate.isTrue(obj instanceof ConfigurationSection, "Must specify a config section");
+      ConfigurationSection section = (ConfigurationSection)obj;
+      ShieldPatternData shieldPatternData = new ShieldPatternData(
+         section.contains("color") ? org.bukkit.DyeColor.valueOf(section.getString("color").toUpperCase().replace("-", "_").replace(" ", "_")) : null
       );
 
-      for (String var5 : var2.getKeys(false)) {
-         if (!var5.equalsIgnoreCase("color")) {
-            String var6 = var2.getString(var5 + ".pattern").toUpperCase().replace("-", "_").replace(" ", "_");
-            PatternType var7 = PatternType.valueOf(var6);
-            var6 = var2.getString(var5 + ".color").toUpperCase().replace("-", "_").replace(" ", "_");
-            org.bukkit.DyeColor var8 = org.bukkit.DyeColor.valueOf(var6);
-            var3.add(new Pattern(var8, var7));
+      for (String key : section.getKeys(false)) {
+         if (!key.equalsIgnoreCase("color")) {
+            String text = section.getString(key + ".pattern").toUpperCase().replace("-", "_").replace(" ", "_");
+            PatternType patternType = PatternType.valueOf(text);
+            text = section.getString(key + ".color").toUpperCase().replace("-", "_").replace(" ", "_");
+            org.bukkit.DyeColor dyeColor = org.bukkit.DyeColor.valueOf(text);
+            shieldPatternData.add(new Pattern(dyeColor, patternType));
          }
       }
 
-      return var3;
+      return shieldPatternData;
    }
 
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull ShieldPatternData var2) {
-      BlockStateMeta var3 = (BlockStateMeta)var1.getMeta();
-      Banner var4 = (Banner)var3.getBlockState();
-      var4.setBaseColor(var2.getBaseColor());
-      var4.setPatterns(var2.getPatterns());
-      ((BlockStateMeta)var1.getMeta()).setBlockState(var4);
-      var1.getMeta().addItemFlags(new ItemFlag[]{HidePotionEffects.ITEM_FLAG});
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull ShieldPatternData shieldPatternData) {
+      BlockStateMeta meta = (BlockStateMeta)itemStackBuilder.getMeta();
+      Banner blockState = (Banner)meta.getBlockState();
+      blockState.setBaseColor(shieldPatternData.getBaseColor());
+      blockState.setPatterns(shieldPatternData.getPatterns());
+      ((BlockStateMeta)itemStackBuilder.getMeta()).setBlockState(blockState);
+      itemStackBuilder.getMeta().addItemFlags(new ItemFlag[]{HidePotionEffects.ITEM_FLAG});
    }
 
    @NotNull
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull ShieldPatternData var1) {
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull ShieldPatternData shieldPatternData) {
       return new ArrayList<>();
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      if (var2.getAction() == InventoryAction.PICKUP_ALL) {
-         new StatEdition(var1, ItemStats.SHIELD_PATTERN, 0).enable("Write in the chat the color of your shield.");
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      if (event.getAction() == InventoryAction.PICKUP_ALL) {
+         new StatEdition(editionInventory, ItemStats.SHIELD_PATTERN, 0).enable("Write in the chat the color of your shield.");
       }
 
-      if (var2.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
-         var1.getEditedSection().set("shield-pattern.color", null);
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the shield color.");
+      if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
+         editionInventory.getEditedSection().set("shield-pattern.color", null);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the shield color.");
       }
 
-      if (var2.getAction() == InventoryAction.PICKUP_HALF) {
-         new StatEdition(var1, ItemStats.SHIELD_PATTERN, 1)
+      if (event.getAction() == InventoryAction.PICKUP_HALF) {
+         new StatEdition(editionInventory, ItemStats.SHIELD_PATTERN, 1)
             .enable("Write in the chat the pattern you want to add.", ChatColor.AQUA + "Format: [PATTERN_TYPE] [DYE_COLOR]");
       }
 
-      if (var2.getAction() == InventoryAction.DROP_ONE_SLOT && var1.getEditedSection().contains("shield-pattern")) {
-         Set<String> var3 = var1.getEditedSection().getConfigurationSection("shield-pattern").getKeys(false);
-         String var4 = new ArrayList<>(var3).get(var3.size() - 1);
-         if (var4.equalsIgnoreCase("color")) {
+      if (event.getAction() == InventoryAction.DROP_ONE_SLOT && editionInventory.getEditedSection().contains("shield-pattern")) {
+         Set<String> keys = editionInventory.getEditedSection().getConfigurationSection("shield-pattern").getKeys(false);
+         String text = new ArrayList<>(keys).get(keys.size() - 1);
+         if (text.equalsIgnoreCase("color")) {
             return;
          }
 
-         var1.getEditedSection().set("shield-pattern." + var4, null);
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed the last pattern.");
+         editionInventory.getEditedSection().set("shield-pattern." + text, null);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed the last pattern.");
       }
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      int var4 = (Integer)var3[0];
-      if (var4 == 1) {
-         String[] var9 = var2.split(" ");
-         Validate.isTrue(var9.length == 2, var2 + " is not a valid [PATTERN_TYPE] [DYE_COLOR].");
-         PatternType var6 = PatternType.valueOf(var9[0].toUpperCase().replace("-", "_").replace(" ", "_"));
-         org.bukkit.DyeColor var7 = org.bukkit.DyeColor.valueOf(var9[1].toUpperCase().replace("-", "_").replace(" ", "_"));
-         int var8 = this.getNextAvailableKey(var1.getEditedSection().getConfigurationSection("shield-pattern"));
-         Validate.isTrue(var8 >= 0, "You can have more than 100 shield patterns on a single item.");
-         var1.getEditedSection().set("shield-pattern." + var8 + ".pattern", var6.name());
-         var1.getEditedSection().set("shield-pattern." + var8 + ".color", var7.name());
-         var1.registerTemplateEdition();
-         var1.getPlayer()
-            .sendMessage(MMOItems.plugin.getPrefix() + UtilityMethods.caseOnWords(var6.name().toLowerCase().replace("_", " ")) + " successfully added.");
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      int count = (Integer)objs[0];
+      if (count == 1) {
+         String[] texts = text.split(" ");
+         Validate.isTrue(texts.length == 2, text + " is not a valid [PATTERN_TYPE] [DYE_COLOR].");
+         PatternType patternType = PatternType.valueOf(texts[0].toUpperCase().replace("-", "_").replace(" ", "_"));
+         org.bukkit.DyeColor dyeColor = org.bukkit.DyeColor.valueOf(texts[1].toUpperCase().replace("-", "_").replace(" ", "_"));
+         int nextAvailableKey = this.getNextAvailableKey(editionInventory.getEditedSection().getConfigurationSection("shield-pattern"));
+         Validate.isTrue(nextAvailableKey >= 0, "You can have more than 100 shield patterns on a single item.");
+         editionInventory.getEditedSection().set("shield-pattern." + nextAvailableKey + ".pattern", patternType.name());
+         editionInventory.getEditedSection().set("shield-pattern." + nextAvailableKey + ".color", dyeColor.name());
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer()
+            .sendMessage(MMOItems.plugin.getPrefix() + UtilityMethods.caseOnWords(patternType.name().toLowerCase().replace("_", " ")) + " successfully added.");
       } else {
-         org.bukkit.DyeColor var5 = org.bukkit.DyeColor.valueOf(var2.toUpperCase().replace("-", "_").replace(" ", "_"));
-         var1.getEditedSection().set("shield-pattern.color", var5.name());
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Shield color successfully changed.");
+         org.bukkit.DyeColor dyeColor = org.bukkit.DyeColor.valueOf(text.toUpperCase().replace("-", "_").replace(" ", "_"));
+         editionInventory.getEditedSection().set("shield-pattern.color", dyeColor.name());
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Shield color successfully changed.");
       }
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<ShieldPatternData> var2) {
-      if (var2.isPresent()) {
-         var1.add(ChatColor.GRAY + "Current Value:");
-         ShieldPatternData var3 = (ShieldPatternData)var2.get();
-         var1.add(
+   public void whenDisplayed(List<String> texts, Optional<ShieldPatternData> optional) {
+      if (optional.isPresent()) {
+         texts.add(ChatColor.GRAY + "Current Value:");
+         ShieldPatternData shieldPatternData = (ShieldPatternData)optional.get();
+         texts.add(
             ChatColor.GRAY
                + "* Base Color: "
                + (
-                  var3.getBaseColor() != null
-                     ? ChatColor.GREEN + UtilityMethods.caseOnWords(var3.getBaseColor().name().toLowerCase().replace("_", " "))
+                  shieldPatternData.getBaseColor() != null
+                     ? ChatColor.GREEN + UtilityMethods.caseOnWords(shieldPatternData.getBaseColor().name().toLowerCase().replace("_", " "))
                      : ChatColor.RED + "None"
                )
          );
-         var3.getPatterns()
+         shieldPatternData.getPatterns()
             .forEach(
-               var1x -> var1.add(
+               var1x -> texts.add(
                   ChatColor.GRAY + "* " + ChatColor.GREEN + var1x.getPattern().name() + ChatColor.GRAY + " - " + ChatColor.GREEN + var1x.getColor().name()
                )
             );
       } else {
-         var1.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+         texts.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
       }
 
-      var1.add("");
-      var1.add(ChatColor.YELLOW + "►" + " Left Click to change the shield color.");
-      var1.add(ChatColor.YELLOW + "►" + " Shift Left Click to reset the shield color.");
-      var1.add(ChatColor.YELLOW + "►" + " Right Click to add a pattern.");
-      var1.add(ChatColor.YELLOW + "►" + " Drop to remove the last pattern.");
+      texts.add("");
+      texts.add(ChatColor.YELLOW + "►" + " Left Click to change the shield color.");
+      texts.add(ChatColor.YELLOW + "►" + " Shift Left Click to reset the shield color.");
+      texts.add(ChatColor.YELLOW + "►" + " Right Click to add a pattern.");
+      texts.add(ChatColor.YELLOW + "►" + " Drop to remove the last pattern.");
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      if (var1.getNBT().getItem().getItemMeta() instanceof BlockStateMeta
-         && ((BlockStateMeta)var1.getNBT().getItem().getItemMeta()).hasBlockState()
-         && ((BlockStateMeta)var1.getNBT().getItem().getItemMeta()).getBlockState() instanceof Banner) {
-         Banner var2 = (Banner)((BlockStateMeta)var1.getNBT().getItem().getItemMeta()).getBlockState();
-         ShieldPatternData var3 = new ShieldPatternData(var2.getBaseColor());
-         var3.addAll(var2.getPatterns());
-         var1.setData(ItemStats.SHIELD_PATTERN, var3);
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      if (readMMOItem.getNBT().getItem().getItemMeta() instanceof BlockStateMeta
+         && ((BlockStateMeta)readMMOItem.getNBT().getItem().getItemMeta()).hasBlockState()
+         && ((BlockStateMeta)readMMOItem.getNBT().getItem().getItemMeta()).getBlockState() instanceof Banner) {
+         Banner blockState = (Banner)((BlockStateMeta)readMMOItem.getNBT().getItem().getItemMeta()).getBlockState();
+         ShieldPatternData shieldPatternData = new ShieldPatternData(blockState.getBaseColor());
+         shieldPatternData.addAll(blockState.getPatterns());
+         readMMOItem.setData(ItemStats.SHIELD_PATTERN, shieldPatternData);
       }
    }
 
@@ -169,14 +169,14 @@ public class ShieldPatternStat extends ItemStat<ShieldPatternData, ShieldPattern
    }
 
    @Nullable
-   public ShieldPatternData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
+   public ShieldPatternData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
       return null;
    }
 
-   private int getNextAvailableKey(ConfigurationSection var1) {
-      for (int var2 = 0; var2 < 100; var2++) {
-         if (!var1.contains("" + var2)) {
-            return var2;
+   private int getNextAvailableKey(ConfigurationSection section) {
+      for (int i = 0; i < 100; i++) {
+         if (!section.contains("" + i)) {
+            return i;
          }
       }
 

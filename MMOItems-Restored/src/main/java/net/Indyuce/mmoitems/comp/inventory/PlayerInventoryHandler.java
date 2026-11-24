@@ -16,32 +16,32 @@ public class PlayerInventoryHandler {
    @NotNull
    private final List<PlayerInventory> registeredInventories = new ArrayList<>();
 
-   public void register(@NotNull PlayerInventory var1) {
-      this.registeredInventories.add(var1);
-      if (var1 instanceof Listener) {
-         Bukkit.getPluginManager().registerEvents((Listener)var1, MMOItems.plugin);
+   public void register(@NotNull PlayerInventory playerInventory) {
+      this.registeredInventories.add(playerInventory);
+      if (playerInventory instanceof Listener) {
+         Bukkit.getPluginManager().registerEvents((Listener)playerInventory, MMOItems.plugin);
       }
    }
 
-   public void unregisterIf(Predicate<PlayerInventory> var1) {
-      Iterator var2 = this.registeredInventories.iterator();
+   public void unregisterIf(Predicate<PlayerInventory> predicate) {
+      Iterator iterator = this.registeredInventories.iterator();
 
-      while (var2.hasNext()) {
-         PlayerInventory var3 = (PlayerInventory)var2.next();
-         if (var1.test(var3)) {
-            if (var3 instanceof Listener) {
-               HandlerList.unregisterAll((Listener)var3);
+      while (iterator.hasNext()) {
+         PlayerInventory playerInventory = (PlayerInventory)iterator.next();
+         if (predicate.test(playerInventory)) {
+            if (playerInventory instanceof Listener) {
+               HandlerList.unregisterAll((Listener)playerInventory);
             }
 
-            var2.remove();
+            iterator.remove();
          }
       }
    }
 
    public void unregisterAll() {
-      for (PlayerInventory var2 : this.registeredInventories) {
-         if (var2 instanceof Listener) {
-            HandlerList.unregisterAll((Listener)var2);
+      for (PlayerInventory registeredInventory : this.registeredInventories) {
+         if (registeredInventory instanceof Listener) {
+            HandlerList.unregisterAll((Listener)registeredInventory);
          }
       }
 
@@ -53,13 +53,13 @@ public class PlayerInventoryHandler {
    }
 
    @NotNull
-   public List<EquippedItem> getInventory(@NotNull Player var1) {
-      ArrayList var2 = new ArrayList();
+   public List<EquippedItem> getInventory(@NotNull Player player) {
+      ArrayList list = new ArrayList();
 
-      for (PlayerInventory var4 : this.registeredInventories) {
-         var2.addAll(var4.getInventory(var1));
+      for (PlayerInventory registeredInventory : this.registeredInventories) {
+         list.addAll(registeredInventory.getInventory(player));
       }
 
-      return var2;
+      return list;
    }
 }

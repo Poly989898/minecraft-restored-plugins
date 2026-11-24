@@ -30,74 +30,74 @@ import org.bukkit.inventory.ItemStack;
 public class GenerateCommandTreeNode extends CommandTreeNode {
    private static final Random random = new Random();
 
-   public GenerateCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "generate");
+   public GenerateCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "generate");
       this.addParameter(Parameter.PLAYER);
       this.addParameter(
          new Parameter(
             "(extra-args)",
-            (var0, var1x) -> var1x.addAll(Arrays.asList("-matchlevel", "-matchclass", "-level:", "-class:", "-type:", "-id:", "-tier:", "-tierset:", "-gimme"))
+            (commandTreeExplorer, var1x) -> var1x.addAll(Arrays.asList("-matchlevel", "-matchclass", "-level:", "-class:", "-type:", "-id:", "-tier:", "-tierset:", "-gimme"))
          )
       );
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
+   public CommandResult execute(CommandSender sender, String[] texts) {
       try {
-         if (var2.length < 2) {
+         if (texts.length < 2) {
             return CommandResult.THROW_USAGE;
          }
 
-         Player var3 = Bukkit.getPlayer(var2[1]);
-         Validate.notNull(var3, "Could not find player called " + var2[1] + ".");
-         GenerateCommandHandler var4 = new GenerateCommandHandler(var2);
-         Player var5 = !var4.hasArgument("gimme") && !var4.hasArgument("giveme") ? var3 : (var1 instanceof Player ? (Player)var1 : null);
-         Validate.notNull(var5, "You cannot use -gimme");
-         RPGPlayer var6 = PlayerData.get(var3).getRPG();
-         int var7 = var4.hasArgument("level:")
-            ? Integer.parseInt(var4.getValue("level"))
-            : (var4.hasArgument("matchlevel") ? MMOItems.plugin.getTemplates().rollLevel(var6.getLevel()) : 1 + random.nextInt(100));
-         ItemTier var8 = var4.hasArgument("tierset")
+         Player player = Bukkit.getPlayer(texts[1]);
+         Validate.notNull(player, "Could not find player called " + texts[1] + ".");
+         GenerateCommandHandler generateCommandHandler = new GenerateCommandHandler(texts);
+         Player player2 = !generateCommandHandler.hasArgument("gimme") && !generateCommandHandler.hasArgument("giveme") ? player : (sender instanceof Player ? (Player)sender : null);
+         Validate.notNull(player2, "You cannot use -gimme");
+         RPGPlayer rPG = PlayerData.get(player).getRPG();
+         int count = generateCommandHandler.hasArgument("level:")
+            ? Integer.parseInt(generateCommandHandler.getValue("level"))
+            : (generateCommandHandler.hasArgument("matchlevel") ? MMOItems.plugin.getTemplates().rollLevel(rPG.getLevel()) : 1 + random.nextInt(100));
+         ItemTier itemTier = generateCommandHandler.hasArgument("tierset")
             ? null
             : (
-               var4.hasArgument("tier:")
-                  ? MMOItems.plugin.getTiers().getOrThrow(var4.getValue("tier").toUpperCase().replace("-", "_"))
+               generateCommandHandler.hasArgument("tier:")
+                  ? MMOItems.plugin.getTiers().getOrThrow(generateCommandHandler.getValue("tier").toUpperCase().replace("-", "_"))
                   : MMOItems.plugin.getTemplates().rollTier()
             );
-         TemplateExplorer var9 = new TemplateExplorer();
-         if (var4.hasArgument("matchclass")) {
-            var9.applyFilter(new ClassFilter(var6));
+         TemplateExplorer templateExplorer = new TemplateExplorer();
+         if (generateCommandHandler.hasArgument("matchclass")) {
+            templateExplorer.applyFilter(new ClassFilter(rPG));
          }
 
-         if (var4.hasArgument("class:")) {
-            var9.applyFilter(new ClassFilter(var4.getValue("class").replace("-", " ").replace("_", " ")));
+         if (generateCommandHandler.hasArgument("class:")) {
+            templateExplorer.applyFilter(new ClassFilter(generateCommandHandler.getValue("class").replace("-", " ").replace("_", " ")));
          }
 
-         String var10 = null;
-         if (var4.hasArgument("tierset:")) {
-            String var11 = UtilityMethods.enumName(var4.getValue("tierset"));
-            Validate.isTrue(MMOItems.plugin.getTiers().has(var11), "Could not find tier with ID '" + var11 + "'");
-            var9.applyFilter(new TierFilter(var11));
+         String text = null;
+         if (generateCommandHandler.hasArgument("tierset:")) {
+            String text2 = UtilityMethods.enumName(generateCommandHandler.getValue("tierset"));
+            Validate.isTrue(MMOItems.plugin.getTiers().has(text2), "Could not find tier with ID '" + text2 + "'");
+            templateExplorer.applyFilter(new TierFilter(text2));
          }
 
-         if (var4.hasArgument("type:")) {
-            var10 = var4.getValue("type");
-            Validate.isTrue(Type.isValid(var10), "Could not find type with ID '" + var10 + "'");
-            var9.applyFilter(new TypeFilter(Type.get(var10)));
+         if (generateCommandHandler.hasArgument("type:")) {
+            text = generateCommandHandler.getValue("type");
+            Validate.isTrue(Type.isValid(text), "Could not find type with ID '" + text + "'");
+            templateExplorer.applyFilter(new TypeFilter(Type.get(text)));
          }
 
-         if (var4.hasArgument("id:")) {
-            Validate.isTrue(var10 != null, "You have to specify a type if using the id option!");
-            var9.applyFilter(new IDFilter(var4.getValue("id")));
+         if (generateCommandHandler.hasArgument("id:")) {
+            Validate.isTrue(text != null, "You have to specify a type if using the id option!");
+            templateExplorer.applyFilter(new IDFilter(generateCommandHandler.getValue("id")));
          }
 
-         Optional var14 = var9.rollLoot();
-         Validate.isTrue(var14.isPresent(), "No item matched your criterias.");
-         ItemStack var12 = ((MMOItemTemplate)var14.get()).newBuilder(var7, var8).build().newBuilder().build();
-         Validate.isTrue(var12 != null && var12.getType() != Material.AIR, "Could not generate item with ID '" + ((MMOItemTemplate)var14.get()).getId() + "'");
-         new SmartGive(var5).give(new ItemStack[]{var12});
+         Optional optional = templateExplorer.rollLoot();
+         Validate.isTrue(optional.isPresent(), "No item matched your criterias.");
+         ItemStack item = ((MMOItemTemplate)optional.get()).newBuilder(count, itemTier).build().newBuilder().build();
+         Validate.isTrue(item != null && item.getType() != Material.AIR, "Could not generate item with ID '" + ((MMOItemTemplate)optional.get()).getId() + "'");
+         new SmartGive(player2).give(new ItemStack[]{item});
          return CommandResult.SUCCESS;
-      } catch (IllegalArgumentException var13) {
-         var1.sendMessage(ChatColor.RED + var13.getMessage());
+      } catch (IllegalArgumentException exception) {
+         sender.sendMessage(ChatColor.RED + exception.getMessage());
          return CommandResult.FAILURE;
       }
    }

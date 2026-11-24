@@ -40,28 +40,28 @@ public class MMOItemsOnUseAura extends Aura implements ITargetedEntitySkill {
    @NotNull
    final ArrayList<MMOItemsOnUseAura.UseItemTypes> auraWeapons = new ArrayList<>();
 
-   public MMOItemsOnUseAura(SkillExecutor var1, File var2, String var3, MythicLineConfig var4) {
-      super(var1, var2, var3, var4);
-      this.skillName = var4.getPlaceholderString(
+   public MMOItemsOnUseAura(SkillExecutor skillExecutor, File file, String text, MythicLineConfig mythicLineConfig) {
+      super(skillExecutor, file, text, mythicLineConfig);
+      this.skillName = mythicLineConfig.getPlaceholderString(
          new String[]{"skill", "s", "ondamagedskill", "ondamaged", "od", "onhitskill", "onhit", "oh", "meta", "m", "mechanics", "$", "()"},
          "skill not found",
          new String[0]
       );
-      this.weaponTypes = var4.getString(new String[]{"weapons", "weapon", "w"}, "MUSKET", new String[0]);
+      this.weaponTypes = mythicLineConfig.getString(new String[]{"weapons", "weapon", "w"}, "MUSKET", new String[0]);
       this.metaskill = GetSkill(this.skillName.get());
-      this.cancelEvent = var4.getBoolean(new String[]{"cancelevent", "ce"}, false);
-      ArrayList<String> var5 = new ArrayList();
+      this.cancelEvent = mythicLineConfig.getBoolean(new String[]{"cancelevent", "ce"}, false);
+      ArrayList<String> texts = new ArrayList();
       if (this.weaponTypes.contains(",")) {
-         var5.addAll(Arrays.asList(this.weaponTypes.split(",")));
+         texts.addAll(Arrays.asList(this.weaponTypes.split(",")));
       } else {
-         var5.add(this.weaponTypes);
+         texts.add(this.weaponTypes);
       }
 
-      for (String var7 : var5) {
+      for (String text2 : texts) {
          try {
-            MMOItemsOnUseAura.UseItemTypes var8 = MMOItemsOnUseAura.UseItemTypes.valueOf(var7.toUpperCase());
-            this.auraWeapons.add(var8);
-         } catch (IllegalArgumentException var9) {
+            MMOItemsOnUseAura.UseItemTypes useItemTypes = MMOItemsOnUseAura.UseItemTypes.valueOf(text2.toUpperCase());
+            this.auraWeapons.add(useItemTypes);
+         } catch (IllegalArgumentException exception) {
          }
       }
 
@@ -74,45 +74,45 @@ public class MMOItemsOnUseAura extends Aura implements ITargetedEntitySkill {
       }
    }
 
-   public SkillResult castAtEntity(SkillMetadata var1, AbstractEntity var2) {
-      Object var3;
-      if (MythicBukkit.inst().getMobManager().isActiveMob(var2)) {
-         var3 = MythicBukkit.inst().getMobManager().getMythicMobInstance(var2);
+   public SkillResult castAtEntity(SkillMetadata skillMetadata, AbstractEntity abstractEntity) {
+      Object obj;
+      if (MythicBukkit.inst().getMobManager().isActiveMob(abstractEntity)) {
+         obj = MythicBukkit.inst().getMobManager().getMythicMobInstance(abstractEntity);
       } else {
-         var3 = new GenericCaster(var2);
+         obj = new GenericCaster(abstractEntity);
       }
 
-      new MMOItemsOnUseAura.Tracker((SkillCaster)var3, var1, var2);
+      new MMOItemsOnUseAura.Tracker((SkillCaster)obj, skillMetadata, abstractEntity);
       return SkillResult.SUCCESS;
    }
 
    @Nullable
-   public static Skill GetSkill(String var0) {
-      if (SkillExists(var0)) {
-         Optional var1 = MythicBukkit.inst().getSkillManager().getSkill(var0);
-         if (var1 == null) {
+   public static Skill GetSkill(String text) {
+      if (SkillExists(text)) {
+         Optional skill = MythicBukkit.inst().getSkillManager().getSkill(text);
+         if (skill == null) {
             return null;
          }
 
-         if (var1.isPresent()) {
-            return (Skill)var1.get();
+         if (skill.isPresent()) {
+            return (Skill)skill.get();
          }
       }
 
       return null;
    }
 
-   public static boolean SkillExists(String var0) {
-      if (var0 == null) {
+   public static boolean SkillExists(String text) {
+      if (text == null) {
          return false;
       }
 
-      Optional var1 = MythicBukkit.inst().getSkillManager().getSkill(var0);
-      if (var1.isPresent()) {
+      Optional skill = MythicBukkit.inst().getSkillManager().getSkill(text);
+      if (skill.isPresent()) {
          try {
-            Skill var2 = (Skill)var1.get();
+            Skill skill2 = (Skill)skill.get();
             return true;
-         } catch (Exception var3) {
+         } catch (Exception exception) {
             return false;
          }
       } else {
@@ -127,8 +127,8 @@ public class MMOItemsOnUseAura extends Aura implements ITargetedEntitySkill {
       }
 
       public void auraStart() {
-         this.registerAuraComponent(Events.subscribe(SpecialWeaponAttackEvent.class).filter(var1 -> {
-            if (!var1.getPlayer().getUniqueId().equals(((AbstractEntity)this.entity.get()).getUniqueId())) {
+         this.registerAuraComponent(Events.subscribe(SpecialWeaponAttackEvent.class).filter(event -> {
+            if (!event.getPlayer().getUniqueId().equals(((AbstractEntity)this.entity.get()).getUniqueId())) {
                return false;
             }
 
@@ -136,25 +136,25 @@ public class MMOItemsOnUseAura extends Aura implements ITargetedEntitySkill {
                return true;
             }
 
-            for (MMOItemsOnUseAura.UseItemTypes var3 : MMOItemsOnUseAura.this.auraWeapons) {
-               if (var3.getInst().isInstance(var1.getWeapon())) {
+            for (MMOItemsOnUseAura.UseItemTypes auraWeapon : MMOItemsOnUseAura.this.auraWeapons) {
+               if (auraWeapon.getInst().isInstance(event.getWeapon())) {
                   return true;
                }
             }
 
             return false;
-         }).handler(var1 -> {
-            SkillMetadata var2 = this.skillMetadata.deepClone();
+         }).handler(event -> {
+            SkillMetadata skillMetadata = this.skillMetadata.deepClone();
             if (MMOItemsOnUseAura.this.metaskill == null) {
-               MMOItemsOnUseAura.this.metaskill = MMOItemsOnUseAura.GetSkill(MMOItemsOnUseAura.this.skillName.get(var2, var2.getCaster().getEntity()));
+               MMOItemsOnUseAura.this.metaskill = MMOItemsOnUseAura.GetSkill(MMOItemsOnUseAura.this.skillName.get(skillMetadata, skillMetadata.getCaster().getEntity()));
             }
 
-            AbstractEntity var3 = BukkitAdapter.adapt(var1.getTarget());
-            var2.setTrigger(var3);
-            if (this.executeAuraSkill(Optional.ofNullable(MMOItemsOnUseAura.this.metaskill), var2)) {
+            AbstractEntity abstractEntity = BukkitAdapter.adapt(event.getTarget());
+            skillMetadata.setTrigger(abstractEntity);
+            if (this.executeAuraSkill(Optional.ofNullable(MMOItemsOnUseAura.this.metaskill), skillMetadata)) {
                this.consumeCharge();
                if (MMOItemsOnUseAura.this.cancelEvent) {
-                  var1.setCancelled(true);
+                  event.setCancelled(true);
                }
             }
          }));

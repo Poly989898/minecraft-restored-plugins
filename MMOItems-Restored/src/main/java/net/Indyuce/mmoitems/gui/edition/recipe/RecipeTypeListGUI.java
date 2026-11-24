@@ -35,8 +35,8 @@ public class RecipeTypeListGUI extends EditionInventory {
    @NotNull
    static final HashMap<String, RecipeRegistry> registeredRecipes = new HashMap<>();
 
-   public RecipeTypeListGUI(@NotNull Player var1, @NotNull MMOItemTemplate var2) {
-      super(var1, var2);
+   public RecipeTypeListGUI(@NotNull Player player, @NotNull MMOItemTemplate mmoItemTemplate) {
+      super(player, mmoItemTemplate);
       this.page = 0;
    }
 
@@ -56,51 +56,51 @@ public class RecipeTypeListGUI extends EditionInventory {
          this.inventory.setItem(36, NEXT_PAGE);
       }
 
-      HashMap var1 = new HashMap();
-      int var2 = 0;
+      HashMap map = new HashMap();
+      int count = 0;
 
-      for (RecipeRegistry var4 : registeredRecipes.values()) {
-         var1.put(var2, var4);
-         var2++;
+      for (RecipeRegistry recipeRegistry : registeredRecipes.values()) {
+         map.put(count, recipeRegistry);
+         count++;
       }
 
-      for (int var6 = 21 * this.page; var6 < 21 * (this.page + 1); var6++) {
-         int var7 = page(var6);
-         if (var6 >= registeredRecipes.size()) {
-            this.inventory.setItem(var7, NO_RECIPE);
+      for (int i = 21 * this.page; i < 21 * (this.page + 1); i++) {
+         int count2 = page(i);
+         if (i >= registeredRecipes.size()) {
+            this.inventory.setItem(count2, NO_RECIPE);
          } else {
-            RecipeRegistry var5 = (RecipeRegistry)var1.get(var6);
-            this.inventory.setItem(var7, var5.getDisplayListItem());
-            this.recipeTypeMap.put(var7, var5);
+            RecipeRegistry recipeRegistry = (RecipeRegistry)map.get(i);
+            this.inventory.setItem(count2, recipeRegistry.getDisplayListItem());
+            this.recipeTypeMap.put(count2, recipeRegistry);
          }
       }
    }
 
-   public static int page(int var0) {
-      int var1 = SilentNumbers.floor(var0 / 21.0);
-      var0 -= var1 * 21;
-      int var2 = SilentNumbers.floor(var0 / 7.0);
-      int var3 = var0 - 7 * var2;
-      int var4 = 18 + var2 * 9;
-      int var5 = var3 + 1;
-      return var4 + var5;
+   public static int page(int count) {
+      int count2 = SilentNumbers.floor(count / 21.0);
+      count -= count2 * 21;
+      int count3 = SilentNumbers.floor(count / 7.0);
+      int count4 = count - 7 * count3;
+      int count5 = 18 + count3 * 9;
+      int count6 = count4 + 1;
+      return count5 + count6;
    }
 
    @Override
-   public void whenClicked(InventoryClickEvent var1) {
-      if (VersionUtils.getView(var1).getTopInventory() == var1.getClickedInventory()) {
-         var1.setCancelled(true);
-         if (var1.getAction() == InventoryAction.PICKUP_ALL) {
-            if (var1.getSlot() == 27) {
+   public void whenClicked(InventoryClickEvent event) {
+      if (VersionUtils.getView(event).getTopInventory() == event.getClickedInventory()) {
+         event.setCancelled(true);
+         if (event.getAction() == InventoryAction.PICKUP_ALL) {
+            if (event.getSlot() == 27) {
                this.page--;
                this.refreshInventory();
-            } else if (var1.getSlot() == 36) {
+            } else if (event.getSlot() == 36) {
                this.page++;
                this.refreshInventory();
-            } else if (var1.getSlot() > 18) {
-               RecipeRegistry var2 = this.recipeTypeMap.get(var1.getSlot());
-               if (var2 != null) {
-                  new RecipeListGUI(this.player, this.template, var2).open(this);
+            } else if (event.getSlot() > 18) {
+               RecipeRegistry recipeRegistry = this.recipeTypeMap.get(event.getSlot());
+               if (recipeRegistry != null) {
+                  new RecipeListGUI(this.player, this.template, recipeRegistry).open(this);
                }
             }
          }
@@ -119,8 +119,8 @@ public class RecipeTypeListGUI extends EditionInventory {
       registerRecipe(new RMGRR_LegacyBurning(CraftingType.CAMPFIRE));
    }
 
-   public static void registerRecipe(@NotNull RecipeRegistry var0) {
-      registeredRecipes.put(var0.getRecipeConfigPath(), var0);
+   public static void registerRecipe(@NotNull RecipeRegistry recipeRegistry) {
+      registeredRecipes.put(recipeRegistry.getRecipeConfigPath(), recipeRegistry);
    }
 
    @NotNull
@@ -129,7 +129,7 @@ public class RecipeTypeListGUI extends EditionInventory {
    }
 
    @NotNull
-   public static RecipeRegistry getRegisteredRecipe(@NotNull String var0) {
-      return registeredRecipes.get(var0);
+   public static RecipeRegistry getRegisteredRecipe(@NotNull String text) {
+      return registeredRecipes.get(text);
    }
 }

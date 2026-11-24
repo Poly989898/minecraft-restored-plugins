@@ -27,9 +27,9 @@ public class UpgradingRecipe extends Recipe {
    private final Ingredient ingredient;
    private static final Random random = new Random();
 
-   public UpgradingRecipe(ConfigurationSection var1) {
-      super(var1);
-      this.item = new ConfigMMOItem(var1.getConfigurationSection("item"));
+   public UpgradingRecipe(ConfigurationSection section) {
+      super(section);
+      this.item = new ConfigMMOItem(section.getConfigurationSection("item"));
       this.ingredient = new MMOItemIngredient(this.item);
    }
 
@@ -38,66 +38,66 @@ public class UpgradingRecipe extends Recipe {
    }
 
    @Override
-   public boolean whenUsed(PlayerData var1, IngredientInventory var2, CheckedRecipe var3, CraftingStation var4) {
-      if (!var1.isOnline()) {
+   public boolean whenUsed(PlayerData playerData, IngredientInventory ingredientInventory, CheckedRecipe checkedRecipe, CraftingStation craftingStation) {
+      if (!playerData.isOnline()) {
          return false;
       }
 
-      UpgradingRecipe.CheckedUpgradingRecipe var5 = (UpgradingRecipe.CheckedUpgradingRecipe)var3;
-      PlayerUseCraftingStationEvent var6 = new PlayerUseCraftingStationEvent(var1, var4, var5);
-      Bukkit.getPluginManager().callEvent(var6);
-      if (var6.isCancelled()) {
+      UpgradingRecipe.CheckedUpgradingRecipe checkedUpgradingRecipe = (UpgradingRecipe.CheckedUpgradingRecipe)checkedRecipe;
+      PlayerUseCraftingStationEvent event = new PlayerUseCraftingStationEvent(playerData, craftingStation, checkedUpgradingRecipe);
+      Bukkit.getPluginManager().callEvent(event);
+      if (event.isCancelled()) {
          return false;
       }
 
-      var5.getUpgradeData().upgrade(var5.getMMOItem());
-      var5.getUpgraded().setItemMeta(var5.getMMOItem().newBuilder().build().getItemMeta());
-      Message.UPGRADE_SUCCESS.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(var5.getUpgraded())).send(var1.getPlayer());
+      checkedUpgradingRecipe.getUpgradeData().upgrade(checkedUpgradingRecipe.getMMOItem());
+      checkedUpgradingRecipe.getUpgraded().setItemMeta(checkedUpgradingRecipe.getMMOItem().newBuilder().build().getItemMeta());
+      Message.UPGRADE_SUCCESS.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(checkedUpgradingRecipe.getUpgraded())).send(playerData.getPlayer());
       if (!this.hasOption(Recipe.RecipeOption.SILENT_CRAFT)) {
-         var1.getPlayer().playSound(var1.getPlayer().getLocation(), var4.getSound(), 1.0F, 1.0F);
+         playerData.getPlayer().playSound(playerData.getPlayer().getLocation(), craftingStation.getSound(), 1.0F, 1.0F);
       }
 
       return true;
    }
 
    @Override
-   public boolean canUse(PlayerData var1, IngredientInventory var2, CheckedRecipe var3, CraftingStation var4) {
-      CheckedIngredient var5 = var2.findMatching(this.ingredient);
-      if (!var5.isHad()) {
-         if (!var1.isOnline()) {
+   public boolean canUse(PlayerData playerData, IngredientInventory ingredientInventory, CheckedRecipe checkedRecipe, CraftingStation craftingStation) {
+      CheckedIngredient matching = ingredientInventory.findMatching(this.ingredient);
+      if (!matching.isHad()) {
+         if (!playerData.isOnline()) {
             return false;
          }
 
-         Message.NOT_HAVE_ITEM_UPGRADE.format(ChatColor.RED).send(var1.getPlayer());
-         var1.getPlayer().playSound(var1.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 2.0F);
+         Message.NOT_HAVE_ITEM_UPGRADE.format(ChatColor.RED).send(playerData.getPlayer());
+         playerData.getPlayer().playSound(playerData.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 2.0F);
          return false;
       } else {
-         NBTItem var6 = NBTItem.get(var5.getFound().stream().findFirst().get().getItem());
-         UpgradingRecipe.CheckedUpgradingRecipe var7 = (UpgradingRecipe.CheckedUpgradingRecipe)var3;
-         if (!(var7.mmoitem = new LiveMMOItem(var6)).hasData(ItemStats.UPGRADE)) {
+         NBTItem nbtItem = NBTItem.get(matching.getFound().stream().findFirst().get().getItem());
+         UpgradingRecipe.CheckedUpgradingRecipe checkedUpgradingRecipe = (UpgradingRecipe.CheckedUpgradingRecipe)checkedRecipe;
+         if (!(checkedUpgradingRecipe.mmoitem = new LiveMMOItem(nbtItem)).hasData(ItemStats.UPGRADE)) {
             return false;
          }
 
-         if (!(var7.upgradeData = (UpgradeData)var7.getMMOItem().getData(ItemStats.UPGRADE)).canLevelUp()) {
-            if (!var1.isOnline()) {
+         if (!(checkedUpgradingRecipe.upgradeData = (UpgradeData)checkedUpgradingRecipe.getMMOItem().getData(ItemStats.UPGRADE)).canLevelUp()) {
+            if (!playerData.isOnline()) {
                return false;
             }
 
-            Message.MAX_UPGRADES_HIT.format(ChatColor.RED).send(var1.getPlayer());
-            var1.getPlayer().playSound(var1.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 2.0F);
+            Message.MAX_UPGRADES_HIT.format(ChatColor.RED).send(playerData.getPlayer());
+            playerData.getPlayer().playSound(playerData.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 2.0F);
             return false;
-         } else if (random.nextDouble() > var7.getUpgradeData().getSuccess()) {
-            if (var7.getUpgradeData().destroysOnFail()) {
-               var7.getUpgraded().setAmount(var7.getUpgraded().getAmount() - 1);
+         } else if (random.nextDouble() > checkedUpgradingRecipe.getUpgradeData().getSuccess()) {
+            if (checkedUpgradingRecipe.getUpgradeData().destroysOnFail()) {
+               checkedUpgradingRecipe.getUpgraded().setAmount(checkedUpgradingRecipe.getUpgraded().getAmount() - 1);
             }
 
-            var7.getIngredients().forEach(var0 -> var0.takeAway());
-            if (!var1.isOnline()) {
+            checkedUpgradingRecipe.getIngredients().forEach(checkedIngredient -> checkedIngredient.takeAway());
+            if (!playerData.isOnline()) {
                return false;
             }
 
-            Message.UPGRADE_FAIL_STATION.format(ChatColor.RED).send(var1.getPlayer());
-            var1.getPlayer().playSound(var1.getPlayer().getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0F, 2.0F);
+            Message.UPGRADE_FAIL_STATION.format(ChatColor.RED).send(playerData.getPlayer());
+            playerData.getPlayer().playSound(playerData.getPlayer().getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0F, 2.0F);
             return false;
          } else {
             return true;
@@ -106,13 +106,13 @@ public class UpgradingRecipe extends Recipe {
    }
 
    @Override
-   public ItemStack display(CheckedRecipe var1) {
-      return ConfigItems.UPGRADING_RECIPE_DISPLAY.newBuilder(var1).build();
+   public ItemStack display(CheckedRecipe checkedRecipe) {
+      return ConfigItems.UPGRADING_RECIPE_DISPLAY.newBuilder(checkedRecipe).build();
    }
 
    @Override
-   public CheckedRecipe evaluateRecipe(PlayerData var1, IngredientInventory var2) {
-      return new UpgradingRecipe.CheckedUpgradingRecipe(this, var1, var2);
+   public CheckedRecipe evaluateRecipe(PlayerData playerData, IngredientInventory ingredientInventory) {
+      return new UpgradingRecipe.CheckedUpgradingRecipe(this, playerData, ingredientInventory);
    }
 
    public class CheckedUpgradingRecipe extends CheckedRecipe {

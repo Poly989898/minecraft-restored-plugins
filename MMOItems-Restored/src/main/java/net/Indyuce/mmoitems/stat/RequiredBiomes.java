@@ -23,33 +23,33 @@ public class RequiredBiomes extends StringListStat implements ItemRestriction, G
    }
 
    @Override
-   public boolean canUse(RPGPlayer var1, NBTItem var2, boolean var3) {
-      if (!var2.hasTag(this.getNBTPath())) {
+   public boolean canUse(RPGPlayer rpgPlayer, NBTItem nbtItem, boolean flag) {
+      if (!nbtItem.hasTag(this.getNBTPath())) {
          return true;
       }
 
-      ArrayList var4 = new ArrayList();
-      if (var2.hasTag(this.getNBTPath())) {
-         var4.add(ItemTag.getTagAtPath(this.getNBTPath(), var2, SupportedNBTTagValues.STRING));
+      ArrayList list = new ArrayList();
+      if (nbtItem.hasTag(this.getNBTPath())) {
+         list.add(ItemTag.getTagAtPath(this.getNBTPath(), nbtItem, SupportedNBTTagValues.STRING));
       }
 
-      StringListData var5 = this.getLoadedNBT(var4);
-      boolean var6 = false;
-      if (var5 != null) {
-         for (String var8 : var5.getList()) {
-            String var9 = var8.toLowerCase().replace(" ", "_").replace("-", "_");
-            if (var9.startsWith("!")) {
-               var6 = true;
-               var9 = var9.substring(1);
+      StringListData loadedNBT = this.getLoadedNBT(list);
+      boolean flag2 = false;
+      if (loadedNBT != null) {
+         for (String text : loadedNBT.getList()) {
+            String text2 = text.toLowerCase().replace(" ", "_").replace("-", "_");
+            if (text2.startsWith("!")) {
+               flag2 = true;
+               text2 = text2.substring(1);
             }
 
-            String var10 = var1.getPlayer().getLocation().getBlock().getBiome().getKey().getKey();
-            if (var10.contains(var9)) {
-               return !var6;
+            String key = rpgPlayer.getPlayer().getLocation().getBlock().getBiome().getKey().getKey();
+            if (key.contains(text2)) {
+               return !flag2;
             }
          }
 
-         return var6;
+         return flag2;
       } else {
          return true;
       }

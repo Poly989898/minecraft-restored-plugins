@@ -13,6 +13,6 @@ public interface LuteAttackHandler {
    Random RANDOM = new Random();
 
    void handle(
-      PlayerMetadata var1, double var2, NBTItem var4, double var5, @NotNull Vector var7, @NotNull SoundReader var8, @NotNull ProjectileParticlesData var9
+      PlayerMetadata playerMetadata, double value, NBTItem nbtItem, double value2, @NotNull Vector vector, @NotNull SoundReader soundReader, @NotNull ProjectileParticlesData projectileParticlesData
    );
 }

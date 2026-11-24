@@ -10,22 +10,22 @@ import org.jetbrains.annotations.NotNull;
 public class PotionEffectListData implements StatData, Mergeable<PotionEffectListData> {
    private final List<PotionEffectData> effects = new ArrayList<>();
 
-   public PotionEffectListData(PotionEffectData... var1) {
-      this.add(var1);
+   public PotionEffectListData(PotionEffectData... potionEffectDatas) {
+      this.add(potionEffectDatas);
    }
 
-   public PotionEffectListData(Collection<PotionEffectData> var1) {
-      this.add(var1);
+   public PotionEffectListData(Collection<PotionEffectData> potionEffectDatas) {
+      this.add(potionEffectDatas);
    }
 
-   public void add(PotionEffectData... var1) {
-      for (PotionEffectData var5 : var1) {
-         this.effects.add(var5);
+   public void add(PotionEffectData... potionEffectDatas) {
+      for (PotionEffectData potionEffectData : potionEffectDatas) {
+         this.effects.add(potionEffectData);
       }
    }
 
-   public void add(Collection<PotionEffectData> var1) {
-      this.effects.addAll(var1);
+   public void add(Collection<PotionEffectData> potionEffectDatas) {
+      this.effects.addAll(potionEffectDatas);
    }
 
    @NotNull
@@ -38,8 +38,8 @@ public class PotionEffectListData implements StatData, Mergeable<PotionEffectLis
       return this.effects.isEmpty();
    }
 
-   public void mergeWith(PotionEffectListData var1) {
-      this.effects.addAll(var1.effects);
+   public void mergeWith(PotionEffectListData potionEffectListData) {
+      this.effects.addAll(potionEffectListData.effects);
    }
 
    @NotNull
@@ -48,27 +48,27 @@ public class PotionEffectListData implements StatData, Mergeable<PotionEffectLis
    }
 
    @Override
-   public boolean equals(Object var1) {
-      if (!(var1 instanceof PotionEffectListData)) {
+   public boolean equals(Object obj) {
+      if (!(obj instanceof PotionEffectListData)) {
          return false;
       }
 
-      if (((PotionEffectListData)var1).getEffects().size() != this.getEffects().size()) {
+      if (((PotionEffectListData)obj).getEffects().size() != this.getEffects().size()) {
          return false;
       }
 
-      for (PotionEffectData var3 : ((PotionEffectListData)var1).getEffects()) {
-         if (var3 != null) {
-            boolean var4 = true;
+      for (PotionEffectData effect : ((PotionEffectListData)obj).getEffects()) {
+         if (effect != null) {
+            boolean flag = true;
 
-            for (PotionEffectData var6 : this.getEffects()) {
-               if (var3.equals(var6)) {
-                  var4 = false;
+            for (PotionEffectData effect2 : this.getEffects()) {
+               if (effect.equals(effect2)) {
+                  flag = false;
                   break;
                }
             }
 
-            if (var4) {
+            if (flag) {
                return false;
             }
          }

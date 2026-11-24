@@ -10,17 +10,17 @@ public class VanillaTrigger extends Trigger {
    private final Material material;
    private final int amount;
 
-   public VanillaTrigger(MMOLineConfig var1) {
+   public VanillaTrigger(MMOLineConfig mmoLineConfig) {
       super("vanilla");
-      var1.validate(new String[]{"type"});
-      this.material = Material.valueOf(var1.getString("type").toUpperCase().replace("-", "_"));
-      this.amount = var1.contains("amount") ? Math.max(1, var1.getInt("amount")) : 1;
+      mmoLineConfig.validate(new String[]{"type"});
+      this.material = Material.valueOf(mmoLineConfig.getString("type").toUpperCase().replace("-", "_"));
+      this.amount = mmoLineConfig.contains("amount") ? Math.max(1, mmoLineConfig.getInt("amount")) : 1;
    }
 
    @Override
-   public void whenCrafting(PlayerData var1) {
-      if (var1.isOnline()) {
-         new SmartGive(var1.getPlayer()).give(new ItemStack[]{new ItemStack(this.material, this.amount)});
+   public void whenCrafting(PlayerData playerData) {
+      if (playerData.isOnline()) {
+         new SmartGive(playerData.getPlayer()).give(new ItemStack[]{new ItemStack(this.material, this.amount)});
       }
    }
 }

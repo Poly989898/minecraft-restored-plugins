@@ -40,75 +40,75 @@ public class Commands extends ItemStat<CommandListData, CommandListData> {
       );
    }
 
-   public CommandListData whenInitialized(Object var1) {
-      Validate.isTrue(var1 instanceof ConfigurationSection, "Must specify a config section");
-      ConfigurationSection var2 = (ConfigurationSection)var1;
-      CommandListData var3 = new CommandListData();
+   public CommandListData whenInitialized(Object obj) {
+      Validate.isTrue(obj instanceof ConfigurationSection, "Must specify a config section");
+      ConfigurationSection section = (ConfigurationSection)obj;
+      CommandListData commandListData = new CommandListData();
 
-      for (String var5 : var2.getKeys(false)) {
-         ConfigurationSection var6 = var2.getConfigurationSection(var5);
-         var3.add(new CommandData(var6.getString("format"), var6.getDouble("delay"), var6.getBoolean("console"), var6.getBoolean("op")));
+      for (String key : section.getKeys(false)) {
+         ConfigurationSection section2 = section.getConfigurationSection(key);
+         commandListData.add(new CommandData(section2.getString("format"), section2.getDouble("delay"), section2.getBoolean("console"), section2.getBoolean("op")));
       }
 
-      return var3;
+      return commandListData;
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      new CommandListEdition(var1.getPlayer(), var1.getEdited()).open(var1);
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      new CommandListEdition(editionInventory.getPlayer(), editionInventory.getEdited()).open(editionInventory);
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      if (var1.getEditedSection().contains("commands") && var1.getEditedSection().getConfigurationSection("commands").getKeys(false).size() >= 15) {
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Your item has reached the " + 15 + " commands limit.");
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      if (editionInventory.getEditedSection().contains("commands") && editionInventory.getEditedSection().getConfigurationSection("commands").getKeys(false).size() >= 15) {
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Your item has reached the " + 15 + " commands limit.");
       } else {
-         double var4 = 0.0;
-         boolean var6 = false;
-         boolean var7 = false;
-         String[] var8 = var2.split(" ");
+         double value = 0.0;
+         boolean flag = false;
+         boolean flag2 = false;
+         String[] texts = text.split(" ");
 
-         for (int var9 = 0; var9 < var8.length && var8[var9].startsWith("-"); var9++) {
-            String var10 = var8[var9];
-            if (var10.startsWith("-d:")) {
-               var4 = MMOUtils.parseDouble(var10.substring(3));
-               var2 = var2.replaceFirst(var10 + " ", "");
-            } else if (var10.equalsIgnoreCase("-c")) {
-               var6 = true;
-               var2 = var2.replaceFirst(var10 + " ", "");
-            } else if (var10.equalsIgnoreCase("-op")) {
-               var7 = true;
-               var2 = var2.replaceFirst(var10 + " ", "");
+         for (int i = 0; i < texts.length && texts[i].startsWith("-"); i++) {
+            String text2 = texts[i];
+            if (text2.startsWith("-d:")) {
+               value = MMOUtils.parseDouble(text2.substring(3));
+               text = text.replaceFirst(text2 + " ", "");
+            } else if (text2.equalsIgnoreCase("-c")) {
+               flag = true;
+               text = text.replaceFirst(text2 + " ", "");
+            } else if (text2.equalsIgnoreCase("-op")) {
+               flag2 = true;
+               text = text.replaceFirst(text2 + " ", "");
             }
          }
 
-         ConfigurationSection var12 = var1.getEditedSection().getConfigurationSection("commands");
-         String var13 = "cmd16";
-         if (var12 == null) {
-            var13 = "cmd0";
+         ConfigurationSection commands = editionInventory.getEditedSection().getConfigurationSection("commands");
+         String text2 = "cmd16";
+         if (commands == null) {
+            text2 = "cmd0";
          } else {
-            for (int var11 = 0; var11 < 15; var11++) {
-               if (!var12.contains("cmd" + var11)) {
-                  var13 = "cmd" + var11;
+            for (int i = 0; i < 15; i++) {
+               if (!commands.contains("cmd" + i)) {
+                  text2 = "cmd" + i;
                   break;
                }
             }
          }
 
-         var1.getEditedSection().set("commands." + var13 + ".format", var2);
-         var1.getEditedSection().set("commands." + var13 + ".delay", var4);
-         var1.getEditedSection().set("commands." + var13 + ".console", var6 ? var6 : null);
-         var1.getEditedSection().set("commands." + var13 + ".op", var7 ? var7 : null);
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Command successfully registered.");
+         editionInventory.getEditedSection().set("commands." + text2 + ".format", text);
+         editionInventory.getEditedSection().set("commands." + text2 + ".delay", value);
+         editionInventory.getEditedSection().set("commands." + text2 + ".console", flag ? flag : null);
+         editionInventory.getEditedSection().set("commands." + text2 + ".op", flag2 ? flag2 : null);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Command successfully registered.");
       }
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<CommandListData> var2) {
-      var1.add(ChatColor.GRAY + "Current Commands: " + ChatColor.RED + (var2.isPresent() ? ((CommandListData)var2.get()).getCommands().size() : "0"));
-      var1.add("");
-      var1.add(ChatColor.YELLOW + "►" + " Click to edit item commands.");
+   public void whenDisplayed(List<String> texts, Optional<CommandListData> optional) {
+      texts.add(ChatColor.GRAY + "Current Commands: " + ChatColor.RED + (optional.isPresent() ? ((CommandListData)optional.get()).getCommands().size() : "0"));
+      texts.add("");
+      texts.add(ChatColor.YELLOW + "►" + " Click to edit item commands.");
    }
 
    @NotNull
@@ -116,12 +116,12 @@ public class Commands extends ItemStat<CommandListData, CommandListData> {
       return new CommandListData();
    }
 
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull CommandListData var2) {
-      var1.addItemTag(this.getAppliedNBT(var2));
-      ArrayList var3 = new ArrayList();
-      String var4 = this.getGeneralStatFormat();
-      var2.getCommands().forEach(var2x -> var3.add(var4.replace("{format}", "/" + var2x.getCommand()).replace("{cooldown}", String.valueOf(var2x.getDelay()))));
-      var1.getLore().insert("commands", var3);
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull CommandListData commandListData) {
+      itemStackBuilder.addItemTag(this.getAppliedNBT(commandListData));
+      ArrayList list = new ArrayList();
+      String generalStatFormat = this.getGeneralStatFormat();
+      commandListData.getCommands().forEach(var2x -> list.add(generalStatFormat.replace("{format}", "/" + var2x.getCommand()).replace("{cooldown}", String.valueOf(var2x.getDelay()))));
+      itemStackBuilder.getLore().insert("commands", list);
    }
 
    @Override
@@ -130,55 +130,55 @@ public class Commands extends ItemStat<CommandListData, CommandListData> {
    }
 
    @NotNull
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull CommandListData var1) {
-      ArrayList var2 = new ArrayList();
-      JsonArray var3 = new JsonArray();
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull CommandListData commandListData) {
+      ArrayList list = new ArrayList();
+      JsonArray jsonArray = new JsonArray();
 
-      for (CommandData var5 : var1.getCommands()) {
-         JsonObject var6 = new JsonObject();
-         var6.addProperty("Command", var5.getCommand());
-         var6.addProperty("Delay", var5.getDelay());
-         var6.addProperty("Console", var5.isConsoleCommand());
-         var6.addProperty("Op", var5.hasOpPerms());
-         var3.add(var6);
+      for (CommandData command : commandListData.getCommands()) {
+         JsonObject jsonObject = new JsonObject();
+         jsonObject.addProperty("Command", command.getCommand());
+         jsonObject.addProperty("Delay", command.getDelay());
+         jsonObject.addProperty("Console", command.isConsoleCommand());
+         jsonObject.addProperty("Op", command.hasOpPerms());
+         jsonArray.add(jsonObject);
       }
 
-      var2.add(new ItemTag(this.getNBTPath(), var3.toString()));
-      return var2;
+      list.add(new ItemTag(this.getNBTPath(), jsonArray.toString()));
+      return list;
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      ArrayList var2 = new ArrayList();
-      if (var1.getNBT().hasTag(this.getNBTPath())) {
-         var2.add(ItemTag.getTagAtPath(this.getNBTPath(), var1.getNBT(), SupportedNBTTagValues.STRING));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      ArrayList list = new ArrayList();
+      if (readMMOItem.getNBT().hasTag(this.getNBTPath())) {
+         list.add(ItemTag.getTagAtPath(this.getNBTPath(), readMMOItem.getNBT(), SupportedNBTTagValues.STRING));
       }
 
-      CommandListData var3 = this.getLoadedNBT(var2);
-      if (var3 != null) {
-         var1.setData(this, var3);
+      CommandListData loadedNBT = this.getLoadedNBT(list);
+      if (loadedNBT != null) {
+         readMMOItem.setData(this, loadedNBT);
       }
    }
 
    @Nullable
-   public CommandListData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
-      ItemTag var2 = ItemTag.getTagAtPath(this.getNBTPath(), var1);
-      if (var2 != null) {
+   public CommandListData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
+      ItemTag tagAtPath = ItemTag.getTagAtPath(this.getNBTPath(), itemTags);
+      if (tagAtPath != null) {
          try {
-            CommandListData var3 = new CommandListData();
+            CommandListData commandListData = new CommandListData();
 
-            for (JsonElement var6 : new JsonParser().parse((String)var2.getValue()).getAsJsonArray()) {
-               if (var6.isJsonObject()) {
-                  JsonObject var7 = var6.getAsJsonObject();
-                  CommandData var8 = new CommandData(
-                     var7.get("Command").getAsString(), var7.get("Delay").getAsDouble(), var7.get("Console").getAsBoolean(), var7.get("Op").getAsBoolean()
+            for (JsonElement asJson : new JsonParser().parse((String)tagAtPath.getValue()).getAsJsonArray()) {
+               if (asJson.isJsonObject()) {
+                  JsonObject asJsonObject = asJson.getAsJsonObject();
+                  CommandData commandData = new CommandData(
+                     asJsonObject.get("Command").getAsString(), asJsonObject.get("Delay").getAsDouble(), asJsonObject.get("Console").getAsBoolean(), asJsonObject.get("Op").getAsBoolean()
                   );
-                  var3.add(var8);
+                  commandListData.add(commandData);
                }
             }
 
-            return var3;
-         } catch (JsonSyntaxException | IllegalStateException var9) {
+            return commandListData;
+         } catch (JsonSyntaxException | IllegalStateException exception) {
          }
       }
 

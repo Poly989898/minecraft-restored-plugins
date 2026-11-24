@@ -55,43 +55,43 @@ public class RecipeManager implements Reloadable {
 
    public void loadRecipes() {
       this.book = MMOItems.plugin.getConfig().getBoolean("recipes.use-recipe-book");
-      FriendlyFeedbackProvider var1 = new FriendlyFeedbackProvider(FFPMMOItems.get());
-      var1.activatePrefix(true, "Custom Crafting");
+      FriendlyFeedbackProvider friendlyFeedbackProvider = new FriendlyFeedbackProvider(FFPMMOItems.get());
+      friendlyFeedbackProvider.activatePrefix(true, "Custom Crafting");
 
-      for (Type var3 : MMOItems.plugin.getTypes().getAll()) {
-         FileConfiguration var4 = var3.getConfigFile().getConfig();
+      for (Type type : MMOItems.plugin.getTypes().getAll()) {
+         FileConfiguration config = type.getConfigFile().getConfig();
 
-         for (MMOItemTemplate var6 : MMOItems.plugin.getTemplates().getTemplates(var3)) {
-            if (var4.contains(var6.getId() + ".base.crafting")) {
-               ConfigurationSection var7 = RecipeEditorGUI.getSection(var4, var6.getId() + ".base.crafting");
+         for (MMOItemTemplate template : MMOItems.plugin.getTemplates().getTemplates(type)) {
+            if (config.contains(template.getId() + ".base.crafting")) {
+               ConfigurationSection section = RecipeEditorGUI.getSection(config, template.getId() + ".base.crafting");
 
-               for (String var9 : RecipeTypeListGUI.getRegisteredRecipes()) {
-                  if (var7.contains(var9)) {
-                     RecipeRegistry var10 = RecipeTypeListGUI.getRegisteredRecipe(var9);
-                     ConfigurationSection var11 = RecipeEditorGUI.getSection(var7, var9);
+               for (String registeredRecipe : RecipeTypeListGUI.getRegisteredRecipes()) {
+                  if (section.contains(registeredRecipe)) {
+                     RecipeRegistry registeredRecipe2 = RecipeTypeListGUI.getRegisteredRecipe(registeredRecipe);
+                     ConfigurationSection section2 = RecipeEditorGUI.getSection(section, registeredRecipe);
 
-                     for (String var13 : var11.getKeys(false)) {
-                        NamespacedKey var14 = this.getRecipeKey(var6.getType(), var6.getId(), var9, var13);
-                        Ref var15 = new Ref(var14);
-                        FriendlyFeedbackProvider var16 = new FriendlyFeedbackProvider(FFPMMOItems.get());
-                        var16.activatePrefix(true, "Recipe of $u" + var6.getType() + " " + var6.getId());
+                     for (String key : section2.getKeys(false)) {
+                        NamespacedKey recipeKey = this.getRecipeKey(template.getType(), template.getId(), registeredRecipe, key);
+                        Ref ref = new Ref(recipeKey);
+                        FriendlyFeedbackProvider friendlyFeedbackProvider2 = new FriendlyFeedbackProvider(FFPMMOItems.get());
+                        friendlyFeedbackProvider2.activatePrefix(true, "Recipe of $u" + template.getType() + " " + template.getId());
 
                         try {
-                           MythicRecipeBlueprint var17 = var10.sendToMythicLib(var6, var11, var13, var15, var16);
-                           (var15.getValue() != null ? this.customRecipes : this.booklessRecipes).add(var17);
-                        } catch (IllegalArgumentException var18) {
-                           if (!var18.getMessage().isEmpty()) {
+                           MythicRecipeBlueprint mythicRecipeBlueprint = registeredRecipe2.sendToMythicLib(template, section2, key, ref, friendlyFeedbackProvider2);
+                           (ref.getValue() != null ? this.customRecipes : this.booklessRecipes).add(mythicRecipeBlueprint);
+                        } catch (IllegalArgumentException exception) {
+                           if (!exception.getMessage().isEmpty()) {
                               MMOItems.print(
                                  null,
                                  "Cannot register custom recipe '$u{2}$b' for $e{0} {1}$b;$f {3}",
                                  "Custom Crafting",
-                                 var3.getId(),
-                                 var6.getId(),
-                                 var13,
-                                 var18.getMessage()
+                                 type.getId(),
+                                 template.getId(),
+                                 key,
+                                 exception.getMessage()
                               );
-                              var16.sendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
-                              var16.sendTo(FriendlyFeedbackCategory.FAILURE, MMOItems.getConsole());
+                              friendlyFeedbackProvider2.sendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
+                              friendlyFeedbackProvider2.sendTo(FriendlyFeedbackCategory.FAILURE, MMOItems.getConsole());
                            }
                         }
                      }
@@ -101,26 +101,26 @@ public class RecipeManager implements Reloadable {
          }
       }
 
-      var1.sendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
-      var1.sendTo(FriendlyFeedbackCategory.FAILURE, MMOItems.getConsole());
+      friendlyFeedbackProvider.sendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
+      friendlyFeedbackProvider.sendTo(FriendlyFeedbackCategory.FAILURE, MMOItems.getConsole());
       Bukkit.getScheduler().runTask(MMOItems.plugin, () -> this.getBukkitRecipes().forEach(Bukkit::addRecipe));
    }
 
    @Deprecated
    public void registerBurningRecipe(
-      @NotNull RecipeManager.BurningRecipeType var1,
-      @NotNull MMOItem var2,
-      @NotNull BurningRecipeInformation var3,
-      int var4,
-      @NotNull NamespacedKey var5,
-      boolean var6
+      @NotNull RecipeManager.BurningRecipeType burningRecipeType,
+      @NotNull MMOItem mmoItem,
+      @NotNull BurningRecipeInformation burningRecipeInformation,
+      int count,
+      @NotNull NamespacedKey namespacedKey,
+      boolean flag
    ) {
-      ItemStack var7 = var2.newBuilder().build();
-      var7.setAmount(var4);
-      CookingRecipe var8 = var1.provideRecipe(var5, var7, var3.getChoice().toBukkit(), var3.getExp(), var3.getBurnTime());
-      this.loadedLegacyRecipes.add(var8);
-      if (var6) {
-         this.blacklistedFromAutomaticDiscovery.add(var5);
+      ItemStack item = mmoItem.newBuilder().build();
+      item.setAmount(count);
+      CookingRecipe cookingRecipe = burningRecipeType.provideRecipe(namespacedKey, item, burningRecipeInformation.getChoice().toBukkit(), burningRecipeInformation.getExp(), burningRecipeInformation.getBurnTime());
+      this.loadedLegacyRecipes.add(cookingRecipe);
+      if (flag) {
+         this.blacklistedFromAutomaticDiscovery.add(namespacedKey);
       }
    }
 
@@ -145,14 +145,14 @@ public class RecipeManager implements Reloadable {
       }
 
       this.generatedNamespacedKeys = new ArrayList<>();
-      this.customRecipes.forEach(var1 -> this.generatedNamespacedKeys.add(var1.getNk()));
-      this.loadedLegacyRecipes.forEach(var1 -> this.generatedNamespacedKeys.add(((Keyed)var1).getKey()));
+      this.customRecipes.forEach(mythicRecipeBlueprint -> this.generatedNamespacedKeys.add(mythicRecipeBlueprint.getNk()));
+      this.loadedLegacyRecipes.forEach(recipe -> this.generatedNamespacedKeys.add(((Keyed)recipe).getKey()));
       return this.generatedNamespacedKeys;
    }
 
    @NotNull
-   public NamespacedKey getRecipeKey(@NotNull Type var1, @NotNull String var2, @NotNull String var3, @NotNull String var4) {
-      return new NamespacedKey(MMOItems.plugin, var3 + "_" + var1.getId() + "_" + var2 + "_" + var4);
+   public NamespacedKey getRecipeKey(@NotNull Type type, @NotNull String text, @NotNull String text2, @NotNull String text3) {
+      return new NamespacedKey(MMOItems.plugin, text2 + "_" + type.getId() + "_" + text + "_" + text3);
    }
 
    @Override
@@ -161,13 +161,13 @@ public class RecipeManager implements Reloadable {
          .runTask(
             MMOItems.plugin,
             () -> {
-               for (NamespacedKey var2 : this.getNamespacedKeys()) {
-                  if (var2 != null) {
+               for (NamespacedKey namespacedKey : this.getNamespacedKeys()) {
+                  if (namespacedKey != null) {
                      try {
-                        Bukkit.removeRecipe(var2);
-                     } catch (Throwable var4) {
+                        Bukkit.removeRecipe(namespacedKey);
+                     } catch (Throwable exception) {
                         MMOItems.print(
-                           null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", var2.getKey(), var4.getMessage()
+                           null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", namespacedKey.getKey(), exception.getMessage()
                         );
                      }
                   }
@@ -175,88 +175,88 @@ public class RecipeManager implements Reloadable {
 
                this.loadedLegacyRecipes.clear();
                this.blacklistedFromAutomaticDiscovery.clear();
-               this.customRecipes.forEach(var0 -> {
+               this.customRecipes.forEach(mythicRecipeBlueprint -> {
                   try {
-                     var0.disable();
-                     Bukkit.removeRecipe(var0.getNk());
+                     mythicRecipeBlueprint.disable();
+                     Bukkit.removeRecipe(mythicRecipeBlueprint.getNk());
                   } catch (Throwable var2x) {
-                     MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not unregister knowledge book recipe '" + var0.getNk() + "': " + var2x.getMessage());
+                     MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not unregister knowledge book recipe '" + mythicRecipeBlueprint.getNk() + "': " + var2x.getMessage());
                   }
                });
                this.customRecipes.clear();
 
-               for (MythicRecipeBlueprint var7 : this.booklessRecipes) {
-                  var7.disable();
+               for (MythicRecipeBlueprint booklessRecipe : this.booklessRecipes) {
+                  booklessRecipe.disable();
                }
 
                this.booklessRecipes.clear();
                this.generatedNamespacedKeys = null;
                this.loadRecipes();
                if (this.book) {
-                  for (Player var8 : Bukkit.getOnlinePlayers()) {
-                     this.refreshRecipeBook(var8);
+                  for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                     this.refreshRecipeBook(onlinePlayer);
                   }
                }
             }
          );
    }
 
-   public void refreshRecipeBook(Player var1) {
+   public void refreshRecipeBook(Player player) {
       if (!this.book) {
-         for (NamespacedKey var14 : var1.getDiscoveredRecipes()) {
-            if ("mmoitems".equals(var14.getNamespace())) {
-               var1.undiscoverRecipe(var14);
+         for (NamespacedKey discoveredRecipe : player.getDiscoveredRecipes()) {
+            if ("mmoitems".equals(discoveredRecipe.getNamespace())) {
+               player.undiscoverRecipe(discoveredRecipe);
             }
          }
       } else if (MythicLib.plugin.getVersion().isStrictlyHigher(new int[]{1, 16})) {
-         for (NamespacedKey var12 : var1.getDiscoveredRecipes()) {
-            if ("mmoitems".equals(var12.getNamespace()) && !this.getNamespacedKeys().contains(var12)) {
-               var1.undiscoverRecipe(var12);
+         for (NamespacedKey discoveredRecipe : player.getDiscoveredRecipes()) {
+            if ("mmoitems".equals(discoveredRecipe.getNamespace()) && !this.getNamespacedKeys().contains(discoveredRecipe)) {
+               player.undiscoverRecipe(discoveredRecipe);
             }
          }
 
-         for (NamespacedKey var13 : this.getNamespacedKeys()) {
-            if (var13 != null) {
-               boolean var15 = false;
+         for (NamespacedKey namespacedKey : this.getNamespacedKeys()) {
+            if (namespacedKey != null) {
+               boolean flag = false;
 
-               for (NamespacedKey var17 : this.blacklistedFromAutomaticDiscovery) {
-                  if (var13.equals(var17)) {
-                     var15 = true;
+               for (NamespacedKey namespacedKey2 : this.blacklistedFromAutomaticDiscovery) {
+                  if (namespacedKey.equals(namespacedKey2)) {
+                     flag = true;
                      break;
                   }
                }
 
-               if (!var15) {
+               if (!flag) {
                   try {
-                     if (!var1.hasDiscoveredRecipe(var13)) {
-                        var1.discoverRecipe(var13);
+                     if (!player.hasDiscoveredRecipe(namespacedKey)) {
+                        player.discoverRecipe(namespacedKey);
                      }
-                  } catch (Throwable var7) {
+                  } catch (Throwable exception) {
                      MMOItems.print(
-                        null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", var13.getKey(), var7.getMessage()
+                        null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", namespacedKey.getKey(), exception.getMessage()
                      );
                   }
                }
             }
          }
       } else {
-         for (NamespacedKey var3 : this.getNamespacedKeys()) {
-            if (var3 != null) {
-               boolean var4 = false;
+         for (NamespacedKey namespacedKey : this.getNamespacedKeys()) {
+            if (namespacedKey != null) {
+               boolean flag = false;
 
-               for (NamespacedKey var6 : this.blacklistedFromAutomaticDiscovery) {
-                  if (var3.equals(var6)) {
-                     var4 = true;
+               for (NamespacedKey namespacedKey2 : this.blacklistedFromAutomaticDiscovery) {
+                  if (namespacedKey.equals(namespacedKey2)) {
+                     flag = true;
                      break;
                   }
                }
 
-               if (!var4) {
+               if (!flag) {
                   try {
-                     var1.discoverRecipe(var3);
-                  } catch (Throwable var8) {
+                     player.discoverRecipe(namespacedKey);
+                  } catch (Throwable exception) {
                      MMOItems.print(
-                        null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", var3.getKey(), var8.getMessage()
+                        null, "Could not register crafting book recipe for $r{0}$b:$f {1}", "MMOItems Custom Crafting", namespacedKey.getKey(), exception.getMessage()
                      );
                   }
                }
@@ -266,29 +266,29 @@ public class RecipeManager implements Reloadable {
    }
 
    @NotNull
-   public static WorkbenchIngredient getWorkbenchIngredient(@NotNull String var0) {
-      ProvidedUIFilter var1 = ProvidedUIFilter.getFromString(RecipeEditorGUI.poofFromLegacy(var0), null);
-      if (var1 == null) {
+   public static WorkbenchIngredient getWorkbenchIngredient(@NotNull String text) {
+      ProvidedUIFilter providedUIFilter = ProvidedUIFilter.getFromString(RecipeEditorGUI.poofFromLegacy(text), null);
+      if (providedUIFilter == null) {
          return new AirIngredient();
       } else {
-         FriendlyFeedbackProvider var2 = new FriendlyFeedbackProvider(FFPMMOItems.get());
-         if (!var1.isValid(var2)) {
+         FriendlyFeedbackProvider friendlyFeedbackProvider = new FriendlyFeedbackProvider(FFPMMOItems.get());
+         if (!providedUIFilter.isValid(friendlyFeedbackProvider)) {
             throw new IllegalArgumentException(
                SilentNumbers.collapseList(
                   SilentNumbers.transcribeList(
-                     var2.getFeedbackOf(FriendlyFeedbackCategory.ERROR), var0x -> ((FriendlyFeedbackMessage)var0x).forConsole(FFPMMOItems.get())
+                     friendlyFeedbackProvider.getFeedbackOf(FriendlyFeedbackCategory.ERROR), var0x -> ((FriendlyFeedbackMessage)var0x).forConsole(FFPMMOItems.get())
                   ),
                   ". "
                )
             );
          } else {
-            int var3 = var1.getAmount(0);
-            if (var1.getParent() instanceof MMOItemUIFilter) {
-               Type var4 = MMOItems.plugin.getTypes().getOrThrow(var1.getArgument());
-               MMOItemTemplate var5 = MMOItems.plugin.getTemplates().getTemplateOrThrow(var4, var1.getData());
-               return new MMOItemIngredient(var4, var5.getId(), var3);
-            } else if (var1.getParent() instanceof VanillaUIFilter) {
-               return new VanillaIngredient(Material.valueOf(var1.getArgument().toUpperCase().replace("-", "_").replace(" ", "_")), var3);
+            int amount = providedUIFilter.getAmount(0);
+            if (providedUIFilter.getParent() instanceof MMOItemUIFilter) {
+               Type type = MMOItems.plugin.getTypes().getOrThrow(providedUIFilter.getArgument());
+               MMOItemTemplate templateOrThrow = MMOItems.plugin.getTemplates().getTemplateOrThrow(type, providedUIFilter.getData());
+               return new MMOItemIngredient(type, templateOrThrow.getId(), amount);
+            } else if (providedUIFilter.getParent() instanceof VanillaUIFilter) {
+               return new VanillaIngredient(Material.valueOf(providedUIFilter.getArgument().toUpperCase().replace("-", "_").replace(" ", "_")), amount);
             } else {
                throw new IllegalArgumentException("Unsupported ingredient, you may only specify vanilla or mmoitems.");
             }
@@ -309,8 +309,8 @@ public class RecipeManager implements Reloadable {
          this.provider = nullxx;
       }
 
-      public CookingRecipe<?> provideRecipe(NamespacedKey var1, ItemStack var2, RecipeChoice var3, float var4, int var5) {
-         return this.provider.provide(var1, var2, var3, var4, var5);
+      public CookingRecipe<?> provideRecipe(NamespacedKey namespacedKey, ItemStack item, RecipeChoice recipeChoice, float value, int count) {
+         return this.provider.provide(namespacedKey, item, recipeChoice, value, count);
       }
 
       public String getPath() {
@@ -320,6 +320,6 @@ public class RecipeManager implements Reloadable {
 
    @FunctionalInterface
    public interface RecipeProvider {
-      CookingRecipe<?> provide(NamespacedKey var1, ItemStack var2, RecipeChoice var3, float var4, int var5);
+      CookingRecipe<?> provide(NamespacedKey namespacedKey, ItemStack item, RecipeChoice recipeChoice, float value, int count);
    }
 }

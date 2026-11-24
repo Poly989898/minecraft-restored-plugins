@@ -19,40 +19,40 @@ public abstract class ItemGenerationDropItem extends DropItem {
    private final double unidentified;
    private final double soulbound;
 
-   public ItemGenerationDropItem(MMOLineConfig var1) {
-      super(var1);
-      this.level = var1.getInt("level", 0);
-      if (var1.contains("tier")) {
-         String var2 = var1.getString("tier").toUpperCase().replace("-", "_").replace(" ", "_");
-         Validate.isTrue(MMOItems.plugin.getTiers().has(var2), "Could not find item tier with ID '" + var2 + "'");
-         this.tier = MMOItems.plugin.getTiers().get(var2);
+   public ItemGenerationDropItem(MMOLineConfig mmoLineConfig) {
+      super(mmoLineConfig);
+      this.level = mmoLineConfig.getInt("level", 0);
+      if (mmoLineConfig.contains("tier")) {
+         String text = mmoLineConfig.getString("tier").toUpperCase().replace("-", "_").replace(" ", "_");
+         Validate.isTrue(MMOItems.plugin.getTiers().has(text), "Could not find item tier with ID '" + text + "'");
+         this.tier = MMOItems.plugin.getTiers().get(text);
       } else {
          this.tier = null;
       }
 
-      this.unidentified = var1.getDouble("unidentified", 0.0);
-      this.soulbound = var1.getDouble("soulbound", 0.0);
+      this.unidentified = mmoLineConfig.getDouble("unidentified", 0.0);
+      this.soulbound = mmoLineConfig.getDouble("soulbound", 0.0);
    }
 
    @NotNull
-   public MMOItem rollMMOItem(MMOItemTemplate var1, RPGPlayer var2) {
-      int var3 = this.level > 0
+   public MMOItem rollMMOItem(MMOItemTemplate mmoItemTemplate, RPGPlayer rpgPlayer) {
+      int count = this.level > 0
          ? this.level
-         : (var1.hasOption(MMOItemTemplate.TemplateOption.LEVEL_ITEM) ? MMOItems.plugin.getTemplates().rollLevel(var2.getLevel()) : 0);
-      ItemTier var4 = this.tier != null
+         : (mmoItemTemplate.hasOption(MMOItemTemplate.TemplateOption.LEVEL_ITEM) ? MMOItems.plugin.getTemplates().rollLevel(rpgPlayer.getLevel()) : 0);
+      ItemTier itemTier = this.tier != null
          ? this.tier
-         : (var1.hasOption(MMOItemTemplate.TemplateOption.TIERED) ? MMOItems.plugin.getTemplates().rollTier() : null);
-      return new MMOItemBuilder(var1, var3, var4).build();
+         : (mmoItemTemplate.hasOption(MMOItemTemplate.TemplateOption.TIERED) ? MMOItems.plugin.getTemplates().rollTier() : null);
+      return new MMOItemBuilder(mmoItemTemplate, count, itemTier).build();
    }
 
    @NotNull
-   public ItemStack rollUnidentification(MMOItem var1) {
-      ItemStack var2 = var1.newBuilder().build();
+   public ItemStack rollUnidentification(MMOItem mmoItem) {
+      ItemStack item = mmoItem.newBuilder().build();
       if (random.nextDouble() < this.unidentified) {
-         var2 = var1.getType().getUnidentifiedTemplate().newBuilder(NBTItem.get(var2)).build();
+         item = mmoItem.getType().getUnidentifiedTemplate().newBuilder(NBTItem.get(item)).build();
       }
 
-      return var2;
+      return item;
    }
 
    public boolean rollSoulbound() {

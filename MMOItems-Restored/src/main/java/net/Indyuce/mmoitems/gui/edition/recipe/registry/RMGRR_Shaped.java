@@ -49,99 +49,99 @@ public class RMGRR_Shaped implements RecipeRegistry {
    }
 
    @Override
-   public void openForPlayer(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      new RMG_Shaped(var1.getPlayer(), var1.getEdited(), var2, this).open(var1);
+   public void openForPlayer(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      new RMG_Shaped(editionInventory.getPlayer(), editionInventory.getEdited(), text, this).open(editionInventory);
    }
 
    @NotNull
    @Override
    public MythicRecipeBlueprint sendToMythicLib(
-      @NotNull MMOItemTemplate var1,
-      @NotNull ConfigurationSection var2,
-      @NotNull String var3,
-      @NotNull Ref<NamespacedKey> var4,
-      @NotNull FriendlyFeedbackProvider var5
+      @NotNull MMOItemTemplate mmoItemTemplate,
+      @NotNull ConfigurationSection section,
+      @NotNull String text,
+      @NotNull Ref<NamespacedKey> ref,
+      @NotNull FriendlyFeedbackProvider friendlyFeedbackProvider
    ) {
-      ConfigurationSection var6 = RecipeEditorGUI.moveInput(var2, var3);
-      NamespacedKey var7 = (NamespacedKey)var4.getValue();
-      if (var7 == null) {
+      ConfigurationSection section2 = RecipeEditorGUI.moveInput(section, text);
+      NamespacedKey namespacedKey = (NamespacedKey)ref.getValue();
+      if (namespacedKey == null) {
          throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Illegal (Null) Namespace", new String[0]));
       }
 
-      ShapedRecipe var8 = shapedRecipeFromList(var7.getKey(), new ArrayList<>(var6.getStringList("input")), var5);
-      if (var8 == null) {
+      ShapedRecipe shapedRecipe = shapedRecipeFromList(namespacedKey.getKey(), new ArrayList<>(section2.getStringList("input")), friendlyFeedbackProvider);
+      if (shapedRecipe == null) {
          throw new IllegalArgumentException(
             FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Shaped recipe containing only AIR, $fignored$b.", new String[0])
          );
       }
 
-      ShapedRecipe var9 = shapedRecipeFromList(var7.getKey(), new ArrayList<>(var6.getStringList("output")), var5);
-      int var10 = var6.getInt("amount", 1);
-      boolean var11 = var6.getBoolean("hidden", false);
-      ShapedRecipe var12 = ShapedRecipe.single(
-         var7.getKey(), new ProvidedUIFilter[]{new ProvidedUIFilter(MMOItemUIFilter.get(), var1.getType().getId(), var1.getId(), Math.max(var10, 1))}
+      ShapedRecipe shapedRecipe2 = shapedRecipeFromList(namespacedKey.getKey(), new ArrayList<>(section2.getStringList("output")), friendlyFeedbackProvider);
+      int amount = section2.getInt("amount", 1);
+      boolean hidden = section2.getBoolean("hidden", false);
+      ShapedRecipe shapedRecipe3 = ShapedRecipe.single(
+         namespacedKey.getKey(), new ProvidedUIFilter[]{new ProvidedUIFilter(MMOItemUIFilter.get(), mmoItemTemplate.getType().getId(), mmoItemTemplate.getId(), Math.max(amount, 1))}
       );
-      MRORecipe var13 = new MRORecipe(var12, var9);
-      MythicRecipeBlueprint var14 = new MythicRecipeBlueprint(var8, var13, var7);
-      RandomStatData var15 = var1.getBaseItemData().get(ItemStats.CRAFT_PERMISSION);
-      if (var15 instanceof StringData) {
-         String var16 = ((StringData)var15).getString();
-         if (var16 != null) {
-            var14.addRequiredPermission(var16);
+      MRORecipe mroRecipe = new MRORecipe(shapedRecipe3, shapedRecipe2);
+      MythicRecipeBlueprint mythicRecipeBlueprint = new MythicRecipeBlueprint(shapedRecipe, mroRecipe, namespacedKey);
+      RandomStatData randomStatData = mmoItemTemplate.getBaseItemData().get(ItemStats.CRAFT_PERMISSION);
+      if (randomStatData instanceof StringData) {
+         String text2 = ((StringData)randomStatData).getString();
+         if (text2 != null) {
+            mythicRecipeBlueprint.addRequiredPermission(text2);
          }
       }
 
-      var14.deploy(MythicRecipeStation.WORKBENCH, var4);
-      if (var11) {
-         var4.setValue(null);
+      mythicRecipeBlueprint.deploy(MythicRecipeStation.WORKBENCH, ref);
+      if (hidden) {
+         ref.setValue(null);
       }
 
-      return var14;
+      return mythicRecipeBlueprint;
    }
 
    @Nullable
-   public static ShapedRecipe shapedRecipeFromList(@NotNull String var0, @NotNull ArrayList<String> var1, @NotNull FriendlyFeedbackProvider var2) {
-      ArrayList var3 = new ArrayList();
-      boolean var4 = false;
-      int var5 = 0;
+   public static ShapedRecipe shapedRecipeFromList(@NotNull String text, @NotNull ArrayList<String> texts, @NotNull FriendlyFeedbackProvider friendlyFeedbackProvider) {
+      ArrayList list = new ArrayList();
+      boolean flag = false;
+      int count = 0;
 
-      for (String var7 : var1) {
-         String var8 = RMGRI_Shaped.updateRow(var7);
-         String[] var9;
-         if (var8.contains("|")) {
-            var9 = var8.split("\\|");
+      for (String text2 : texts) {
+         String text3 = RMGRI_Shaped.updateRow(text2);
+         String[] texts2;
+         if (text3.contains("|")) {
+            texts2 = text3.split("\\|");
          } else {
-            var9 = var8.split(" ");
+            texts2 = text3.split(" ");
          }
 
-         if (var9.length != 3) {
-            throw new IllegalArgumentException("Invalid crafting table row $u" + var8 + "$b ($fNot exactly 3 ingredients wide$b).");
+         if (texts2.length != 3) {
+            throw new IllegalArgumentException("Invalid crafting table row $u" + text3 + "$b ($fNot exactly 3 ingredients wide$b).");
          }
 
-         ProvidedUIFilter var10 = RecipeEditorGUI.readIngredientFrom(var9[0], var2);
-         ProvidedUIFilter var11 = RecipeEditorGUI.readIngredientFrom(var9[1], var2);
-         ProvidedUIFilter var12 = RecipeEditorGUI.readIngredientFrom(var9[2], var2);
-         if (!var10.isAir()) {
-            var4 = true;
+         ProvidedUIFilter ingredientFrom = RecipeEditorGUI.readIngredientFrom(texts2[0], friendlyFeedbackProvider);
+         ProvidedUIFilter ingredientFrom2 = RecipeEditorGUI.readIngredientFrom(texts2[1], friendlyFeedbackProvider);
+         ProvidedUIFilter ingredientFrom3 = RecipeEditorGUI.readIngredientFrom(texts2[2], friendlyFeedbackProvider);
+         if (!ingredientFrom.isAir()) {
+            flag = true;
          }
 
-         if (!var11.isAir()) {
-            var4 = true;
+         if (!ingredientFrom2.isAir()) {
+            flag = true;
          }
 
-         if (!var12.isAir()) {
-            var4 = true;
+         if (!ingredientFrom3.isAir()) {
+            flag = true;
          }
 
-         ShapedIngredient var13 = new ShapedIngredient(var10, 0, -var5);
-         ShapedIngredient var14 = new ShapedIngredient(var11, 1, -var5);
-         ShapedIngredient var15 = new ShapedIngredient(var12, 2, -var5);
-         var3.add(var13);
-         var3.add(var14);
-         var3.add(var15);
-         var5++;
+         ShapedIngredient shapedIngredient = new ShapedIngredient(ingredientFrom, 0, -count);
+         ShapedIngredient shapedIngredient2 = new ShapedIngredient(ingredientFrom2, 1, -count);
+         ShapedIngredient shapedIngredient3 = new ShapedIngredient(ingredientFrom3, 2, -count);
+         list.add(shapedIngredient);
+         list.add(shapedIngredient2);
+         list.add(shapedIngredient3);
+         count++;
       }
 
-      return !var4 ? null : ShapedRecipe.unsharpen(new ShapedRecipe(var0, var3));
+      return !flag ? null : ShapedRecipe.unsharpen(new ShapedRecipe(text, list));
    }
 }

@@ -11,8 +11,8 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class ChatEdition extends PlayerInputHandler implements Listener {
-   public ChatEdition(Edition var1) {
-      super(var1);
+   public ChatEdition(Edition edition) {
+      super(edition);
       Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
    }
 
@@ -22,16 +22,16 @@ public class ChatEdition extends PlayerInputHandler implements Listener {
    }
 
    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-   public void a(AsyncPlayerChatEvent var1) {
-      if (this.getPlayer() != null && var1.getPlayer().equals(this.getPlayer())) {
-         var1.setCancelled(true);
-         Bukkit.getScheduler().runTask(MMOItems.plugin, () -> this.registerInput(var1.getMessage()));
+   public void a(AsyncPlayerChatEvent event) {
+      if (this.getPlayer() != null && event.getPlayer().equals(this.getPlayer())) {
+         event.setCancelled(true);
+         Bukkit.getScheduler().runTask(MMOItems.plugin, () -> this.registerInput(event.getMessage()));
       }
    }
 
    @EventHandler
-   public void b(InventoryOpenEvent var1) {
-      if (var1.getPlayer().equals(this.getPlayer())) {
+   public void b(InventoryOpenEvent event) {
+      if (event.getPlayer().equals(this.getPlayer())) {
          this.close();
       }
    }

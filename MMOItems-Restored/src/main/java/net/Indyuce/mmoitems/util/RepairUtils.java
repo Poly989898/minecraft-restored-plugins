@@ -18,24 +18,24 @@ public class RepairUtils {
       throw new IllegalStateException("Utility class");
    }
 
-   public static boolean repairVanillaItem(@NotNull PlayerData var0, @NotNull NBTItem var1, @NotNull Consumable var2, int var3) {
-      Player var4 = var0.getPlayer();
-      if (!var1.getBoolean("Unbreakable")
-         && var1.getItem().hasItemMeta()
-         && var1.getItem().getItemMeta() instanceof Damageable
-         && ((Damageable)var1.getItem().getItemMeta()).getDamage() > 0) {
-         RepairItemEvent var5 = new RepairItemEvent(var0, var2.getMMOItem(), var1, var3);
-         Bukkit.getPluginManager().callEvent(var5);
-         if (var5.isCancelled()) {
+   public static boolean repairVanillaItem(@NotNull PlayerData playerData, @NotNull NBTItem nbtItem, @NotNull Consumable consumable, int count) {
+      Player player = playerData.getPlayer();
+      if (!nbtItem.getBoolean("Unbreakable")
+         && nbtItem.getItem().hasItemMeta()
+         && nbtItem.getItem().getItemMeta() instanceof Damageable
+         && ((Damageable)nbtItem.getItem().getItemMeta()).getDamage() > 0) {
+         RepairItemEvent event = new RepairItemEvent(playerData, consumable.getMMOItem(), nbtItem, count);
+         Bukkit.getPluginManager().callEvent(event);
+         if (event.isCancelled()) {
             return false;
          }
 
-         var3 = var5.getRepaired();
-         Damageable var6 = (Damageable)var1.getItem().getItemMeta();
-         var6.setDamage(Math.max(0, var6.getDamage() - var3));
-         var1.getItem().setItemMeta(var6);
-         Message.REPAIRED_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(var1.getItem()), "#amount#", String.valueOf(var3)).send(var4);
-         CustomSoundListener.playSound(var2.getItem(), CustomSound.ON_CONSUME, var4);
+         count = event.getRepaired();
+         Damageable itemMeta = (Damageable)nbtItem.getItem().getItemMeta();
+         itemMeta.setDamage(Math.max(0, itemMeta.getDamage() - count));
+         nbtItem.getItem().setItemMeta(itemMeta);
+         Message.REPAIRED_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(nbtItem.getItem()), "#amount#", String.valueOf(count)).send(player);
+         CustomSoundListener.playSound(consumable.getItem(), CustomSound.ON_CONSUME, player);
          return true;
       } else {
          return false;

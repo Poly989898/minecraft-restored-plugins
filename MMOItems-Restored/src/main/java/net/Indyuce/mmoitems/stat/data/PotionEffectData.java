@@ -10,20 +10,20 @@ public class PotionEffectData {
    private final double duration;
    private final int level;
 
-   public PotionEffectData(PotionEffectType var1, int var2) {
-      this(var1, MMOUtils.getEffectDuration(var1) / 20.0, var2);
+   public PotionEffectData(PotionEffectType potionEffectType, int count) {
+      this(potionEffectType, MMOUtils.getEffectDuration(potionEffectType) / 20.0, count);
    }
 
-   public PotionEffectData(PotionEffect var1) {
-      this.type = var1.getType();
-      this.duration = var1.getDuration() / 20.0;
-      this.level = var1.getAmplifier() + 1;
+   public PotionEffectData(PotionEffect potionEffect) {
+      this.type = potionEffect.getType();
+      this.duration = potionEffect.getDuration() / 20.0;
+      this.level = potionEffect.getAmplifier() + 1;
    }
 
-   public PotionEffectData(PotionEffectType var1, double var2, int var4) {
-      this.type = var1;
-      this.duration = var2;
-      this.level = var4;
+   public PotionEffectData(PotionEffectType potionEffectType, double value, int count) {
+      this.type = potionEffectType;
+      this.duration = value;
+      this.level = count;
    }
 
    public PotionEffectType getType() {
@@ -43,12 +43,12 @@ public class PotionEffectData {
    }
 
    @Override
-   public boolean equals(Object var1) {
-      if (this == var1) {
+   public boolean equals(Object obj) {
+      if (this == obj) {
          return true;
-      } else if (var1 != null && this.getClass() == var1.getClass()) {
-         PotionEffectData var2 = (PotionEffectData)var1;
-         return Double.compare(var2.duration, this.duration) == 0 && this.level == var2.level && this.type.equals(var2.type);
+      } else if (obj != null && this.getClass() == obj.getClass()) {
+         PotionEffectData potionEffectData = (PotionEffectData)obj;
+         return Double.compare(potionEffectData.duration, this.duration) == 0 && this.level == potionEffectData.level && this.type.equals(potionEffectData.type);
       } else {
          return false;
       }

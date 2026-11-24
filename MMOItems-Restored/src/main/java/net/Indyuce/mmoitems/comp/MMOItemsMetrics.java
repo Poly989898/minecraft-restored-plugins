@@ -9,13 +9,13 @@ public class MMOItemsMetrics extends Metrics {
    public MMOItemsMetrics() {
       super(MMOItems.plugin);
       this.addCustomChart(new SingleLineChart("items", () -> {
-         int var0 = 0;
+         int count = 0;
 
-         for (Type var2 : MMOItems.plugin.getTypes().getAll()) {
-            var0 += var2.getConfigFile().getConfig().getKeys(false).size();
+         for (Type type : MMOItems.plugin.getTypes().getAll()) {
+            count += type.getConfigFile().getConfig().getKeys(false).size();
          }
 
-         return var0;
+         return count;
       }));
    }
 }

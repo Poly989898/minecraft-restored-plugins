@@ -13,13 +13,13 @@ public class BlockID extends DoubleStat {
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2) {
-      super.whenApplied(var1, var2);
-      var1.getMeta().setCustomModelData((int)var2.getValue() + 1000);
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData) {
+      super.whenApplied(itemStackBuilder, doubleData);
+      itemStackBuilder.getMeta().setCustomModelData((int)doubleData.getValue() + 1000);
    }
 
    @Override
-   public void whenPreviewed(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2, @NotNull NumericStatFormula var3) {
-      this.whenApplied(var1, var2);
+   public void whenPreviewed(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData, @NotNull NumericStatFormula numericStatFormula) {
+      this.whenApplied(itemStackBuilder, doubleData);
    }
 }

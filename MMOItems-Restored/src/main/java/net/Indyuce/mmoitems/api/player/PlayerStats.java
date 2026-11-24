@@ -17,8 +17,8 @@ import org.jetbrains.annotations.NotNull;
 public class PlayerStats {
    private final PlayerData playerData;
 
-   public PlayerStats(PlayerData var1) {
-      this.playerData = var1;
+   public PlayerStats(PlayerData playerData) {
+      this.playerData = playerData;
    }
 
    public PlayerData getData() {
@@ -30,47 +30,47 @@ public class PlayerStats {
       return this.playerData.getMMOPlayerData().getStatMap();
    }
 
-   public double getStat(@NotNull ItemStat<?, ?> var1) {
-      return this.getMap().getStat(var1.getId());
+   public double getStat(@NotNull ItemStat<?, ?> itemStat) {
+      return this.getMap().getStat(itemStat.getId());
    }
 
    @NotNull
-   public StatInstance getInstance(@NotNull ItemStat<?, ?> var1) {
-      return this.getMap().getInstance(var1.getId());
+   public StatInstance getInstance(@NotNull ItemStat<?, ?> itemStat) {
+      return this.getMap().getInstance(itemStat.getId());
    }
 
    @NotNull
-   public PlayerMetadata newTemporary(@NotNull EquipmentSlot var1) {
-      return this.playerData.getMMOPlayerData().getStatMap().cache(var1);
+   public PlayerMetadata newTemporary(@NotNull EquipmentSlot equipmentSlot) {
+      return this.playerData.getMMOPlayerData().getStatMap().cache(equipmentSlot);
    }
 
    public void updateStats() {
-      for (ItemStat var2 : MMOItems.plugin.getStats().getNumericStats()) {
-         ModifierPacket var3 = this.getInstance(var2).newPacket();
-         var3.removeIf(var0 -> var0.startsWith("MMOItem"));
-         if (this.playerData.hasSetBonuses() && this.playerData.getSetBonuses().hasStat(var2)) {
-            var3.addModifier(
+      for (ItemStat numericStat : MMOItems.plugin.getStats().getNumericStats()) {
+         ModifierPacket packet = this.getInstance(numericStat).newPacket();
+         packet.removeIf(text -> text.startsWith("MMOItem"));
+         if (this.playerData.hasSetBonuses() && this.playerData.getSetBonuses().hasStat(numericStat)) {
+            packet.addModifier(
                new StatModifier(
-                  "MMOItemSetBonus", var2.getId(), this.playerData.getSetBonuses().getStat(var2), ModifierType.FLAT, EquipmentSlot.OTHER, ModifierSource.OTHER
+                  "MMOItemSetBonus", numericStat.getId(), this.playerData.getSetBonuses().getStat(numericStat), ModifierType.FLAT, EquipmentSlot.OTHER, ModifierSource.OTHER
                )
             );
          }
 
-         int var4 = 0;
+         int count = 0;
 
-         for (EquippedItem var6 : this.playerData.getInventory().getEquipped()) {
-            double var7 = var6.getNBT().getStat(var2.getId());
-            if (var7 != 0.0) {
-               ModifierSource var9 = var6.getCached().getType().getModifierSource();
-               if (var9.isWeapon() && var2 instanceof AttackWeaponStat) {
-                  var7 -= ((AttackWeaponStat)var2).getOffset(this.playerData);
+         for (EquippedItem equippedItem : this.playerData.getInventory().getEquipped()) {
+            double stat = equippedItem.getNBT().getStat(numericStat.getId());
+            if (stat != 0.0) {
+               ModifierSource modifierSource = equippedItem.getCached().getType().getModifierSource();
+               if (modifierSource.isWeapon() && numericStat instanceof AttackWeaponStat) {
+                  stat -= ((AttackWeaponStat)numericStat).getOffset(this.playerData);
                }
 
-               var3.addModifier(new StatModifier("MMOItem-" + var4++, var2.getId(), var7, ModifierType.FLAT, var6.getSlot(), var9));
+               packet.addModifier(new StatModifier("MMOItem-" + count++, numericStat.getId(), stat, ModifierType.FLAT, equippedItem.getSlot(), modifierSource));
             }
          }
 
-         var3.update();
+         packet.update();
       }
    }
 }

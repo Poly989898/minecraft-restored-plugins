@@ -12,8 +12,8 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 public class IdentifiedItem {
    private final NBTItem item;
 
-   public IdentifiedItem(NBTItem var1) {
-      this.item = var1;
+   public IdentifiedItem(NBTItem nbtItem) {
+      this.item = nbtItem;
    }
 
    @NotNull
@@ -22,21 +22,21 @@ public class IdentifiedItem {
    }
 
    @NotNull
-   private ItemStack deserialize(String var1) {
+   private ItemStack deserialize(String text) {
       try {
-         ByteArrayInputStream var2 = new ByteArrayInputStream(Base64Coder.decodeLines(var1));
-         BukkitObjectInputStream var3 = new BukkitObjectInputStream(var2);
-         ItemStack var4 = (ItemStack)var3.readObject();
-         var3.close();
-         NBTItem var5 = NBTItem.get(var4);
-         if (var5.hasType()) {
-            LiveMMOItem var6 = new LiveMMOItem(var4);
-            return var6.newBuilder().build();
+         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(Base64Coder.decodeLines(text));
+         BukkitObjectInputStream bukkitObjectInputStream = new BukkitObjectInputStream(byteArrayInputStream);
+         ItemStack item = (ItemStack)bukkitObjectInputStream.readObject();
+         bukkitObjectInputStream.close();
+         NBTItem nbtItem = NBTItem.get(item);
+         if (nbtItem.hasType()) {
+            LiveMMOItem liveMMOItem = new LiveMMOItem(item);
+            return liveMMOItem.newBuilder().build();
          } else {
-            return var4;
+            return item;
          }
-      } catch (ClassNotFoundException | IOException var7) {
-         throw new RuntimeException(var7);
+      } catch (ClassNotFoundException | IOException exception) {
+         throw new RuntimeException(exception);
       }
    }
 }

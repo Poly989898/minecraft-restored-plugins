@@ -541,35 +541,35 @@ public class BlockManager implements Reloadable {
       this.reload();
    }
 
-   public void register(CustomBlock var1) {
-      this.customBlocks.put(var1.getId(), var1);
-      this.mushroomStateValue.put(var1.getState().getUniqueId(), var1);
-      if (var1.hasGenTemplate()) {
-         MMOItems.plugin.getWorldGen().assign(var1, var1.getGenTemplate());
+   public void register(CustomBlock customBlock) {
+      this.customBlocks.put(customBlock.getId(), customBlock);
+      this.mushroomStateValue.put(customBlock.getState().getUniqueId(), customBlock);
+      if (customBlock.hasGenTemplate()) {
+         MMOItems.plugin.getWorldGen().assign(customBlock, customBlock.getGenTemplate());
       }
    }
 
-   public CustomBlock getBlock(int var1) {
-      return var1 > 0 && var1 < 161 && var1 != 54 ? this.customBlocks.get(var1) : null;
+   public CustomBlock getBlock(int index) {
+      return index > 0 && index < 161 && index != 54 ? this.customBlocks.get(index) : null;
    }
 
-   public CustomBlock getBlock(MushroomState var1) {
-      return this.mushroomStateValue.get(var1.getUniqueId());
+   public CustomBlock getBlock(MushroomState mushroomState) {
+      return this.mushroomStateValue.get(mushroomState.getUniqueId());
    }
 
-   public Optional<CustomBlock> getFromBlock(BlockData var1) {
-      if (this.isMushroomBlock(var1.getMaterial()) && var1 instanceof MultipleFacing) {
-         MultipleFacing var2 = (MultipleFacing)var1;
-         MushroomState var3 = new MushroomState(
-            var1.getMaterial(),
-            var2.hasFace(BlockFace.UP),
-            var2.hasFace(BlockFace.DOWN),
-            var2.hasFace(BlockFace.WEST),
-            var2.hasFace(BlockFace.EAST),
-            var2.hasFace(BlockFace.SOUTH),
-            var2.hasFace(BlockFace.NORTH)
+   public Optional<CustomBlock> getFromBlock(BlockData blockData) {
+      if (this.isMushroomBlock(blockData.getMaterial()) && blockData instanceof MultipleFacing) {
+         MultipleFacing multipleFacing = (MultipleFacing)blockData;
+         MushroomState mushroomState = new MushroomState(
+            blockData.getMaterial(),
+            multipleFacing.hasFace(BlockFace.UP),
+            multipleFacing.hasFace(BlockFace.DOWN),
+            multipleFacing.hasFace(BlockFace.WEST),
+            multipleFacing.hasFace(BlockFace.EAST),
+            multipleFacing.hasFace(BlockFace.SOUTH),
+            multipleFacing.hasFace(BlockFace.NORTH)
          );
-         return this.isVanilla(var3) ? Optional.empty() : Optional.of(this.getBlock(var3));
+         return this.isVanilla(mushroomState) ? Optional.empty() : Optional.of(this.getBlock(mushroomState));
       } else {
          return Optional.empty();
       }
@@ -583,12 +583,12 @@ public class BlockManager implements Reloadable {
       return this.customBlocks.keySet();
    }
 
-   public boolean isVanilla(MushroomState var1) {
-      return !this.mushroomStateValue.containsKey(var1.getUniqueId());
+   public boolean isVanilla(MushroomState mushroomState) {
+      return !this.mushroomStateValue.containsKey(mushroomState.getUniqueId());
    }
 
-   public boolean isMushroomBlock(Material var1) {
-      return var1 == Material.BROWN_MUSHROOM_BLOCK || var1 == Material.MUSHROOM_STEM || var1 == Material.RED_MUSHROOM_BLOCK;
+   public boolean isMushroomBlock(Material material) {
+      return material == Material.BROWN_MUSHROOM_BLOCK || material == Material.MUSHROOM_STEM || material == Material.RED_MUSHROOM_BLOCK;
    }
 
    @Override
@@ -596,29 +596,29 @@ public class BlockManager implements Reloadable {
       this.customBlocks.clear();
       this.mushroomStateValue.clear();
 
-      for (MMOItemTemplate var2 : MMOItems.plugin.getTemplates().getTemplates(Type.BLOCK)) {
-         MMOItem var3 = var2.newBuilder(0, null).build();
-         int var4 = var3.hasData(ItemStats.BLOCK_ID) ? (int)((DoubleData)var3.getData(ItemStats.BLOCK_ID)).getValue() : 0;
-         if (var4 > 0 && var4 < 161 && var4 != 54) {
+      for (MMOItemTemplate template : MMOItems.plugin.getTemplates().getTemplates(Type.BLOCK)) {
+         MMOItem mmoItem = template.newBuilder(0, null).build();
+         int count = mmoItem.hasData(ItemStats.BLOCK_ID) ? (int)((DoubleData)mmoItem.getData(ItemStats.BLOCK_ID)).getValue() : 0;
+         if (count > 0 && count < 161 && count != 54) {
             try {
-               MushroomState var5 = new MushroomState(
-                  this.getType(var4),
-                  upIds.contains(var4),
-                  downIds.contains(var4),
-                  westIds.contains(var4),
-                  eastIds.contains(var4),
-                  southIds.contains(var4),
-                  northIds.contains(var4)
+               MushroomState mushroomState = new MushroomState(
+                  this.getType(count),
+                  upIds.contains(count),
+                  downIds.contains(count),
+                  westIds.contains(count),
+                  eastIds.contains(count),
+                  southIds.contains(count),
+                  northIds.contains(count)
                );
-               this.register(new CustomBlock(var5, var3));
-            } catch (IllegalArgumentException var6) {
-               MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load custom block '" + var4 + "': " + var6.getMessage());
+               this.register(new CustomBlock(mushroomState, mmoItem));
+            } catch (IllegalArgumentException exception) {
+               MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load custom block '" + count + "': " + exception.getMessage());
             }
          }
       }
    }
 
-   private Material getType(int var1) {
-      return var1 < 54 ? Material.BROWN_MUSHROOM_BLOCK : (var1 > 99 ? Material.MUSHROOM_STEM : Material.RED_MUSHROOM_BLOCK);
+   private Material getType(int count) {
+      return count < 54 ? Material.BROWN_MUSHROOM_BLOCK : (count > 99 ? Material.MUSHROOM_STEM : Material.RED_MUSHROOM_BLOCK);
    }
 }

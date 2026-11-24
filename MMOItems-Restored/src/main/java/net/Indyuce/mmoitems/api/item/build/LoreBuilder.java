@@ -27,142 +27,142 @@ public class LoreBuilder extends Buildable<List<String>> {
    private static final String LINE_PREFIX = ChatColor.WHITE.toString();
 
    @Deprecated
-   public LoreBuilder(@NotNull Collection<String> var1) {
-      this.lore.addAll(var1);
+   public LoreBuilder(@NotNull Collection<String> texts) {
+      this.lore.addAll(texts);
       this.tooltip = null;
    }
 
-   public LoreBuilder(@NotNull MMOItem var1) {
-      this.lore.addAll(MMOItems.plugin.getLore().getFormat(var1));
-      this.tooltip = var1.getTooltip();
-      this.registerPlaceholder("type", var1.getType().getName());
-      ItemTier var2 = var1.getTier();
-      this.registerPlaceholder("tier", var2 != null ? var2.getName() : MMOItems.plugin.getLanguage().defaultTierName);
+   public LoreBuilder(@NotNull MMOItem mmoItem) {
+      this.lore.addAll(MMOItems.plugin.getLore().getFormat(mmoItem));
+      this.tooltip = mmoItem.getTooltip();
+      this.registerPlaceholder("type", mmoItem.getType().getName());
+      ItemTier tier = mmoItem.getTier();
+      this.registerPlaceholder("tier", tier != null ? tier.getName() : MMOItems.plugin.getLanguage().defaultTierName);
    }
 
-   public void insert(int var1, @NotNull String var2) {
-      this.lore.add(var1, var2);
+   public void insert(int count, @NotNull String text) {
+      this.lore.add(count, text);
    }
 
-   public void insert(int var1, @NotNull Collection<String> var2) {
-      this.lore.addAll(var1, var2);
+   public void insert(int count, @NotNull Collection<String> texts) {
+      this.lore.addAll(count, texts);
    }
 
-   public void insert(String var1, String... var2) {
-      int var3 = this.lore.indexOf("#" + var1 + "#");
-      if (var3 >= 0) {
-         for (int var4 = 0; var4 < var2.length; var4++) {
-            this.lore.add(var3 + 1, var2[var2.length - var4 - 1]);
+   public void insert(String text, String... texts) {
+      int count = this.lore.indexOf("#" + text + "#");
+      if (count >= 0) {
+         for (int i = 0; i < texts.length; i++) {
+            this.lore.add(count + 1, texts[texts.length - i - 1]);
          }
 
-         this.lore.remove(var3);
+         this.lore.remove(count);
       }
    }
 
-   public void insert(@NotNull String var1, @NotNull List<String> var2) {
-      int var3 = this.lore.indexOf("#" + var1 + "#");
-      if (var3 >= 0) {
-         Lists.reverse(var2).forEach(var2x -> this.lore.add(var3 + 1, var2x));
-         this.lore.remove(var3);
+   public void insert(@NotNull String text, @NotNull List<String> texts) {
+      int count = this.lore.indexOf("#" + text + "#");
+      if (count >= 0) {
+         Lists.reverse(texts).forEach(var2x -> this.lore.add(count + 1, var2x));
+         this.lore.remove(count);
       }
    }
 
-   public void registerPlaceholder(@NotNull String var1, @Nullable Object var2) {
-      this.placeholders.put(var1, String.valueOf(var2));
+   public void registerPlaceholder(@NotNull String text, @Nullable Object obj) {
+      this.placeholders.put(text, String.valueOf(obj));
    }
 
    @NotNull
-   public String applySpecialPlaceholders(String var1) {
-      int var2 = var1.indexOf("{");
+   public String applySpecialPlaceholders(String text) {
+      int count = text.indexOf("{");
 
-      while (var2 >= 0) {
-         int var3 = var1.indexOf("}", var2);
-         if (var3 < 0) {
+      while (count >= 0) {
+         int count2 = text.indexOf("}", count);
+         if (count2 < 0) {
             break;
          }
 
-         String var4 = var1.substring(var2 + 1, var3);
-         String var5 = this.placeholders.get(var4);
-         if (var5 != null) {
-            var1 = var1.substring(0, var2) + var5 + var1.substring(var3 + 1);
-            var3 += var5.length() - var4.length() - 2;
+         String text2 = text.substring(count + 1, count2);
+         String text3 = this.placeholders.get(text2);
+         if (text3 != null) {
+            text = text.substring(0, count) + text3 + text.substring(count2 + 1);
+            count2 += text3.length() - text2.length() - 2;
          }
 
-         var2 = var1.indexOf("{", var3 + 1);
+         count = text.indexOf("{", count2 + 1);
       }
 
-      return var1;
+      return text;
    }
 
    @Deprecated
-   public void end(@NotNull String var1) {
-      this.end.add(var1);
+   public void end(@NotNull String text) {
+      this.end.add(text);
    }
 
    protected List<String> whenBuilt() {
-      int var1 = 0;
+      int count = 0;
 
-      while (var1 < this.lore.size()) {
-         int var2 = this.lore.size() - var1 - 1;
-         String var3 = this.lore.get(var2);
-         if (var3.startsWith("#")) {
-            this.lore.remove(var2);
-         } else if (!var3.startsWith("{bar}") || var1 != 0 && !this.getType(var2 + 1).isBar()) {
-            var1++;
+      while (count < this.lore.size()) {
+         int index = this.lore.size() - count - 1;
+         String text = this.lore.get(index);
+         if (text.startsWith("#")) {
+            this.lore.remove(index);
+         } else if (!text.startsWith("{bar}") || count != 0 && !this.getType(index + 1).isBar()) {
+            count++;
          } else {
-            this.lore.remove(var2);
+            this.lore.remove(index);
          }
       }
 
-      String var9 = this.tooltip != null ? this.tooltip.getSuffix() : "";
+      String text = this.tooltip != null ? this.tooltip.getSuffix() : "";
       if (this.tooltip != null) {
-         this.lore.add(this.tooltip.getBottom() + var9);
+         this.lore.add(this.tooltip.getBottom() + text);
          if (this.tooltip.getLoreHeader() != null) {
             this.lore.addAll(0, this.tooltip.getLoreHeader());
          }
       }
 
-      int var10 = this.tooltip != null ? this.tooltip.getFirstIgnored() : 0;
-      int var11 = 0;
+      int count2 = this.tooltip != null ? this.tooltip.getFirstIgnored() : 0;
+      int index = 0;
 
-      while (var11 < this.lore.size()) {
-         String var4 = this.lore.get(var11);
-         LoreBuilder.LineType var5 = this.getType(var11, var4);
-         if (var5.isNormalBar()) {
-            var4 = var4.substring(5);
+      while (index < this.lore.size()) {
+         String text2 = this.lore.get(index);
+         LoreBuilder.LineType type = this.getType(index, text2);
+         if (type.isNormalBar()) {
+            text2 = text2.substring(5);
          }
 
-         if (var5.isSuperBar()) {
-            var4 = var4.substring(6);
+         if (type.isSuperBar()) {
+            text2 = text2.substring(6);
          }
 
-         if (this.tooltip != null && !var5.isBottom()) {
-            var4 = (var11 < var10 ? this.tooltip.getAlignText() : (var5.isBar() ? this.tooltip.getBar() : this.tooltip.getMiddle())) + var4;
+         if (this.tooltip != null && !type.isBottom()) {
+            text2 = (index < count2 ? this.tooltip.getAlignText() : (type.isBar() ? this.tooltip.getBar() : this.tooltip.getMiddle())) + text2;
          }
 
-         String var6 = StringUtils.substringBetween(var4, "MATH%", "%");
-         if (var6 != null) {
-            var4 = var4.replaceFirst("MATH\\%[^%]*\\%", this.evaluate(var6));
+         String text3 = StringUtils.substringBetween(text2, "MATH%", "%");
+         if (text3 != null) {
+            text2 = text2.replaceFirst("MATH\\%[^%]*\\%", this.evaluate(text3));
          }
 
-         var4 = MythicLib.plugin.getPlaceholderParser().parse(null, var4);
-         var4 = this.applySpecialPlaceholders(var4);
-         String[] var7 = var4.split("\n", -1);
-         if (var7.length > 1) {
-            for (int var8 = var7.length - 1; var8 >= 0; var8--) {
-               this.lore.add(var11, LINE_PREFIX + var7[var8] + (var11 < var10 ? "" : var9));
+         text2 = MythicLib.plugin.getPlaceholderParser().parse(null, text2);
+         text2 = this.applySpecialPlaceholders(text2);
+         String[] texts = text2.split("\n", -1);
+         if (texts.length > 1) {
+            for (int i = texts.length - 1; i >= 0; i--) {
+               this.lore.add(index, LINE_PREFIX + texts[i] + (index < count2 ? "" : text));
             }
 
-            this.lore.remove(var11 + var7.length);
-            var11 += var7.length;
+            this.lore.remove(index + texts.length);
+            index += texts.length;
          } else {
-            this.lore.set(var11++, LINE_PREFIX + var4 + var9);
+            this.lore.set(index++, LINE_PREFIX + text2 + text);
          }
       }
 
       if (this.tooltip != null && this.tooltip.getCenteringOptions() != null) {
-         for (int var12 = 0; var12 < this.tooltip.getCenteringOptions().getLoreLines(); var12++) {
-            this.lore.set(var12, this.tooltip.getCenteringOptions().centerLore(var12, this.lore.get(var12)));
+         for (int i = 0; i < this.tooltip.getCenteringOptions().getLoreLines(); i++) {
+            this.lore.set(i, this.tooltip.getCenteringOptions().centerLore(i, this.lore.get(i)));
          }
       }
 
@@ -171,30 +171,30 @@ public class LoreBuilder extends Buildable<List<String>> {
    }
 
    @NotNull
-   private LoreBuilder.LineType getType(int var1) {
-      return this.getType(var1, this.lore.get(var1));
+   private LoreBuilder.LineType getType(int index) {
+      return this.getType(index, this.lore.get(index));
    }
 
    @NotNull
-   private LoreBuilder.LineType getType(int var1, String var2) {
-      if (var1 == this.lore.size() - 1) {
-         if (var2.startsWith("{bar}")) {
+   private LoreBuilder.LineType getType(int count, String text) {
+      if (count == this.lore.size() - 1) {
+         if (text.startsWith("{bar}")) {
             return LoreBuilder.LineType.BAR;
          } else {
-            return var2.startsWith("{sbar}") ? LoreBuilder.LineType.SUPERBAR : LoreBuilder.LineType.BOTTOM;
+            return text.startsWith("{sbar}") ? LoreBuilder.LineType.SUPERBAR : LoreBuilder.LineType.BOTTOM;
          }
-      } else if (var2.startsWith("{bar}")) {
+      } else if (text.startsWith("{bar}")) {
          return LoreBuilder.LineType.BAR;
       } else {
-         return var2.startsWith("{sbar}") ? LoreBuilder.LineType.SUPERBAR : LoreBuilder.LineType.MIDDLE;
+         return text.startsWith("{sbar}") ? LoreBuilder.LineType.SUPERBAR : LoreBuilder.LineType.MIDDLE;
       }
    }
 
    @Deprecated
-   private String evaluate(String var1) {
+   private String evaluate(String text) {
       try {
-         return String.valueOf(NumericalExpression.eval(var1));
-      } catch (Throwable var3) {
+         return String.valueOf(NumericalExpression.eval(text));
+      } catch (Throwable exception) {
          return "<ParsingError>";
       }
    }
@@ -213,9 +213,9 @@ public class LoreBuilder extends Buildable<List<String>> {
       return Objects.requireNonNull(this.tooltip);
    }
 
-   public void setLore(List<String> var1) {
+   public void setLore(List<String> texts) {
       this.lore.clear();
-      this.lore.addAll(var1);
+      this.lore.addAll(texts);
    }
 
    @NotNull

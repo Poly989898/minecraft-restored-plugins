@@ -16,11 +16,11 @@ public class RestoreMana extends DoubleStat implements PlayerConsumable {
    }
 
    @Override
-   public void onConsume(@NotNull VolatileMMOItem var1, @NotNull Player var2, boolean var3) {
-      if (var1.hasData(ItemStats.RESTORE_MANA)) {
-         DoubleData var4 = (DoubleData)var1.getData(ItemStats.RESTORE_MANA);
-         if (var4.getValue() != 0.0) {
-            PlayerData.get(var2).getRPG().giveMana(var4.getValue());
+   public void onConsume(@NotNull VolatileMMOItem volatileMMOItem, @NotNull Player player, boolean flag) {
+      if (volatileMMOItem.hasData(ItemStats.RESTORE_MANA)) {
+         DoubleData data = (DoubleData)volatileMMOItem.getData(ItemStats.RESTORE_MANA);
+         if (data.getValue() != 0.0) {
+            PlayerData.get(player).getRPG().giveMana(data.getValue());
          }
       }
    }

@@ -22,40 +22,40 @@ public class TrimPatternStat extends ChooseStat implements GemStoneStat {
    public TrimPatternStat() {
       super("TRIM_PATTERN", Material.LEATHER_CHESTPLATE, "Trim Pattern", new String[]{"Pattern of trimmed armor."}, new String[]{"armor", "skin"});
       if (this.isEnabled()) {
-         for (TrimPattern var2 : Registry.TRIM_PATTERN) {
-            this.addChoices(new StatChoice(var2.getKey().toString()));
+         for (TrimPattern trimPattern : Registry.TRIM_PATTERN) {
+            this.addChoices(new StatChoice(trimPattern.getKey().toString()));
          }
       }
    }
 
-   public static NamespacedKey fixNamespacedKey(String var0) {
-      return !var0.contains(":") ? NamespacedKey.minecraft(var0) : NamespacedKey.fromString(var0);
+   public static NamespacedKey fixNamespacedKey(String text) {
+      return !text.contains(":") ? NamespacedKey.minecraft(text) : NamespacedKey.fromString(text);
    }
 
    @Nullable
    @Override
-   public StatChoice getChoice(String var1) {
-      return super.getChoice(fixNamespacedKey(var1).toString());
+   public StatChoice getChoice(String text) {
+      return super.getChoice(fixNamespacedKey(text).toString());
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull StringData var2) {
-      if (var1.getMeta() instanceof ArmorMeta) {
-         TrimPattern var3 = (TrimPattern)Registry.TRIM_PATTERN.get(fixNamespacedKey(var2.toString()));
-         if (var3 != null) {
-            ArmorMeta var4 = (ArmorMeta)var1.getMeta();
-            ArmorTrim var5 = var4.hasTrim() ? var4.getTrim() : new ArmorTrim(TrimMaterial.AMETHYST, TrimPattern.COAST);
-            var4.setTrim(new ArmorTrim(var5.getMaterial(), var3));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull StringData stringData) {
+      if (itemStackBuilder.getMeta() instanceof ArmorMeta) {
+         TrimPattern trimPattern = (TrimPattern)Registry.TRIM_PATTERN.get(fixNamespacedKey(stringData.toString()));
+         if (trimPattern != null) {
+            ArmorMeta meta = (ArmorMeta)itemStackBuilder.getMeta();
+            ArmorTrim armorTrim = meta.hasTrim() ? meta.getTrim() : new ArmorTrim(TrimMaterial.AMETHYST, TrimPattern.COAST);
+            meta.setTrim(new ArmorTrim(armorTrim.getMaterial(), trimPattern));
          }
       }
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      if (var1.getNBT().getItem().getItemMeta() instanceof ArmorMeta) {
-         ArmorMeta var2 = (ArmorMeta)var1.getNBT().getItem().getItemMeta();
-         if (var2.hasTrim()) {
-            var1.setData(this, new StringData(var2.getTrim().getPattern().getKey().toString()));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      if (readMMOItem.getNBT().getItem().getItemMeta() instanceof ArmorMeta) {
+         ArmorMeta itemMeta = (ArmorMeta)readMMOItem.getNBT().getItem().getItemMeta();
+         if (itemMeta.hasTrim()) {
+            readMMOItem.setData(this, new StringData(itemMeta.getTrim().getPattern().getKey().toString()));
          }
       }
    }

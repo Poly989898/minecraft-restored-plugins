@@ -7,8 +7,8 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 public class CrazyEnchantsData implements StatData {
    private final Map<CEnchantment, Integer> enchants;
 
-   public CrazyEnchantsData(Map<CEnchantment, Integer> var1) {
-      this.enchants = var1;
+   public CrazyEnchantsData(Map<CEnchantment, Integer> map) {
+      this.enchants = map;
    }
 
    public Map<CEnchantment, Integer> getEnchants() {

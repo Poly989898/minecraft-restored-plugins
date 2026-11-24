@@ -30,30 +30,30 @@ public class AbilityData extends Skill {
    @NotNull
    private final Map<String, Double> modifiers = new HashMap<>();
 
-   public AbilityData(@NotNull JsonObject var1) {
-      super(MMOUtils.backwardsCompatibleTriggerType(var1.get("CastMode").getAsString()));
-      this.ability = MMOItems.plugin.getSkills().getSkill(var1.get("Id").getAsString());
-      JsonObject var2 = var1.getAsJsonObject("Modifiers");
-      var2.entrySet().forEach(var1x -> this.setModifier((String)var1x.getKey(), ((JsonElement)var1x.getValue()).getAsDouble()));
+   public AbilityData(@NotNull JsonObject jsonObject) {
+      super(MMOUtils.backwardsCompatibleTriggerType(jsonObject.get("CastMode").getAsString()));
+      this.ability = MMOItems.plugin.getSkills().getSkill(jsonObject.get("Id").getAsString());
+      JsonObject asJsonObject = jsonObject.getAsJsonObject("Modifiers");
+      asJsonObject.entrySet().forEach(var1x -> this.setModifier((String)var1x.getKey(), ((JsonElement)var1x.getValue()).getAsDouble()));
    }
 
-   public AbilityData(@NotNull ConfigurationSection var1) {
-      super(MMOUtils.backwardsCompatibleTriggerType(UtilityMethods.enumName(Objects.requireNonNull(var1.getString("mode"), "Ability is missing mode"))));
-      Validate.isTrue(var1.contains("type"), "Ability is missing type");
-      String var2 = UtilityMethods.enumName(var1.getString("type"));
-      Validate.isTrue(MMOItems.plugin.getSkills().hasSkill(var2), "Could not find ability called '" + var2 + "'");
-      this.ability = MMOItems.plugin.getSkills().getSkill(var2);
+   public AbilityData(@NotNull ConfigurationSection section) {
+      super(MMOUtils.backwardsCompatibleTriggerType(UtilityMethods.enumName(Objects.requireNonNull(section.getString("mode"), "Ability is missing mode"))));
+      Validate.isTrue(section.contains("type"), "Ability is missing type");
+      String text = UtilityMethods.enumName(section.getString("type"));
+      Validate.isTrue(MMOItems.plugin.getSkills().hasSkill(text), "Could not find ability called '" + text + "'");
+      this.ability = MMOItems.plugin.getSkills().getSkill(text);
 
-      for (String var4 : var1.getKeys(false)) {
-         if (!var4.equalsIgnoreCase("mode") && !var4.equalsIgnoreCase("type") && this.ability.getHandler().getModifiers().contains(var4)) {
-            this.modifiers.put(var4, var1.getDouble(var4));
+      for (String key : section.getKeys(false)) {
+         if (!key.equalsIgnoreCase("mode") && !key.equalsIgnoreCase("type") && this.ability.getHandler().getModifiers().contains(key)) {
+            this.modifiers.put(key, section.getDouble(key));
          }
       }
    }
 
-   public AbilityData(RegisteredSkill var1, TriggerType var2) {
-      super(var2);
-      this.ability = var1;
+   public AbilityData(RegisteredSkill registeredSkill, TriggerType triggerType) {
+      super(triggerType);
+      this.ability = registeredSkill;
    }
 
    public RegisteredSkill getAbility() {
@@ -64,74 +64,74 @@ public class AbilityData extends Skill {
       return this.modifiers.keySet();
    }
 
-   public void setModifier(String var1, double var2) {
-      this.modifiers.put(var1, var2);
+   public void setModifier(String text, double value) {
+      this.modifiers.put(text, value);
    }
 
-   public boolean hasModifier(String var1) {
-      return this.modifiers.containsKey(var1);
+   public boolean hasModifier(String text) {
+      return this.modifiers.containsKey(text);
    }
 
-   public boolean getResult(SkillMetadata var1) {
-      PlayerData var2 = PlayerData.get(var1.getCaster().getPlayer());
-      RPGPlayer var3 = var2.getRPG();
-      Player var4 = var1.getCaster().getPlayer();
-      if (!var1.getCaster().getData().getCooldownMap().isOnCooldown(this)) {
+   public boolean getResult(SkillMetadata skillMetadata) {
+      PlayerData playerData = PlayerData.get(skillMetadata.getCaster().getPlayer());
+      RPGPlayer rPG = playerData.getRPG();
+      Player player = skillMetadata.getCaster().getPlayer();
+      if (!skillMetadata.getCaster().getData().getCooldownMap().isOnCooldown(this)) {
          if (MMOItems.plugin.getConfig().getBoolean("permissions.abilities")
-            && !var4.hasPermission("mmoitems.ability." + this.getHandler().getLowerCaseId())
-            && !var4.hasPermission("mmoitems.bypass.ability")) {
+            && !player.hasPermission("mmoitems.ability." + this.getHandler().getLowerCaseId())
+            && !player.hasPermission("mmoitems.bypass.ability")) {
             return false;
-         } else if (this.hasModifier("mana") && var3.getMana() < var1.getParameter("mana")) {
-            Message.NOT_ENOUGH_MANA.format(ChatColor.RED).send(var4);
+         } else if (this.hasModifier("mana") && rPG.getMana() < skillMetadata.getParameter("mana")) {
+            Message.NOT_ENOUGH_MANA.format(ChatColor.RED).send(player);
             return false;
-         } else if (this.hasModifier("stamina") && var3.getStamina() < var1.getParameter("stamina")) {
-            Message.NOT_ENOUGH_STAMINA.format(ChatColor.RED).send(var4);
+         } else if (this.hasModifier("stamina") && rPG.getStamina() < skillMetadata.getParameter("stamina")) {
+            Message.NOT_ENOUGH_STAMINA.format(ChatColor.RED).send(player);
             return false;
          } else {
             return true;
          }
       } else {
-         CooldownInfo var5 = var2.getMMOPlayerData().getCooldownMap().getInfo(this);
+         CooldownInfo info = playerData.getMMOPlayerData().getCooldownMap().getInfo(this);
          if (!this.getTrigger().isSilent()) {
-            StringBuilder var6 = new StringBuilder(ChatColor.YELLOW + "");
-            double var7 = (double)(var5.getInitialCooldown() - var5.getRemaining()) / var5.getInitialCooldown() * 10.0;
-            String var9 = MMOItems.plugin.getConfig().getString("cooldown-progress-bar-char");
+            StringBuilder builder = new StringBuilder(ChatColor.YELLOW + "");
+            double value = (double)(info.getInitialCooldown() - info.getRemaining()) / info.getInitialCooldown() * 10.0;
+            String text = MMOItems.plugin.getConfig().getString("cooldown-progress-bar-char");
 
-            for (int var10 = 0; var10 < 10; var10++) {
-               var6.append(var7 >= var10 ? ChatColor.GREEN : ChatColor.WHITE).append(var9);
+            for (int i = 0; i < 10; i++) {
+               builder.append(value >= i ? ChatColor.GREEN : ChatColor.WHITE).append(text);
             }
 
             Message.SPELL_ON_COOLDOWN
                .format(
                   ChatColor.RED,
                   "#left#",
-                  MythicLib.plugin.getMMOConfig().decimal.format(var5.getRemaining() / 1000.0),
+                  MythicLib.plugin.getMMOConfig().decimal.format(info.getRemaining() / 1000.0),
                   "#progress#",
-                  var6.toString(),
+                  builder.toString(),
                   "#s#",
-                  var5.getRemaining() > 1999L ? "s" : ""
+                  info.getRemaining() > 1999L ? "s" : ""
                )
-               .send(var4);
+               .send(player);
          }
 
          return false;
       }
    }
 
-   public void whenCast(SkillMetadata var1) {
-      PlayerData var2 = PlayerData.get(var1.getCaster().getPlayer());
-      RPGPlayer var3 = var2.getRPG();
+   public void whenCast(SkillMetadata skillMetadata) {
+      PlayerData playerData = PlayerData.get(skillMetadata.getCaster().getPlayer());
+      RPGPlayer rPG = playerData.getRPG();
       if (this.hasModifier("mana")) {
-         var3.giveMana(-var1.getParameter("mana"));
+         rPG.giveMana(-skillMetadata.getParameter("mana"));
       }
 
       if (this.hasModifier("stamina")) {
-         var3.giveStamina(-var1.getParameter("stamina"));
+         rPG.giveStamina(-skillMetadata.getParameter("stamina"));
       }
 
-      double var4 = var1.getParameter("cooldown") * (1.0 - Math.min(0.8, var1.getCaster().getStat("COOLDOWN_REDUCTION") / 100.0));
-      if (var4 > 0.0) {
-         var1.getCaster().getData().getCooldownMap().applyCooldown(this, var4);
+      double value = skillMetadata.getParameter("cooldown") * (1.0 - Math.min(0.8, skillMetadata.getCaster().getStat("COOLDOWN_REDUCTION") / 100.0));
+      if (value > 0.0) {
+         skillMetadata.getCaster().getData().getCooldownMap().applyCooldown(this, value);
       }
    }
 
@@ -139,26 +139,26 @@ public class AbilityData extends Skill {
       return this.ability.getHandler();
    }
 
-   public double getParameter(String var1) {
-      return this.modifiers.getOrDefault(var1, this.ability.getDefaultModifier(var1));
+   public double getParameter(String text) {
+      return this.modifiers.getOrDefault(text, this.ability.getDefaultModifier(text));
    }
 
    public JsonObject toJson() {
-      JsonObject var1 = new JsonObject();
-      var1.addProperty("Id", this.ability.getHandler().getId());
-      var1.addProperty("CastMode", this.getTrigger().name());
-      JsonObject var2 = new JsonObject();
-      this.modifiers.keySet().forEach(var2x -> var2.addProperty(var2x, this.getParameter(var2x)));
-      var1.add("Modifiers", var2);
-      return var1;
+      JsonObject jsonObject = new JsonObject();
+      jsonObject.addProperty("Id", this.ability.getHandler().getId());
+      jsonObject.addProperty("CastMode", this.getTrigger().name());
+      JsonObject jsonObject2 = new JsonObject();
+      this.modifiers.keySet().forEach(var2x -> jsonObject2.addProperty(var2x, this.getParameter(var2x)));
+      jsonObject.add("Modifiers", jsonObject2);
+      return jsonObject;
    }
 
-   public boolean equals(Object var1) {
-      if (this == var1) {
+   public boolean equals(Object obj) {
+      if (this == obj) {
          return true;
-      } else if (var1 != null && this.getClass() == var1.getClass()) {
-         AbilityData var2 = (AbilityData)var1;
-         return this.ability.equals(var2.ability) && this.getTrigger().equals(var2.getTrigger()) && this.modifiers.equals(var2.modifiers);
+      } else if (obj != null && this.getClass() == obj.getClass()) {
+         AbilityData abilityData = (AbilityData)obj;
+         return this.ability.equals(abilityData.ability) && this.getTrigger().equals(abilityData.getTrigger()) && this.modifiers.equals(abilityData.modifiers);
       } else {
          return false;
       }

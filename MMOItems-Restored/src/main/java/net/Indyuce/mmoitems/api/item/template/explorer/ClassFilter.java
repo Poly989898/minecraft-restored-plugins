@@ -9,21 +9,21 @@ import net.Indyuce.mmoitems.stat.data.StringListData;
 public class ClassFilter implements Predicate<MMOItemTemplate> {
    private final String name;
 
-   public ClassFilter(RPGPlayer var1) {
-      this(var1.getClassName());
+   public ClassFilter(RPGPlayer rpgPlayer) {
+      this(rpgPlayer.getClassName());
    }
 
-   public ClassFilter(String var1) {
-      this.name = var1;
+   public ClassFilter(String text) {
+      this.name = text;
    }
 
-   public boolean test(MMOItemTemplate var1) {
-      if (!var1.getBaseItemData().containsKey(ItemStats.REQUIRED_CLASS)) {
+   public boolean test(MMOItemTemplate mmoItemTemplate) {
+      if (!mmoItemTemplate.getBaseItemData().containsKey(ItemStats.REQUIRED_CLASS)) {
          return true;
       }
 
-      for (String var3 : ((StringListData)var1.getBaseItemData().get(ItemStats.REQUIRED_CLASS)).getList()) {
-         if (var3.equalsIgnoreCase(this.name)) {
+      for (String text : ((StringListData)mmoItemTemplate.getBaseItemData().get(ItemStats.REQUIRED_CLASS)).getList()) {
+         if (text.equalsIgnoreCase(this.name)) {
             return true;
          }
       }

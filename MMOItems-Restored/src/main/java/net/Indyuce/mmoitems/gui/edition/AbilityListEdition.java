@@ -22,8 +22,8 @@ public class AbilityListEdition extends EditionInventory {
    private static final int[] slots = new int[]{19, 20, 21, 22, 23, 24, 25};
    private static final NamespacedKey CONFIG_KEY = new NamespacedKey(MMOItems.plugin, "ConfigKey");
 
-   public AbilityListEdition(Player var1, MMOItemTemplate var2) {
-      super(var1, var2);
+   public AbilityListEdition(Player player, MMOItemTemplate mmoItemTemplate) {
+      super(player, mmoItemTemplate);
    }
 
    @Override
@@ -33,86 +33,86 @@ public class AbilityListEdition extends EditionInventory {
 
    @Override
    public void arrangeInventory() {
-      int var1 = 0;
+      int count = 0;
       if (this.getEditedSection().contains("ability")) {
-         for (String var3 : this.getEditedSection().getConfigurationSection("ability").getKeys(false)) {
-            String var4 = this.getEditedSection().getString("ability." + var3 + ".type");
-            String var18;
-            RegisteredSkill var5 = var4 != null && MMOItems.plugin.getSkills().hasSkill(var18 = var4.toUpperCase().replace(" ", "_").replace("-", "_"))
-               ? MMOItems.plugin.getSkills().getSkill(var18)
+         for (String key : this.getEditedSection().getConfigurationSection("ability").getKeys(false)) {
+            String text = this.getEditedSection().getString("ability." + key + ".type");
+            String text2;
+            RegisteredSkill registeredSkill = text != null && MMOItems.plugin.getSkills().hasSkill(text2 = text.toUpperCase().replace(" ", "_").replace("-", "_"))
+               ? MMOItems.plugin.getSkills().getSkill(text2)
                : null;
 
-            TriggerType var6;
+            TriggerType triggerType;
             try {
-               var6 = TriggerType.valueOf(UtilityMethods.enumName(this.getEditedSection().getString("ability." + var3 + ".mode")));
-            } catch (RuntimeException var15) {
-               var6 = null;
+               triggerType = TriggerType.valueOf(UtilityMethods.enumName(this.getEditedSection().getString("ability." + key + ".mode")));
+            } catch (RuntimeException exception) {
+               triggerType = null;
             }
 
-            ItemStack var7 = new ItemStack(Material.BLAZE_POWDER);
-            ItemMeta var8 = var7.getItemMeta();
-            var8.setDisplayName(var5 != null ? ChatColor.GREEN + var5.getName() : ChatColor.RED + "! No Ability Selected !");
-            ArrayList var9 = new ArrayList();
-            var9.add("");
-            var9.add(ChatColor.GRAY + "Cast Mode: " + (var6 != null ? ChatColor.GOLD + var6.getName() : ChatColor.RED + "Not Selected"));
-            var9.add("");
-            boolean var10 = false;
-            if (var5 != null) {
-               for (String var12 : this.getEditedSection().getConfigurationSection("ability." + var3).getKeys(false)) {
-                  if (!var12.equals("type") && !var12.equals("mode") && var5.getHandler().getModifiers().contains(var12)) {
+            ItemStack item = new ItemStack(Material.BLAZE_POWDER);
+            ItemMeta itemMeta = item.getItemMeta();
+            itemMeta.setDisplayName(registeredSkill != null ? ChatColor.GREEN + registeredSkill.getName() : ChatColor.RED + "! No Ability Selected !");
+            ArrayList list = new ArrayList();
+            list.add("");
+            list.add(ChatColor.GRAY + "Cast Mode: " + (triggerType != null ? ChatColor.GOLD + triggerType.getName() : ChatColor.RED + "Not Selected"));
+            list.add("");
+            boolean flag = false;
+            if (registeredSkill != null) {
+               for (String key2 : this.getEditedSection().getConfigurationSection("ability." + key).getKeys(false)) {
+                  if (!key2.equals("type") && !key2.equals("mode") && registeredSkill.getHandler().getModifiers().contains(key2)) {
                      try {
-                        var9.add(
+                        list.add(
                            ChatColor.GRAY
                               + "* "
-                              + UtilityMethods.caseOnWords(var12.toLowerCase().replace("-", " "))
+                              + UtilityMethods.caseOnWords(key2.toLowerCase().replace("-", " "))
                               + ": "
                               + ChatColor.GOLD
-                              + new NumericStatFormula(this.getEditedSection().get("ability." + var3 + "." + var12)).toString()
+                              + new NumericStatFormula(this.getEditedSection().get("ability." + key + "." + key2)).toString()
                         );
-                        var10 = true;
-                     } catch (IllegalArgumentException var14) {
-                        var9.add(
-                           ChatColor.GRAY + "* " + UtilityMethods.caseOnWords(var12.toLowerCase().replace("-", " ")) + ": " + ChatColor.GOLD + "Unreadable"
+                        flag = true;
+                     } catch (IllegalArgumentException exception) {
+                        list.add(
+                           ChatColor.GRAY + "* " + UtilityMethods.caseOnWords(key2.toLowerCase().replace("-", " ")) + ": " + ChatColor.GOLD + "Unreadable"
                         );
                      }
                   }
                }
             }
 
-            if (var10) {
-               var9.add("");
+            if (flag) {
+               list.add("");
             }
 
-            var9.add(ChatColor.YELLOW + "►" + " Left click to edit.");
-            var9.add(ChatColor.YELLOW + "►" + " Right click to remove.");
-            var8.setLore(var9);
-            var8.getPersistentDataContainer().set(CONFIG_KEY, PersistentDataType.STRING, var3);
-            var7.setItemMeta(var8);
-            this.inventory.setItem(slots[var1++], var7);
+            list.add(ChatColor.YELLOW + "►" + " Left click to edit.");
+            list.add(ChatColor.YELLOW + "►" + " Right click to remove.");
+            itemMeta.setLore(list);
+            itemMeta.getPersistentDataContainer().set(CONFIG_KEY, PersistentDataType.STRING, key);
+            item.setItemMeta(itemMeta);
+            this.inventory.setItem(slots[count++], item);
          }
       }
 
-      ItemStack var16 = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-      ItemMeta var17 = var16.getItemMeta();
-      var17.setDisplayName(ChatColor.RED + "- No Ability -");
-      var16.setItemMeta(var17);
-      ItemStack var19 = new ItemStack(Material.WRITABLE_BOOK);
-      ItemMeta var20 = var19.getItemMeta();
-      var20.setDisplayName(ChatColor.GREEN + "Add an ability...");
-      var19.setItemMeta(var20);
-      this.inventory.setItem(40, var19);
+      ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+      ItemMeta itemMeta = item.getItemMeta();
+      itemMeta.setDisplayName(ChatColor.RED + "- No Ability -");
+      item.setItemMeta(itemMeta);
+      ItemStack item2 = new ItemStack(Material.WRITABLE_BOOK);
+      ItemMeta itemMeta2 = item2.getItemMeta();
+      itemMeta2.setDisplayName(ChatColor.GREEN + "Add an ability...");
+      item2.setItemMeta(itemMeta2);
+      this.inventory.setItem(40, item2);
 
-      while (var1 < slots.length) {
-         this.inventory.setItem(slots[var1++], var16);
+      while (count < slots.length) {
+         this.inventory.setItem(slots[count++], item);
       }
    }
 
    @Override
-   public void whenClicked(InventoryClickEvent var1) {
-      ItemStack var2 = var1.getCurrentItem();
-      var1.setCancelled(true);
-      if (var1.getInventory() == var1.getClickedInventory() && MMOUtils.isMetaItem(var2, false)) {
-         if (var2.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Add an ability...")) {
+   public void whenClicked(InventoryClickEvent event) {
+      ItemStack currentItem = event.getCurrentItem();
+      event.setCancelled(true);
+      if (event.getInventory() == event.getClickedInventory() && MMOUtils.isMetaItem(currentItem, false)) {
+         if (currentItem.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Add an ability...")) {
             if (!this.getEditedSection().contains("ability")) {
                this.getEditedSection().createSection("ability.ability1");
                this.registerTemplateEdition();
@@ -124,34 +124,34 @@ public class AbilityListEdition extends EditionInventory {
                return;
             }
 
-            for (int var3 = 1; var3 < 8; var3++) {
-               if (!this.getEditedSection().getConfigurationSection("ability").contains("ability" + var3)) {
-                  String var4 = "ability" + var3;
-                  this.getEditedSection().set("ability." + var4 + ".type", "FIREBOLT");
-                  this.getEditedSection().set("ability." + var4 + ".mode", "RIGHT_CLICK");
+            for (int i = 1; i < 8; i++) {
+               if (!this.getEditedSection().getConfigurationSection("ability").contains("ability" + i)) {
+                  String text = "ability" + i;
+                  this.getEditedSection().set("ability." + text + ".type", "FIREBOLT");
+                  this.getEditedSection().set("ability." + text + ".mode", "RIGHT_CLICK");
                   this.registerTemplateEdition();
                   return;
                }
             }
          }
 
-         String var5 = (String)var2.getItemMeta().getPersistentDataContainer().get(CONFIG_KEY, PersistentDataType.STRING);
-         if (var5 != null && !var5.equals("")) {
-            if (var1.getAction() == InventoryAction.PICKUP_ALL) {
-               new AbilityEdition(this.player, this.template, var5).open(this);
+         String text = (String)currentItem.getItemMeta().getPersistentDataContainer().get(CONFIG_KEY, PersistentDataType.STRING);
+         if (text != null && !text.equals("")) {
+            if (event.getAction() == InventoryAction.PICKUP_ALL) {
+               new AbilityEdition(this.player, this.template, text).open(this);
             }
 
-            if (var1.getAction() == InventoryAction.PICKUP_HALF
+            if (event.getAction() == InventoryAction.PICKUP_HALF
                && this.getEditedSection().contains("ability")
-               && this.getEditedSection().getConfigurationSection("ability").contains(var5)) {
-               this.getEditedSection().set("ability." + var5, null);
+               && this.getEditedSection().getConfigurationSection("ability").contains(text)) {
+               this.getEditedSection().set("ability." + text, null);
                this.registerTemplateEdition();
                this.player
                   .sendMessage(
                      MMOItems.plugin.getPrefix()
                         + "Successfully removed "
                         + ChatColor.GOLD
-                        + var5
+                        + text
                         + ChatColor.DARK_GRAY
                         + " (Internal ID)"
                         + ChatColor.GRAY

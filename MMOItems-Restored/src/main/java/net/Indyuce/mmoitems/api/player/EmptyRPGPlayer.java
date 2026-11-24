@@ -1,8 +1,8 @@
 package net.Indyuce.mmoitems.api.player;
 
 public class EmptyRPGPlayer extends RPGPlayer {
-   public EmptyRPGPlayer(PlayerData var1) {
-      super(var1);
+   public EmptyRPGPlayer(PlayerData playerData) {
+      super(playerData);
    }
 
    @Override
@@ -26,10 +26,10 @@ public class EmptyRPGPlayer extends RPGPlayer {
    }
 
    @Override
-   public void setMana(double var1) {
+   public void setMana(double value) {
    }
 
    @Override
-   public void setStamina(double var1) {
+   public void setStamina(double value) {
    }
 }

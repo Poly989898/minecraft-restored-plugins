@@ -39,65 +39,65 @@ public class RevisionID extends ItemStat<NumericStatFormula, DoubleData> impleme
       );
    }
 
-   public NumericStatFormula whenInitialized(Object var1) {
-      if (var1 instanceof Integer) {
-         return new NumericStatFormula(((Integer)var1).intValue(), 0.0, 0.0, 0.0);
+   public NumericStatFormula whenInitialized(Object obj) {
+      if (obj instanceof Integer) {
+         return new NumericStatFormula(((Integer)obj).intValue(), 0.0, 0.0, 0.0);
       } else {
          throw new IllegalArgumentException("Must specify a whole number");
       }
    }
 
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2) {
-      var1.addItemTag(this.getAppliedNBT(var2));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData) {
+      itemStackBuilder.addItemTag(this.getAppliedNBT(doubleData));
    }
 
    @NotNull
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData var1) {
-      ArrayList var2 = new ArrayList();
-      var2.add(new ItemTag(this.getNBTPath(), (int)var1.getValue()));
-      return var2;
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData doubleData) {
+      ArrayList list = new ArrayList();
+      list.add(new ItemTag(this.getNBTPath(), (int)doubleData.getValue()));
+      return list;
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      new RevisionInventory(var1.getPlayer(), var1.getEdited()).open(var1);
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      new RevisionInventory(editionInventory.getPlayer(), editionInventory.getEdited()).open(editionInventory);
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      ArrayList var2 = new ArrayList();
-      if (var1.getNBT().hasTag(this.getNBTPath())) {
-         var2.add(ItemTag.getTagAtPath(this.getNBTPath(), var1.getNBT(), SupportedNBTTagValues.INTEGER));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      ArrayList list = new ArrayList();
+      if (readMMOItem.getNBT().hasTag(this.getNBTPath())) {
+         list.add(ItemTag.getTagAtPath(this.getNBTPath(), readMMOItem.getNBT(), SupportedNBTTagValues.INTEGER));
       }
 
-      DoubleData var3 = this.getLoadedNBT(var2);
-      if (var3 != null) {
-         var1.setData(this, var3);
+      DoubleData loadedNBT = this.getLoadedNBT(list);
+      if (loadedNBT != null) {
+         readMMOItem.setData(this, loadedNBT);
       }
    }
 
    @Nullable
-   public DoubleData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
-      ItemTag var2 = ItemTag.getTagAtPath(this.getNBTPath(), var1);
-      return var2 != null ? new DoubleData(((Integer)var2.getValue()).intValue()) : null;
+   public DoubleData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
+      ItemTag tagAtPath = ItemTag.getTagAtPath(this.getNBTPath(), itemTags);
+      return tagAtPath != null ? new DoubleData(((Integer)tagAtPath.getValue()).intValue()) : null;
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<NumericStatFormula> var2) {
-      if (var2.isPresent()) {
-         NumericStatFormula var3 = (NumericStatFormula)var2.get();
-         var1.add(ChatColor.GRAY + "Current Revision ID: " + ChatColor.GREEN + (int)var3.getBase());
+   public void whenDisplayed(List<String> texts, Optional<NumericStatFormula> optional) {
+      if (optional.isPresent()) {
+         NumericStatFormula numericStatFormula = (NumericStatFormula)optional.get();
+         texts.add(ChatColor.GRAY + "Current Revision ID: " + ChatColor.GREEN + (int)numericStatFormula.getBase());
       } else {
-         var1.add(ChatColor.GRAY + "Current Revision ID: " + ChatColor.GREEN + "1");
+         texts.add(ChatColor.GRAY + "Current Revision ID: " + ChatColor.GREEN + "1");
       }
 
-      var1.add("");
-      var1.add(ChatColor.YELLOW + "►" + " Left click to increase this value.");
-      var1.add(ChatColor.YELLOW + "►" + " Right click to decrease this value.");
+      texts.add("");
+      texts.add(ChatColor.YELLOW + "►" + " Left click to increase this value.");
+      texts.add(ChatColor.YELLOW + "►" + " Right click to decrease this value.");
    }
 
    @NotNull

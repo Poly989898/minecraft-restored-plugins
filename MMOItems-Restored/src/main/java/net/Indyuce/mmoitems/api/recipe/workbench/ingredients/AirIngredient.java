@@ -12,12 +12,12 @@ public class AirIngredient extends WorkbenchIngredient {
    }
 
    @Override
-   public boolean matches(ItemStack var1) {
-      return var1 == null || var1.getType() == Material.AIR;
+   public boolean matches(ItemStack item) {
+      return item == null || item.getType() == Material.AIR;
    }
 
    @Override
-   public boolean corresponds(ItemStack var1) {
+   public boolean corresponds(ItemStack item) {
       return true;
    }
 

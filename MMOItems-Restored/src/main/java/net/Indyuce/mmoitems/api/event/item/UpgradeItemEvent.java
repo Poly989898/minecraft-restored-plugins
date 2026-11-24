@@ -14,12 +14,12 @@ public class UpgradeItemEvent extends PlayerDataEvent {
    private final UpgradeData consumableData;
    private final UpgradeData targetData;
 
-   public UpgradeItemEvent(PlayerData var1, VolatileMMOItem var2, MMOItem var3, UpgradeData var4, UpgradeData var5) {
-      super(var1);
-      this.consumable = var2;
-      this.target = var3;
-      this.consumableData = var4;
-      this.targetData = var5;
+   public UpgradeItemEvent(PlayerData playerData, VolatileMMOItem volatileMMOItem, MMOItem mmoItem, UpgradeData upgradeData, UpgradeData upgradeData2) {
+      super(playerData);
+      this.consumable = volatileMMOItem;
+      this.target = mmoItem;
+      this.consumableData = upgradeData;
+      this.targetData = upgradeData2;
    }
 
    public VolatileMMOItem getConsumable() {

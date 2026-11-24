@@ -13,22 +13,22 @@ public class FirefliesParticles extends ParticleRunnable {
    private final int amount;
    private double j = 0.0;
 
-   public FirefliesParticles(ParticleData var1, PlayerData var2) {
-      super(var1, var2);
-      this.speed = (float)var1.getModifier("speed");
-      this.height = (float)var1.getModifier("height");
-      this.radius = (float)var1.getModifier("radius");
-      this.r_speed = (float)var1.getModifier("rotation-speed");
-      this.amount = (int)var1.getModifier("amount");
+   public FirefliesParticles(ParticleData particleData, PlayerData playerData) {
+      super(particleData, playerData);
+      this.speed = (float)particleData.getModifier("speed");
+      this.height = (float)particleData.getModifier("height");
+      this.radius = (float)particleData.getModifier("radius");
+      this.r_speed = (float)particleData.getModifier("rotation-speed");
+      this.amount = (int)particleData.getModifier("amount");
    }
 
    @Override
    public void createParticles() {
-      Location var1 = this.player.getPlayer().getLocation();
+      Location location = this.player.getPlayer().getLocation();
 
-      for (int var2 = 0; var2 < this.amount; var2++) {
-         double var3 = this.j + (Math.PI * 2) * var2 / this.amount;
-         this.particle.display(var1.clone().add(Math.cos(var3) * this.radius, this.height, Math.sin(var3) * this.radius), this.speed);
+      for (int i = 0; i < this.amount; i++) {
+         double value = this.j + (Math.PI * 2) * i / this.amount;
+         this.particle.display(location.clone().add(Math.cos(value) * this.radius, this.height, Math.sin(value) * this.radius), this.speed);
       }
 
       this.j = this.j + 0.06544984694978735 * this.r_speed;

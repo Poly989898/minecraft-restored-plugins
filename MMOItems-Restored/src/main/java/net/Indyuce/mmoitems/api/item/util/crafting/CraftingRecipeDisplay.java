@@ -40,8 +40,8 @@ public class CraftingRecipeDisplay extends ConfigItem {
       );
    }
 
-   public CraftingRecipeDisplay.ItemBuilder newBuilder(CheckedRecipe var1) {
-      return new CraftingRecipeDisplay.ItemBuilder(var1);
+   public CraftingRecipeDisplay.ItemBuilder newBuilder(CheckedRecipe checkedRecipe) {
+      return new CraftingRecipeDisplay.ItemBuilder(checkedRecipe);
    }
 
    public class ItemBuilder {
@@ -56,68 +56,68 @@ public class CraftingRecipeDisplay extends ConfigItem {
       }
 
       public ItemStack build() {
-         HashMap<String, String> var1 = new HashMap<>();
-         int var2 = -1;
-         ListIterator var3 = this.lore.listIterator();
+         HashMap<String, String> map = new HashMap<>();
+         int count = -1;
+         ListIterator listIterator = this.lore.listIterator();
 
-         while (var3.hasNext()) {
-            int var4 = var3.nextIndex();
-            String var5 = (String)var3.next();
-            if (var5.startsWith("{crafting_time}")) {
+         while (listIterator.hasNext()) {
+            int count2 = listIterator.nextIndex();
+            String text = (String)listIterator.next();
+            if (text.startsWith("{crafting_time}")) {
                if (this.craftingRecipe.getCraftingTime() <= 0.0) {
-                  var3.remove();
+                  listIterator.remove();
                   continue;
                }
 
-               var1.put(
-                  var5,
-                  var5.replace("{crafting_time}", "")
+               map.put(
+                  text,
+                  text.replace("{crafting_time}", "")
                      .replace("#crafting-time#", MythicLib.plugin.getMMOConfig().decimal.format(this.craftingRecipe.getCraftingTime()))
                );
             }
 
-            if (var5.startsWith("{conditions}")) {
-               var2 = var4 + 1;
+            if (text.startsWith("{conditions}")) {
+               count = count2 + 1;
                if (this.recipe.getConditions().size() == 0) {
-                  var3.remove();
+                  listIterator.remove();
                } else {
-                  var1.put(var5, var5.replace("{conditions}", ""));
+                  map.put(text, text.replace("{conditions}", ""));
                }
             }
          }
 
-         for (String var9 : var1.keySet()) {
-            this.lore.set(this.lore.indexOf(var9), (String)var1.get(var9));
+         for (String key : map.keySet()) {
+            this.lore.set(this.lore.indexOf(key), (String)map.get(key));
          }
 
-         int var8 = this.lore.indexOf("#ingredients#");
-         this.lore.remove(var8);
-         this.recipe.getIngredients().forEach(var2x -> this.lore.add(var8, var2x.format()));
-         if (var2 >= 0) {
-            for (CheckedCondition var12 : this.recipe.getConditions()) {
-               ConditionalDisplay var6 = var12.getCondition().getDisplay();
-               if (var6 != null) {
-                  this.lore.add(var2++, var12.format());
+         int count2 = this.lore.indexOf("#ingredients#");
+         this.lore.remove(count2);
+         this.recipe.getIngredients().forEach(var2x -> this.lore.add(count2, var2x.format()));
+         if (count >= 0) {
+            for (CheckedCondition condition : this.recipe.getConditions()) {
+               ConditionalDisplay display = condition.getCondition().getDisplay();
+               if (display != null) {
+                  this.lore.add(count++, condition.format());
                }
             }
          }
 
-         ItemStack var11 = this.craftingRecipe.getPreviewItemStack();
-         int var13 = this.craftingRecipe.getOutputAmount();
-         if (var13 > 64) {
-            this.lore.add(0, Message.STATION_BIG_STACK.format(ChatColor.GOLD, "#size#", String.valueOf(var13)).toString());
+         ItemStack previewItemStack = this.craftingRecipe.getPreviewItemStack();
+         int outputAmount = this.craftingRecipe.getOutputAmount();
+         if (outputAmount > 64) {
+            this.lore.add(0, Message.STATION_BIG_STACK.format(ChatColor.GOLD, "#size#", String.valueOf(outputAmount)).toString());
          } else {
-            var11.setAmount(var13);
+            previewItemStack.setAmount(outputAmount);
          }
 
-         ItemMeta var14 = var11.getItemMeta();
-         var14.addItemFlags(ItemFlag.values());
+         ItemMeta itemMeta = previewItemStack.getItemMeta();
+         itemMeta.addItemFlags(ItemFlag.values());
          AdventureUtils.setDisplayName(
-            var14, this.name.replace("#name#", (var13 > 1 ? ChatColor.WHITE + "" + var13 + " x " : "") + MMOUtils.getDisplayName(var11))
+            itemMeta, this.name.replace("#name#", (outputAmount > 1 ? ChatColor.WHITE + "" + outputAmount + " x " : "") + MMOUtils.getDisplayName(previewItemStack))
          );
-         AdventureUtils.setLore(var14, this.lore);
-         var11.setItemMeta(var14);
-         return NBTItem.get(var11).addTag(new ItemTag[]{new ItemTag("recipeId", this.craftingRecipe.getId())}).toItem();
+         AdventureUtils.setLore(itemMeta, this.lore);
+         previewItemStack.setItemMeta(itemMeta);
+         return NBTItem.get(previewItemStack).addTag(new ItemTag[]{new ItemTag("recipeId", this.craftingRecipe.getId())}).toItem();
       }
    }
 }

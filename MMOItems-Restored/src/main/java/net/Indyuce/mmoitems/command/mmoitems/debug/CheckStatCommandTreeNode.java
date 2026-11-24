@@ -10,24 +10,24 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CheckStatCommandTreeNode extends CommandTreeNode {
-   public CheckStatCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "checkstat");
+   public CheckStatCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "checkstat");
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      if (var2.length < 3) {
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      if (texts.length < 3) {
          return CommandResult.THROW_USAGE;
-      } else if (!(var1 instanceof Player)) {
-         var1.sendMessage(ChatColor.RED + "This command is only for players.");
+      } else if (!(sender instanceof Player)) {
+         sender.sendMessage(ChatColor.RED + "This command is only for players.");
          return CommandResult.FAILURE;
       } else {
-         ItemStat var3 = MMOItems.plugin.getStats().get(var2[2].toUpperCase().replace("-", "_"));
-         if (var3 == null) {
-            var1.sendMessage(ChatColor.RED + "Couldn't find the stat called " + var2[2].toUpperCase().replace("-", "_") + ".");
+         ItemStat itemStat = MMOItems.plugin.getStats().get(texts[2].toUpperCase().replace("-", "_"));
+         if (itemStat == null) {
+            sender.sendMessage(ChatColor.RED + "Couldn't find the stat called " + texts[2].toUpperCase().replace("-", "_") + ".");
             return CommandResult.FAILURE;
          } else {
-            Player var4 = (Player)var1;
-            var4.sendMessage("Found stat with ID " + var3.getId() + " = " + PlayerData.get((Player)var1).getStats().getStat(var3));
+            Player player = (Player)sender;
+            player.sendMessage("Found stat with ID " + itemStat.getId() + " = " + PlayerData.get((Player)sender).getStats().getStat(itemStat));
             return CommandResult.SUCCESS;
          }
       }

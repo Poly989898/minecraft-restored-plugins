@@ -15,31 +15,31 @@ import org.jetbrains.annotations.NotNull;
 
 public class RFGKeepEnchantments implements Listener {
    @EventHandler
-   public void onReforge(MMOItemReforgeEvent var1) {
-      if (var1.getOptions().shouldKeepEnchantments()) {
-         MMOItem var2 = var1.getOldMMOItem().clone();
-         if (!var2.hasData(ItemStats.ENCHANTS)) {
-            var2.setData(ItemStats.ENCHANTS, new EnchantListData());
+   public void onReforge(MMOItemReforgeEvent event) {
+      if (event.getOptions().shouldKeepEnchantments()) {
+         MMOItem mmoItem = event.getOldMMOItem().clone();
+         if (!mmoItem.hasData(ItemStats.ENCHANTS)) {
+            mmoItem.setData(ItemStats.ENCHANTS, new EnchantListData());
          }
 
-         Enchants.separateEnchantments(var2);
-         StatHistory var3 = var2.computeStatHistory(ItemStats.ENCHANTS);
-         EnchantListData var4 = ((EnchantListData)var3.getOriginalData()).clone();
-         StatHistory var5 = var1.getNewMMOItem().computeStatHistory(ItemStats.ENCHANTS);
+         Enchants.separateEnchantments(mmoItem);
+         StatHistory statHistory = mmoItem.computeStatHistory(ItemStats.ENCHANTS);
+         EnchantListData enchantListData = ((EnchantListData)statHistory.getOriginalData()).clone();
+         StatHistory statHistory2 = event.getNewMMOItem().computeStatHistory(ItemStats.ENCHANTS);
 
-         for (StatData var7 : var3.getExternalData()) {
-            var5.registerExternalData(var7);
+         for (StatData statData : statHistory.getExternalData()) {
+            statHistory2.registerExternalData(statData);
          }
 
-         var4.identifyTrueOriginalEnchantments(var1.getNewMMOItem());
+         enchantListData.identifyTrueOriginalEnchantments(event.getNewMMOItem());
       }
    }
 
-   void log(@NotNull EnchantListData var1, @NotNull String var2) {
-      MMOItems.print(null, "  §3> §7" + var2 + ":", null);
+   void log(@NotNull EnchantListData enchantListData, @NotNull String text) {
+      MMOItems.print(null, "  §3> §7" + text + ":", null);
 
-      for (Enchantment var4 : var1.getEnchants()) {
-         MMOItems.print(null, "  §b * §7" + var4.getName() + " §f" + var1.getLevel(var4), null);
+      for (Enchantment enchant : enchantListData.getEnchants()) {
+         MMOItems.print(null, "  §b * §7" + enchant.getName() + " §f" + enchantListData.getLevel(enchant), null);
       }
    }
 }

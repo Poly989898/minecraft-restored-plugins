@@ -15,14 +15,14 @@ public abstract class EquippedItem {
    private final EquipmentSlot slot;
    private final Lazy<VolatileMMOItem> cached;
 
-   public EquippedItem(ItemStack var1, EquipmentSlot var2) {
-      this(NBTItem.get(var1), var2);
+   public EquippedItem(ItemStack item, EquipmentSlot equipmentSlot) {
+      this(NBTItem.get(item), equipmentSlot);
    }
 
-   public EquippedItem(NBTItem var1, EquipmentSlot var2) {
-      this.item = var1;
-      this.slot = var2;
-      this.cached = Lazy.of(() -> new VolatileMMOItem(var1));
+   public EquippedItem(NBTItem nbtItem, EquipmentSlot equipmentSlot) {
+      this.item = nbtItem;
+      this.slot = equipmentSlot;
+      this.cached = Lazy.of(() -> new VolatileMMOItem(nbtItem));
    }
 
    public VolatileMMOItem getCached() {
@@ -38,19 +38,19 @@ public abstract class EquippedItem {
    }
 
    public boolean isPlacementLegal() {
-      String var1 = this.item.getString("MMOITEMS_ITEM_TYPE");
-      if (var1 == null) {
+      String mMOITEMSITEMTYPE = this.item.getString("MMOITEMS_ITEM_TYPE");
+      if (mMOITEMSITEMTYPE == null) {
          return false;
       }
 
-      Type var2 = MMOItems.plugin.getTypes().get(var1);
-      if (var2 == null) {
+      Type type = MMOItems.plugin.getTypes().get(mMOITEMSITEMTYPE);
+      if (type == null) {
          return false;
       }
 
-      ModifierSource var3 = var2.getModifierSource();
-      return EquipmentSlot.OFF_HAND.isCompatible(var3, this.slot) || EquipmentSlot.MAIN_HAND.isCompatible(var3, this.slot);
+      ModifierSource modifierSource = type.getModifierSource();
+      return EquipmentSlot.OFF_HAND.isCompatible(modifierSource, this.slot) || EquipmentSlot.MAIN_HAND.isCompatible(modifierSource, this.slot);
    }
 
-   public abstract void setItem(@Nullable ItemStack var1);
+   public abstract void setItem(@Nullable ItemStack item);
 }

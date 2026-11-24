@@ -19,20 +19,20 @@ public class RestoreFood extends DoubleStat implements PlayerConsumable {
    }
 
    @Override
-   public void onConsume(@NotNull VolatileMMOItem var1, @NotNull Player var2, boolean var3) {
-      if (var1.hasData(ItemStats.RESTORE_FOOD)) {
-         DoubleData var4 = (DoubleData)var1.getData(ItemStats.RESTORE_FOOD);
-         int var5 = SilentNumbers.ceil(var4.getValue() - (var3 ? this.getFoodRestored(var1.getNBT().getItem()) : 0));
-         if (var5 != 0) {
-            MMOUtils.feed(var2, var5);
+   public void onConsume(@NotNull VolatileMMOItem volatileMMOItem, @NotNull Player player, boolean flag) {
+      if (volatileMMOItem.hasData(ItemStats.RESTORE_FOOD)) {
+         DoubleData data = (DoubleData)volatileMMOItem.getData(ItemStats.RESTORE_FOOD);
+         int count = SilentNumbers.ceil(data.getValue() - (flag ? this.getFoodRestored(volatileMMOItem.getNBT().getItem()) : 0));
+         if (count != 0) {
+            MMOUtils.feed(player, count);
          }
       }
    }
 
-   private int getFoodRestored(ItemStack var1) {
+   private int getFoodRestored(ItemStack item) {
       try {
-         return MythicLib.plugin.getVersion().getWrapper().getFoodRestored(var1);
-      } catch (Exception var3) {
+         return MythicLib.plugin.getVersion().getWrapper().getFoodRestored(item);
+      } catch (Exception exception) {
          return 0;
       }
    }

@@ -9,22 +9,22 @@ import org.bukkit.event.Listener;
 
 public class RFGKeepName implements Listener {
    @EventHandler
-   public void onReforge(MMOItemReforgeEvent var1) {
-      if (var1.getOptions().shouldKeepName()) {
-         NameData var2;
-         if (var1.getOldMMOItem().hasData(ItemStats.NAME)) {
-            NameData var3 = (NameData)var1.getOldMMOItem().getData(ItemStats.NAME);
-            var2 = new NameData(var3.getMainName());
+   public void onReforge(MMOItemReforgeEvent event) {
+      if (event.getOptions().shouldKeepName()) {
+         NameData nameData;
+         if (event.getOldMMOItem().hasData(ItemStats.NAME)) {
+            NameData data = (NameData)event.getOldMMOItem().getData(ItemStats.NAME);
+            nameData = new NameData(data.getMainName());
          } else {
-            if (!var1.getReforger().getStack().getItemMeta().hasDisplayName()) {
+            if (!event.getReforger().getStack().getItemMeta().hasDisplayName()) {
                return;
             }
 
-            var2 = new NameData(var1.getReforger().getStack().getItemMeta().getDisplayName());
+            nameData = new NameData(event.getReforger().getStack().getItemMeta().getDisplayName());
          }
 
-         StatHistory var4 = var1.getNewMMOItem().computeStatHistory(ItemStats.NAME);
-         ((NameData)var4.getOriginalData()).setString(var2.getMainName());
+         StatHistory statHistory = event.getNewMMOItem().computeStatHistory(ItemStats.NAME);
+         ((NameData)statHistory.getOriginalData()).setString(nameData.getMainName());
       }
    }
 }

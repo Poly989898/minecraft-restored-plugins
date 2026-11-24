@@ -10,14 +10,14 @@ import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 public class VanillaIngredient extends WorkbenchIngredient {
    private final Material material;
 
-   public VanillaIngredient(Material var1, int var2) {
-      super(var2);
-      this.material = var1;
+   public VanillaIngredient(Material material, int count) {
+      super(count);
+      this.material = material;
    }
 
    @Override
-   public boolean corresponds(ItemStack var1) {
-      return !NBTItem.get(var1).hasType() && var1.getType() == this.material;
+   public boolean corresponds(ItemStack item) {
+      return !NBTItem.get(item).hasType() && item.getType() == this.material;
    }
 
    @Override

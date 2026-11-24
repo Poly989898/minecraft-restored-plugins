@@ -9,8 +9,8 @@ public abstract class SimpleTag implements ObjectTag {
       return this.prefix;
    }
 
-   public ObjectTag setPrefix(String var1) {
-      this.prefix = var1;
+   public ObjectTag setPrefix(String text) {
+      this.prefix = text;
       return this;
    }
 }

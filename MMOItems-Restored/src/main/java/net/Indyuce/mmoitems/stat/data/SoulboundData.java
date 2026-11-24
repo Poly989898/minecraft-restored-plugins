@@ -11,20 +11,20 @@ public class SoulboundData implements StatData {
    private final String name;
    private final int level;
 
-   public SoulboundData(Player var1, int var2) {
-      this(var1.getUniqueId(), var1.getName(), var2);
+   public SoulboundData(Player player, int count) {
+      this(player.getUniqueId(), player.getName(), count);
    }
 
-   public SoulboundData(UUID var1, String var2, int var3) {
-      this.uuid = var1;
-      this.name = var2;
-      this.level = var3;
+   public SoulboundData(UUID uuid, String text, int count) {
+      this.uuid = uuid;
+      this.name = text;
+      this.level = count;
    }
 
-   public SoulboundData(JsonObject var1) {
-      this.uuid = UUID.fromString(var1.get("UUID").getAsString());
-      this.name = var1.get("Name").getAsString();
-      this.level = var1.get("Level").getAsInt();
+   public SoulboundData(JsonObject jsonObject) {
+      this.uuid = UUID.fromString(jsonObject.get("UUID").getAsString());
+      this.name = jsonObject.get("Name").getAsString();
+      this.level = jsonObject.get("Level").getAsInt();
    }
 
    public UUID getUniqueId() {
@@ -40,11 +40,11 @@ public class SoulboundData implements StatData {
    }
 
    public JsonObject toJson() {
-      JsonObject var1 = new JsonObject();
-      var1.addProperty("Level", this.level);
-      var1.addProperty("Name", this.name);
-      var1.addProperty("UUID", this.uuid.toString());
-      return var1;
+      JsonObject jsonObject = new JsonObject();
+      jsonObject.addProperty("Level", this.level);
+      jsonObject.addProperty("Name", this.name);
+      jsonObject.addProperty("UUID", this.uuid.toString());
+      return jsonObject;
    }
 
    @NotNull

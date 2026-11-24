@@ -14,10 +14,10 @@ public class SpecialWeaponAttackEvent extends PlayerDataEvent implements Cancell
    private boolean cancelled;
    private static final HandlerList handlers = new HandlerList();
 
-   public SpecialWeaponAttackEvent(@NotNull PlayerData var1, @NotNull Weapon var2, @NotNull LivingEntity var3) {
-      super(var1);
-      this.weapon = var2;
-      this.target = var3;
+   public SpecialWeaponAttackEvent(@NotNull PlayerData playerData, @NotNull Weapon weapon, @NotNull LivingEntity entity) {
+      super(playerData);
+      this.weapon = weapon;
+      this.target = entity;
    }
 
    @NotNull
@@ -36,8 +36,8 @@ public class SpecialWeaponAttackEvent extends PlayerDataEvent implements Cancell
    }
 
    @Override
-   public void setCancelled(boolean var1) {
-      this.cancelled = var1;
+   public void setCancelled(boolean flag) {
+      this.cancelled = flag;
    }
 
    @NotNull

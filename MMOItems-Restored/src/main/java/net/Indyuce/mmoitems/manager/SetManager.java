@@ -19,35 +19,35 @@ public class SetManager implements Reloadable {
    @Override
    public void reload() {
       this.itemSets.clear();
-      ConfigFile var1 = new ConfigFile("item-sets");
+      ConfigFile configFile = new ConfigFile("item-sets");
 
-      for (String var3 : var1.getConfig().getKeys(false)) {
+      for (String key : configFile.getConfig().getKeys(false)) {
          try {
-            ConfigurationSection var4 = var1.getConfig().getConfigurationSection(var3);
-            if (var4 == null) {
-               throw new IllegalStateException(String.format("Item set '%s' is not a valid configuration section.", var3));
+            ConfigurationSection section = configFile.getConfig().getConfigurationSection(key);
+            if (section == null) {
+               throw new IllegalStateException(String.format("Item set '%s' is not a valid configuration section.", key));
             }
 
-            this.itemSets.put(var3, new ItemSet(var4));
-         } catch (IllegalArgumentException var5) {
-            MMOItems.plugin.getLogger().log(Level.SEVERE, String.format("Could not load item set '%s': %s", var3, var5.getMessage()));
+            this.itemSets.put(key, new ItemSet(section));
+         } catch (IllegalArgumentException exception) {
+            MMOItems.plugin.getLogger().log(Level.SEVERE, String.format("Could not load item set '%s': %s", key, exception.getMessage()));
          }
       }
    }
 
-   public void register(ItemSet var1) {
-      this.itemSets.put(var1.getId(), var1);
+   public void register(ItemSet itemSet) {
+      this.itemSets.put(itemSet.getId(), itemSet);
    }
 
-   public boolean has(String var1) {
-      return this.itemSets.containsKey(var1);
+   public boolean has(String text) {
+      return this.itemSets.containsKey(text);
    }
 
    public Collection<ItemSet> getAll() {
       return this.itemSets.values();
    }
 
-   public ItemSet get(String var1) {
-      return this.itemSets.getOrDefault(var1, null);
+   public ItemSet get(String text) {
+      return this.itemSets.getOrDefault(text, null);
    }
 }

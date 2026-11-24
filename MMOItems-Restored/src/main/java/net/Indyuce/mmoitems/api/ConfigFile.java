@@ -17,25 +17,25 @@ public class ConfigFile {
    private final boolean exists;
    private final FileConfiguration config;
 
-   public ConfigFile(String var1) {
-      this(MMOItems.plugin, "", var1);
+   public ConfigFile(String text) {
+      this(MMOItems.plugin, "", text);
    }
 
-   public ConfigFile(Plugin var1, String var2) {
-      this(var1, "", var2);
+   public ConfigFile(Plugin plugin, String text) {
+      this(plugin, "", text);
    }
 
-   public ConfigFile(String var1, String var2) {
-      this(MMOItems.plugin, var1, var2);
+   public ConfigFile(String text, String text2) {
+      this(MMOItems.plugin, text, text2);
    }
 
-   public ConfigFile(Plugin var1, String var2, String var3) {
-      this.plugin = var1;
-      this.path = var2;
-      this.name = var3;
-      File var4 = new File(var1.getDataFolder() + var2, var3 + ".yml");
-      this.exists = var4.exists();
-      this.config = YamlConfiguration.loadConfiguration(var4);
+   public ConfigFile(Plugin plugin, String text, String text2) {
+      this.plugin = plugin;
+      this.path = text;
+      this.name = text2;
+      File file = new File(plugin.getDataFolder() + text, text2 + ".yml");
+      this.exists = file.exists();
+      this.config = YamlConfiguration.loadConfiguration(file);
    }
 
    @NotNull
@@ -50,8 +50,8 @@ public class ConfigFile {
    public void save() {
       try {
          this.config.save(new File(this.plugin.getDataFolder() + this.path, this.name + ".yml"));
-      } catch (IOException var2) {
-         MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not save " + this.name + ".yml: " + var2.getMessage());
+      } catch (IOException exception) {
+         MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not save " + this.name + ".yml: " + exception.getMessage());
       }
    }
 
@@ -64,13 +64,13 @@ public class ConfigFile {
          if (!new File(this.plugin.getDataFolder() + this.path, this.name + ".yml").exists()) {
             new File(this.plugin.getDataFolder() + this.path, this.name + ".yml").createNewFile();
          }
-      } catch (IOException var2) {
-         MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not generate " + this.name + ".yml: " + var2.getMessage());
+      } catch (IOException exception) {
+         MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not generate " + this.name + ".yml: " + exception.getMessage());
       }
    }
 
-   public void registerTemplateEdition(ItemReference var1) {
+   public void registerTemplateEdition(ItemReference itemReference) {
       this.save();
-      MMOItems.plugin.getTemplates().requestTemplateUpdate(var1.getType(), var1.getId());
+      MMOItems.plugin.getTemplates().requestTemplateUpdate(itemReference.getType(), itemReference.getId());
    }
 }

@@ -60,30 +60,30 @@ public class ConfigManager implements Reloadable {
       this.mkdir("item");
       this.mkdir("language");
       this.mkdir("language/lore-formats");
-      File var1 = new File(MMOItems.plugin.getDataFolder() + "/modifiers");
-      if (!var1.exists()) {
+      File file = new File(MMOItems.plugin.getDataFolder() + "/modifiers");
+      if (!file.exists()) {
          this.mkdir("modifiers");
          ConfigManager.DefaultFile.EXAMPLE_MODIFIERS.checkFile();
       }
 
-      File var2 = new File(MMOItems.plugin.getDataFolder() + "/crafting-stations");
-      if (!var2.exists()) {
-         if (var2.mkdir()) {
+      File file2 = new File(MMOItems.plugin.getDataFolder() + "/crafting-stations");
+      if (!file2.exists()) {
+         if (file2.mkdir()) {
             try {
-               JarFile var3 = new JarFile(MMOItems.plugin.getJarFile());
-               Enumeration var4 = var3.entries();
+               JarFile jarFile = new JarFile(MMOItems.plugin.getJarFile());
+               Enumeration enumeration = jarFile.entries();
 
-               while (var4.hasMoreElements()) {
-                  String var5 = ((JarEntry)var4.nextElement()).getName();
-                  if (var5.startsWith("default/crafting-stations/") && var5.length() > "default/crafting-stations/".length()) {
+               while (enumeration.hasMoreElements()) {
+                  String name = ((JarEntry)enumeration.nextElement()).getName();
+                  if (name.startsWith("default/crafting-stations/") && name.length() > "default/crafting-stations/".length()) {
                      Files.copy(
-                        MMOItems.plugin.getResource(var5), new File(MMOItems.plugin.getDataFolder() + "/crafting-stations", var5.split("/")[2]).toPath()
+                        MMOItems.plugin.getResource(name), new File(MMOItems.plugin.getDataFolder() + "/crafting-stations", name.split("/")[2]).toPath()
                      );
                   }
                }
 
-               var3.close();
-            } catch (IOException var7) {
+               jarFile.close();
+            } catch (IOException exception) {
                MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load default crafting stations.");
             }
          } else {
@@ -91,73 +91,73 @@ public class ConfigManager implements Reloadable {
          }
       }
 
-      for (ConfigManager.DefaultFile var6 : ConfigManager.DefaultFile.values()) {
-         if (var6.isAutomatic()) {
-            var6.checkFile();
+      for (ConfigManager.DefaultFile defaultFile : ConfigManager.DefaultFile.values()) {
+         if (defaultFile.isAutomatic()) {
+            defaultFile.checkFile();
          }
       }
 
-      MMOItems.plugin.getTypes().getAll().forEach(var0 -> var0.getConfigFile().setup());
+      MMOItems.plugin.getTypes().getAll().forEach(type -> type.getConfigFile().setup());
       this.reload();
    }
 
    private void loadTranslations() {
-      ConfigFile var1 = new ConfigFile("/language", "items");
+      ConfigFile configFile = new ConfigFile("/language", "items");
 
-      for (ConfigItem var5 : ConfigItems.values) {
-         if (!var1.getConfig().contains(var5.getId())) {
-            var1.getConfig().createSection(var5.getId());
-            var5.setup(var1.getConfig().getConfigurationSection(var5.getId()));
+      for (ConfigItem configItem : ConfigItems.values) {
+         if (!configFile.getConfig().contains(configItem.getId())) {
+            configFile.getConfig().createSection(configItem.getId());
+            configItem.setup(configFile.getConfig().getConfigurationSection(configItem.getId()));
          }
 
-         var5.update(var1.getConfig());
+         configItem.update(configFile.getConfig());
       }
 
-      var1.save();
-      LanguageFile var10 = new LanguageFile("messages");
+      configFile.save();
+      LanguageFile languageFile = new LanguageFile("messages");
 
-      for (Message var6 : Message.values()) {
-         String var7 = var6.name().toLowerCase().replace("_", "-");
-         if (!var10.getConfig().contains(var7)) {
-            var10.getConfig().set(var7, var6.getDefault());
+      for (Message message : Message.values()) {
+         String text = message.name().toLowerCase().replace("_", "-");
+         if (!languageFile.getConfig().contains(text)) {
+            languageFile.getConfig().set(text, message.getDefault());
          }
 
-         var6.setRaw(var10.getConfig().getString(var7));
+         message.setRaw(languageFile.getConfig().getString(text));
       }
 
-      var10.save();
-      FileConfiguration var12 = new ConfigFile("/language", "stats").getConfig();
-      this.itemTypeLoreTag = var12.getString("item-type", "");
-      this.gemStoneLoreTag = var12.getString("gem-stone-lore", "");
-      LanguageFile var14 = new LanguageFile("potion-effects");
+      languageFile.save();
+      FileConfiguration config = new ConfigFile("/language", "stats").getConfig();
+      this.itemTypeLoreTag = config.getString("item-type", "");
+      this.gemStoneLoreTag = config.getString("gem-stone-lore", "");
+      LanguageFile languageFile2 = new LanguageFile("potion-effects");
 
-      for (PotionEffectType var8 : PotionEffectType.values()) {
+      for (PotionEffectType potionEffectType : PotionEffectType.values()) {
          this.potionNames
             .put(
-               var8,
-               var14.computeTranslation(
-                  var8.getName().toLowerCase().replace("_", "-"), () -> UtilityMethods.caseOnWords(var8.getName().toLowerCase().replace("_", " "))
+               potionEffectType,
+               languageFile2.computeTranslation(
+                  potionEffectType.getName().toLowerCase().replace("_", "-"), () -> UtilityMethods.caseOnWords(potionEffectType.getName().toLowerCase().replace("_", " "))
                )
             );
       }
 
-      var14.save();
-      LanguageFile var17 = new LanguageFile("attack-effects");
+      languageFile2.save();
+      LanguageFile languageFile3 = new LanguageFile("attack-effects");
 
-      for (LuteAttackEffectStat.LuteAttackEffect var9 : LuteAttackEffectStat.LuteAttackEffect.values()) {
-         var9.setName(
-            var17.computeTranslation(
-               "lute-attack." + var9.name().toLowerCase().replace("_", "-"), () -> UtilityMethods.caseOnWords(var9.name().toLowerCase().replace("_", " "))
+      for (LuteAttackEffectStat.LuteAttackEffect luteAttackEffect : LuteAttackEffectStat.LuteAttackEffect.values()) {
+         luteAttackEffect.setName(
+            languageFile3.computeTranslation(
+               "lute-attack." + luteAttackEffect.name().toLowerCase().replace("_", "-"), () -> UtilityMethods.caseOnWords(luteAttackEffect.name().toLowerCase().replace("_", " "))
             )
          );
       }
 
-      var17.save();
+      languageFile3.save();
       this.triggerTypeNames.clear();
-      FileConfiguration var20 = new ConfigFile("/language", "abilities").getConfig();
+      FileConfiguration config2 = new ConfigFile("/language", "abilities").getConfig();
 
-      for (TriggerType var25 : TriggerType.values()) {
-         this.triggerTypeNames.put(var25, var20.getString("cast-mode." + var25.getLowerCaseId(), var25.getName()));
+      for (TriggerType triggerType : TriggerType.values()) {
+         this.triggerTypeNames.put(triggerType, config2.getString("cast-mode." + triggerType.getLowerCaseId(), triggerType.getName()));
       }
    }
 
@@ -182,69 +182,69 @@ public class ConfigManager implements Reloadable {
       this.opStatsEnabled = MMOItems.plugin.getConfig().getBoolean("op-item-stats.enabled");
       this.opStats.clear();
 
-      for (String var2 : MMOItems.plugin.getConfig().getStringList("op-item-stats.stats")) {
-         this.opStats.add(UtilityMethods.enumName(var2));
+      for (String text : MMOItems.plugin.getConfig().getStringList("op-item-stats.stats")) {
+         this.opStats.add(UtilityMethods.enumName(text));
       }
 
-      ConfigurationSection var11 = MMOItems.plugin.getConfig().getConfigurationSection("item-revision.keep-data");
-      ConfigurationSection var12 = MMOItems.plugin.getConfig().getConfigurationSection("item-revision.phat-loots");
-      ConfigurationSection var3 = MMOItems.plugin.getConfig().getConfigurationSection("item-revision.keep-gem-data");
+      ConfigurationSection section = MMOItems.plugin.getConfig().getConfigurationSection("item-revision.keep-data");
+      ConfigurationSection section2 = MMOItems.plugin.getConfig().getConfigurationSection("item-revision.phat-loots");
+      ConfigurationSection section3 = MMOItems.plugin.getConfig().getConfigurationSection("item-revision.keep-gem-data");
       ReforgeOptions.dropRestoredGems = MMOItems.plugin.getConfig().getBoolean("item-revision.drop-extra-gems", true);
-      this.revisionOptions = var11 != null ? new ReforgeOptions(var11) : new ReforgeOptions();
-      this.gemRevisionOptions = var3 != null ? new ReforgeOptions(var3) : new ReforgeOptions();
-      this.phatLootsOptions = var12 != null ? new ReforgeOptions(var12) : new ReforgeOptions();
+      this.revisionOptions = section != null ? new ReforgeOptions(section) : new ReforgeOptions();
+      this.gemRevisionOptions = section3 != null ? new ReforgeOptions(section3) : new ReforgeOptions();
+      this.phatLootsOptions = section2 != null ? new ReforgeOptions(section2) : new ReforgeOptions();
 
-      for (String var6 : MMOItems.plugin.getConfig().getStringList("item-revision.disable-phat-loot")) {
-         this.phatLootsOptions.addToBlacklist(var6);
+      for (String text : MMOItems.plugin.getConfig().getStringList("item-revision.disable-phat-loot")) {
+         this.phatLootsOptions.addToBlacklist(text);
       }
 
       try {
          this.defaultItemCapacity = new NumericStatFormula(MMOItems.plugin.getConfig().getConfigurationSection("default-item-capacity"));
-      } catch (IllegalArgumentException var10) {
+      } catch (IllegalArgumentException exception) {
          this.defaultItemCapacity = new NumericStatFormula(5.0, 0.05, 0.1, 0.3);
          MMOItems.plugin
             .getLogger()
-            .log(Level.SEVERE, "An error occurred while trying to load default capacity formula for the item generator, using default: " + var10.getMessage());
+            .log(Level.SEVERE, "An error occurred while trying to load default capacity formula for the item generator, using default: " + exception.getMessage());
       }
 
-      ConfigFile var13 = new ConfigFile("/language", "items");
+      ConfigFile configFile = new ConfigFile("/language", "items");
 
-      for (ConfigItem var9 : ConfigItems.values) {
-         var9.update(var13.getConfig().getConfigurationSection(var9.getId()));
+      for (ConfigItem configItem : ConfigItems.values) {
+         configItem.update(configFile.getConfig().getConfigurationSection(configItem.getId()));
       }
    }
 
-   public boolean isBlacklisted(@NotNull Material var1) {
-      return MMOItems.plugin.getConfig().getStringList("block-blacklist").contains(var1.name());
+   public boolean isBlacklisted(@NotNull Material material) {
+      return MMOItems.plugin.getConfig().getStringList("block-blacklist").contains(material.name());
    }
 
    @Deprecated
    @NotNull
-   public String getStatFormat(String var1) {
-      FileConfiguration var2 = new ConfigFile("/language", "stats").getConfig();
-      String var3 = var2.getString(var1);
-      return var3 == null ? "<TranslationNotFound:" + var1 + ">" : var3;
+   public String getStatFormat(String text) {
+      FileConfiguration config = new ConfigFile("/language", "stats").getConfig();
+      String text2 = config.getString(text);
+      return text2 == null ? "<TranslationNotFound:" + text + ">" : text2;
    }
 
    @Deprecated
-   public String getMessage(String var1) {
-      return Message.valueOf(UtilityMethods.enumName(var1)).getFormatted();
+   public String getMessage(String text) {
+      return Message.valueOf(UtilityMethods.enumName(text)).getFormatted();
    }
 
    @Deprecated
    @NotNull
-   public String getCastingModeName(@NotNull TriggerType var1) {
-      return this.getTriggerTypeName(var1);
+   public String getCastingModeName(@NotNull TriggerType triggerType) {
+      return this.getTriggerTypeName(triggerType);
    }
 
    @NotNull
-   public String getTriggerTypeName(@NotNull TriggerType var1) {
-      return Objects.requireNonNull(this.triggerTypeNames.get(var1), "Trigger type name for '" + var1.name() + "' not found");
+   public String getTriggerTypeName(@NotNull TriggerType triggerType) {
+      return Objects.requireNonNull(this.triggerTypeNames.get(triggerType), "Trigger type name for '" + triggerType.name() + "' not found");
    }
 
    @Deprecated
-   public String getModifierName(String var1) {
-      return UtilityMethods.caseOnWords(var1.toLowerCase().replace("-", " ").replace("_", " "));
+   public String getModifierName(String text) {
+      return UtilityMethods.caseOnWords(text.toLowerCase().replace("-", " ").replace("_", " "));
    }
 
    @NotNull
@@ -253,23 +253,23 @@ public class ConfigManager implements Reloadable {
    }
 
    @NotNull
-   public String getPotionEffectName(PotionEffectType var1) {
-      return Objects.requireNonNull(this.potionNames.get(var1), "Potion effect name for '" + var1.getName() + "' not found");
+   public String getPotionEffectName(PotionEffectType potionEffectType) {
+      return Objects.requireNonNull(this.potionNames.get(potionEffectType), "Potion effect name for '" + potionEffectType.getName() + "' not found");
    }
 
    @Deprecated
-   public String getLuteAttackEffectName(LuteAttackEffectStat.LuteAttackEffect var1) {
-      return var1.getName();
+   public String getLuteAttackEffectName(LuteAttackEffectStat.LuteAttackEffect luteAttackEffect) {
+      return luteAttackEffect.getName();
    }
 
    @Deprecated
-   public String getDynLoreFormat(String var1) {
-      return this.dynLore.getConfig().getString("format." + var1);
+   public String getDynLoreFormat(String text) {
+      return this.dynLore.getConfig().getString("format." + text);
    }
 
-   private void mkdir(String var1) {
-      File var2 = new File(MMOItems.plugin.getDataFolder() + "/" + var1);
-      if (!var2.exists() && !var2.mkdir()) {
+   private void mkdir(String text) {
+      File file = new File(MMOItems.plugin.getDataFolder() + "/" + text);
+      if (!file.exists() && !file.mkdir()) {
          MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not create directory!");
       }
    }
@@ -357,17 +357,17 @@ public class ConfigManager implements Reloadable {
       }
 
       public void checkFile() {
-         File var1 = this.getFile();
-         if (!var1.exists()) {
+         File file = this.getFile();
+         if (!file.exists()) {
             try {
-               if (!new ConfigManager.YamlConverter(var1).convert()) {
+               if (!new ConfigManager.YamlConverter(file).convert()) {
                   Files.copy(
                      MMOItems.plugin.getResource("default/" + (this.folderPath.isEmpty() ? "" : this.folderPath + "/") + this.fileName),
-                     var1.getAbsoluteFile().toPath()
+                     file.getAbsoluteFile().toPath()
                   );
                }
-            } catch (IOException var3) {
-               var3.printStackTrace();
+            } catch (IOException exception) {
+               exception.printStackTrace();
             }
          }
       }
@@ -377,9 +377,9 @@ public class ConfigManager implements Reloadable {
       private final File file;
       private final String fileName;
 
-      public YamlConverter(File var1) {
-         this.file = var1;
-         this.fileName = var1.getName();
+      public YamlConverter(File file) {
+         this.file = file;
+         this.fileName = file.getName();
       }
 
       /**
@@ -389,15 +389,15 @@ public class ConfigManager implements Reloadable {
       public boolean convert() {
          try {
             return this.convertFile();
-         } catch (IOException var1) {
-            YamlConverter.<RuntimeException>sneakyThrow(var1);
+         } catch (IOException exception) {
+            YamlConverter.<RuntimeException>sneakyThrow(exception);
             return false;
          }
       }
 
       @SuppressWarnings("unchecked")
-      private static <E extends Throwable> void sneakyThrow(Throwable var0) throws E {
-         throw (E)var0;
+      private static <E extends Throwable> void sneakyThrow(Throwable exception) throws E {
+         throw (E)exception;
       }
 
       private boolean convertFile() throws IOException {
@@ -405,23 +405,23 @@ public class ConfigManager implements Reloadable {
             && this.fileName.equalsIgnoreCase("block.yml")
             && new File(MMOItems.plugin.getDataFolder(), "custom-blocks.yml").exists()
             && this.file.createNewFile()) {
-            YamlConfiguration var1 = YamlConfiguration.loadConfiguration(new File(MMOItems.plugin.getDataFolder(), "custom-blocks.yml"));
+            YamlConfiguration config = YamlConfiguration.loadConfiguration(new File(MMOItems.plugin.getDataFolder(), "custom-blocks.yml"));
 
-            for (String var3 : var1.getKeys(false)) {
-               ConfigurationSection var4 = var1.getConfigurationSection(var3);
-               var4.set("material", "STONE");
-               var4.set("block-id", Integer.parseInt(var3));
+            for (String key : config.getKeys(false)) {
+               ConfigurationSection section = config.getConfigurationSection(key);
+               section.set("material", "STONE");
+               section.set("block-id", Integer.parseInt(key));
 
-               for (String var6 : var4.getKeys(false)) {
-                  Object var7 = var4.get(var6);
-                  if (var6.equalsIgnoreCase("display-name")) {
-                     var4.set("display-name", null);
-                     var4.set("name", var7);
+               for (String key2 : section.getKeys(false)) {
+                  Object obj = section.get(key2);
+                  if (key2.equalsIgnoreCase("display-name")) {
+                     section.set("display-name", null);
+                     section.set("name", obj);
                   }
                }
             }
 
-            var1.save(this.file);
+            config.save(this.file);
             MMOItems.plugin.getLogger().log(Level.CONFIG, "Successfully converted custom-blocks.yml");
             return true;
          } else {

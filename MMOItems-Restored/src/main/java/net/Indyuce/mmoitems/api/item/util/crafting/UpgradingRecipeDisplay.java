@@ -35,8 +35,8 @@ public class UpgradingRecipeDisplay extends ConfigItem {
       );
    }
 
-   public UpgradingRecipeDisplay.ItemBuilder newBuilder(CheckedRecipe var1) {
-      return new UpgradingRecipeDisplay.ItemBuilder(var1);
+   public UpgradingRecipeDisplay.ItemBuilder newBuilder(CheckedRecipe checkedRecipe) {
+      return new UpgradingRecipeDisplay.ItemBuilder(checkedRecipe);
    }
 
    public class ItemBuilder {
@@ -51,46 +51,46 @@ public class UpgradingRecipeDisplay extends ConfigItem {
       }
 
       public ItemStack build() {
-         HashMap<String, String> var1 = new HashMap<>();
-         int var2 = -1;
-         ListIterator var3 = this.lore.listIterator();
+         HashMap<String, String> map = new HashMap<>();
+         int count = -1;
+         ListIterator listIterator = this.lore.listIterator();
 
-         while (var3.hasNext()) {
-            int var4 = var3.nextIndex();
-            String var5 = (String)var3.next();
-            if (var5.startsWith("{conditions}")) {
-               var2 = var4;
+         while (listIterator.hasNext()) {
+            int count2 = listIterator.nextIndex();
+            String text = (String)listIterator.next();
+            if (text.startsWith("{conditions}")) {
+               count = count2;
                if (this.recipe.getConditions().size() == 0) {
-                  var3.remove();
+                  listIterator.remove();
                } else {
-                  var1.put(var5, var5.replace("{conditions}", ""));
+                  map.put(text, text.replace("{conditions}", ""));
                }
             }
          }
 
-         for (String var9 : var1.keySet()) {
-            this.lore.set(this.lore.indexOf(var9), (String)var1.get(var9));
+         for (String key : map.keySet()) {
+            this.lore.set(this.lore.indexOf(key), (String)map.get(key));
          }
 
-         int var8 = this.lore.indexOf("#ingredients#");
-         this.lore.remove(var8);
-         this.recipe.getIngredients().forEach(var2x -> this.lore.add(var8, var2x.format()));
-         if (var2 >= 0) {
-            for (CheckedCondition var12 : this.recipe.getConditions()) {
-               ConditionalDisplay var6 = var12.getCondition().getDisplay();
-               if (var6 != null) {
-                  this.lore.add(var2++, var12.format());
+         int count2 = this.lore.indexOf("#ingredients#");
+         this.lore.remove(count2);
+         this.recipe.getIngredients().forEach(var2x -> this.lore.add(count2, var2x.format()));
+         if (count >= 0) {
+            for (CheckedCondition condition : this.recipe.getConditions()) {
+               ConditionalDisplay display = condition.getCondition().getDisplay();
+               if (display != null) {
+                  this.lore.add(count++, condition.format());
                }
             }
          }
 
-         ItemStack var11 = this.upgradingRecipe.getItem().getPreview();
-         ItemMeta var13 = var11.getItemMeta();
-         AdventureUtils.setDisplayName(var13, this.name.replace("#name#", MMOUtils.getDisplayName(var11)));
-         AdventureUtils.setLore(var13, this.lore);
-         var13.addItemFlags(ItemFlag.values());
-         var11.setItemMeta(var13);
-         return NBTItem.get(var11).addTag(new ItemTag[]{new ItemTag("recipeId", this.recipe.getRecipe().getId())}).toItem();
+         ItemStack preview = this.upgradingRecipe.getItem().getPreview();
+         ItemMeta itemMeta = preview.getItemMeta();
+         AdventureUtils.setDisplayName(itemMeta, this.name.replace("#name#", MMOUtils.getDisplayName(preview)));
+         AdventureUtils.setLore(itemMeta, this.lore);
+         itemMeta.addItemFlags(ItemFlag.values());
+         preview.setItemMeta(itemMeta);
+         return NBTItem.get(preview).addTag(new ItemTag[]{new ItemTag("recipeId", this.recipe.getRecipe().getId())}).toItem();
       }
    }
 }

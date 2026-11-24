@@ -11,14 +11,14 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 public class ClassCondition extends Condition {
    private final List<String> classes;
 
-   public ClassCondition(ConfigObject var1) {
-      super(var1);
-      var1.validateKeys(new String[]{"list"});
-      this.classes = Arrays.asList(var1.getString("list").split(","));
+   public ClassCondition(ConfigObject configObject) {
+      super(configObject);
+      configObject.validateKeys(new String[]{"list"});
+      this.classes = Arrays.asList(configObject.getString("list").split(","));
    }
 
-   public boolean isMet(SkillMetadata var1) {
-      PlayerData var2 = PlayerData.get(var1.getCaster().getPlayer());
-      return this.classes.contains(var2.getRPG().getClassName());
+   public boolean isMet(SkillMetadata skillMetadata) {
+      PlayerData playerData = PlayerData.get(skillMetadata.getCaster().getPlayer());
+      return this.classes.contains(playerData.getRPG().getClassName());
    }
 }

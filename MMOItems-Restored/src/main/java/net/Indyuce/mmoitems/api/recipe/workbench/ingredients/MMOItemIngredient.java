@@ -12,16 +12,16 @@ public class MMOItemIngredient extends WorkbenchIngredient {
    private final Type type;
    private final String id;
 
-   public MMOItemIngredient(Type var1, String var2, int var3) {
-      super(var3);
-      this.type = var1;
-      this.id = var2;
+   public MMOItemIngredient(Type type, String text, int count) {
+      super(count);
+      this.type = type;
+      this.id = text;
    }
 
    @Override
-   public boolean corresponds(ItemStack var1) {
-      NBTItem var2 = NBTItem.get(var1);
-      return this.type.equals(Type.get(var2.getType())) && var2.getString("MMOITEMS_ITEM_ID").equalsIgnoreCase(this.id);
+   public boolean corresponds(ItemStack item) {
+      NBTItem nbtItem = NBTItem.get(item);
+      return this.type.equals(Type.get(nbtItem.getType())) && nbtItem.getString("MMOITEMS_ITEM_ID").equalsIgnoreCase(this.id);
    }
 
    @Override

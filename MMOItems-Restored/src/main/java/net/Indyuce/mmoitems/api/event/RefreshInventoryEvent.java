@@ -33,10 +33,10 @@ public class RefreshInventoryEvent extends Event {
       return this.playerData;
    }
 
-   public RefreshInventoryEvent(@NotNull List<EquippedItem> var1, @NotNull Player var2, @NotNull PlayerData var3) {
-      this.itemsToEquip = var1;
-      this.player = var2;
-      this.playerData = var3;
+   public RefreshInventoryEvent(@NotNull List<EquippedItem> equippedItems, @NotNull Player player, @NotNull PlayerData playerData) {
+      this.itemsToEquip = equippedItems;
+      this.player = player;
+      this.playerData = playerData;
    }
 
    @NotNull

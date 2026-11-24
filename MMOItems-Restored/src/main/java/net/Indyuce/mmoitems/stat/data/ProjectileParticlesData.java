@@ -23,30 +23,30 @@ public class ProjectileParticlesData implements StatData, RandomStatData<Project
    private final boolean colored;
    public static final ProjectileParticlesData DEFAULT = new ProjectileParticlesData(Particle.NOTE);
 
-   public ProjectileParticlesData(Particle var1) {
-      this.particle = var1;
+   public ProjectileParticlesData(Particle particle) {
+      this.particle = particle;
       this.red = 0;
       this.green = 0;
       this.blue = 0;
       this.colored = false;
    }
 
-   public ProjectileParticlesData(Particle var1, int var2, int var3, int var4) {
-      this.particle = var1;
-      this.red = var2;
-      this.green = var3;
-      this.blue = var4;
+   public ProjectileParticlesData(Particle particle, int count, int count2, int count3) {
+      this.particle = particle;
+      this.red = count;
+      this.green = count2;
+      this.blue = count3;
       this.colored = true;
    }
 
-   public ProjectileParticlesData(String var1) {
-      JsonObject var2 = (JsonObject)MythicLib.plugin.getGson().fromJson(var1, JsonObject.class);
-      this.particle = Particle.valueOf(var2.get("Particle").getAsString());
+   public ProjectileParticlesData(String text) {
+      JsonObject jsonObject = (JsonObject)MythicLib.plugin.getGson().fromJson(text, JsonObject.class);
+      this.particle = Particle.valueOf(jsonObject.get("Particle").getAsString());
       if (MMOUtils.isColorable(this.particle)) {
          this.colored = true;
-         this.red = var2.get("Red").getAsInt();
-         this.green = var2.get("Green").getAsInt();
-         this.blue = var2.get("Blue").getAsInt();
+         this.red = jsonObject.get("Red").getAsInt();
+         this.green = jsonObject.get("Green").getAsInt();
+         this.blue = jsonObject.get("Blue").getAsInt();
       } else {
          this.colored = false;
          this.red = 0;
@@ -77,53 +77,53 @@ public class ProjectileParticlesData implements StatData, RandomStatData<Project
    }
 
    @Deprecated
-   public static boolean isColorable(Particle var0) {
-      return MMOUtils.isColorable(var0);
+   public static boolean isColorable(Particle particle) {
+      return MMOUtils.isColorable(particle);
    }
 
    @Override
    public String toString() {
-      JsonObject var1 = new JsonObject();
-      var1.addProperty("Particle", this.particle.name());
+      JsonObject jsonObject = new JsonObject();
+      jsonObject.addProperty("Particle", this.particle.name());
       if (this.colored) {
-         var1.addProperty("Red", this.red);
-         var1.addProperty("Green", this.green);
-         var1.addProperty("Blue", this.blue);
+         jsonObject.addProperty("Red", this.red);
+         jsonObject.addProperty("Green", this.green);
+         jsonObject.addProperty("Blue", this.blue);
       }
 
-      return var1.toString();
+      return jsonObject.toString();
    }
 
-   public void shootParticle(Location var1) {
-      this.shootParticle(var1, 1, 0.0);
+   public void shootParticle(Location location) {
+      this.shootParticle(location, 1, 0.0);
    }
 
-   public void shootParticle(Location var1, int var2, double var3) {
+   public void shootParticle(Location location, int count, double value) {
       if (MMOUtils.isColorable(this.particle)) {
          if (this.particle == VParticle.REDSTONE.get()) {
-            DustOptions var5 = new DustOptions(Color.fromRGB(this.red, this.green, this.blue), 1.0F);
-            var1.getWorld().spawnParticle(this.particle, var1, var2, var3, var3, var3, 0.0, var5);
+            DustOptions dustOptions = new DustOptions(Color.fromRGB(this.red, this.green, this.blue), 1.0F);
+            location.getWorld().spawnParticle(this.particle, location, count, value, value, value, 0.0, dustOptions);
          } else if (this.particle == Particle.NOTE) {
-            double var11 = this.red / 24.0;
-            var1.getWorld().spawnParticle(Particle.NOTE, var1, 0, var11, 0.0, 0.0, 1.0);
+            double value2 = this.red / 24.0;
+            location.getWorld().spawnParticle(Particle.NOTE, location, 0, value2, 0.0, 0.0, 1.0);
          } else {
-            double var12 = this.red / 255.0;
-            double var7 = this.green / 255.0;
-            double var9 = this.blue / 255.0;
-            var1.getWorld().spawnParticle(this.particle, var1, 0, var12, var7, var9, 1.0);
+            double value2 = this.red / 255.0;
+            double value3 = this.green / 255.0;
+            double value4 = this.blue / 255.0;
+            location.getWorld().spawnParticle(this.particle, location, 0, value2, value3, value4, 1.0);
          }
       } else if (this.particle == VParticle.ITEM.get()) {
-         ItemStack var13 = new ItemStack(Material.STONE);
-         var1.getWorld().spawnParticle(this.particle, var1, var2, var3, var3, var3, 0.0, var13);
+         ItemStack item = new ItemStack(Material.STONE);
+         location.getWorld().spawnParticle(this.particle, location, count, value, value, value, 0.0, item);
       } else if (this.particle != VParticle.BLOCK.get() && this.particle != VParticle.BLOCK_DUST.get() && this.particle != Particle.FALLING_DUST) {
-         var1.getWorld().spawnParticle(this.particle, var1, var2, var3, var3, var3, 0.0);
+         location.getWorld().spawnParticle(this.particle, location, count, value, value, value, 0.0);
       } else {
-         BlockData var14 = Material.STONE.createBlockData();
-         var1.getWorld().spawnParticle(this.particle, var1, var2, var3, var3, var3, 0.0, var14);
+         BlockData blockData = Material.STONE.createBlockData();
+         location.getWorld().spawnParticle(this.particle, location, count, value, value, value, 0.0, blockData);
       }
    }
 
-   public ProjectileParticlesData randomize(MMOItemBuilder var1) {
+   public ProjectileParticlesData randomize(MMOItemBuilder mmoItemBuilder) {
       return this;
    }
 }

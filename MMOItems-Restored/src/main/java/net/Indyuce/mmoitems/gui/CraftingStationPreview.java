@@ -29,92 +29,92 @@ public class CraftingStationPreview extends PluginInventory {
    private static final int[] slots = new int[]{12, 13, 14, 21, 22, 23, 30, 31, 32};
    private static final int[] fill = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 15, 17, 18, 19, 25, 26, 27, 29, 33, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44};
 
-   public CraftingStationPreview(CraftingStationView var1, CheckedRecipe var2) {
-      super(var1.getPlayer());
-      this.previous = var1;
-      this.recipe = var2;
+   public CraftingStationPreview(CraftingStationView craftingStationView, CheckedRecipe checkedRecipe) {
+      super(craftingStationView.getPlayer());
+      this.previous = craftingStationView;
+      this.recipe = checkedRecipe;
    }
 
    @NotNull
    @Override
    public Inventory getInventory() {
-      Inventory var1 = Bukkit.createInventory(
+      Inventory inventory = Bukkit.createInventory(
          this, 45, MythicLib.plugin.getPlaceholderParser().parse(this.getPlayer(), Message.RECIPE_PREVIEW.format(ChatColor.RESET).toString())
       );
       this.ingredients.clear();
 
-      for (CheckedIngredient var3 : this.recipe.getIngredients()) {
-         if (var3.getIngredient().getAmount() > 64) {
-            ItemStack var4 = var3.getIngredient().generateItemStack(this.playerData.getRPG(), true);
-            var4.setAmount(64);
-            int var5 = var3.getIngredient().getAmount();
-            int var6 = SilentNumbers.floor(var5 / 64.0);
+      for (CheckedIngredient ingredient : this.recipe.getIngredients()) {
+         if (ingredient.getIngredient().getAmount() > 64) {
+            ItemStack item = ingredient.getIngredient().generateItemStack(this.playerData.getRPG(), true);
+            item.setAmount(64);
+            int amount = ingredient.getIngredient().getAmount();
+            int count = SilentNumbers.floor(amount / 64.0);
 
-            while (var5 > 0) {
-               if (var5 > 64) {
-                  this.ingredients.add(var4.clone());
-                  var5 -= 64;
+            while (amount > 0) {
+               if (amount > 64) {
+                  this.ingredients.add(item.clone());
+                  amount -= 64;
                } else {
-                  var4.setAmount(var5);
-                  this.ingredients.add(var4.clone());
-                  var5 -= var5;
+                  item.setAmount(amount);
+                  this.ingredients.add(item.clone());
+                  amount -= amount;
                }
             }
          } else {
-            this.ingredients.add(var3.getIngredient().generateItemStack(this.playerData.getRPG(), true));
+            this.ingredients.add(ingredient.getIngredient().generateItemStack(this.playerData.getRPG(), true));
          }
       }
 
-      int var8 = (this.page - 1) * slots.length;
-      int var9 = this.page * slots.length;
+      int count = (this.page - 1) * slots.length;
+      int count2 = this.page * slots.length;
 
-      for (int var10 = var8; var10 < var9 && var10 < this.ingredients.size(); var10++) {
-         var1.setItem(slots[var10 - var8], this.ingredients.get(var10));
+      for (int i = count; i < count2 && i < this.ingredients.size(); i++) {
+         inventory.setItem(slots[i - count], this.ingredients.get(i));
       }
 
-      for (int var7 : fill) {
-         var1.setItem(var7, ConfigItems.FILL.getItem());
+      for (int count3 : fill) {
+         inventory.setItem(count3, ConfigItems.FILL.getItem());
       }
 
       if (this.recipe.getRecipe() instanceof CraftingRecipe) {
-         ItemStack var12 = ((CraftingRecipe)this.recipe.getRecipe()).getPreviewItemStack();
-         var12.setAmount(((CraftingRecipe)this.recipe.getRecipe()).getOutputAmount());
-         var1.setItem(16, var12);
+         ItemStack previewItemStack = ((CraftingRecipe)this.recipe.getRecipe()).getPreviewItemStack();
+         previewItemStack.setAmount(((CraftingRecipe)this.recipe.getRecipe()).getOutputAmount());
+         inventory.setItem(16, previewItemStack);
       }
 
       if (this.recipe.getRecipe() instanceof UpgradingRecipe) {
-         ItemStack var13 = ((UpgradingRecipe)this.recipe.getRecipe()).getItem().getPreview();
-         ItemMeta var16 = var13.getItemMeta();
-         var16.setDisplayName(var13.getItemMeta().getDisplayName() + ChatColor.GREEN + "+1!");
-         var13.setItemMeta(var16);
-         var1.setItem(16, var13);
+         ItemStack preview = ((UpgradingRecipe)this.recipe.getRecipe()).getItem().getPreview();
+         ItemMeta itemMeta = preview.getItemMeta();
+         itemMeta.setDisplayName(preview.getItemMeta().getDisplayName() + ChatColor.GREEN + "+1!");
+         preview.setItemMeta(itemMeta);
+         inventory.setItem(16, preview);
       }
 
-      var1.setItem(10, ConfigItems.BACK.getItem());
-      var1.setItem(34, ConfigItems.CONFIRM.getItem());
-      ItemStack var14 = this.recipe.display();
-      var14.setType(Material.KNOWLEDGE_BOOK);
-      var14.setAmount(1);
-      ItemMeta var17 = var14.getItemMeta();
+      inventory.setItem(10, ConfigItems.BACK.getItem());
+      inventory.setItem(34, ConfigItems.CONFIRM.getItem());
+      ItemStack item = this.recipe.display();
+      item.setType(Material.KNOWLEDGE_BOOK);
+      item.setAmount(1);
+      ItemMeta itemMeta = item.getItemMeta();
 
-      for (Enchantment var20 : var17.getEnchants().keySet()) {
-         var17.removeEnchant(var20);
+      for (Enchantment key : itemMeta.getEnchants().keySet()) {
+         itemMeta.removeEnchant(key);
       }
 
-      var17.setLore(var17.getLore().subList(0, var17.getLore().size() - 3));
-      var14.setItemMeta(var17);
-      var1.setItem(28, var14);
-      var1.setItem(20, this.page > 1 ? ConfigItems.PREVIOUS_PAGE.getItem() : ConfigItems.FILL.getItem());
-      var1.setItem(24, var9 < this.ingredients.size() ? ConfigItems.NEXT_PAGE.getItem() : ConfigItems.FILL.getItem());
-      return var1;
+      itemMeta.setLore(itemMeta.getLore().subList(0, itemMeta.getLore().size() - 3));
+      item.setItemMeta(itemMeta);
+      inventory.setItem(28, item);
+      inventory.setItem(20, this.page > 1 ? ConfigItems.PREVIOUS_PAGE.getItem() : ConfigItems.FILL.getItem());
+      inventory.setItem(24, count2 < this.ingredients.size() ? ConfigItems.NEXT_PAGE.getItem() : ConfigItems.FILL.getItem());
+      return inventory;
    }
 
    @Override
-   public void whenClicked(InventoryClickEvent var1) {
-      var1.setCancelled(true);
-      if (MMOUtils.isMetaItem(var1.getCurrentItem(), false)) {
-         NBTItem var2 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var1.getCurrentItem());
-         switch (var2.getString("ItemId")) {
+   public void whenClicked(InventoryClickEvent event) {
+      event.setCancelled(true);
+      if (MMOUtils.isMetaItem(event.getCurrentItem(), false)) {
+         NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
+         switch (nBTItem.getString("ItemId")) {
             case "CONFIRM":
                this.previous.processRecipe(this.recipe);
                this.previous.open();

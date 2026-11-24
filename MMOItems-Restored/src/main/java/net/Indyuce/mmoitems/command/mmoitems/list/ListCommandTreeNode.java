@@ -8,15 +8,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class ListCommandTreeNode extends CommandTreeNode {
-   public ListCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "list");
+   public ListCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "list");
       this.addChild(new AbilityCommandTreeNode(this));
       this.addChild(new LuteAttackCommandTreeNode(this));
       this.addChild(new TypeCommandTreeNode(this));
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      var1.sendMessage(
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      sender.sendMessage(
          ChatColor.DARK_GRAY
             + ""
             + ChatColor.STRIKETHROUGH
@@ -28,17 +28,17 @@ public class ListCommandTreeNode extends CommandTreeNode {
             + ChatColor.STRIKETHROUGH
             + "]-----------------"
       );
-      var1.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list type " + ChatColor.WHITE + "shows all item types (sword, axe...)");
-      var1.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list lute " + ChatColor.WHITE + "shows all available lute attack effects");
-      var1.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list ability " + ChatColor.WHITE + "shows all available abilities");
-      if (var1 instanceof Player) {
-         var1.sendMessage("");
-         var1.sendMessage("Spigot Javadoc Links:");
+      sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list type " + ChatColor.WHITE + "shows all item types (sword, axe...)");
+      sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list lute " + ChatColor.WHITE + "shows all available lute attack effects");
+      sender.sendMessage(ChatColor.LIGHT_PURPLE + "/mi list ability " + ChatColor.WHITE + "shows all available abilities");
+      if (sender instanceof Player) {
+         sender.sendMessage("");
+         sender.sendMessage("Spigot Javadoc Links:");
          MythicLib.plugin
             .getVersion()
             .getWrapper()
             .sendJson(
-               (Player)var1,
+               (Player)sender,
                "[{\"text\":\""
                   + ChatColor.UNDERLINE
                   + ChatColor.GREEN
@@ -64,7 +64,7 @@ public class ListCommandTreeNode extends CommandTreeNode {
             .getVersion()
             .getWrapper()
             .sendJson(
-               (Player)var1,
+               (Player)sender,
                "[{\"text\":\""
                   + ChatColor.UNDERLINE
                   + ChatColor.GREEN

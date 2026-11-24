@@ -15,8 +15,8 @@ public class RMG_MegaShaped extends RecipeEditorGUI {
    @NotNull
    final RMGRI_MegaShaped interpreter;
 
-   public RMG_MegaShaped(@NotNull Player var1, @NotNull MMOItemTemplate var2, @NotNull String var3, @NotNull RecipeRegistry var4) {
-      super(var1, var2, var3, var4);
+   public RMG_MegaShaped(@NotNull Player player, @NotNull MMOItemTemplate mmoItemTemplate, @NotNull String text, @NotNull RecipeRegistry recipeRegistry) {
+      super(player, mmoItemTemplate, text, recipeRegistry);
       this.addButton(new RBA_InputOutput(this));
       this.interpreter = new RMGRI_MegaShaped(this.getNameSection());
       this.inputLinks.put(1, 0);
@@ -64,15 +64,15 @@ public class RMG_MegaShaped extends RecipeEditorGUI {
 
    @Override
    public void putRecipe() {
-      for (Integer var2 : this.inputLinks.keySet()) {
-         this.inventory.setItem(var2, this.getDisplay(this.isShowingInput(), this.inputLinks.get(var2)));
+      for (Integer key : this.inputLinks.keySet()) {
+         this.inventory.setItem(key, this.getDisplay(this.isShowingInput(), this.inputLinks.get(key)));
       }
    }
 
    @Override
-   int getInputSlot(int var1) {
-      Integer var2 = this.inputLinks.get(var1);
-      return var2 != null ? var2 : -1;
+   int getInputSlot(int index) {
+      Integer value = this.inputLinks.get(index);
+      return value != null ? value : -1;
    }
 
    @NotNull

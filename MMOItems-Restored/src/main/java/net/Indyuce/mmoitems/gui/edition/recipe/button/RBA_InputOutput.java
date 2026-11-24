@@ -22,8 +22,8 @@ public class RBA_InputOutput extends RecipeButtonAction {
       )
       .build();
 
-   public RBA_InputOutput(@NotNull RecipeEditorGUI var1) {
-      super(var1);
+   public RBA_InputOutput(@NotNull RecipeEditorGUI recipeEditorGUI) {
+      super(recipeEditorGUI);
       this.showingInput = true;
    }
 
@@ -36,7 +36,7 @@ public class RBA_InputOutput extends RecipeButtonAction {
    }
 
    @Override
-   public void primaryProcessInput(@NotNull String var1, Object... var2) {
+   public void primaryProcessInput(@NotNull String text, Object... objs) {
    }
 
    @Override
@@ -45,16 +45,16 @@ public class RBA_InputOutput extends RecipeButtonAction {
    }
 
    @Override
-   public void secondaryProcessInput(@NotNull String var1, Object... var2) {
+   public void secondaryProcessInput(@NotNull String text, Object... objs) {
    }
 
    @NotNull
    @Override
    public ItemStack getButton() {
-      String var1 = this.getInv().isShowingInput() ? "§6INPUT" : "§3OUTPUT";
+      String text = this.getInv().isShowingInput() ? "§6INPUT" : "§3OUTPUT";
       return RecipeEditorGUI.addLore(
          this.button.clone(),
-         SilentNumbers.toArrayList(new String[]{"§7Currently Showing: " + var1, "", ChatColor.YELLOW + "►" + " Left click to switch mode."})
+         SilentNumbers.toArrayList(new String[]{"§7Currently Showing: " + text, "", ChatColor.YELLOW + "►" + " Left click to switch mode."})
       );
    }
 }

@@ -5,17 +5,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface RMG_RecipeInterpreter {
-   void editInput(@NotNull ProvidedUIFilter var1, int var2);
+   void editInput(@NotNull ProvidedUIFilter providedUIFilter, int count);
 
-   void editOutput(@NotNull ProvidedUIFilter var1, int var2);
+   void editOutput(@NotNull ProvidedUIFilter providedUIFilter, int count);
 
-   void deleteInput(int var1);
+   void deleteInput(int count);
 
-   void deleteOutput(int var1);
-
-   @Nullable
-   ProvidedUIFilter getInput(int var1);
+   void deleteOutput(int count);
 
    @Nullable
-   ProvidedUIFilter getOutput(int var1);
+   ProvidedUIFilter getInput(int count);
+
+   @Nullable
+   ProvidedUIFilter getOutput(int count);
 }

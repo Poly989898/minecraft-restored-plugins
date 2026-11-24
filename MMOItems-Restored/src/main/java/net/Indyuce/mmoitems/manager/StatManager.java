@@ -49,82 +49,82 @@ public class StatManager {
    private final List<PlayerConsumable> playerConsumables = new ArrayList<>();
 
    public void loadBuiltins() {
-      for (Field var4 : StatCategory.class.getFields()) {
+      for (Field field : StatCategory.class.getFields()) {
          try {
-            if (Modifier.isStatic(var4.getModifiers()) && Modifier.isFinal(var4.getModifiers()) && var4.get(null) instanceof StatCategory) {
-               this.registerCategory((StatCategory)var4.get(null));
+            if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()) && field.get(null) instanceof StatCategory) {
+               this.registerCategory((StatCategory)field.get(null));
             }
-         } catch (IllegalArgumentException | IllegalAccessException var7) {
-            MMOItems.plugin.getLogger().log(Level.SEVERE, String.format("Couldn't register category called '%s': %s", var4.getName(), var7.getMessage()));
+         } catch (IllegalArgumentException | IllegalAccessException exception) {
+            MMOItems.plugin.getLogger().log(Level.SEVERE, String.format("Couldn't register category called '%s': %s", field.getName(), exception.getMessage()));
          }
       }
 
-      for (Field var11 : ItemStats.class.getFields()) {
+      for (Field field : ItemStats.class.getFields()) {
          try {
-            if (Modifier.isStatic(var11.getModifiers())
-               && Modifier.isFinal(var11.getModifiers())
-               && var11.get(null) instanceof ItemStat
-               && var11.getAnnotation(DeprecatedStat.class) == null) {
-               this.register((ItemStat<?, ?>)var11.get(null));
+            if (Modifier.isStatic(field.getModifiers())
+               && Modifier.isFinal(field.getModifiers())
+               && field.get(null) instanceof ItemStat
+               && field.getAnnotation(DeprecatedStat.class) == null) {
+               this.register((ItemStat<?, ?>)field.get(null));
             }
-         } catch (IllegalArgumentException | IllegalAccessException var6) {
-            MMOItems.plugin.getLogger().log(Level.SEVERE, String.format("Couldn't register stat called '%s': %s", var11.getName(), var6.getMessage()));
+         } catch (IllegalArgumentException | IllegalAccessException exception) {
+            MMOItems.plugin.getLogger().log(Level.SEVERE, String.format("Couldn't register stat called '%s': %s", field.getName(), exception.getMessage()));
          }
       }
 
       this.loadCustomStats();
    }
 
-   public void reload(boolean var1) {
-      if (var1) {
-         this.numericStats.removeIf(var0 -> var0 instanceof FakeElementalStat);
+   public void reload(boolean flag) {
+      if (flag) {
+         this.numericStats.removeIf(doubleStat -> doubleStat instanceof FakeElementalStat);
       }
 
       this.loadElements();
-      FileConfiguration var2 = new ConfigFile("/language", "stats").getConfig();
+      FileConfiguration config = new ConfigFile("/language", "stats").getConfig();
 
-      for (ItemStat var4 : this.getAll()) {
+      for (ItemStat itemStat : this.getAll()) {
          try {
-            Object var5 = var2.get(var4.getPath());
-            if (var5 == null) {
-               var5 = var2.get(var4.getLegacyTranslationPath());
+            Object obj = config.get(itemStat.getPath());
+            if (obj == null) {
+               obj = config.get(itemStat.getLegacyTranslationPath());
             }
 
-            var4.loadConfiguration(var2, var5 != null ? var5 : "<TranslationNotFound:" + var4.getPath() + ">");
-         } catch (RuntimeException var6) {
-            MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load translation info for stat '" + var4.getId() + "': " + var6.getMessage());
+            itemStat.loadConfiguration(config, obj != null ? obj : "<TranslationNotFound:" + itemStat.getPath() + ">");
+         } catch (RuntimeException exception) {
+            MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load translation info for stat '" + itemStat.getId() + "': " + exception.getMessage());
          }
       }
    }
 
    private void loadCustomStats() {
       ConfigManager.DefaultFile.CUSTOM_STATS.checkFile();
-      ConfigFile var1 = new ConfigFile("custom-stats");
-      ConfigurationSection var2 = var1.getConfig().getConfigurationSection("custom-stats");
-      Validate.notNull(var2, "Custom stats section is null");
-      var2.getKeys(true)
+      ConfigFile configFile = new ConfigFile("custom-stats");
+      ConfigurationSection customStats = configFile.getConfig().getConfigurationSection("custom-stats");
+      Validate.notNull(customStats, "Custom stats section is null");
+      customStats.getKeys(true)
          .stream()
-         .filter(var2::isConfigurationSection)
-         .<ConfigurationSection>map(var2::getConfigurationSection)
+         .filter(customStats::isConfigurationSection)
+         .<ConfigurationSection>map(customStats::getConfigurationSection)
          .filter(Objects::nonNull)
          .forEach(this::registerCustomStat);
    }
 
    public void loadElements() {
-      for (ElementStatType var4 : ElementStatType.values()) {
-         for (Element var6 : MythicLib.plugin.getElements().getAll()) {
-            this.numericStats.add(new FakeElementalStat(var6, var4));
+      for (ElementStatType elementStatType : ElementStatType.values()) {
+         for (Element element : MythicLib.plugin.getElements().getAll()) {
+            this.numericStats.add(new FakeElementalStat(element, elementStatType));
          }
       }
    }
 
-   public void registerCategory(@NotNull StatCategory var1) {
-      this.categories.put(var1.getId(), var1);
+   public void registerCategory(@NotNull StatCategory statCategory) {
+      this.categories.put(statCategory.getId(), statCategory);
    }
 
    @NotNull
-   public StatCategory getCategory(@NotNull String var1) {
-      return Objects.requireNonNull(this.categories.get(var1), "No stat category found with ID '" + var1 + "'");
+   public StatCategory getCategory(@NotNull String text) {
+      return Objects.requireNonNull(this.categories.get(text), "No stat category found with ID '" + text + "'");
    }
 
    @NotNull
@@ -152,108 +152,108 @@ public class StatManager {
       return this.playerConsumables;
    }
 
-   public boolean has(String var1) {
-      return this.stats.containsKey(var1);
+   public boolean has(String text) {
+      return this.stats.containsKey(text);
    }
 
    @Nullable
-   public ItemStat<?, ?> get(String var1) {
-      ItemStat var2 = this.stats.get(var1);
-      if (var2 != null) {
-         return var2;
+   public ItemStat<?, ?> get(String text) {
+      ItemStat itemStat = this.stats.get(text);
+      if (itemStat != null) {
+         return itemStat;
       }
 
-      var2 = this.numericStats.stream().filter(var1x -> var1x.getId().equals(var1)).findFirst().orElse(null);
-      if (var2 != null) {
-         return var2;
+      itemStat = this.numericStats.stream().filter(var1x -> var1x.getId().equals(text)).findFirst().orElse(null);
+      if (itemStat != null) {
+         return itemStat;
       }
 
-      var2 = this.legacyAliases.get(var1);
-      return var2 != null ? var2 : null;
+      itemStat = this.legacyAliases.get(text);
+      return itemStat != null ? itemStat : null;
    }
 
-   public void register(@NotNull ItemStat<?, ?> var1) {
-      if (var1.isEnabled()) {
-         this.stats.compute(var1.getId(), (var1x, var2) -> {
-            Validate.isTrue(var2 == null, "A stat with ID '" + var1x + "' already exists");
-            return var1;
+   public void register(@NotNull ItemStat<?, ?> itemStat) {
+      if (itemStat.isEnabled()) {
+         this.stats.compute(itemStat.getId(), (var1x, itemStat2) -> {
+            Validate.isTrue(itemStat2 == null, "A stat with ID '" + var1x + "' already exists");
+            return itemStat;
          });
 
-         for (String var5 : var1.getAliases()) {
-            this.legacyAliases.put(var5, var1);
+         for (String aliase : itemStat.getAliases()) {
+            this.legacyAliases.put(aliase, itemStat);
          }
 
-         if (var1 instanceof DoubleStat && !(var1 instanceof GemStoneStat) && var1.isCompatible(Type.GEM_STONE)) {
-            this.numericStats.add((DoubleStat)var1);
+         if (itemStat instanceof DoubleStat && !(itemStat instanceof GemStoneStat) && itemStat.isCompatible(Type.GEM_STONE)) {
+            this.numericStats.add((DoubleStat)itemStat);
          }
 
-         if (var1 instanceof ItemRestriction) {
-            this.itemRestrictions.add((ItemRestriction)var1);
+         if (itemStat instanceof ItemRestriction) {
+            this.itemRestrictions.add((ItemRestriction)itemStat);
          }
 
-         if (var1 instanceof ConsumableItemInteraction) {
-            this.consumableActions.add((ConsumableItemInteraction)var1);
+         if (itemStat instanceof ConsumableItemInteraction) {
+            this.consumableActions.add((ConsumableItemInteraction)itemStat);
          }
 
-         if (var1 instanceof PlayerConsumable) {
-            this.playerConsumables.add((PlayerConsumable)var1);
+         if (itemStat instanceof PlayerConsumable) {
+            this.playerConsumables.add((PlayerConsumable)itemStat);
          }
 
-         HasCategory var6 = var1.getClass().getAnnotation(HasCategory.class);
-         if (var6 != null) {
-            var1.setCategory(this.getCategory(UtilityMethods.enumName(var6.cat())));
+         HasCategory annotation = itemStat.getClass().getAnnotation(HasCategory.class);
+         if (annotation != null) {
+            itemStat.setCategory(this.getCategory(UtilityMethods.enumName(annotation.cat())));
          }
 
          if (MMOItems.plugin.getTypes() != null) {
-            MMOItems.plugin.getTypes().getAll().stream().filter(var1::isCompatible).forEach(var1x -> var1x.getAvailableStats().add(var1));
+            MMOItems.plugin.getTypes().getAll().stream().filter(itemStat::isCompatible).forEach(var1x -> var1x.getAvailableStats().add(itemStat));
          }
       }
    }
 
-   private void registerCustomStat(@NotNull ConfigurationSection var1) {
-      String var2 = var1.getString("name");
-      String var3 = var1.getString("type");
-      Validate.notNull(var1, "Cannot register a custom stat from a null section");
-      Validate.notNull(var2, "Cannot register a custom stat without a name");
-      Validate.notNull(var3, "Cannot register a custom stat without a type");
-      Class<? extends ItemStat> var4;
-      switch (var3.toLowerCase()) {
+   private void registerCustomStat(@NotNull ConfigurationSection section) {
+      String name = section.getString("name");
+      String type = section.getString("type");
+      Validate.notNull(section, "Cannot register a custom stat from a null section");
+      Validate.notNull(name, "Cannot register a custom stat without a name");
+      Validate.notNull(type, "Cannot register a custom stat without a type");
+      Class<? extends ItemStat> type2;
+      switch (type.toLowerCase()) {
          case "double":
-            var4 = DoubleStat.class;
+            type2 = DoubleStat.class;
             break;
          case "boolean":
-            var4 = BooleanStat.class;
+            type2 = BooleanStat.class;
             break;
          case "text":
-            var4 = StringStat.class;
+            type2 = StringStat.class;
             break;
          case "text-list":
-            var4 = StringListStat.class;
+            type2 = StringListStat.class;
             break;
          default:
-            throw new RuntimeException("Cannot register a custom stat of type " + var3);
+            throw new RuntimeException("Cannot register a custom stat of type " + type);
       }
 
-      String var9 = String.format("custom_%s", var2.replace(" ", "_")).toUpperCase();
-      String[] var10 = new String[0];
-      if (var1.isList("lore")) {
-         var10 = var1.getStringList("lore").toArray(new String[0]);
-      } else if (var1.isString("lore")) {
-         var10 = new String[]{var1.getString("lore")};
+      String text = String.format("custom_%s", name.replace(" ", "_")).toUpperCase();
+      String[] texts = new String[0];
+      if (section.isList("lore")) {
+         texts = section.getStringList("lore").toArray(new String[0]);
+      } else if (section.isString("lore")) {
+         texts = new String[]{section.getString("lore")};
       }
 
       try {
-         ItemStat var7 = var4.getConstructor(String.class, Material.class, String.class, String[].class, String[].class, Material[].class)
-            .newInstance(var9, Material.PAPER, var2, var10, new String[]{"!miscellaneous", "!block", "all"}, new Material[0]);
-         this.register(var7);
-      } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException var8) {
-         throw new RuntimeException("Unable to create a custom stat of type " + var3, var8);
+         ItemStat instance = type2.getConstructor(String.class, Material.class, String.class, String[].class, String[].class, Material[].class)
+            .newInstance(text, Material.PAPER, name, texts, new String[]{"!miscellaneous", "!block", "all"}, new Material[0]);
+         this.register(instance);
+      } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException exception) {
+         throw new RuntimeException("Unable to create a custom stat of type " + type, exception);
       }
    }
 
    @Deprecated
-   public void register(@Nullable String var1, @NotNull ItemStat<?, ?> var2) {
-      this.register(var2);
+   public void register(@Nullable String text, @NotNull ItemStat<?, ?> itemStat) {
+      this.register(itemStat);
    }
 
    @Deprecated

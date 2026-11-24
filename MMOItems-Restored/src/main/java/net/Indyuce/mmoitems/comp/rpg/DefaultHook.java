@@ -8,22 +8,22 @@ import org.bukkit.event.player.PlayerLevelChangeEvent;
 
 public class DefaultHook implements RPGHandler, Listener {
    @Override
-   public void refreshStats(PlayerData var1) {
+   public void refreshStats(PlayerData playerData) {
    }
 
    @EventHandler
-   public void a(PlayerLevelChangeEvent var1) {
-      PlayerData.get(var1.getPlayer()).getInventory().scheduleUpdate();
+   public void a(PlayerLevelChangeEvent event) {
+      PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
    }
 
    @Override
-   public RPGPlayer getInfo(PlayerData var1) {
-      return new DefaultHook.DefaultRPGPlayer(var1);
+   public RPGPlayer getInfo(PlayerData playerData) {
+      return new DefaultHook.DefaultRPGPlayer(playerData);
    }
 
    public static class DefaultRPGPlayer extends RPGPlayer {
-      public DefaultRPGPlayer(PlayerData var1) {
-         super(var1);
+      public DefaultRPGPlayer(PlayerData playerData) {
+         super(playerData);
       }
 
       @Override
@@ -47,12 +47,12 @@ public class DefaultHook implements RPGHandler, Listener {
       }
 
       @Override
-      public void setMana(double var1) {
-         this.getPlayer().setFoodLevel((int)var1);
+      public void setMana(double value) {
+         this.getPlayer().setFoodLevel((int)value);
       }
 
       @Override
-      public void setStamina(double var1) {
+      public void setStamina(double value) {
       }
    }
 }

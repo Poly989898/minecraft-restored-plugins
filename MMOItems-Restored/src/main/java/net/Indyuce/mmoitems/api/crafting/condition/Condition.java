@@ -7,8 +7,8 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 public abstract class Condition {
    private final String id;
 
-   public Condition(String var1) {
-      this.id = var1;
+   public Condition(String text) {
+      this.id = text;
    }
 
    public String getId() {
@@ -19,13 +19,13 @@ public abstract class Condition {
       return MMOItems.plugin.getCrafting().getConditionInfo(this.id).getDisplay();
    }
 
-   public abstract boolean isMet(PlayerData var1);
+   public abstract boolean isMet(PlayerData playerData);
 
-   public abstract String formatDisplay(String var1);
+   public abstract String formatDisplay(String text);
 
-   public abstract void whenCrafting(PlayerData var1);
+   public abstract void whenCrafting(PlayerData playerData);
 
-   public CheckedCondition evaluateCondition(PlayerData var1) {
-      return new CheckedCondition(this, this.isMet(var1));
+   public CheckedCondition evaluateCondition(PlayerData playerData) {
+      return new CheckedCondition(this, this.isMet(playerData));
    }
 }

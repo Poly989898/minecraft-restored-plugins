@@ -13,8 +13,8 @@ public class PlayerDataManager extends SynchronizedDataManager<PlayerData, Defau
       super(MMOItems.plugin, new YAMLDataHandler());
    }
 
-   public PlayerData newPlayerData(@NotNull MMOPlayerData var1) {
-      return new PlayerData(var1);
+   public PlayerData newPlayerData(@NotNull MMOPlayerData mmoPlayerData) {
+      return new PlayerData(mmoPlayerData);
    }
 
    public Object newProfileDataModule() {

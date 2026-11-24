@@ -14,13 +14,13 @@ public abstract class PluginInventory implements InventoryHolder {
    protected final Player player;
    protected int page = 1;
 
-   public PluginInventory(@NotNull Player var1) {
-      this(PlayerData.get(var1));
+   public PluginInventory(@NotNull Player player) {
+      this(PlayerData.get(player));
    }
 
-   public PluginInventory(PlayerData var1) {
-      this.playerData = var1;
-      this.player = var1.getPlayer();
+   public PluginInventory(PlayerData playerData) {
+      this.playerData = playerData;
+      this.player = playerData.getPlayer();
    }
 
    public int getPage() {
@@ -37,7 +37,7 @@ public abstract class PluginInventory implements InventoryHolder {
 
    public abstract Inventory getInventory();
 
-   public abstract void whenClicked(InventoryClickEvent var1);
+   public abstract void whenClicked(InventoryClickEvent event);
 
    public void open() {
       if (Bukkit.isPrimaryThread()) {

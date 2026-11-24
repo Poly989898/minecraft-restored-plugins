@@ -15,19 +15,19 @@ public class AdvancedEnchantmentsHook implements Listener {
    public static final ItemStat DISABLE_ADVANCED_ENCHANTMENTS = new DisableAdvancedEnchantments();
 
    @EventHandler
-   public void onEnchantApply(EnchantApplyEvent var1) {
-      NBTItem var2 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var1.getItem());
-      if (var2.getBoolean("MMOITEMS_DISABLE_ADVANCED_ENCHANTS")) {
-         var1.setCancelled(true);
+   public void onEnchantApply(EnchantApplyEvent event) {
+      NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
+      if (nBTItem.getBoolean("MMOITEMS_DISABLE_ADVANCED_ENCHANTS")) {
+         event.setCancelled(true);
       }
    }
 
    @EventHandler
-   public void onReforge(MMOItemReforgeEvent var1) {
-      if (var1.getOptions().shouldKeepAdvancedEnchants()) {
-         StatData var2 = var1.getOldMMOItem().getData(ADVANCED_ENCHANTMENTS);
-         if (var2 != null) {
-            var1.getNewMMOItem().setData(ADVANCED_ENCHANTMENTS, var2);
+   public void onReforge(MMOItemReforgeEvent event) {
+      if (event.getOptions().shouldKeepAdvancedEnchants()) {
+         StatData data = event.getOldMMOItem().getData(ADVANCED_ENCHANTMENTS);
+         if (data != null) {
+            event.getNewMMOItem().setData(ADVANCED_ENCHANTMENTS, data);
          }
       }
    }

@@ -17,63 +17,63 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class AbilityCommandTreeNode extends CommandTreeNode {
-   public AbilityCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "ability");
+   public AbilityCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "ability");
       this.addParameter(
-         new Parameter("<ability>", (var0, var1x) -> MMOItems.plugin.getSkills().getAll().forEach(var1xx -> var1x.add(var1xx.getHandler().getId())))
+         new Parameter("<ability>", (commandTreeExplorer, var1x) -> MMOItems.plugin.getSkills().getAll().forEach(var1xx -> var1x.add(var1xx.getHandler().getId())))
       );
       this.addParameter(Parameter.PLAYER_OPTIONAL);
 
-      for (int var2 = 0; var2 < 10; var2++) {
-         this.addParameter(new Parameter("<modifier>", (var0, var1x) -> {
+      for (int i = 0; i < 10; i++) {
+         this.addParameter(new Parameter("<modifier>", (commandTreeExplorer, var1x) -> {
             try {
-               RegisteredSkill var2x = MMOItems.plugin.getSkills().getSkillOrThrow(var0.getArguments()[1].toUpperCase().replace("-", "_"));
+               RegisteredSkill var2x = MMOItems.plugin.getSkills().getSkillOrThrow(commandTreeExplorer.getArguments()[1].toUpperCase().replace("-", "_"));
                var1x.addAll(var2x.getHandler().getModifiers());
-            } catch (Exception var3) {
+            } catch (Exception exception) {
             }
          }));
-         this.addParameter(new Parameter("<value>", (var0, var1x) -> var1x.add("0")));
+         this.addParameter(new Parameter("<value>", (commandTreeExplorer, var1x) -> var1x.add("0")));
       }
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      if (var2.length < 2) {
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      if (texts.length < 2) {
          return CommandResult.THROW_USAGE;
       }
 
-      if (var2.length < 3 && !(var1 instanceof Player)) {
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Please specify a player to use this command.");
+      if (texts.length < 3 && !(sender instanceof Player)) {
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Please specify a player to use this command.");
          return CommandResult.FAILURE;
       }
 
-      Player var3 = var2.length > 2 ? Bukkit.getPlayer(var2[2]) : (Player)var1;
-      if (var3 == null) {
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Couldn't find player called " + var2[2] + ".");
+      Player player = texts.length > 2 ? Bukkit.getPlayer(texts[2]) : (Player)sender;
+      if (player == null) {
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Couldn't find player called " + texts[2] + ".");
          return CommandResult.FAILURE;
       }
 
-      String var4 = var2[1].toUpperCase().replace("-", "_");
-      if (!MMOItems.plugin.getSkills().hasSkill(var4)) {
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Couldn't find ability " + var4 + ".");
+      String text = texts[1].toUpperCase().replace("-", "_");
+      if (!MMOItems.plugin.getSkills().hasSkill(text)) {
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Couldn't find ability " + text + ".");
          return CommandResult.FAILURE;
       }
 
-      AbilityData var5 = new AbilityData(MMOItems.plugin.getSkills().getSkill(var4), TriggerType.CAST);
+      AbilityData abilityData = new AbilityData(MMOItems.plugin.getSkills().getSkill(text), TriggerType.CAST);
 
-      for (byte var6 = 3; var6 < var2.length - 1; var6 += 2) {
-         String var7 = var2[var6];
-         String var8 = var2[var6 + 1];
+      for (byte b = 3; b < texts.length - 1; b += 2) {
+         String text2 = texts[b];
+         String text3 = texts[b + 1];
 
          try {
-            var5.setModifier(var7, Double.parseDouble(var8));
-         } catch (Exception var10) {
-            var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Wrong format: {" + var7 + " " + var8 + "}");
+            abilityData.setModifier(text2, Double.parseDouble(text3));
+         } catch (Exception exception) {
+            sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Wrong format: {" + text2 + " " + text3 + "}");
             return CommandResult.FAILURE;
          }
       }
 
-      PlayerMetadata var11 = MMOPlayerData.get(var3).getStatMap().cache(EquipmentSlot.MAIN_HAND);
-      var5.cast(new TriggerMetadata(var11, null, null));
+      PlayerMetadata playerMetadata = MMOPlayerData.get(player).getStatMap().cache(EquipmentSlot.MAIN_HAND);
+      abilityData.cast(new TriggerMetadata(playerMetadata, null, null));
       return CommandResult.SUCCESS;
    }
 }

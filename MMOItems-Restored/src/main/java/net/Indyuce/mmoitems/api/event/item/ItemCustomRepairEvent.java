@@ -14,9 +14,9 @@ public class ItemCustomRepairEvent extends Event implements Cancellable {
    private boolean cancelled;
    private static final HandlerList handlers = new HandlerList();
 
-   public ItemCustomRepairEvent(@NotNull DurabilityItem var1, int var2) {
-      this.sourceItem = var1;
-      this.durabilityIncrease = var2;
+   public ItemCustomRepairEvent(@NotNull DurabilityItem durabilityItem, int count) {
+      this.sourceItem = durabilityItem;
+      this.durabilityIncrease = count;
    }
 
    public boolean hasPlayer() {
@@ -40,8 +40,8 @@ public class ItemCustomRepairEvent extends Event implements Cancellable {
       return this.cancelled;
    }
 
-   public void setCancelled(boolean var1) {
-      this.cancelled = var1;
+   public void setCancelled(boolean flag) {
+      this.cancelled = flag;
    }
 
    @NotNull

@@ -13,9 +13,9 @@ public class CustomDurabilityDamage extends Event implements Cancellable {
    boolean cancelled = false;
    private static final HandlerList handlers = new HandlerList();
 
-   public CustomDurabilityDamage(@NotNull DurabilityItem var1, int var2) {
-      this.sourceItem = var1;
-      this.durabilityDecrease = var2;
+   public CustomDurabilityDamage(@NotNull DurabilityItem durabilityItem, int count) {
+      this.sourceItem = durabilityItem;
+      this.durabilityDecrease = count;
    }
 
    public int getDurabilityDecrease() {
@@ -31,8 +31,8 @@ public class CustomDurabilityDamage extends Event implements Cancellable {
       return this.cancelled;
    }
 
-   public void setCancelled(boolean var1) {
-      this.cancelled = var1;
+   public void setCancelled(boolean flag) {
+      this.cancelled = flag;
    }
 
    @NotNull

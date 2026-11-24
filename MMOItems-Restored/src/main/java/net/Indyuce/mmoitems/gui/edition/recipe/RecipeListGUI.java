@@ -52,13 +52,13 @@ public class RecipeListGUI extends EditionInventory {
       return this.recipeNames;
    }
 
-   public RecipeListGUI(@NotNull Player var1, @NotNull MMOItemTemplate var2, @NotNull RecipeRegistry var3) {
-      super(var1, var2);
-      this.recipeType = var3;
+   public RecipeListGUI(@NotNull Player player, @NotNull MMOItemTemplate mmoItemTemplate, @NotNull RecipeRegistry recipeRegistry) {
+      super(player, mmoItemTemplate);
+      this.recipeType = recipeRegistry;
       this.listedItem = this.getRecipeRegistry().getDisplayListItem();
-      ConfigurationSection var4 = RecipeEditorGUI.getSection(this.getEditedSection(), "crafting");
-      ConfigurationSection var5 = RecipeEditorGUI.getSection(var4, var3.getRecipeConfigPath());
-      this.recipeNames.addAll(var5.getKeys(false));
+      ConfigurationSection section = RecipeEditorGUI.getSection(this.getEditedSection(), "crafting");
+      ConfigurationSection section2 = RecipeEditorGUI.getSection(section, recipeRegistry.getRecipeConfigPath());
+      this.recipeNames.addAll(section2.getKeys(false));
       this.page = 0;
    }
 
@@ -79,76 +79,76 @@ public class RecipeListGUI extends EditionInventory {
          this.inventory.setItem(36, this.nextPage);
       }
 
-      for (int var1 = 21 * this.page; var1 < 21 * (this.page + 1); var1++) {
-         int var2 = page(var1);
-         if (var1 == this.recipeNames.size()) {
+      for (int i = 21 * this.page; i < 21 * (this.page + 1); i++) {
+         int count = page(i);
+         if (i == this.recipeNames.size()) {
             this.inventory
                .setItem(
-                  var2,
+                  count,
                   RecipeEditorGUI.rename(
                      new ItemStack(Material.NETHER_STAR),
                      FFPMMOItems.get().getBodyFormat() + "Create new " + SilentNumbers.getItemName(this.getListedItem(), false)
                   )
                );
-            this.createSlot = var2;
-         } else if (var1 > this.recipeNames.size()) {
-            this.inventory.setItem(var2, this.noRecipe);
+            this.createSlot = count;
+         } else if (i > this.recipeNames.size()) {
+            this.inventory.setItem(count, this.noRecipe);
          } else {
             this.inventory
                .setItem(
-                  var2,
+                  count,
                   RecipeEditorGUI.rename(
                      this.getListedItem().clone(),
-                     FFPMMOItems.get().getBodyFormat() + "Edit " + FFPMMOItems.get().getInputFormat() + this.recipeNames.get(var1)
+                     FFPMMOItems.get().getBodyFormat() + "Edit " + FFPMMOItems.get().getInputFormat() + this.recipeNames.get(i)
                   )
                );
-            this.recipeMap.put(var2, this.recipeNames.get(var1));
+            this.recipeMap.put(count, this.recipeNames.get(i));
          }
       }
    }
 
-   public static int page(int var0) {
-      int var1 = SilentNumbers.floor(var0 / 21.0);
-      var0 -= var1 * 21;
-      int var2 = SilentNumbers.floor(var0 / 7.0);
-      int var3 = var0 - 7 * var2;
-      int var4 = 18 + var2 * 9;
-      int var5 = var3 + 1;
-      return var4 + var5;
+   public static int page(int count) {
+      int count2 = SilentNumbers.floor(count / 21.0);
+      count -= count2 * 21;
+      int count3 = SilentNumbers.floor(count / 7.0);
+      int count4 = count - 7 * count3;
+      int count5 = 18 + count3 * 9;
+      int count6 = count4 + 1;
+      return count5 + count6;
    }
 
    @Override
-   public void whenClicked(InventoryClickEvent var1) {
-      if (VersionUtils.getView(var1).getTopInventory() == var1.getClickedInventory()) {
-         var1.setCancelled(true);
+   public void whenClicked(InventoryClickEvent event) {
+      if (VersionUtils.getView(event).getTopInventory() == event.getClickedInventory()) {
+         event.setCancelled(true);
          if (!this.invalidRecipe) {
-            if (var1.getAction() == InventoryAction.PICKUP_ALL) {
-               if (var1.getSlot() == 27) {
+            if (event.getAction() == InventoryAction.PICKUP_ALL) {
+               if (event.getSlot() == 27) {
                   this.page--;
                   this.refreshInventory();
-               } else if (var1.getSlot() == 36) {
+               } else if (event.getSlot() == 36) {
                   this.page++;
                   this.refreshInventory();
-               } else if (var1.getSlot() == this.createSlot) {
-                  String var2 = String.valueOf(this.recipeMap.size() + 1);
-                  if (this.recipeMap.containsValue(var2)) {
-                     var2 = var2 + "_" + UUID.randomUUID();
+               } else if (event.getSlot() == this.createSlot) {
+                  String text = String.valueOf(this.recipeMap.size() + 1);
+                  if (this.recipeMap.containsValue(text)) {
+                     text = text + "_" + UUID.randomUUID();
                   }
 
-                  this.getRecipeRegistry().openForPlayer(this, var2);
-               } else if (var1.getSlot() > 18) {
-                  String var5 = this.recipeMap.get(var1.getSlot());
-                  if (var5 != null) {
-                     this.getRecipeRegistry().openForPlayer(this, var5);
+                  this.getRecipeRegistry().openForPlayer(this, text);
+               } else if (event.getSlot() > 18) {
+                  String text = this.recipeMap.get(event.getSlot());
+                  if (text != null) {
+                     this.getRecipeRegistry().openForPlayer(this, text);
                   }
                }
-            } else if (var1.getAction() == InventoryAction.PICKUP_HALF) {
-               String var6 = this.recipeMap.get(var1.getSlot());
-               if (var6 != null) {
-                  ConfigurationSection var3 = RecipeEditorGUI.getSection(this.getEditedSection(), "crafting");
-                  ConfigurationSection var4 = RecipeEditorGUI.getSection(var3, this.getRecipeRegistry().getRecipeConfigPath());
-                  this.recipeNames.remove(var6);
-                  var4.set(var6, null);
+            } else if (event.getAction() == InventoryAction.PICKUP_HALF) {
+               String text = this.recipeMap.get(event.getSlot());
+               if (text != null) {
+                  ConfigurationSection section = RecipeEditorGUI.getSection(this.getEditedSection(), "crafting");
+                  ConfigurationSection section2 = RecipeEditorGUI.getSection(section, this.getRecipeRegistry().getRecipeConfigPath());
+                  this.recipeNames.remove(text);
+                  section2.set(text, null);
                   this.registerTemplateEdition();
                }
             }

@@ -25,22 +25,22 @@ public class TooltipTexture {
    private final int ignoreFirst;
    private final CenteringOptions centering;
 
-   public TooltipTexture(@NotNull ConfigurationSection var1) {
-      this.id = UtilityMethods.enumName(var1.getName());
-      String var2 = UtilityMethods.getFontSpace(var1.getInt("align_texture"));
-      this.alignText = UtilityMethods.getFontSpace(var1.getInt("align_text"));
-      this.hideVanilla = UtilityMethods.getFontSpace(var1.getInt("hide_texture"));
-      this.top = var2 + var1.getString("top") + this.alignText;
-      this.loreHeader = var1.getStringList("lore_header");
-      this.middle = var2 + var1.getString("middle") + this.alignText;
-      this.bar = var1.get("bar") != null ? var2 + var1.getString("bar") : null;
-      this.bottom = var2 + var1.getString("bottom");
-      this.ignoreFirst = var1.getInt("ignore_first");
+   public TooltipTexture(@NotNull ConfigurationSection section) {
+      this.id = UtilityMethods.enumName(section.getName());
+      String fontSpace = UtilityMethods.getFontSpace(section.getInt("align_texture"));
+      this.alignText = UtilityMethods.getFontSpace(section.getInt("align_text"));
+      this.hideVanilla = UtilityMethods.getFontSpace(section.getInt("hide_texture"));
+      this.top = fontSpace + section.getString("top") + this.alignText;
+      this.loreHeader = section.getStringList("lore_header");
+      this.middle = fontSpace + section.getString("middle") + this.alignText;
+      this.bar = section.get("bar") != null ? fontSpace + section.getString("bar") : null;
+      this.bottom = fontSpace + section.getString("bottom");
+      this.ignoreFirst = section.getInt("ignore_first");
 
       try {
-         this.centering = var1.isConfigurationSection("center") ? new CenteringOptions(var1.getConfigurationSection("center")) : null;
-      } catch (RuntimeException var4) {
-         throw new RuntimeException("Could not load centering options: " + var4.getMessage());
+         this.centering = section.isConfigurationSection("center") ? new CenteringOptions(section.getConfigurationSection("center")) : null;
+      } catch (RuntimeException exception) {
+         throw new RuntimeException("Could not load centering options: " + exception.getMessage());
       }
 
       Validate.notNull(this.top, "Tooltip top portion cannot be null");

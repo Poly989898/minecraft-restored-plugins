@@ -13,9 +13,9 @@ public abstract class ReadMMOItem extends MMOItem {
    @NotNull
    private final NBTItem item;
 
-   public ReadMMOItem(@NotNull NBTItem var1) {
-      super(Type.get(var1.getType()), var1.getString("MMOITEMS_ITEM_ID"));
-      this.item = var1;
+   public ReadMMOItem(@NotNull NBTItem nbtItem) {
+      super(Type.get(nbtItem.getType()), nbtItem.getString("MMOITEMS_ITEM_ID"));
+      this.item = nbtItem;
    }
 
    @Deprecated
@@ -27,11 +27,11 @@ public abstract class ReadMMOItem extends MMOItem {
             : 0;
       }
 
-      ItemStack var1 = this.getNBT().getItem();
-      if (var1.hasItemMeta()) {
-         ItemMeta var2 = var1.getItemMeta();
-         if (var2 instanceof Damageable) {
-            return ((Damageable)var2).getDamage();
+      ItemStack item = this.getNBT().getItem();
+      if (item.hasItemMeta()) {
+         ItemMeta itemMeta = item.getItemMeta();
+         if (itemMeta instanceof Damageable) {
+            return ((Damageable)itemMeta).getDamage();
          }
       }
 

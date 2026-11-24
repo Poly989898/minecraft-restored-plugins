@@ -21,27 +21,27 @@ public class ManaCost extends DoubleStat implements ItemRestriction, PlayerConsu
    }
 
    @Override
-   public boolean canUse(RPGPlayer var1, NBTItem var2, boolean var3) {
-      if (!var2.hasTag(ItemStats.MANA_COST.getNBTPath())) {
+   public boolean canUse(RPGPlayer rpgPlayer, NBTItem nbtItem, boolean flag) {
+      if (!nbtItem.hasTag(ItemStats.MANA_COST.getNBTPath())) {
          return true;
       }
 
-      double var4 = var2.getDouble(ItemStats.MANA_COST.getNBTPath());
-      boolean var6 = var4 > 0.0 && var1.getMana() >= var4;
-      if (!var6) {
-         Message.NOT_ENOUGH_MANA.format(ChatColor.RED).send(var1.getPlayer());
+      double value = nbtItem.getDouble(ItemStats.MANA_COST.getNBTPath());
+      boolean flag2 = value > 0.0 && rpgPlayer.getMana() >= value;
+      if (!flag2) {
+         Message.NOT_ENOUGH_MANA.format(ChatColor.RED).send(rpgPlayer.getPlayer());
       }
 
-      return var6;
+      return flag2;
    }
 
    @Override
-   public void onConsume(@NotNull VolatileMMOItem var1, @NotNull Player var2, boolean var3) {
-      if (var1.hasData(ItemStats.MANA_COST)) {
-         DoubleData var4 = (DoubleData)var1.getData(ItemStats.MANA_COST);
-         if (var4.getValue() > 0.0) {
-            RPGPlayer var5 = PlayerData.get(var2).getRPG();
-            var5.setMana(var5.getMana() - var4.getValue());
+   public void onConsume(@NotNull VolatileMMOItem volatileMMOItem, @NotNull Player player, boolean flag) {
+      if (volatileMMOItem.hasData(ItemStats.MANA_COST)) {
+         DoubleData data = (DoubleData)volatileMMOItem.getData(ItemStats.MANA_COST);
+         if (data.getValue() > 0.0) {
+            RPGPlayer rPG = PlayerData.get(player).getRPG();
+            rPG.setMana(rPG.getMana() - data.getValue());
          }
       }
    }

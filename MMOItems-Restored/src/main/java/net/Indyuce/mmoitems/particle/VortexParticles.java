@@ -14,30 +14,30 @@ public class VortexParticles extends ParticleRunnable {
    private final int amount;
    private double j = 0.0;
 
-   public VortexParticles(ParticleData var1, PlayerData var2) {
-      super(var1, var2);
-      this.speed = (float)var1.getModifier("speed");
-      this.height = (float)var1.getModifier("height");
-      this.radius = (float)var1.getModifier("radius");
-      this.y_speed = (float)var1.getModifier("y-speed");
-      this.r_speed = (float)var1.getModifier("rotation-speed");
-      this.amount = (int)var1.getModifier("amount");
+   public VortexParticles(ParticleData particleData, PlayerData playerData) {
+      super(particleData, playerData);
+      this.speed = (float)particleData.getModifier("speed");
+      this.height = (float)particleData.getModifier("height");
+      this.radius = (float)particleData.getModifier("radius");
+      this.y_speed = (float)particleData.getModifier("y-speed");
+      this.r_speed = (float)particleData.getModifier("rotation-speed");
+      this.amount = (int)particleData.getModifier("amount");
    }
 
    @Override
    public void createParticles() {
-      Location var1 = this.player.getPlayer().getLocation();
-      double var2 = this.j / Math.PI / 2.0;
+      Location location = this.player.getPlayer().getLocation();
+      double value = this.j / Math.PI / 2.0;
 
-      for (int var4 = 0; var4 < this.amount; var4++) {
-         double var5 = this.j + (Math.PI * 2) * var4 / this.amount;
+      for (int i = 0; i < this.amount; i++) {
+         double value2 = this.j + (Math.PI * 2) * i / this.amount;
          this.particle
             .display(
-               var1.clone()
+               location.clone()
                   .add(
-                     Math.cos(var5) * this.radius * (1.0 - var2 * this.y_speed),
-                     var2 * this.y_speed * this.height,
-                     Math.sin(var5) * this.radius * (1.0 - var2 * this.y_speed)
+                     Math.cos(value2) * this.radius * (1.0 - value * this.y_speed),
+                     value * this.y_speed * this.height,
+                     Math.sin(value2) * this.radius * (1.0 - value * this.y_speed)
                   ),
                this.speed
             );

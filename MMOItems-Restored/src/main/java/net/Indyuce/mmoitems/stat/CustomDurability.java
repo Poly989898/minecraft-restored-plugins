@@ -14,10 +14,10 @@ public class CustomDurability extends DoubleStat implements InternalStat {
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2) {
-      int var3 = (int)var2.getValue();
-      if (var3 != 0) {
-         var1.addItemTag(new ItemTag(this.getNBTPath(), var3));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData) {
+      int count = (int)doubleData.getValue();
+      if (count != 0) {
+         itemStackBuilder.addItemTag(new ItemTag(this.getNBTPath(), count));
       }
    }
 }

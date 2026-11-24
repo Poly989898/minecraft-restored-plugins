@@ -38,60 +38,60 @@ public class PotionColor extends ItemStat<ColorData, ColorData> {
       );
    }
 
-   public ColorData whenInitialized(Object var1) {
-      Validate.isTrue(var1 instanceof String, "Must specify a string");
-      return new ColorData((String)var1);
+   public ColorData whenInitialized(Object obj) {
+      Validate.isTrue(obj instanceof String, "Must specify a string");
+      return new ColorData((String)obj);
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      if (var2.getAction() == InventoryAction.PICKUP_ALL) {
-         new StatEdition(var1, ItemStats.POTION_COLOR).enable("Write in the chat the RGB color you want.", ChatColor.AQUA + "Format: {Red} {Green} {Blue}");
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      if (event.getAction() == InventoryAction.PICKUP_ALL) {
+         new StatEdition(editionInventory, ItemStats.POTION_COLOR).enable("Write in the chat the RGB color you want.", ChatColor.AQUA + "Format: {Red} {Green} {Blue}");
       }
 
-      if (var2.getAction() == InventoryAction.PICKUP_HALF) {
-         var1.getEditedSection().set("potion-color", null);
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed Potion Color.");
+      if (event.getAction() == InventoryAction.PICKUP_HALF) {
+         editionInventory.getEditedSection().set("potion-color", null);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed Potion Color.");
       }
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      String[] var4 = var2.split(" ");
-      Validate.isTrue(var4.length == 3, "Use this format: {Red} {Green} {Blue}. Example: '75 0 130' stands for Purple.");
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      String[] texts = text.split(" ");
+      Validate.isTrue(texts.length == 3, "Use this format: {Red} {Green} {Blue}. Example: '75 0 130' stands for Purple.");
 
-      for (String var8 : var4) {
-         int var9 = Integer.parseInt(var8);
-         Validate.isTrue(var9 >= 0 && var9 < 256, "Color must be between 0 and 255");
+      for (String text2 : texts) {
+         int count = Integer.parseInt(text2);
+         Validate.isTrue(count >= 0 && count < 256, "Color must be between 0 and 255");
       }
 
-      var1.getEditedSection().set("potion-color", var2);
-      var1.registerTemplateEdition();
-      var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Potion Color successfully changed to " + var2 + ".");
+      editionInventory.getEditedSection().set("potion-color", text);
+      editionInventory.registerTemplateEdition();
+      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Potion Color successfully changed to " + text + ".");
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      if (var1.getNBT().getItem().getItemMeta() instanceof PotionMeta) {
-         Color var2 = ((PotionMeta)var1.getNBT().getItem().getItemMeta()).getColor();
-         if (var2 != null) {
-            var1.setData(this, new ColorData(var2));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      if (readMMOItem.getNBT().getItem().getItemMeta() instanceof PotionMeta) {
+         Color color = ((PotionMeta)readMMOItem.getNBT().getItem().getItemMeta()).getColor();
+         if (color != null) {
+            readMMOItem.setData(this, new ColorData(color));
          }
       }
    }
 
    @Nullable
-   public ColorData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
+   public ColorData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
       throw new NotImplementedException();
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<ColorData> var2) {
-      var1.add(var2.isPresent() ? ChatColor.GREEN + ((ColorData)var2.get()).toString() : ChatColor.RED + "Uncolored");
-      var1.add("");
-      var1.add(ChatColor.YELLOW + "►" + " Click to change this value.");
-      var1.add(ChatColor.YELLOW + "►" + " Right click to remove the potion color.");
+   public void whenDisplayed(List<String> texts, Optional<ColorData> optional) {
+      texts.add(optional.isPresent() ? ChatColor.GREEN + ((ColorData)optional.get()).toString() : ChatColor.RED + "Uncolored");
+      texts.add("");
+      texts.add(ChatColor.YELLOW + "►" + " Click to change this value.");
+      texts.add(ChatColor.YELLOW + "►" + " Right click to remove the potion color.");
    }
 
    @NotNull
@@ -99,14 +99,14 @@ public class PotionColor extends ItemStat<ColorData, ColorData> {
       return new ColorData(0, 0, 0);
    }
 
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull ColorData var2) {
-      if (var1.getItemStack().getType().name().contains("POTION") || var1.getItemStack().getType() == Material.TIPPED_ARROW) {
-         ((PotionMeta)var1.getMeta()).setColor(var2.getColor());
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull ColorData colorData) {
+      if (itemStackBuilder.getItemStack().getType().name().contains("POTION") || itemStackBuilder.getItemStack().getType() == Material.TIPPED_ARROW) {
+         ((PotionMeta)itemStackBuilder.getMeta()).setColor(colorData.getColor());
       }
    }
 
    @NotNull
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull ColorData var1) {
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull ColorData colorData) {
       throw new NotImplementedException();
    }
 }

@@ -9,19 +9,19 @@ public class InteractItem {
    private final EquipmentSlot slot;
    private final ItemStack item;
 
-   public InteractItem(Player var1, Material var2) {
-      this.slot = this.hasItem(var1.getInventory().getItemInMainHand(), var2)
+   public InteractItem(Player player, Material material) {
+      this.slot = this.hasItem(player.getInventory().getItemInMainHand(), material)
          ? EquipmentSlot.HAND
-         : (this.hasItem(var1.getInventory().getItemInOffHand(), var2) ? EquipmentSlot.OFF_HAND : null);
-      this.item = this.slot == EquipmentSlot.HAND ? var1.getInventory().getItemInMainHand() : var1.getInventory().getItemInOffHand();
+         : (this.hasItem(player.getInventory().getItemInOffHand(), material) ? EquipmentSlot.OFF_HAND : null);
+      this.item = this.slot == EquipmentSlot.HAND ? player.getInventory().getItemInMainHand() : player.getInventory().getItemInOffHand();
    }
 
    @Deprecated
-   public InteractItem(Player var1, String var2) {
-      this.slot = this.hasItem(var1.getInventory().getItemInMainHand(), var2)
+   public InteractItem(Player player, String text) {
+      this.slot = this.hasItem(player.getInventory().getItemInMainHand(), text)
          ? EquipmentSlot.HAND
-         : (this.hasItem(var1.getInventory().getItemInOffHand(), var2) ? EquipmentSlot.OFF_HAND : null);
-      this.item = this.slot == EquipmentSlot.HAND ? var1.getInventory().getItemInMainHand() : var1.getInventory().getItemInOffHand();
+         : (this.hasItem(player.getInventory().getItemInOffHand(), text) ? EquipmentSlot.OFF_HAND : null);
+      this.item = this.slot == EquipmentSlot.HAND ? player.getInventory().getItemInMainHand() : player.getInventory().getItemInOffHand();
    }
 
    public EquipmentSlot getSlot() {
@@ -36,11 +36,11 @@ public class InteractItem {
       return this.item;
    }
 
-   private boolean hasItem(ItemStack var1, Material var2) {
-      return var1 != null && var1.getType() == var2;
+   private boolean hasItem(ItemStack item, Material material) {
+      return item != null && item.getType() == material;
    }
 
-   private boolean hasItem(ItemStack var1, String var2) {
-      return var1 != null && var1.getType().name().endsWith(var2);
+   private boolean hasItem(ItemStack item, String text) {
+      return item != null && item.getType().name().endsWith(text);
    }
 }

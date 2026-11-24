@@ -40,10 +40,10 @@ public class StatHistory {
    private static final String ENC_EXS = "Exstory";
    private static final String ENC_MOD = "Mod";
 
-   public StatHistory(@NotNull MMOItem var1, @NotNull ItemStat var2, @NotNull StatData var3) {
-      this.itemStat = var2;
-      this.originalData = var3;
-      this.parent = var1;
+   public StatHistory(@NotNull MMOItem mmoItem, @NotNull ItemStat itemStat, @NotNull StatData statData) {
+      this.itemStat = itemStat;
+      this.originalData = statData;
+      this.parent = mmoItem;
    }
 
    @NotNull
@@ -74,31 +74,31 @@ public class StatHistory {
    }
 
    @NotNull
-   public StatHistory setParent(@NotNull MMOItem var1) {
-      this.parent = var1;
+   public StatHistory setParent(@NotNull MMOItem mmoItem) {
+      this.parent = mmoItem;
       return this;
    }
 
-   public void setOriginalData(@NotNull StatData var1) {
-      Validate.notNull(var1, "Original data cannot be null");
-      this.originalData = var1;
+   public void setOriginalData(@NotNull StatData statData) {
+      Validate.notNull(statData, "Original data cannot be null");
+      this.originalData = statData;
    }
 
    @Nullable
-   public StatData getModifiersBonus(@NotNull UUID var1) {
-      return this.perModifierBonus.get(var1);
+   public StatData getModifiersBonus(@NotNull UUID uuid) {
+      return this.perModifierBonus.get(uuid);
    }
 
-   public void registerModifierBonus(@NotNull UUID var1, @NotNull StatData var2) {
-      Validate.notNull(var1, "Modifier UUID cannot be null");
-      Validate.notNull(var2, "Stat data cannot be null");
-      if (!var2.isEmpty()) {
-         this.perModifierBonus.put(var1, var2);
+   public void registerModifierBonus(@NotNull UUID uuid, @NotNull StatData statData) {
+      Validate.notNull(uuid, "Modifier UUID cannot be null");
+      Validate.notNull(statData, "Stat data cannot be null");
+      if (!statData.isEmpty()) {
+         this.perModifierBonus.put(uuid, statData);
       }
    }
 
-   public void removeModifierBonus(@NotNull UUID var1) {
-      this.perModifierBonus.remove(var1);
+   public void removeModifierBonus(@NotNull UUID uuid) {
+      this.perModifierBonus.remove(uuid);
    }
 
    @NotNull
@@ -111,12 +111,12 @@ public class StatHistory {
    }
 
    @Nullable
-   public StatData getGemstoneData(@NotNull UUID var1) {
-      return this.perGemstoneData.get(var1);
+   public StatData getGemstoneData(@NotNull UUID uuid) {
+      return this.perGemstoneData.get(uuid);
    }
 
-   public void removeGemData(@NotNull UUID var1) {
-      this.perGemstoneData.remove(var1);
+   public void removeGemData(@NotNull UUID uuid) {
+      this.perGemstoneData.remove(uuid);
    }
 
    @NotNull
@@ -124,11 +124,11 @@ public class StatHistory {
       return new ArrayList<>(this.perGemstoneData.keySet());
    }
 
-   public void registerGemstoneData(@NotNull UUID var1, @NotNull StatData var2) {
-      Validate.notNull(var1, "Gemstone ID cannot be null");
-      Validate.notNull(var2, "Stat data cannot be null");
-      if (!var2.isEmpty()) {
-         this.perGemstoneData.put(var1, var2);
+   public void registerGemstoneData(@NotNull UUID uuid, @NotNull StatData statData) {
+      Validate.notNull(uuid, "Gemstone ID cannot be null");
+      Validate.notNull(statData, "Stat data cannot be null");
+      if (!statData.isEmpty()) {
+         this.perGemstoneData.put(uuid, statData);
       }
    }
 
@@ -142,20 +142,20 @@ public class StatHistory {
    }
 
    public void fuseExternalData() {
-      StatData var1 = this.getItemStat().getClearStatData();
+      StatData clearStatData = this.getItemStat().getClearStatData();
 
-      for (StatData var3 : this.getExternalData()) {
-         ((Mergeable)var1).mergeWith((Mergeable)var3);
+      for (StatData statData : this.getExternalData()) {
+         ((Mergeable)clearStatData).mergeWith((Mergeable)statData);
       }
 
       this.getExternalData().clear();
-      this.registerExternalData(var1);
+      this.registerExternalData(clearStatData);
    }
 
-   public void registerExternalData(@NotNull StatData var1) {
-      Validate.notNull(var1, "Stat data cannot be null");
-      if (!var1.isEmpty()) {
-         this.perExternalData.add(var1);
+   public void registerExternalData(@NotNull StatData statData) {
+      Validate.notNull(statData, "Stat data cannot be null");
+      if (!statData.isEmpty()) {
+         this.perExternalData.add(statData);
       }
    }
 
@@ -164,26 +164,26 @@ public class StatHistory {
    }
 
    public void purgeGemstones() {
-      GemSocketsData var1 = (GemSocketsData)this.getMMOItem().getData(ItemStats.GEM_SOCKETS);
-      if (var1 == null) {
+      GemSocketsData data = (GemSocketsData)this.getMMOItem().getData(ItemStats.GEM_SOCKETS);
+      if (data == null) {
          this.perGemstoneData.clear();
       } else {
-         HashMap var2 = new HashMap();
+         HashMap map = new HashMap();
 
-         for (GemstoneData var4 : var1.getGemstones()) {
-            StatData var5 = this.perGemstoneData.get(var4.getHistoricUUID());
-            if (var5 != null) {
-               var2.put(var4.getHistoricUUID(), var5);
+         for (GemstoneData gemstone : data.getGemstones()) {
+            StatData statData = this.perGemstoneData.get(gemstone.getHistoricUUID());
+            if (statData != null) {
+               map.put(gemstone.getHistoricUUID(), statData);
             }
          }
 
-         this.perGemstoneData = var2;
+         this.perGemstoneData = map;
       }
    }
 
    @NotNull
-   public StatData recalculate(int var1) {
-      return this.recalculate(true, var1);
+   public StatData recalculate(int count) {
+      return this.recalculate(true, count);
    }
 
    @NotNull
@@ -191,99 +191,99 @@ public class StatHistory {
       return this.recalculate(true, null);
    }
 
-   private int findLevel(int var1, UUID var2) {
-      for (GemstoneData var4 : this.getMMOItem().getGemstones()) {
-         if (var4.getHistoricUUID().equals(var2)) {
-            return var4.isScaling() ? var4.getLevel() : var1;
+   private int findLevel(int count, UUID uuid) {
+      for (GemstoneData gemstone : this.getMMOItem().getGemstones()) {
+         if (gemstone.getHistoricUUID().equals(uuid)) {
+            return gemstone.isScaling() ? gemstone.getLevel() : count;
          }
       }
 
-      throw new IllegalArgumentException("Could not find level of gem " + var2);
+      throw new IllegalArgumentException("Could not find level of gem " + uuid);
    }
 
    @NotNull
-   public StatData recalculate(boolean var1, @Nullable Integer var2) {
-      if (var1) {
+   public StatData recalculate(boolean flag, @Nullable Integer value) {
+      if (flag) {
          this.purgeGemstones();
       }
 
-      UpgradeInfo var3 = var2 != null && var2 != 0 && this.getItemStat() instanceof Upgradable
+      UpgradeInfo upgradeInfo = value != null && value != 0 && this.getItemStat() instanceof Upgradable
          ? this.getMMOItem().getUpgradeTemplate().getUpgradeInfo(this.getItemStat())
          : null;
-      Mergeable var4 = ((Mergeable)this.originalData).clone();
+      Mergeable mergeable = ((Mergeable)this.originalData).clone();
 
-      for (StatData var6 : this.perModifierBonus.values()) {
-         var4.mergeWith((Mergeable)var6);
+      for (StatData statData : this.perModifierBonus.values()) {
+         mergeable.mergeWith((Mergeable)statData);
       }
 
-      if (var3 != null) {
-         var4 = (Mergeable)((Upgradable)this.getItemStat()).apply(var4, var3, var2);
+      if (upgradeInfo != null) {
+         mergeable = (Mergeable)((Upgradable)this.getItemStat()).apply(mergeable, upgradeInfo, value);
       }
 
-      for (UUID var11 : this.perGemstoneData.keySet()) {
-         Mergeable var7 = (Mergeable)this.getGemstoneData(var11);
-         if (var3 != null) {
-            int var8 = var2 - this.findLevel(var2, var11);
-            var7 = (Mergeable)((Upgradable)this.getItemStat()).apply(var7.clone(), var3, var8);
+      for (UUID key : this.perGemstoneData.keySet()) {
+         Mergeable gemstoneData = (Mergeable)this.getGemstoneData(key);
+         if (upgradeInfo != null) {
+            int count = value - this.findLevel(value, key);
+            gemstoneData = (Mergeable)((Upgradable)this.getItemStat()).apply(gemstoneData.clone(), upgradeInfo, count);
          }
 
-         var4.mergeWith(var7);
+         mergeable.mergeWith(gemstoneData);
       }
 
-      for (StatData var12 : this.getExternalData()) {
-         var4.mergeWith((Mergeable)var12);
+      for (StatData statData : this.getExternalData()) {
+         mergeable.mergeWith((Mergeable)statData);
       }
 
-      return var4;
+      return mergeable;
    }
 
    @NotNull
    public JsonObject toJson() {
-      JsonObject var1 = new JsonObject();
-      var1.addProperty("Stat", this.getItemStat().getId());
+      JsonObject jsonObject = new JsonObject();
+      jsonObject.addProperty("Stat", this.getItemStat().getId());
       if (!this.getOriginalData().isEmpty() || this.getItemStat() == ItemStats.ENCHANTS) {
-         var1.add("OGStory", ItemTag.compressTags(this.getItemStat().getAppliedNBT(this.getOriginalData())));
+         jsonObject.add("OGStory", ItemTag.compressTags(this.getItemStat().getAppliedNBT(this.getOriginalData())));
       }
 
-      JsonArray var2 = new JsonArray();
+      JsonArray jsonArray = new JsonArray();
 
-      for (UUID var4 : this.getAllGemstones()) {
-         JsonObject var5 = new JsonObject();
-         JsonArray var6 = ItemTag.compressTags(this.getItemStat().getAppliedNBT(this.getGemstoneData(var4)));
-         var5.add(var4.toString(), var6);
-         var2.add(var5);
+      for (UUID allGemstone : this.getAllGemstones()) {
+         JsonObject jsonObject2 = new JsonObject();
+         JsonArray jsonArray2 = ItemTag.compressTags(this.getItemStat().getAppliedNBT(this.getGemstoneData(allGemstone)));
+         jsonObject2.add(allGemstone.toString(), jsonArray2);
+         jsonArray.add(jsonObject2);
       }
 
-      if (var2.size() > 0) {
-         var1.add("Gemstory", var2);
+      if (jsonArray.size() > 0) {
+         jsonObject.add("Gemstory", jsonArray);
       }
 
-      JsonArray var9 = new JsonArray();
+      JsonArray jsonArray2 = new JsonArray();
 
-      for (StatData var12 : this.getExternalData()) {
-         if (!var12.isEmpty()) {
-            var9.add(ItemTag.compressTags(this.getItemStat().getAppliedNBT(var12)));
+      for (StatData statData : this.getExternalData()) {
+         if (!statData.isEmpty()) {
+            jsonArray2.add(ItemTag.compressTags(this.getItemStat().getAppliedNBT(statData)));
          }
       }
 
-      if (!var9.isEmpty()) {
-         var1.add("Exstory", var9);
+      if (!jsonArray2.isEmpty()) {
+         jsonObject.add("Exstory", jsonArray2);
       }
 
-      JsonArray var11 = new JsonArray();
+      JsonArray jsonArray3 = new JsonArray();
 
-      for (UUID var14 : this.getAllModifiers()) {
-         JsonObject var7 = new JsonObject();
-         JsonArray var8 = ItemTag.compressTags(this.getItemStat().getAppliedNBT(this.getModifiersBonus(var14)));
-         var7.add(var14.toString(), var8);
-         var11.add(var7);
+      for (UUID allModifier : this.getAllModifiers()) {
+         JsonObject jsonObject2 = new JsonObject();
+         JsonArray jsonArray4 = ItemTag.compressTags(this.getItemStat().getAppliedNBT(this.getModifiersBonus(allModifier)));
+         jsonObject2.add(allModifier.toString(), jsonArray4);
+         jsonArray3.add(jsonObject2);
       }
 
-      if (var11.size() > 0) {
-         var1.add("Mod", var11);
+      if (jsonArray3.size() > 0) {
+         jsonObject.add("Mod", jsonArray3);
       }
 
-      return var1;
+      return jsonObject;
    }
 
    @NotNull
@@ -296,82 +296,82 @@ public class StatHistory {
    }
 
    @Nullable
-   public static StatHistory fromJson(@NotNull MMOItem var0, @NotNull JsonObject var1) {
-      JsonElement var3 = null;
-      JsonElement var4 = null;
-      JsonElement var5 = null;
-      JsonElement var6 = null;
-      if (var1.has("Stat")) {
-         JsonElement var2 = var1.get("Stat");
-         if (var1.has("OGStory")) {
-            var3 = var1.get("OGStory");
+   public static StatHistory fromJson(@NotNull MMOItem mmoItem, @NotNull JsonObject jsonObject) {
+      JsonElement jsonElement = null;
+      JsonElement jsonElement2 = null;
+      JsonElement jsonElement3 = null;
+      JsonElement jsonElement4 = null;
+      if (jsonObject.has("Stat")) {
+         JsonElement stat = jsonObject.get("Stat");
+         if (jsonObject.has("OGStory")) {
+            jsonElement = jsonObject.get("OGStory");
          }
 
-         if (var1.has("Gemstory")) {
-            var4 = var1.get("Gemstory");
+         if (jsonObject.has("Gemstory")) {
+            jsonElement2 = jsonObject.get("Gemstory");
          }
 
-         if (var1.has("Exstory")) {
-            var5 = var1.get("Exstory");
+         if (jsonObject.has("Exstory")) {
+            jsonElement3 = jsonObject.get("Exstory");
          }
 
-         if (var1.has("Mod")) {
-            var6 = var1.get("Mod");
+         if (jsonObject.has("Mod")) {
+            jsonElement4 = jsonObject.get("Mod");
          }
 
-         if (!var2.isJsonPrimitive()) {
+         if (!stat.isJsonPrimitive()) {
             return null;
          }
 
-         if (var3 != null && !var3.isJsonArray()) {
+         if (jsonElement != null && !jsonElement.isJsonArray()) {
             return null;
          }
 
-         if (var4 != null && !var4.isJsonArray()) {
+         if (jsonElement2 != null && !jsonElement2.isJsonArray()) {
             return null;
          }
 
-         if (var5 != null && !var5.isJsonArray()) {
+         if (jsonElement3 != null && !jsonElement3.isJsonArray()) {
             return null;
          }
 
-         if (var6 != null && !var6.isJsonArray()) {
+         if (jsonElement4 != null && !jsonElement4.isJsonArray()) {
             return null;
          }
 
-         String var7 = var2.getAsJsonPrimitive().getAsString();
-         ItemStat var8 = MMOItems.plugin.getStats().get(var7);
-         if (var8 == null) {
+         String asString = stat.getAsJsonPrimitive().getAsString();
+         ItemStat itemStat = MMOItems.plugin.getStats().get(asString);
+         if (itemStat == null) {
             return null;
          }
 
-         StatData var9;
-         if (var3 != null) {
-            ArrayList var10 = ItemTag.decompressTags(var3.getAsJsonArray());
-            var9 = var8.getLoadedNBT(var10);
+         StatData statData;
+         if (jsonElement != null) {
+            ArrayList list = ItemTag.decompressTags(jsonElement.getAsJsonArray());
+            statData = itemStat.getLoadedNBT(list);
          } else {
-            var9 = var8.getClearStatData();
+            statData = itemStat.getClearStatData();
          }
 
-         if (var9 == null) {
+         if (statData == null) {
             return null;
          }
 
-         StatHistory var22 = new StatHistory(var0, var8, var9);
-         if (var4 != null) {
-            for (JsonElement var12 : var4.getAsJsonArray()) {
-               if (var12.isJsonObject()) {
-                  JsonObject var13 = var12.getAsJsonObject();
+         StatHistory statHistory = new StatHistory(mmoItem, itemStat, statData);
+         if (jsonElement2 != null) {
+            for (JsonElement asJson : jsonElement2.getAsJsonArray()) {
+               if (asJson.isJsonObject()) {
+                  JsonObject asJsonObject = asJson.getAsJsonObject();
 
-                  for (Entry var16 : var13.entrySet()) {
-                     String var17 = (String)var16.getKey();
-                     UUID var18 = MMOUtils.UUIDFromString(var17);
-                     JsonElement var19 = (JsonElement)var16.getValue();
-                     if (var19.isJsonArray() && var18 != null) {
-                        ArrayList var20 = ItemTag.decompressTags(var19.getAsJsonArray());
-                        StatData var21 = var8.getLoadedNBT(var20);
-                        if (var21 != null) {
-                           var22.registerGemstoneData(var18, var21);
+                  for (Entry entry : asJsonObject.entrySet()) {
+                     String key = (String)entry.getKey();
+                     UUID uuid = MMOUtils.UUIDFromString(key);
+                     JsonElement jsonElement5 = (JsonElement)entry.getValue();
+                     if (jsonElement5.isJsonArray() && uuid != null) {
+                        ArrayList list = ItemTag.decompressTags(jsonElement5.getAsJsonArray());
+                        StatData loadedNBT = itemStat.getLoadedNBT(list);
+                        if (loadedNBT != null) {
+                           statHistory.registerGemstoneData(uuid, loadedNBT);
                         }
                      }
                   }
@@ -379,32 +379,32 @@ public class StatHistory {
             }
          }
 
-         if (var5 != null) {
-            for (JsonElement var25 : var5.getAsJsonArray()) {
-               if (var25.isJsonArray()) {
-                  ArrayList var27 = ItemTag.decompressTags(var25.getAsJsonArray());
-                  StatData var29 = var8.getLoadedNBT(var27);
-                  if (var29 != null) {
-                     var22.registerExternalData(var29);
+         if (jsonElement3 != null) {
+            for (JsonElement asJson : jsonElement3.getAsJsonArray()) {
+               if (asJson.isJsonArray()) {
+                  ArrayList list = ItemTag.decompressTags(asJson.getAsJsonArray());
+                  StatData loadedNBT = itemStat.getLoadedNBT(list);
+                  if (loadedNBT != null) {
+                     statHistory.registerExternalData(loadedNBT);
                   }
                }
             }
          }
 
-         if (var6 != null) {
-            for (JsonElement var26 : var6.getAsJsonArray()) {
-               if (var26.isJsonObject()) {
-                  JsonObject var28 = var26.getAsJsonObject();
+         if (jsonElement4 != null) {
+            for (JsonElement asJson : jsonElement4.getAsJsonArray()) {
+               if (asJson.isJsonObject()) {
+                  JsonObject asJsonObject = asJson.getAsJsonObject();
 
-                  for (Entry var32 : var28.entrySet()) {
-                     String var33 = (String)var32.getKey();
-                     UUID var34 = MMOUtils.UUIDFromString(var33);
-                     JsonElement var35 = (JsonElement)var32.getValue();
-                     if (var35.isJsonArray() && var34 != null) {
-                        ArrayList var36 = ItemTag.decompressTags(var35.getAsJsonArray());
-                        StatData var37 = var8.getLoadedNBT(var36);
-                        if (var37 != null) {
-                           var22.registerModifierBonus(var34, var37);
+                  for (Entry entry : asJsonObject.entrySet()) {
+                     String key = (String)entry.getKey();
+                     UUID uuid = MMOUtils.UUIDFromString(key);
+                     JsonElement jsonElement5 = (JsonElement)entry.getValue();
+                     if (jsonElement5.isJsonArray() && uuid != null) {
+                        ArrayList list = ItemTag.decompressTags(jsonElement5.getAsJsonArray());
+                        StatData loadedNBT = itemStat.getLoadedNBT(list);
+                        if (loadedNBT != null) {
+                           statHistory.registerModifierBonus(uuid, loadedNBT);
                         }
                      }
                   }
@@ -412,83 +412,83 @@ public class StatHistory {
             }
          }
 
-         return var22;
+         return statHistory;
       } else {
          return null;
       }
    }
 
    @Nullable
-   public static StatHistory fromNBTString(@NotNull MMOItem var0, @NotNull String var1) {
+   public static StatHistory fromNBTString(@NotNull MMOItem mmoItem, @NotNull String text) {
       try {
-         JsonParser var2 = new JsonParser();
-         JsonObject var5 = var2.parse(var1).getAsJsonObject();
-         return fromJson(var0, var5);
-      } catch (Throwable var4) {
-         FriendlyFeedbackProvider var3 = new FriendlyFeedbackProvider(FFPMMOItems.get());
-         var3.activatePrefix(true, "Stat History");
-         var3.log(
-            FriendlyFeedbackCategory.ERROR, "Could not get stat history: $f{0}$b at $f{1}", new String[]{var4.getMessage(), var4.getStackTrace()[0].toString()}
+         JsonParser jsonParser = new JsonParser();
+         JsonObject asJsonObject = jsonParser.parse(text).getAsJsonObject();
+         return fromJson(mmoItem, asJsonObject);
+      } catch (Throwable exception) {
+         FriendlyFeedbackProvider friendlyFeedbackProvider = new FriendlyFeedbackProvider(FFPMMOItems.get());
+         friendlyFeedbackProvider.activatePrefix(true, "Stat History");
+         friendlyFeedbackProvider.log(
+            FriendlyFeedbackCategory.ERROR, "Could not get stat history: $f{0}$b at $f{1}", new String[]{exception.getMessage(), exception.getStackTrace()[0].toString()}
          );
-         var3.sendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
+         friendlyFeedbackProvider.sendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
          return null;
       }
    }
 
    @NotNull
    public StatHistory clone() {
-      StatHistory var1 = new StatHistory(this.getMMOItem(), this.getItemStat(), ((Mergeable)this.getOriginalData()).clone());
-      this.perGemstoneData.forEach((var1x, var2) -> var1.perGemstoneData.put(var1x, ((Mergeable)var2).clone()));
-      this.perExternalData.forEach(var1x -> var1.perExternalData.add(((Mergeable)var1x).clone()));
-      this.perModifierBonus.forEach((var1x, var2) -> var1.perModifierBonus.put(var1x, ((Mergeable)var2).clone()));
-      return var1;
+      StatHistory statHistory = new StatHistory(this.getMMOItem(), this.getItemStat(), ((Mergeable)this.getOriginalData()).clone());
+      this.perGemstoneData.forEach((var1x, statData) -> statHistory.perGemstoneData.put(var1x, ((Mergeable)statData).clone()));
+      this.perExternalData.forEach(var1x -> statHistory.perExternalData.add(((Mergeable)var1x).clone()));
+      this.perModifierBonus.forEach((var1x, statData) -> statHistory.perModifierBonus.put(var1x, ((Mergeable)statData).clone()));
+      return statHistory;
    }
 
-   public void assimilate(@NotNull StatHistory var1) {
-      if (var1.getItemStat().getNBTPath().equals(this.getItemStat().getNBTPath())) {
-         for (UUID var3 : var1.getAllGemstones()) {
-            this.registerGemstoneData(var3, var1.getGemstoneData(var3));
+   public void assimilate(@NotNull StatHistory statHistory) {
+      if (statHistory.getItemStat().getNBTPath().equals(this.getItemStat().getNBTPath())) {
+         for (UUID allGemstone : statHistory.getAllGemstones()) {
+            this.registerGemstoneData(allGemstone, statHistory.getGemstoneData(allGemstone));
          }
 
-         for (StatData var6 : var1.getExternalData()) {
-            this.registerExternalData(var6);
+         for (StatData statData : statHistory.getExternalData()) {
+            this.registerExternalData(statData);
          }
 
-         for (UUID var7 : var1.getAllModifiers()) {
-            this.registerModifierBonus(var7, var1.getModifiersBonus(var7));
+         for (UUID allModifier : statHistory.getAllModifiers()) {
+            this.registerModifierBonus(allModifier, statHistory.getModifiersBonus(allModifier));
          }
       }
    }
 
    @Deprecated
-   public StatHistory clone(@NotNull MMOItem var1) {
-      StatHistory var2 = this.clone();
-      var2.setParent(var1);
-      return var2;
+   public StatHistory clone(@NotNull MMOItem mmoItem) {
+      StatHistory statHistory = this.clone();
+      statHistory.setParent(mmoItem);
+      return statHistory;
    }
 
    @Deprecated
    @NotNull
-   public static StatHistory from(@NotNull MMOItem var0, @NotNull ItemStat var1) {
-      return var0.computeStatHistory(var1);
+   public static StatHistory from(@NotNull MMOItem mmoItem, @NotNull ItemStat itemStat) {
+      return mmoItem.computeStatHistory(itemStat);
    }
 
    @Deprecated
    @NotNull
-   public static StatHistory from(@NotNull MMOItem var0, @NotNull ItemStat var1, boolean var2) {
-      if (var2) {
-         StatHistory var3 = new StatHistory(var0, var1, Objects.requireNonNull(var0.getData(var1)));
-         var0.setStatHistory(var1, var3);
-         return var3;
+   public static StatHistory from(@NotNull MMOItem mmoItem, @NotNull ItemStat itemStat, boolean flag) {
+      if (flag) {
+         StatHistory statHistory = new StatHistory(mmoItem, itemStat, Objects.requireNonNull(mmoItem.getData(itemStat)));
+         mmoItem.setStatHistory(itemStat, statHistory);
+         return statHistory;
       } else {
-         return var0.computeStatHistory(var1);
+         return mmoItem.computeStatHistory(itemStat);
       }
    }
 
    @Deprecated
    @NotNull
-   public StatData recalculateUnupgraded(boolean var1) {
-      return this.recalculate(var1, null);
+   public StatData recalculateUnupgraded(boolean flag) {
+      return this.recalculate(flag, null);
    }
 
    @Deprecated

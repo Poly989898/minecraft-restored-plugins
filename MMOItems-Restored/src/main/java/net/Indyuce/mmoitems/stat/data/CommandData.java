@@ -8,12 +8,12 @@ public class CommandData {
    private final boolean console;
    private final boolean op;
 
-   public CommandData(String var1, double var2, boolean var4, boolean var5) {
-      Validate.notNull(var1, "Command cannot be null");
-      this.command = var1;
-      this.delay = var2;
-      this.console = var4;
-      this.op = var5;
+   public CommandData(String text, double value, boolean flag, boolean flag2) {
+      Validate.notNull(text, "Command cannot be null");
+      this.command = text;
+      this.delay = value;
+      this.console = flag;
+      this.op = flag2;
    }
 
    public String getCommand() {
@@ -37,12 +37,12 @@ public class CommandData {
    }
 
    @Override
-   public boolean equals(Object var1) {
-      if (this == var1) {
+   public boolean equals(Object obj) {
+      if (this == obj) {
          return true;
-      } else if (var1 != null && this.getClass() == var1.getClass()) {
-         CommandData var2 = (CommandData)var1;
-         return Double.compare(var2.delay, this.delay) == 0 && this.console == var2.console && this.op == var2.op && this.command.equals(var2.command);
+      } else if (obj != null && this.getClass() == obj.getClass()) {
+         CommandData commandData = (CommandData)obj;
+         return Double.compare(commandData.delay, this.delay) == 0 && this.console == commandData.console && this.op == commandData.op && this.command.equals(commandData.command);
       } else {
          return false;
       }

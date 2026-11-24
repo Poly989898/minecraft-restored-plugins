@@ -41,38 +41,38 @@ public class CraftingStation implements PreloadedObject {
       }
    });
 
-   public CraftingStation(String var1, FileConfiguration var2) {
-      this.postLoadAction.cacheConfig(var2);
-      this.id = var1.toLowerCase().replace("_", "-").replace(" ", "-");
-      this.name = var2.getString("name", "A Station With No Name");
-      this.layout = MMOItems.plugin.getLayouts().getLayout(var2.getString("layout", "default"));
-      this.sound = Sound.valueOf(var2.getString("sound", "ENTITY_EXPERIENCE_ORB_PICKUP").toUpperCase());
+   public CraftingStation(String text, FileConfiguration config) {
+      this.postLoadAction.cacheConfig(config);
+      this.id = text.toLowerCase().replace("_", "-").replace(" ", "-");
+      this.name = config.getString("name", "A Station With No Name");
+      this.layout = MMOItems.plugin.getLayouts().getLayout(config.getString("layout", "default"));
+      this.sound = Sound.valueOf(config.getString("sound", "ENTITY_EXPERIENCE_ORB_PICKUP").toUpperCase());
 
-      for (String var4 : var2.getConfigurationSection("recipes").getKeys(false)) {
+      for (String key : config.getConfigurationSection("recipes").getKeys(false)) {
          try {
-            this.registerRecipe(this.loadRecipe(var2.getConfigurationSection("recipes." + var4)));
-         } catch (IllegalArgumentException var6) {
+            this.registerRecipe(this.loadRecipe(config.getConfigurationSection("recipes." + key)));
+         } catch (IllegalArgumentException exception) {
             MMOItems.plugin
                .getLogger()
-               .log(Level.SEVERE, "An issue occurred registering recipe '" + var4 + "' from crafting station '" + var1 + "': " + var6.getMessage());
+               .log(Level.SEVERE, "An issue occurred registering recipe '" + key + "' from crafting station '" + text + "': " + exception.getMessage());
          }
       }
 
-      this.itemOptions = new StationItemOptions(var2.getConfigurationSection("items"));
-      this.maxQueueSize = Math.max(1, Math.min(var2.getInt("max-queue-size"), 64));
+      this.itemOptions = new StationItemOptions(config.getConfigurationSection("items"));
+      this.maxQueueSize = Math.max(1, Math.min(config.getInt("max-queue-size"), 64));
    }
 
-   public CraftingStation(String var1, String var2, Layout var3, Sound var4, StationItemOptions var5, int var6, CraftingStation var7) {
-      Validate.notNull(var1, "Crafting station ID must not be null");
-      Validate.notNull(var2, "Crafting station name must not be null");
-      Validate.notNull(var4, "Crafting station sound must not be null");
-      this.id = var1.toLowerCase().replace("_", "-").replace(" ", "-");
-      this.name = var2;
-      this.layout = var3;
-      this.sound = var4;
-      this.itemOptions = var5;
-      this.maxQueueSize = var6;
-      this.parent = var7;
+   public CraftingStation(String text, String text2, Layout layout, Sound sound, StationItemOptions stationItemOptions, int count, CraftingStation craftingStation) {
+      Validate.notNull(text, "Crafting station ID must not be null");
+      Validate.notNull(text2, "Crafting station name must not be null");
+      Validate.notNull(sound, "Crafting station sound must not be null");
+      this.id = text.toLowerCase().replace("_", "-").replace(" ", "-");
+      this.name = text2;
+      this.layout = layout;
+      this.sound = sound;
+      this.itemOptions = stationItemOptions;
+      this.maxQueueSize = count;
+      this.parent = craftingStation;
    }
 
    @NotNull
@@ -107,66 +107,66 @@ public class CraftingStation implements PreloadedObject {
          return this.recipes.values();
       }
 
-      ArrayList var1 = new ArrayList<>(this.recipes.values());
+      ArrayList list = new ArrayList<>(this.recipes.values());
 
-      for (CraftingStation var2 = this.parent; var2 != null; var2 = var2.parent) {
-         var1.addAll(var2.recipes.values());
+      for (CraftingStation parent = this.parent; parent != null; parent = parent.parent) {
+         list.addAll(parent.recipes.values());
       }
 
-      return var1;
+      return list;
    }
 
-   public boolean hasRecipe(String var1) {
-      return this.recipes.containsKey(var1) || this.parent != null && this.parent.hasRecipe(var1);
+   public boolean hasRecipe(String text) {
+      return this.recipes.containsKey(text) || this.parent != null && this.parent.hasRecipe(text);
    }
 
-   public Recipe getRecipe(String var1) {
-      Recipe var2 = this.recipes.get(var1);
-      return var2 == null && this.parent != null ? this.parent.getRecipe(var1) : var2;
+   public Recipe getRecipe(String text) {
+      Recipe recipe = this.recipes.get(text);
+      return recipe == null && this.parent != null ? this.parent.getRecipe(text) : recipe;
    }
 
    public int getMaxQueueSize() {
       return this.maxQueueSize;
    }
 
-   public List<CheckedRecipe> getAvailableRecipes(PlayerData var1, IngredientInventory var2) {
-      ArrayList var3 = new ArrayList();
+   public List<CheckedRecipe> getAvailableRecipes(PlayerData playerData, IngredientInventory ingredientInventory) {
+      ArrayList list = new ArrayList();
 
-      for (Recipe var5 : this.getRecipes()) {
-         CheckedRecipe var6 = var5.evaluateRecipe(var1, var2);
-         if ((var6.areConditionsMet() || !var6.getRecipe().hasOption(Recipe.RecipeOption.HIDE_WHEN_LOCKED))
-            && (var6.allIngredientsHad() || !var6.getRecipe().hasOption(Recipe.RecipeOption.HIDE_WHEN_NO_INGREDIENTS))) {
-            var3.add(var6);
+      for (Recipe recipe : this.getRecipes()) {
+         CheckedRecipe checkedRecipe = recipe.evaluateRecipe(playerData, ingredientInventory);
+         if ((checkedRecipe.areConditionsMet() || !checkedRecipe.getRecipe().hasOption(Recipe.RecipeOption.HIDE_WHEN_LOCKED))
+            && (checkedRecipe.allIngredientsHad() || !checkedRecipe.getRecipe().hasOption(Recipe.RecipeOption.HIDE_WHEN_NO_INGREDIENTS))) {
+            list.add(checkedRecipe);
          }
       }
 
-      return var3;
+      return list;
    }
 
    public StationItemOptions getItemOptions() {
       return this.itemOptions;
    }
 
-   public void registerRecipe(Recipe var1) {
-      this.recipes.put(var1.getId(), var1);
+   public void registerRecipe(Recipe recipe) {
+      this.recipes.put(recipe.getId(), recipe);
    }
 
    public int getMaxPage() {
-      int var1 = this.getRecipes().size();
-      return Math.max(1, (int)Math.ceil((double)var1 / this.getLayout().getRecipeSlots().size()));
+      int size = this.getRecipes().size();
+      return Math.max(1, (int)Math.ceil((double)size / this.getLayout().getRecipeSlots().size()));
    }
 
-   private Recipe loadRecipe(ConfigurationSection var1) {
-      return var1.contains("output") ? new CraftingRecipe(var1) : new UpgradingRecipe(var1);
+   private Recipe loadRecipe(ConfigurationSection section) {
+      return section.contains("output") ? new CraftingRecipe(section) : new UpgradingRecipe(section);
    }
 
    @Override
-   public boolean equals(Object var1) {
-      if (this == var1) {
+   public boolean equals(Object obj) {
+      if (this == obj) {
          return true;
-      } else if (var1 != null && this.getClass() == var1.getClass()) {
-         CraftingStation var2 = (CraftingStation)var1;
-         return Objects.equals(this.id, var2.id);
+      } else if (obj != null && this.getClass() == obj.getClass()) {
+         CraftingStation craftingStation = (CraftingStation)obj;
+         return Objects.equals(this.id, craftingStation.id);
       } else {
          return false;
       }

@@ -9,14 +9,14 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 public class BiomeChangeListener implements Listener {
    @EventHandler(priority = EventPriority.MONITOR)
-   public void onPlayerMove(PlayerMoveEvent var1) {
-      if (!var1.isCancelled()
-         && PlayerData.has(var1.getPlayer())
-         && (var1.getFrom().getBlockX() != var1.getTo().getBlockX() || var1.getFrom().getBlockZ() != var1.getTo().getBlockZ())) {
-         Biome var2 = var1.getFrom().getBlock().getBiome();
-         Biome var3 = var1.getTo().getBlock().getBiome();
-         if (var3 != var2) {
-            PlayerData.get(var1.getPlayer()).getInventory().scheduleUpdate();
+   public void onPlayerMove(PlayerMoveEvent event) {
+      if (!event.isCancelled()
+         && PlayerData.has(event.getPlayer())
+         && (event.getFrom().getBlockX() != event.getTo().getBlockX() || event.getFrom().getBlockZ() != event.getTo().getBlockZ())) {
+         Biome biome = event.getFrom().getBlock().getBiome();
+         Biome biome2 = event.getTo().getBlock().getBiome();
+         if (biome2 != biome) {
+            PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
          }
       }
    }

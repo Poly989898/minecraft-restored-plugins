@@ -15,44 +15,44 @@ public class FormattedMessage {
    @NotNull
    private String message;
 
-   public FormattedMessage(@NotNull Message var1) {
-      this.message = var1.getRaw();
-      this.actionBar = MMOItems.plugin.getConfig().getBoolean("action-bar-display." + var1.getActionBarConfigPath());
+   public FormattedMessage(@NotNull Message message) {
+      this.message = message.getRaw();
+      this.actionBar = MMOItems.plugin.getConfig().getBoolean("action-bar-display." + message.getActionBarConfigPath());
    }
 
-   public FormattedMessage(String var1, boolean var2) {
-      this.message = var1;
-      this.actionBar = var2;
+   public FormattedMessage(String text, boolean flag) {
+      this.message = text;
+      this.actionBar = flag;
    }
 
    @NotNull
-   public FormattedMessage format(@Nullable ChatColor var1, @NotNull String... var2) {
+   public FormattedMessage format(@Nullable ChatColor chatColor, @NotNull String... texts) {
       if (this.message.isEmpty()) {
          return this;
       }
 
-      if (var1 != null) {
-         this.message = var1 + this.message;
+      if (chatColor != null) {
+         this.message = chatColor + this.message;
       }
 
-      for (byte var3 = 0; var3 < var2.length; var3 += 2) {
-         this.message = this.message.replace(var2[var3], var2[var3 + 1]);
+      for (byte b = 0; b < texts.length; b += 2) {
+         this.message = this.message.replace(texts[b], texts[b + 1]);
       }
 
       return this;
    }
 
-   public void send(Player var1) {
+   public void send(Player player) {
       if (!this.message.isEmpty()) {
          this.message = MythicLib.plugin.parseColors(this.message);
          if (this.actionBar) {
             if (Bukkit.getPluginManager().isPluginEnabled("MMOCore")) {
-               PlayerData.get(var1).setLastActivity(PlayerActivity.ACTION_BAR_MESSAGE);
+               PlayerData.get(player).setLastActivity(PlayerActivity.ACTION_BAR_MESSAGE);
             }
 
-            MythicLib.plugin.getVersion().getWrapper().sendActionBar(var1, this.message);
+            MythicLib.plugin.getVersion().getWrapper().sendActionBar(player, this.message);
          } else {
-            var1.sendMessage(this.message);
+            player.sendMessage(this.message);
          }
       }
    }

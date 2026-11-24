@@ -21,31 +21,31 @@ public class ItemDropEvent extends Event implements Cancellable {
    private final String mythicMobName;
    private final CustomBlock customBlock;
 
-   public ItemDropEvent(LivingEntity var1, List<ItemStack> var2, CustomBlock var3) {
-      this(var1, var2, ItemDropEvent.DropCause.CUSTOM_BLOCK, null, null, null, var3);
+   public ItemDropEvent(LivingEntity entity, List<ItemStack> items, CustomBlock customBlock) {
+      this(entity, items, ItemDropEvent.DropCause.CUSTOM_BLOCK, null, null, null, customBlock);
    }
 
-   public ItemDropEvent(LivingEntity var1, List<ItemStack> var2, Block var3) {
-      this(var1, var2, ItemDropEvent.DropCause.NORMAL_BLOCK, var3, null, null, null);
+   public ItemDropEvent(LivingEntity entity, List<ItemStack> items, Block block) {
+      this(entity, items, ItemDropEvent.DropCause.NORMAL_BLOCK, block, null, null, null);
    }
 
-   public ItemDropEvent(LivingEntity var1, List<ItemStack> var2, Entity var3) {
-      this(var1, var2, ItemDropEvent.DropCause.NORMAL_MONSTER, null, var3, null, null);
+   public ItemDropEvent(LivingEntity entity, List<ItemStack> items, Entity entity2) {
+      this(entity, items, ItemDropEvent.DropCause.NORMAL_MONSTER, null, entity2, null, null);
    }
 
    @Deprecated
-   public ItemDropEvent(LivingEntity var1, List<ItemStack> var2, ItemDropEvent.DropCause var3, String var4) {
-      this(var1, var2, ItemDropEvent.DropCause.MYTHIC_MOB, null, null, var4, null);
+   public ItemDropEvent(LivingEntity entity, List<ItemStack> items, ItemDropEvent.DropCause dropCause, String text) {
+      this(entity, items, ItemDropEvent.DropCause.MYTHIC_MOB, null, null, text, null);
    }
 
-   private ItemDropEvent(LivingEntity var1, List<ItemStack> var2, ItemDropEvent.DropCause var3, Block var4, Entity var5, String var6, CustomBlock var7) {
-      this.player = var1;
-      this.cause = var3;
-      this.drops = var2;
-      this.block = var4;
-      this.entity = var5;
-      this.mythicMobName = var6;
-      this.customBlock = var7;
+   private ItemDropEvent(LivingEntity entity, List<ItemStack> items, ItemDropEvent.DropCause dropCause, Block block, Entity entity2, String text, CustomBlock customBlock) {
+      this.player = entity;
+      this.cause = dropCause;
+      this.drops = items;
+      this.block = block;
+      this.entity = entity2;
+      this.mythicMobName = text;
+      this.customBlock = customBlock;
    }
 
    public boolean isCancelled() {
@@ -76,8 +76,8 @@ public class ItemDropEvent extends Event implements Cancellable {
       return this.mythicMobName;
    }
 
-   public void setCancelled(boolean var1) {
-      this.cancelled = var1;
+   public void setCancelled(boolean flag) {
+      this.cancelled = flag;
    }
 
    public HandlerList getHandlers() {

@@ -20,49 +20,49 @@ import org.bukkit.inventory.ItemStack;
 
 public class GuiListener implements Listener {
    @EventHandler
-   public void a(InventoryClickEvent var1) {
-      Player var2 = (Player)var1.getWhoClicked();
-      ItemStack var3 = var1.getCurrentItem();
-      if (var1.getInventory().getHolder() instanceof PluginInventory) {
-         PluginInventory var4 = (PluginInventory)var1.getInventory().getHolder();
-         var4.whenClicked(var1);
-         if (!(var4 instanceof EditionInventory)
-            || var1.getInventory() != var1.getClickedInventory()
-            || !MMOUtils.isMetaItem(var3, false)
-            || !var3.getItemMeta().getDisplayName().startsWith(ChatColor.GREEN + "")) {
+   public void a(InventoryClickEvent event) {
+      Player whoClicked = (Player)event.getWhoClicked();
+      ItemStack currentItem = event.getCurrentItem();
+      if (event.getInventory().getHolder() instanceof PluginInventory) {
+         PluginInventory holder = (PluginInventory)event.getInventory().getHolder();
+         holder.whenClicked(event);
+         if (!(holder instanceof EditionInventory)
+            || event.getInventory() != event.getClickedInventory()
+            || !MMOUtils.isMetaItem(currentItem, false)
+            || !currentItem.getItemMeta().getDisplayName().startsWith(ChatColor.GREEN + "")) {
             return;
          }
 
-         if (var3.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "✤" + " Get the Item! " + "✤")) {
-            if (var1.getAction() == InventoryAction.PICKUP_ALL) {
-               for (ItemStack var9 : var2.getInventory().addItem(new ItemStack[]{var1.getInventory().getItem(4)}).values()) {
-                  var2.getWorld().dropItemNaturally(var2.getLocation(), var9);
+         if (currentItem.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "✤" + " Get the Item! " + "✤")) {
+            if (event.getAction() == InventoryAction.PICKUP_ALL) {
+               for (ItemStack item : whoClicked.getInventory().addItem(new ItemStack[]{event.getInventory().getItem(4)}).values()) {
+                  whoClicked.getWorld().dropItemNaturally(whoClicked.getLocation(), item);
                }
 
-               if (NBTItem.get(var1.getInventory().getItem(4)).getBoolean("MMOITEMS_UNSTACKABLE")) {
-                  ((EditionInventory)var4).updateCachedItem();
-                  var1.getInventory().setItem(4, ((EditionInventory)var4).getCachedItem());
+               if (NBTItem.get(event.getInventory().getItem(4)).getBoolean("MMOITEMS_UNSTACKABLE")) {
+                  ((EditionInventory)holder).updateCachedItem();
+                  event.getInventory().setItem(4, ((EditionInventory)holder).getCachedItem());
                }
-            } else if (var1.getAction() == InventoryAction.PICKUP_HALF) {
-               for (ItemStack var6 : var2.getInventory().addItem(new ItemStack[]{var1.getInventory().getItem(4)}).values()) {
-                  var2.getWorld().dropItemNaturally(var2.getLocation(), var6);
+            } else if (event.getAction() == InventoryAction.PICKUP_HALF) {
+               for (ItemStack item : whoClicked.getInventory().addItem(new ItemStack[]{event.getInventory().getItem(4)}).values()) {
+                  whoClicked.getWorld().dropItemNaturally(whoClicked.getLocation(), item);
                }
 
-               ((EditionInventory)var4).updateCachedItem();
-               var1.getInventory().setItem(4, ((EditionInventory)var4).getCachedItem());
+               ((EditionInventory)holder).updateCachedItem();
+               event.getInventory().setItem(4, ((EditionInventory)holder).getCachedItem());
             }
          }
 
-         MMOItemTemplate var8 = ((EditionInventory)var4).getEdited();
-         if (var3.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "⇨" + " Back")) {
-            if (var4 instanceof ItemEdition) {
-               new ItemBrowser(var2, var8.getType()).open();
-            } else if (var4 instanceof RecipeListGUI) {
-               new RecipeTypeListGUI(var2, var8).open((EditionInventory)var4);
-            } else if (var4 instanceof RecipeEditorGUI) {
-               new RecipeListGUI(var2, var8, ((RecipeEditorGUI)var4).getRecipeRegistry()).open((EditionInventory)var4);
+         MMOItemTemplate edited = ((EditionInventory)holder).getEdited();
+         if (currentItem.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "⇨" + " Back")) {
+            if (holder instanceof ItemEdition) {
+               new ItemBrowser(whoClicked, edited.getType()).open();
+            } else if (holder instanceof RecipeListGUI) {
+               new RecipeTypeListGUI(whoClicked, edited).open((EditionInventory)holder);
+            } else if (holder instanceof RecipeEditorGUI) {
+               new RecipeListGUI(whoClicked, edited, ((RecipeEditorGUI)holder).getRecipeRegistry()).open((EditionInventory)holder);
             } else {
-               new ItemEdition(var2, var8).open((EditionInventory)var4);
+               new ItemEdition(whoClicked, edited).open((EditionInventory)holder);
             }
          }
       }

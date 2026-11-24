@@ -31,135 +31,135 @@ public class ItemSkin extends UseItem {
    public static final String SKIN_TYPE_TAG = "MMOITEMS_SKIN_TYPE";
 
    @Deprecated
-   public ItemSkin(Player var1, NBTItem var2) {
-      super(var1, var2);
+   public ItemSkin(Player player, NBTItem nbtItem) {
+      super(player, nbtItem);
    }
 
-   public ItemSkin(PlayerData var1, NBTItem var2) {
-      super(var1, var2);
+   public ItemSkin(PlayerData playerData, NBTItem nbtItem) {
+      super(playerData, nbtItem);
    }
 
-   public ItemSkin.ApplyResult applyOntoItem(NBTItem var1, Type var2) {
-      if (var2 == Type.SKIN) {
+   public ItemSkin.ApplyResult applyOntoItem(NBTItem nbtItem, Type type) {
+      if (type == Type.SKIN) {
          return new ItemSkin.ApplyResult(ItemSkin.ResultType.NONE);
       }
 
-      if (MMOItems.plugin.getConfig().getBoolean("locked-skins") && MMOUtils.isNonEmpty(var1.getString("MMOITEMS_SKIN_ID"))) {
+      if (MMOItems.plugin.getConfig().getBoolean("locked-skins") && MMOUtils.isNonEmpty(nbtItem.getString("MMOITEMS_SKIN_ID"))) {
          this.player.playSound(this.player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.0F);
-         Message.SKIN_REJECTED.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(var1.getItem())).send(this.player);
+         Message.SKIN_REJECTED.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(nbtItem.getItem())).send(this.player);
          return new ItemSkin.ApplyResult(ItemSkin.ResultType.NONE);
       }
 
       if (this.mmoitem.hasData(ItemStats.COMPATIBLE_TYPES)) {
-         List<String> var3 = ((StringListData)this.mmoitem.getData(ItemStats.COMPATIBLE_TYPES)).getList();
-         if (var3.size() > 0 && var3.stream().noneMatch(var1x -> var1x.equalsIgnoreCase(var2.getId()))) {
+         List<String> texts = ((StringListData)this.mmoitem.getData(ItemStats.COMPATIBLE_TYPES)).getList();
+         if (texts.size() > 0 && texts.stream().noneMatch(var1x -> var1x.equalsIgnoreCase(type.getId()))) {
             this.player.playSound(this.player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 2.0F);
-            Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(var1.getItem())).send(this.player);
+            Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(nbtItem.getItem())).send(this.player);
             return new ItemSkin.ApplyResult(ItemSkin.ResultType.NONE);
          }
       }
 
       if (this.mmoitem.hasData(ItemStats.COMPATIBLE_IDS)) {
-         List<String> var6 = ((StringListData)this.mmoitem.getData(ItemStats.COMPATIBLE_IDS)).getList();
-         String var4 = var1.getString("MMOITEMS_ITEM_ID");
-         if (var6.size() > 0 && var6.stream().noneMatch(var1x -> var1x.equalsIgnoreCase(var4))) {
+         List<String> texts = ((StringListData)this.mmoitem.getData(ItemStats.COMPATIBLE_IDS)).getList();
+         String mMOITEMSITEMID = nbtItem.getString("MMOITEMS_ITEM_ID");
+         if (texts.size() > 0 && texts.stream().noneMatch(var1x -> var1x.equalsIgnoreCase(mMOITEMSITEMID))) {
             this.player.playSound(this.player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 2.0F);
-            Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(var1.getItem())).send(this.player);
+            Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(nbtItem.getItem())).send(this.player);
             return new ItemSkin.ApplyResult(ItemSkin.ResultType.NONE);
          }
       }
 
       if (this.mmoitem.hasData(ItemStats.COMPATIBLE_MATERIALS)) {
-         List<String> var7 = ((StringListData)this.mmoitem.getData(ItemStats.COMPATIBLE_MATERIALS)).getList();
-         if (var7.size() > 0 && var7.stream().noneMatch(var1x -> var1x.equalsIgnoreCase(var1.getItem().getType().name()))) {
+         List<String> texts = ((StringListData)this.mmoitem.getData(ItemStats.COMPATIBLE_MATERIALS)).getList();
+         if (texts.size() > 0 && texts.stream().noneMatch(var1x -> var1x.equalsIgnoreCase(nbtItem.getItem().getType().name()))) {
             this.player.playSound(this.player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 2.0F);
-            Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(var1.getItem())).send(this.player);
+            Message.SKIN_INCOMPATIBLE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(nbtItem.getItem())).send(this.player);
             return new ItemSkin.ApplyResult(ItemSkin.ResultType.NONE);
          }
       }
 
-      double var8 = this.getNBTItem().getStat(ItemStats.SUCCESS_RATE.getId());
-      if (var8 != 0.0 && RANDOM.nextDouble() < 1.0 - var8 / 100.0) {
+      double stat = this.getNBTItem().getStat(ItemStats.SUCCESS_RATE.getId());
+      if (stat != 0.0 && RANDOM.nextDouble() < 1.0 - stat / 100.0) {
          this.player.playSound(this.player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0F, 1.0F);
-         Message.SKIN_BROKE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(var1.getItem())).send(this.player);
+         Message.SKIN_BROKE.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(nbtItem.getItem())).send(this.player);
          return new ItemSkin.ApplyResult(ItemSkin.ResultType.FAILURE);
       } else {
-         ItemStack var5 = applySkin(var1, this.mmoitem);
+         ItemStack item = applySkin(nbtItem, this.mmoitem);
          this.player.playSound(this.player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 2.0F);
-         Message.SKIN_APPLIED.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(var1.getItem())).send(this.player);
-         return new ItemSkin.ApplyResult(var5);
+         Message.SKIN_APPLIED.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(nbtItem.getItem())).send(this.player);
+         return new ItemSkin.ApplyResult(item);
       }
    }
 
    @Deprecated
    @NotNull
-   public static ItemStack applySkin(@NotNull NBTItem var0, @NotNull VolatileMMOItem var1) {
-      NBTItem var2 = var1.getNBT();
-      String var3 = MMOUtils.requireNonEmptyElse(var1.getNBT().getString("MMOITEMS_SKIN_ID"), var2.getString("MMOITEMS_ITEM_ID"));
-      String var4 = MMOUtils.requireNonEmptyElse(var1.getNBT().getString("MMOITEMS_SKIN_TYPE"), var2.getString("MMOITEMS_ITEM_TYPE"));
-      var0.addTag(new ItemTag[]{new ItemTag("MMOITEMS_SKIN_ID", var3)});
-      var0.addTag(new ItemTag[]{new ItemTag("MMOITEMS_SKIN_TYPE", var4)});
-      if (!var2.getString("MMOITEMS_ITEM_PARTICLES").isEmpty()) {
-         var0.addTag(new ItemTag[]{new ItemTag("MMOITEMS_ITEM_PARTICLES", var2.getString("MMOITEMS_ITEM_PARTICLES"))});
+   public static ItemStack applySkin(@NotNull NBTItem nbtItem, @NotNull VolatileMMOItem volatileMMOItem) {
+      NBTItem nBT = volatileMMOItem.getNBT();
+      String text = MMOUtils.requireNonEmptyElse(volatileMMOItem.getNBT().getString("MMOITEMS_SKIN_ID"), nBT.getString("MMOITEMS_ITEM_ID"));
+      String text2 = MMOUtils.requireNonEmptyElse(volatileMMOItem.getNBT().getString("MMOITEMS_SKIN_TYPE"), nBT.getString("MMOITEMS_ITEM_TYPE"));
+      nbtItem.addTag(new ItemTag[]{new ItemTag("MMOITEMS_SKIN_ID", text)});
+      nbtItem.addTag(new ItemTag[]{new ItemTag("MMOITEMS_SKIN_TYPE", text2)});
+      if (!nBT.getString("MMOITEMS_ITEM_PARTICLES").isEmpty()) {
+         nbtItem.addTag(new ItemTag[]{new ItemTag("MMOITEMS_ITEM_PARTICLES", nBT.getString("MMOITEMS_ITEM_PARTICLES"))});
       }
 
-      ItemStack var5 = var0.toItem();
-      if (var5.getType() != var2.getItem().getType()) {
-         var5.setType(var2.getItem().getType());
+      ItemStack item = nbtItem.toItem();
+      if (item.getType() != nBT.getItem().getType()) {
+         item.setType(nBT.getItem().getType());
       }
 
-      ItemMeta var6 = var5.getItemMeta();
-      ItemMeta var7 = var2.getItem().getItemMeta();
-      if (var7 != null && var6 != null) {
-         if (var7.hasCustomModelData()) {
-            var6.setCustomModelData(var7.getCustomModelData());
+      ItemMeta itemMeta = item.getItemMeta();
+      ItemMeta itemMeta2 = nBT.getItem().getItemMeta();
+      if (itemMeta2 != null && itemMeta != null) {
+         if (itemMeta2.hasCustomModelData()) {
+            itemMeta.setCustomModelData(itemMeta2.getCustomModelData());
          }
 
-         if (var7.isUnbreakable()) {
-            var6.setUnbreakable(true);
-            if (var6 instanceof Damageable && var7 instanceof Damageable) {
-               ((Damageable)var6).setDamage(((Damageable)var7).getDamage());
+         if (itemMeta2.isUnbreakable()) {
+            itemMeta.setUnbreakable(true);
+            if (itemMeta instanceof Damageable && itemMeta2 instanceof Damageable) {
+               ((Damageable)itemMeta).setDamage(((Damageable)itemMeta2).getDamage());
             }
          }
 
-         if (var7 instanceof LeatherArmorMeta && var6 instanceof LeatherArmorMeta) {
-            ((LeatherArmorMeta)var6).setColor(((LeatherArmorMeta)var7).getColor());
+         if (itemMeta2 instanceof LeatherArmorMeta && itemMeta instanceof LeatherArmorMeta) {
+            ((LeatherArmorMeta)itemMeta).setColor(((LeatherArmorMeta)itemMeta2).getColor());
          }
 
-         if (var7 instanceof ArmorMeta && var6 instanceof ArmorMeta) {
-            ((ArmorMeta)var6).setTrim(((ArmorMeta)var7).getTrim());
-            if (var7.hasItemFlag(ItemFlag.HIDE_ARMOR_TRIM)) {
-               var6.addItemFlags(new ItemFlag[]{ItemFlag.HIDE_ARMOR_TRIM});
+         if (itemMeta2 instanceof ArmorMeta && itemMeta instanceof ArmorMeta) {
+            ((ArmorMeta)itemMeta).setTrim(((ArmorMeta)itemMeta2).getTrim());
+            if (itemMeta2.hasItemFlag(ItemFlag.HIDE_ARMOR_TRIM)) {
+               itemMeta.addItemFlags(new ItemFlag[]{ItemFlag.HIDE_ARMOR_TRIM});
             } else {
-               var6.removeItemFlags(new ItemFlag[]{ItemFlag.HIDE_ARMOR_TRIM});
+               itemMeta.removeItemFlags(new ItemFlag[]{ItemFlag.HIDE_ARMOR_TRIM});
             }
          }
 
-         if (var1.hasData(ItemStats.SKULL_TEXTURE) && var5.getType() == Material.PLAYER_HEAD && var2.getItem().getType() == Material.PLAYER_HEAD) {
-            MythicLib.plugin.getVersion().getWrapper().setProfile((SkullMeta)var6, ((SkullTextureData)var1.getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
+         if (volatileMMOItem.hasData(ItemStats.SKULL_TEXTURE) && item.getType() == Material.PLAYER_HEAD && nBT.getItem().getType() == Material.PLAYER_HEAD) {
+            MythicLib.plugin.getVersion().getWrapper().setProfile((SkullMeta)itemMeta, ((SkullTextureData)volatileMMOItem.getData(ItemStats.SKULL_TEXTURE)).getGameProfile());
          }
 
-         var5.setItemMeta(var6);
+         item.setItemMeta(itemMeta);
       }
 
-      return var5;
+      return item;
    }
 
    public static class ApplyResult {
       private final ItemSkin.ResultType type;
       private final ItemStack result;
 
-      public ApplyResult(ItemSkin.ResultType var1) {
-         this(null, var1);
+      public ApplyResult(ItemSkin.ResultType resultType) {
+         this(null, resultType);
       }
 
-      public ApplyResult(ItemStack var1) {
-         this(var1, ItemSkin.ResultType.SUCCESS);
+      public ApplyResult(ItemStack item) {
+         this(item, ItemSkin.ResultType.SUCCESS);
       }
 
-      public ApplyResult(ItemStack var1, ItemSkin.ResultType var2) {
-         this.type = var2;
-         this.result = var1;
+      public ApplyResult(ItemStack item, ItemSkin.ResultType resultType) {
+         this.type = resultType;
+         this.result = item;
       }
 
       public ItemSkin.ResultType getType() {

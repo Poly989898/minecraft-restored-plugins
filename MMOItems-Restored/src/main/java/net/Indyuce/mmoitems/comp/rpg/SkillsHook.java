@@ -12,43 +12,43 @@ import org.bukkit.event.Listener;
 
 public class SkillsHook implements RPGHandler, Listener {
    @EventHandler
-   public void a(SkillLevelUpEvent var1) {
-      OfflinePlayer var2 = var1.getPlayer();
-      if (var2.isOnline()) {
-         PlayerData.get(var2).getInventory().scheduleUpdate();
+   public void a(SkillLevelUpEvent event) {
+      OfflinePlayer player = event.getPlayer();
+      if (player.isOnline()) {
+         PlayerData.get(player).getInventory().scheduleUpdate();
       }
    }
 
    @Override
-   public void refreshStats(PlayerData var1) {
+   public void refreshStats(PlayerData playerData) {
    }
 
    @Override
-   public RPGPlayer getInfo(PlayerData var1) {
-      return new SkillsHook.SkillsPlayer(var1);
+   public RPGPlayer getInfo(PlayerData playerData) {
+      return new SkillsHook.SkillsPlayer(playerData);
    }
 
    public static class SkillsPlayer extends RPGPlayer {
-      public SkillsPlayer(PlayerData var1) {
-         super(var1);
+      public SkillsPlayer(PlayerData playerData) {
+         super(playerData);
       }
 
       @Override
       public int getLevel() {
-         PlayerInfo var1 = Skills.get().getPlayerDataManager().loadPlayerInfo(this.getPlayer());
-         return var1.getLevel();
+         PlayerInfo playerInfo = Skills.get().getPlayerDataManager().loadPlayerInfo(this.getPlayer());
+         return playerInfo.getLevel();
       }
 
       @Override
       public String getClassName() {
-         PlayerInfo var1 = Skills.get().getPlayerDataManager().loadPlayerInfo(this.getPlayer());
-         return var1.getSkill().getLanguageName().getDefault();
+         PlayerInfo playerInfo = Skills.get().getPlayerDataManager().loadPlayerInfo(this.getPlayer());
+         return playerInfo.getSkill().getLanguageName().getDefault();
       }
 
       @Override
       public double getMana() {
-         PlayerInfo var1 = Skills.get().getPlayerDataManager().loadPlayerInfo(this.getPlayer());
-         return var1.getActiveStatType(ScalingType.ENERGY);
+         PlayerInfo playerInfo = Skills.get().getPlayerDataManager().loadPlayerInfo(this.getPlayer());
+         return playerInfo.getActiveStatType(ScalingType.ENERGY);
       }
 
       @Override
@@ -57,14 +57,14 @@ public class SkillsHook implements RPGHandler, Listener {
       }
 
       @Override
-      public void setMana(double var1) {
-         PlayerInfo var3 = Skills.get().getPlayerDataManager().loadPlayerInfo(this.getPlayer());
-         var3.setActiveStatType(ScalingType.ENERGY, var1);
+      public void setMana(double value) {
+         PlayerInfo playerInfo = Skills.get().getPlayerDataManager().loadPlayerInfo(this.getPlayer());
+         playerInfo.setActiveStatType(ScalingType.ENERGY, value);
       }
 
       @Override
-      public void setStamina(double var1) {
-         this.getPlayer().setFoodLevel((int)var1);
+      public void setStamina(double value) {
+         this.getPlayer().setFoodLevel((int)value);
       }
    }
 }

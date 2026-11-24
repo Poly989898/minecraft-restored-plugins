@@ -11,10 +11,10 @@ public class UnsocketGemStoneEvent extends PlayerDataEvent {
    private final VolatileMMOItem consumable;
    private final MMOItem targetItem;
 
-   public UnsocketGemStoneEvent(PlayerData var1, VolatileMMOItem var2, MMOItem var3) {
-      super(var1);
-      this.consumable = var2;
-      this.targetItem = var3;
+   public UnsocketGemStoneEvent(PlayerData playerData, VolatileMMOItem volatileMMOItem, MMOItem mmoItem) {
+      super(playerData);
+      this.consumable = volatileMMOItem;
+      this.targetItem = mmoItem;
    }
 
    public VolatileMMOItem getConsumable() {

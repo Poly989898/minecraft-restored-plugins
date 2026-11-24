@@ -29,79 +29,79 @@ import org.bukkit.inventory.ItemStack;
 public class GiveCommandTreeNode extends CommandTreeNode {
    private static final Random random = new Random();
 
-   public GiveCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "give");
+   public GiveCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "give");
       this.addParameter(MMOItemsCommandTreeRoot.TYPE);
       this.addParameter(MMOItemsCommandTreeRoot.ID_2);
       this.addParameter(Parameter.PLAYER_OPTIONAL);
-      this.addParameter(new Parameter("(min-max)", (var0, var1x) -> var1x.addAll(Arrays.asList("1-3", "1", "10", "32", "64"))));
-      this.addParameter(new Parameter("(unidentify-chance)", (var0, var1x) -> var1x.add("(unidentify-chance)")));
-      this.addParameter(new Parameter("(drop-chance)", (var0, var1x) -> var1x.add("(drop-chance)")));
-      this.addParameter(new Parameter("(soulbound-chance)", (var0, var1x) -> var1x.add("(soulbound-chance)")));
-      this.addParameter(new Parameter("(silent)", (var0, var1x) -> var1x.addAll(Arrays.asList("silent", "s"))));
+      this.addParameter(new Parameter("(min-max)", (commandTreeExplorer, var1x) -> var1x.addAll(Arrays.asList("1-3", "1", "10", "32", "64"))));
+      this.addParameter(new Parameter("(unidentify-chance)", (commandTreeExplorer, var1x) -> var1x.add("(unidentify-chance)")));
+      this.addParameter(new Parameter("(drop-chance)", (commandTreeExplorer, var1x) -> var1x.add("(drop-chance)")));
+      this.addParameter(new Parameter("(soulbound-chance)", (commandTreeExplorer, var1x) -> var1x.add("(soulbound-chance)")));
+      this.addParameter(new Parameter("(silent)", (commandTreeExplorer, var1x) -> var1x.addAll(Arrays.asList("silent", "s"))));
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      if (var2.length < 3) {
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      if (texts.length < 3) {
          return CommandResult.THROW_USAGE;
       }
 
       try {
-         Validate.isTrue(var2.length > 3 || var1 instanceof Player, "Please specify a player.");
-         Player var3 = var2.length > 3 ? Bukkit.getPlayer(var2[3]) : (Player)var1;
-         Validate.notNull(var3, "Could not find player called '" + var2[var2.length > 3 ? 3 : 2] + "'.");
-         Type var4 = MMOItems.plugin.getTypes().getOrThrow(var2[1].toUpperCase().replace("-", "_"));
-         MMOItemTemplate var5 = MMOItems.plugin.getTemplates().getTemplateOrThrow(var4, var2[2].toUpperCase().replace("-", "_"));
-         RandomAmount var6 = var2.length > 4 ? new RandomAmount(var2[4]) : new RandomAmount(1, 1);
-         double var7 = var2.length > 5 ? Double.parseDouble(var2[5]) / 100.0 : 0.0;
-         double var9 = var2.length > 6 ? Double.parseDouble(var2[6]) / 100.0 : 1.0;
-         double var11 = var2.length > 7 ? Double.parseDouble(var2[7]) / 100.0 : 0.0;
-         boolean var13 = var2.length > 8 && (var2[8].equalsIgnoreCase("silent") || var2[8].equalsIgnoreCase("s"));
-         if (random.nextDouble() > var9) {
+         Validate.isTrue(texts.length > 3 || sender instanceof Player, "Please specify a player.");
+         Player player = texts.length > 3 ? Bukkit.getPlayer(texts[3]) : (Player)sender;
+         Validate.notNull(player, "Could not find player called '" + texts[texts.length > 3 ? 3 : 2] + "'.");
+         Type type = MMOItems.plugin.getTypes().getOrThrow(texts[1].toUpperCase().replace("-", "_"));
+         MMOItemTemplate templateOrThrow = MMOItems.plugin.getTemplates().getTemplateOrThrow(type, texts[2].toUpperCase().replace("-", "_"));
+         RandomAmount randomAmount = texts.length > 4 ? new RandomAmount(texts[4]) : new RandomAmount(1, 1);
+         double value = texts.length > 5 ? Double.parseDouble(texts[5]) / 100.0 : 0.0;
+         double value2 = texts.length > 6 ? Double.parseDouble(texts[6]) / 100.0 : 1.0;
+         double value3 = texts.length > 7 ? Double.parseDouble(texts[7]) / 100.0 : 0.0;
+         boolean flag = texts.length > 8 && (texts[8].equalsIgnoreCase("silent") || texts[8].equalsIgnoreCase("s"));
+         if (random.nextDouble() > value2) {
             return CommandResult.SUCCESS;
          }
 
-         MMOItem var14 = var5.newBuilder(PlayerData.get(var3).getRPG()).build();
-         if (random.nextDouble() < var11) {
-            var14.setData(ItemStats.SOULBOUND, new SoulboundData(var3, 1));
+         MMOItem mmoItem = templateOrThrow.newBuilder(PlayerData.get(player).getRPG()).build();
+         if (random.nextDouble() < value3) {
+            mmoItem.setData(ItemStats.SOULBOUND, new SoulboundData(player, 1));
          }
 
-         ItemStack var15 = var14.newBuilder().build();
-         if (random.nextDouble() < var7) {
-            var15 = var4.getUnidentifiedTemplate().newBuilder(NBTItem.get(var15)).build();
+         ItemStack item = mmoItem.newBuilder().build();
+         if (random.nextDouble() < value) {
+            item = type.getUnidentifiedTemplate().newBuilder(NBTItem.get(item)).build();
          }
 
          Validate.isTrue(
-            var15 != null && var15.getType() != Material.AIR,
-            "Couldn't find/generate the item called '" + var5.getId() + "'. Check your console for potential item generation issues."
+            item != null && item.getType() != Material.AIR,
+            "Couldn't find/generate the item called '" + templateOrThrow.getId() + "'. Check your console for potential item generation issues."
          );
-         var15.setAmount(var6.getRandomAmount());
-         if (!var13) {
+         item.setAmount(randomAmount.getRandomAmount());
+         if (!flag) {
             Message.RECEIVED_ITEM
-               .format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(var15), "#amount#", var15.getAmount() > 1 ? " x" + var15.getAmount() : "")
-               .send(var3);
-            if (!var1.equals(var3)) {
-               var1.sendMessage(
+               .format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(item), "#amount#", item.getAmount() > 1 ? " x" + item.getAmount() : "")
+               .send(player);
+            if (!sender.equals(player)) {
+               sender.sendMessage(
                   MMOItems.plugin.getPrefix()
                      + ChatColor.YELLOW
                      + "Successfully gave "
                      + ChatColor.GOLD
-                     + MMOUtils.getDisplayName(var15)
-                     + (var15.getAmount() > 1 ? " x" + var15.getAmount() : "")
+                     + MMOUtils.getDisplayName(item)
+                     + (item.getAmount() > 1 ? " x" + item.getAmount() : "")
                      + ChatColor.YELLOW
                      + " to "
                      + ChatColor.GOLD
-                     + var3.getName()
+                     + player.getName()
                      + ChatColor.YELLOW
                      + "."
                );
             }
          }
 
-         new SmartGive(var3).give(new ItemStack[]{var15});
+         new SmartGive(player).give(new ItemStack[]{item});
          return CommandResult.SUCCESS;
-      } catch (IllegalArgumentException var16) {
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + var16.getMessage());
+      } catch (IllegalArgumentException exception) {
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + exception.getMessage());
          return CommandResult.FAILURE;
       }
    }

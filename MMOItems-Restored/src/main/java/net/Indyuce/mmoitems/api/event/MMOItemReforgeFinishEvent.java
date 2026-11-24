@@ -38,14 +38,14 @@ public class MMOItemReforgeFinishEvent extends Event implements Cancellable {
       return this.finishedItem;
    }
 
-   public void setFinishedItem(@NotNull ItemStack var1) {
-      this.finishedItem = var1;
+   public void setFinishedItem(@NotNull ItemStack item) {
+      this.finishedItem = item;
    }
 
-   public MMOItemReforgeFinishEvent(@NotNull ItemStack var1, @NotNull MMOItemReforger var2, @NotNull ReforgeOptions var3) {
-      this.finishedItem = var1;
-      this.reforger = var2;
-      this.options = var3;
+   public MMOItemReforgeFinishEvent(@NotNull ItemStack item, @NotNull MMOItemReforger mmoItemReforger, @NotNull ReforgeOptions reforgeOptions) {
+      this.finishedItem = item;
+      this.reforger = mmoItemReforger;
+      this.options = reforgeOptions;
    }
 
    @Nullable
@@ -91,7 +91,7 @@ public class MMOItemReforgeFinishEvent extends Event implements Cancellable {
       return this.cancelled;
    }
 
-   public void setCancelled(boolean var1) {
-      this.cancelled = var1;
+   public void setCancelled(boolean flag) {
+      this.cancelled = flag;
    }
 }

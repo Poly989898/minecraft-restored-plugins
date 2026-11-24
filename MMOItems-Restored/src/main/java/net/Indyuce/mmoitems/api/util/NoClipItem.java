@@ -27,8 +27,8 @@ public class NoClipItem implements Listener {
    private final Item item;
 
    /** @deprecated */
-   public NoClipItem(Location var1, ItemStack var2) {
-      this.item = var1.getWorld().dropItem(var1, this.stripItemData(var2));
+   public NoClipItem(Location location, ItemStack item) {
+      this.item = location.getWorld().dropItem(location, this.stripItemData(item));
       this.item.setPickupDelay(1000000);
       Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
    }
@@ -45,64 +45,64 @@ public class NoClipItem implements Listener {
    }
 
    @EventHandler(priority = EventPriority.LOWEST)
-   public void a(InventoryPickupItemEvent var1) {
-      if (var1.getItem().equals(this.item)) {
-         var1.setCancelled(true);
+   public void a(InventoryPickupItemEvent event) {
+      if (event.getItem().equals(this.item)) {
+         event.setCancelled(true);
          this.close();
       }
    }
 
    @EventHandler(priority = EventPriority.LOWEST)
-   public void b(EntityPortalEnterEvent var1) {
-      if (var1.getEntity().equals(this.item)) {
+   public void b(EntityPortalEnterEvent event) {
+      if (event.getEntity().equals(this.item)) {
          this.close();
       }
    }
 
    @EventHandler(priority = EventPriority.LOWEST)
-   public void c(EntityPickupItemEvent var1) {
-      if (var1.getItem().equals(this.item)) {
+   public void c(EntityPickupItemEvent event) {
+      if (event.getItem().equals(this.item)) {
          this.close();
       }
    }
 
-   private ItemStack stripItemData(ItemStack var1) {
-      NBTItem var2 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var1);
-      ItemStack var3 = new ItemStack(var1.getType());
-      ItemMeta var4 = var3.getItemMeta();
-      var3.setAmount(1);
-      if (var1.getItemMeta().hasEnchants()) {
-         var4.addEnchant(VEnchantment.POWER.get(), 0, true);
-         var4.addItemFlags(new ItemFlag[]{ItemFlag.HIDE_ENCHANTS});
+   private ItemStack stripItemData(ItemStack item) {
+      NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item);
+      ItemStack item2 = new ItemStack(item.getType());
+      ItemMeta itemMeta = item2.getItemMeta();
+      item2.setAmount(1);
+      if (item.getItemMeta().hasEnchants()) {
+         itemMeta.addEnchant(VEnchantment.POWER.get(), 0, true);
+         itemMeta.addItemFlags(new ItemFlag[]{ItemFlag.HIDE_ENCHANTS});
       }
 
       if (MythicLib.plugin.getVersion().isStrictlyHigher(new int[]{1, 13})
-         && var1.getItemMeta().hasCustomModelData()
-         && var1.getItemMeta().getCustomModelData() != 0) {
-         var4.setCustomModelData(var1.getItemMeta().getCustomModelData());
+         && item.getItemMeta().hasCustomModelData()
+         && item.getItemMeta().getCustomModelData() != 0) {
+         itemMeta.setCustomModelData(item.getItemMeta().getCustomModelData());
       }
 
-      if (var1.getItemMeta() instanceof SkullMeta) {
+      if (item.getItemMeta() instanceof SkullMeta) {
          try {
-            Object var5 = MythicLib.plugin.getVersion().getWrapper().getProfile((SkullMeta)var1.getItemMeta());
-            MythicLib.plugin.getVersion().getWrapper().setProfile((SkullMeta)var4, var5);
-         } catch (RuntimeException var7) {
+            Object profile = MythicLib.plugin.getVersion().getWrapper().getProfile((SkullMeta)item.getItemMeta());
+            MythicLib.plugin.getVersion().getWrapper().setProfile((SkullMeta)itemMeta, profile);
+         } catch (RuntimeException exception) {
             MMOItems.plugin
                .getLogger()
                .log(Level.SEVERE, "Could not set skull texture on stripItemData method in the NoClipItem class. Please report this issue!");
          }
       }
 
-      if (var1.getItemMeta() instanceof LeatherArmorMeta && var4 instanceof LeatherArmorMeta) {
-         ((LeatherArmorMeta)var4).setColor(((LeatherArmorMeta)var1.getItemMeta()).getColor());
+      if (item.getItemMeta() instanceof LeatherArmorMeta && itemMeta instanceof LeatherArmorMeta) {
+         ((LeatherArmorMeta)itemMeta).setColor(((LeatherArmorMeta)item.getItemMeta()).getColor());
       }
 
-      var3.setItemMeta(var4);
-      NBTItem var8 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var3);
-      var8.addTag(new ItemTag[]{new ItemTag("MMOITEMS_TIER", var2.getString("MMOITEMS_TIER").trim().isEmpty() ? null : var2.getString("MMOITEMS_TIER"))});
-      Random var6 = new Random();
-      var8.addTag(new ItemTag[]{new ItemTag("MMOITEMS_NO_STACK", var6.nextInt(Integer.MAX_VALUE))});
-      var8.addTag(new ItemTag[]{new ItemTag("MMOITEMS_NO_CLIP_ITEM", true)});
-      return var8.toItem();
+      item2.setItemMeta(itemMeta);
+      NBTItem nBTItem2 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item2);
+      nBTItem2.addTag(new ItemTag[]{new ItemTag("MMOITEMS_TIER", nBTItem.getString("MMOITEMS_TIER").trim().isEmpty() ? null : nBTItem.getString("MMOITEMS_TIER"))});
+      Random random = new Random();
+      nBTItem2.addTag(new ItemTag[]{new ItemTag("MMOITEMS_NO_STACK", random.nextInt(Integer.MAX_VALUE))});
+      nBTItem2.addTag(new ItemTag[]{new ItemTag("MMOITEMS_NO_CLIP_ITEM", true)});
+      return nBTItem2.toItem();
    }
 }

@@ -18,17 +18,17 @@ public class ConsumableConsumedEvent extends PlayerDataEvent {
    private boolean consumed = true;
    private static final HandlerList handlers = new HandlerList();
 
-   public ConsumableConsumedEvent(@NotNull PlayerData var1, @NotNull VolatileMMOItem var2, @NotNull Consumable var3) {
-      super(var1);
-      this.mmoitem = var2;
-      this.useItem = var3;
+   public ConsumableConsumedEvent(@NotNull PlayerData playerData, @NotNull VolatileMMOItem volatileMMOItem, @NotNull Consumable consumable) {
+      super(playerData);
+      this.mmoitem = volatileMMOItem;
+      this.useItem = consumable;
    }
 
    @Deprecated
-   public ConsumableConsumedEvent(@NotNull VolatileMMOItem var1, @NotNull Player var2, @NotNull Consumable var3) {
-      super(PlayerData.get(var2));
-      this.mmoitem = var1;
-      this.useItem = var3;
+   public ConsumableConsumedEvent(@NotNull VolatileMMOItem volatileMMOItem, @NotNull Player player, @NotNull Consumable consumable) {
+      super(PlayerData.get(player));
+      this.mmoitem = volatileMMOItem;
+      this.useItem = consumable;
    }
 
    @NotNull
@@ -51,12 +51,12 @@ public class ConsumableConsumedEvent extends PlayerDataEvent {
    }
 
    /** @deprecated */
-   public void setConsume(@Nullable Boolean var1) {
-      this.consumed = var1;
+   public void setConsume(@Nullable Boolean flag) {
+      this.consumed = flag;
    }
 
-   public void setConsumed(boolean var1) {
-      this.consumed = var1;
+   public void setConsumed(boolean flag) {
+      this.consumed = flag;
    }
 
    @NotNull

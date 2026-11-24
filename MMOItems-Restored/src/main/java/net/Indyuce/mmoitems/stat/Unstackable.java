@@ -14,10 +14,10 @@ public class Unstackable extends BooleanStat {
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull BooleanData var2) {
-      if (var2.isEnabled()) {
-         var1.addItemTag(new ItemTag(this.getNBTPath(), true));
-         var1.addItemTag(new ItemTag(this.getNBTPath() + "_UUID", UUID.randomUUID().toString()));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull BooleanData booleanData) {
+      if (booleanData.isEnabled()) {
+         itemStackBuilder.addItemTag(new ItemTag(this.getNBTPath(), true));
+         itemStackBuilder.addItemTag(new ItemTag(this.getNBTPath() + "_UUID", UUID.randomUUID().toString()));
       }
    }
 }

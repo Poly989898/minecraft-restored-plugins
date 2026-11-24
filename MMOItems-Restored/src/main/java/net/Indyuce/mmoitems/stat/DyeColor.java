@@ -39,45 +39,45 @@ public class DyeColor extends ItemStat<ColorData, ColorData> {
       );
    }
 
-   public ColorData whenInitialized(Object var1) {
-      Validate.isTrue(var1 instanceof String, "Must specify a string");
-      return new ColorData((String)var1);
+   public ColorData whenInitialized(Object obj) {
+      Validate.isTrue(obj instanceof String, "Must specify a string");
+      return new ColorData((String)obj);
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      if (var2.getAction() == InventoryAction.PICKUP_ALL) {
-         new StatEdition(var1, ItemStats.DYE_COLOR).enable("Write in the chat the RGB color you want.", ChatColor.AQUA + "Format: {Red} {Green} {Blue}");
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      if (event.getAction() == InventoryAction.PICKUP_ALL) {
+         new StatEdition(editionInventory, ItemStats.DYE_COLOR).enable("Write in the chat the RGB color you want.", ChatColor.AQUA + "Format: {Red} {Green} {Blue}");
       }
 
-      if (var2.getAction() == InventoryAction.PICKUP_HALF) {
-         var1.getEditedSection().set("dye-color", null);
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed Dye Color.");
+      if (event.getAction() == InventoryAction.PICKUP_HALF) {
+         editionInventory.getEditedSection().set("dye-color", null);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed Dye Color.");
       }
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      String[] var4 = var2.split(" ");
-      Validate.isTrue(var4.length == 3, "Use this format: {Red} {Green} {Blue}.");
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      String[] texts = text.split(" ");
+      Validate.isTrue(texts.length == 3, "Use this format: {Red} {Green} {Blue}.");
 
-      for (String var8 : var4) {
-         int var9 = Integer.parseInt(var8);
-         Validate.isTrue(var9 >= 0 && var9 < 256, "Color must be between 0 and 255");
+      for (String text2 : texts) {
+         int count = Integer.parseInt(text2);
+         Validate.isTrue(count >= 0 && count < 256, "Color must be between 0 and 255");
       }
 
-      var1.getEditedSection().set("dye-color", var2);
-      var1.registerTemplateEdition();
-      var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Dye Color successfully changed to " + var2 + ".");
+      editionInventory.getEditedSection().set("dye-color", text);
+      editionInventory.registerTemplateEdition();
+      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Dye Color successfully changed to " + text + ".");
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<ColorData> var2) {
-      var1.add(ChatColor.GRAY + "Current Value: " + (var2.isPresent() ? ChatColor.GREEN + ((ColorData)var2.get()).toString() : ChatColor.RED + "None"));
-      var1.add("");
-      var1.add(ChatColor.YELLOW + "►" + " Click to change this value.");
-      var1.add(ChatColor.YELLOW + "►" + " Right click to remove the dye color.");
+   public void whenDisplayed(List<String> texts, Optional<ColorData> optional) {
+      texts.add(ChatColor.GRAY + "Current Value: " + (optional.isPresent() ? ChatColor.GREEN + ((ColorData)optional.get()).toString() : ChatColor.RED + "None"));
+      texts.add("");
+      texts.add(ChatColor.YELLOW + "►" + " Click to change this value.");
+      texts.add(ChatColor.YELLOW + "►" + " Right click to remove the dye color.");
    }
 
    @NotNull
@@ -86,37 +86,37 @@ public class DyeColor extends ItemStat<ColorData, ColorData> {
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      ItemMeta var2 = var1.getNBT().getItem().getItemMeta();
-      if (var2 instanceof LeatherArmorMeta) {
-         ArrayList var3 = new ArrayList();
-         var3.add(new ItemTag(this.getNBTPath(), ((LeatherArmorMeta)var2).getColor()));
-         ColorData var4 = this.getLoadedNBT(var3);
-         if (var4 != null) {
-            var1.setData(this, var4);
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      ItemMeta itemMeta = readMMOItem.getNBT().getItem().getItemMeta();
+      if (itemMeta instanceof LeatherArmorMeta) {
+         ArrayList list = new ArrayList();
+         list.add(new ItemTag(this.getNBTPath(), ((LeatherArmorMeta)itemMeta).getColor()));
+         ColorData loadedNBT = this.getLoadedNBT(list);
+         if (loadedNBT != null) {
+            readMMOItem.setData(this, loadedNBT);
          }
       }
    }
 
    @Nullable
-   public ColorData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
-      ItemTag var2 = ItemTag.getTagAtPath(this.getNBTPath(), var1);
-      if (var2 != null) {
-         Color var3 = (Color)var2.getValue();
-         return new ColorData(var3);
+   public ColorData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
+      ItemTag tagAtPath = ItemTag.getTagAtPath(this.getNBTPath(), itemTags);
+      if (tagAtPath != null) {
+         Color color = (Color)tagAtPath.getValue();
+         return new ColorData(color);
       } else {
          return null;
       }
    }
 
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull ColorData var2) {
-      if (var1.getMeta() instanceof LeatherArmorMeta) {
-         ((LeatherArmorMeta)var1.getMeta()).setColor(var2.getColor());
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull ColorData colorData) {
+      if (itemStackBuilder.getMeta() instanceof LeatherArmorMeta) {
+         ((LeatherArmorMeta)itemStackBuilder.getMeta()).setColor(colorData.getColor());
       }
    }
 
    @NotNull
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull ColorData var1) {
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull ColorData colorData) {
       return new ArrayList<>();
    }
 }

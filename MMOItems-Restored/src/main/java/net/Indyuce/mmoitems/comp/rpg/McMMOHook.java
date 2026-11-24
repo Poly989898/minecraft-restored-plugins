@@ -18,34 +18,34 @@ public class McMMOHook implements RPGHandler, Listener {
    );
 
    @EventHandler(ignoreCancelled = true)
-   public void a(McMMOPlayerLevelUpEvent var1) {
-      PlayerData.get(var1.getPlayer()).getInventory().scheduleUpdate();
+   public void a(McMMOPlayerLevelUpEvent event) {
+      PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
    }
 
    @EventHandler(ignoreCancelled = true)
-   public void b(McMMOPlayerLevelDownEvent var1) {
-      PlayerData.get(var1.getPlayer()).getInventory().scheduleUpdate();
+   public void b(McMMOPlayerLevelDownEvent event) {
+      PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
    }
 
    @Override
-   public RPGPlayer getInfo(PlayerData var1) {
-      return new McMMOHook.McMMOPlayer(var1);
+   public RPGPlayer getInfo(PlayerData playerData) {
+      return new McMMOHook.McMMOPlayer(playerData);
    }
 
    @Override
-   public void refreshStats(PlayerData var1) {
+   public void refreshStats(PlayerData playerData) {
    }
 
    public static class McMMOPlayer extends RPGPlayer {
-      public McMMOPlayer(PlayerData var1) {
-         super(var1);
+      public McMMOPlayer(PlayerData playerData) {
+         super(playerData);
       }
 
       @Override
       public int getLevel() {
          try {
             return ExperienceAPI.getPowerLevel(this.getPlayer());
-         } catch (McMMOPlayerNotFoundException var2) {
+         } catch (McMMOPlayerNotFoundException exception) {
             return 0;
          }
       }
@@ -66,12 +66,12 @@ public class McMMOHook implements RPGHandler, Listener {
       }
 
       @Override
-      public void setMana(double var1) {
-         this.getPlayer().setFoodLevel((int)var1);
+      public void setMana(double value) {
+         this.getPlayer().setFoodLevel((int)value);
       }
 
       @Override
-      public void setStamina(double var1) {
+      public void setStamina(double value) {
       }
    }
 }

@@ -66,7 +66,7 @@ public class CraftingManager implements Reloadable {
          "vanilla",
          VanillaIngredient::new,
          new ConditionalDisplay("&8✔ &7#amount# #item#", "&c✖ &7#amount# #item#"),
-         var0 -> true,
+         nbtItem -> true,
          VanillaPlayerIngredient::new
       );
       this.registerIngredient(
@@ -84,77 +84,77 @@ public class CraftingManager implements Reloadable {
    @Override
    public void reload() {
       this.stations.clear();
-      ConfigFile var1 = new ConfigFile("/language", "crafting-stations");
+      ConfigFile configFile = new ConfigFile("/language", "crafting-stations");
 
-      for (LoadedCraftingObject var3 : this.getConditions()) {
-         String var4 = "condition." + var3.getId();
-         if (!var1.getConfig().contains(var4)) {
-            var1.getConfig().createSection(var4);
-            var3.getDisplay().setup(var1.getConfig().getConfigurationSection(var4));
+      for (LoadedCraftingObject condition : this.getConditions()) {
+         String text = "condition." + condition.getId();
+         if (!configFile.getConfig().contains(text)) {
+            configFile.getConfig().createSection(text);
+            condition.getDisplay().setup(configFile.getConfig().getConfigurationSection(text));
          }
 
-         var3.setDisplay(new ConditionalDisplay(var1.getConfig().getConfigurationSection(var4)));
+         condition.setDisplay(new ConditionalDisplay(configFile.getConfig().getConfigurationSection(text)));
       }
 
-      for (IngredientType var12 : this.getIngredients()) {
-         String var15 = "ingredient." + var12.getId();
-         if (!var1.getConfig().contains(var15)) {
-            var1.getConfig().createSection(var15);
-            var12.getDisplay().setup(var1.getConfig().getConfigurationSection(var15));
+      for (IngredientType ingredient : this.getIngredients()) {
+         String text = "ingredient." + ingredient.getId();
+         if (!configFile.getConfig().contains(text)) {
+            configFile.getConfig().createSection(text);
+            ingredient.getDisplay().setup(configFile.getConfig().getConfigurationSection(text));
          }
 
-         var12.setDisplay(new ConditionalDisplay(var1.getConfig().getConfigurationSection(var15)));
+         ingredient.setDisplay(new ConditionalDisplay(configFile.getConfig().getConfigurationSection(text)));
       }
 
-      var1.save();
+      configFile.save();
 
-      for (File var5 : new File(MMOItems.plugin.getDataFolder() + "/crafting-stations").listFiles()) {
+      for (File listFile : new File(MMOItems.plugin.getDataFolder() + "/crafting-stations").listFiles()) {
          try {
-            CraftingStation var6 = new CraftingStation(var5.getName().substring(0, var5.getName().length() - 4), YamlConfiguration.loadConfiguration(var5));
-            this.stations.put(var6.getId(), var6);
-         } catch (IllegalArgumentException | NullPointerException var8) {
-            MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load station '" + var5.getName() + "': " + var8.getMessage());
+            CraftingStation craftingStation = new CraftingStation(listFile.getName().substring(0, listFile.getName().length() - 4), YamlConfiguration.loadConfiguration(listFile));
+            this.stations.put(craftingStation.getId(), craftingStation);
+         } catch (IllegalArgumentException | NullPointerException exception) {
+            MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load station '" + listFile.getName() + "': " + exception.getMessage());
          }
       }
 
-      for (CraftingStation var14 : this.stations.values()) {
+      for (CraftingStation craftingStation : this.stations.values()) {
          try {
-            var14.getPostLoadAction().performAction();
-         } catch (IllegalArgumentException var7) {
-            MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not post-load station '" + var14.getId() + "': " + var7.getMessage());
+            craftingStation.getPostLoadAction().performAction();
+         } catch (IllegalArgumentException exception) {
+            MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not post-load station '" + craftingStation.getId() + "': " + exception.getMessage());
          }
       }
    }
 
    public int countRecipes() {
-      int var1 = 0;
+      int count = 0;
 
-      for (CraftingStation var3 : this.stations.values()) {
-         var1 += var3.getRecipes().size();
+      for (CraftingStation craftingStation : this.stations.values()) {
+         count += craftingStation.getRecipes().size();
       }
 
-      return var1;
+      return count;
    }
 
-   public boolean hasStation(String var1) {
-      return this.stations.containsKey(var1);
+   public boolean hasStation(String text) {
+      return this.stations.containsKey(text);
    }
 
    public Collection<CraftingStation> getStations() {
       return this.stations.values();
    }
 
-   public CraftingStation getStation(String var1) {
-      return this.stations.get(var1);
+   public CraftingStation getStation(String text) {
+      return this.stations.get(text);
    }
 
    @NotNull
-   public Ingredient getIngredient(MMOLineConfig var1) {
-      String var2 = var1.getKey();
+   public Ingredient getIngredient(MMOLineConfig mmoLineConfig) {
+      String key = mmoLineConfig.getKey();
 
-      for (IngredientType var4 : this.ingredients) {
-         if (var4.getId().equals(var2)) {
-            return var4.load(var1);
+      for (IngredientType ingredient : this.ingredients) {
+         if (ingredient.getId().equals(key)) {
+            return ingredient.load(mmoLineConfig);
          }
       }
 
@@ -162,23 +162,23 @@ public class CraftingManager implements Reloadable {
    }
 
    @NotNull
-   public Condition getCondition(MMOLineConfig var1) {
-      return this.getConditionInfo(var1.getKey()).load(var1);
+   public Condition getCondition(MMOLineConfig mmoLineConfig) {
+      return this.getConditionInfo(mmoLineConfig.getKey()).load(mmoLineConfig);
    }
 
    @NotNull
-   public LoadedCraftingObject<Condition> getConditionInfo(String var1) {
-      return Objects.requireNonNull(this.conditions.get(var1), "Could not match condition");
+   public LoadedCraftingObject<Condition> getConditionInfo(String text) {
+      return Objects.requireNonNull(this.conditions.get(text), "Could not match condition");
    }
 
    @NotNull
-   public Trigger getTrigger(MMOLineConfig var1) {
-      return this.getTriggerInfo(var1.getKey()).load(var1);
+   public Trigger getTrigger(MMOLineConfig mmoLineConfig) {
+      return this.getTriggerInfo(mmoLineConfig.getKey()).load(mmoLineConfig);
    }
 
    @NotNull
-   public LoadedCraftingObject<Trigger> getTriggerInfo(String var1) {
-      return Objects.requireNonNull(this.triggers.get(var1), "Could not match trigger");
+   public LoadedCraftingObject<Trigger> getTriggerInfo(String text) {
+      return Objects.requireNonNull(this.triggers.get(text), "Could not match trigger");
    }
 
    public List<IngredientType> getIngredients() {
@@ -194,19 +194,19 @@ public class CraftingManager implements Reloadable {
    }
 
    public void registerIngredient(
-      String var1, Function<MMOLineConfig, Ingredient> var2, ConditionalDisplay var3, Predicate<NBTItem> var4, Function<NBTItem, PlayerIngredient> var5
+      String text, Function<MMOLineConfig, Ingredient> function, ConditionalDisplay conditionalDisplay, Predicate<NBTItem> predicate, Function<NBTItem, PlayerIngredient> function2
    ) {
-      this.ingredients.add(0, new IngredientType(var1, var2, var3, var4, var5));
+      this.ingredients.add(0, new IngredientType(text, function, conditionalDisplay, predicate, function2));
    }
 
-   public void registerCondition(String var1, Function<MMOLineConfig, Condition> var2, @NotNull ConditionalDisplay var3) {
-      LoadedCraftingObject var4 = new LoadedCraftingObject(var1, var2, Objects.requireNonNull(var3, "Conditional display cannot be null"));
-      this.conditions.put(var4.getId(), var4);
+   public void registerCondition(String text, Function<MMOLineConfig, Condition> function, @NotNull ConditionalDisplay conditionalDisplay) {
+      LoadedCraftingObject loadedCraftingObject = new LoadedCraftingObject(text, function, Objects.requireNonNull(conditionalDisplay, "Conditional display cannot be null"));
+      this.conditions.put(loadedCraftingObject.getId(), loadedCraftingObject);
    }
 
-   public void registerTrigger(String var1, Function<MMOLineConfig, Trigger> var2) {
-      LoadedCraftingObject var3 = new LoadedCraftingObject(var1, var2, null);
-      this.triggers.put(var3.getId(), var3);
+   public void registerTrigger(String text, Function<MMOLineConfig, Trigger> function) {
+      LoadedCraftingObject loadedCraftingObject = new LoadedCraftingObject(text, function, null);
+      this.triggers.put(loadedCraftingObject.getId(), loadedCraftingObject);
    }
 
    public Collection<CraftingStation> getAll() {

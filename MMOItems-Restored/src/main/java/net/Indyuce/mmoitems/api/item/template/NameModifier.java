@@ -9,28 +9,28 @@ public class NameModifier {
    private final String format;
    private final int priority;
 
-   public NameModifier(NameModifier.ModifierType var1, Object var2) {
-      Validate.notNull(var2, "Object cannot be null");
-      this.type = var1;
-      if (var2 instanceof String) {
-         this.format = (String)var2;
+   public NameModifier(NameModifier.ModifierType modifierType, Object obj) {
+      Validate.notNull(obj, "Object cannot be null");
+      this.type = modifierType;
+      if (obj instanceof String) {
+         this.format = (String)obj;
          this.priority = 0;
-      } else if (var2 instanceof ConfigurationSection) {
-         ConfigurationSection var3 = (ConfigurationSection)var2;
-         Validate.isTrue(var3.contains("format"), UtilityMethods.caseOnWords(var1.name().toLowerCase()) + " format cannot be null");
-         this.format = var3.get("format").toString();
-         this.priority = var3.getInt("priority");
+      } else if (obj instanceof ConfigurationSection) {
+         ConfigurationSection section = (ConfigurationSection)obj;
+         Validate.isTrue(section.contains("format"), UtilityMethods.caseOnWords(modifierType.name().toLowerCase()) + " format cannot be null");
+         this.format = section.get("format").toString();
+         this.priority = section.getInt("priority");
       } else {
          throw new IllegalArgumentException("Must specify a string or a config section");
       }
    }
 
-   public NameModifier(NameModifier.ModifierType var1, String var2, int var3) {
-      Validate.notNull(var2, "Format cannot be null");
-      this.type = var1;
-      this.format = var2;
-      this.priority = var3;
-      Validate.notNull(var1, "Type cannot be null");
+   public NameModifier(NameModifier.ModifierType modifierType, String text, int count) {
+      Validate.notNull(text, "Format cannot be null");
+      this.type = modifierType;
+      this.format = text;
+      this.priority = count;
+      Validate.notNull(modifierType, "Type cannot be null");
    }
 
    public String getFormat() {

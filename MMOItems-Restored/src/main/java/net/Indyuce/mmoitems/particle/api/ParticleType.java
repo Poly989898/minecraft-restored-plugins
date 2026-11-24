@@ -111,8 +111,8 @@ public enum ParticleType {
       this.period = nullxxxx;
       this.lore = nullxxxxx;
 
-      for (StringValue var12 : nullxxxxxx) {
-         this.modifiers.put(var12.getName(), var12.getValue());
+      for (StringValue stringValue : nullxxxxxx) {
+         this.modifiers.put(stringValue.getName(), stringValue.getValue());
       }
    }
 
@@ -120,8 +120,8 @@ public enum ParticleType {
       return UtilityMethods.caseOnWords(this.name().toLowerCase().replace("_", " "));
    }
 
-   public double getModifier(String var1) {
-      return this.modifiers.get(var1);
+   public double getModifier(String text) {
+      return this.modifiers.get(text);
    }
 
    public Set<String> getModifiers() {
@@ -140,7 +140,7 @@ public enum ParticleType {
       return this.period;
    }
 
-   public ParticleRunnable newRunnable(ParticleData var1, PlayerData var2) {
-      return this.func.apply(var1, var2);
+   public ParticleRunnable newRunnable(ParticleData particleData, PlayerData playerData) {
+      return this.func.apply(particleData, playerData);
    }
 }

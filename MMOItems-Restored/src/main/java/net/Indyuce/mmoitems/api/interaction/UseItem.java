@@ -24,14 +24,14 @@ public class UseItem {
    protected static final Random RANDOM = new Random();
 
    @Deprecated
-   public UseItem(@NotNull Player var1, @NotNull NBTItem var2) {
-      this(PlayerData.get(var1), var2);
+   public UseItem(@NotNull Player player, @NotNull NBTItem nbtItem) {
+      this(PlayerData.get(player), nbtItem);
    }
 
-   public UseItem(@NotNull PlayerData var1, @NotNull NBTItem var2) {
-      this.player = var1.getPlayer();
-      this.playerData = var1;
-      this.mmoitem = new VolatileMMOItem(var2);
+   public UseItem(@NotNull PlayerData playerData, @NotNull NBTItem nbtItem) {
+      this.player = playerData.getPlayer();
+      this.playerData = playerData;
+      this.mmoitem = new VolatileMMOItem(nbtItem);
    }
 
    public Player getPlayer() {
@@ -64,44 +64,44 @@ public class UseItem {
       }
    }
 
-   private void scheduleCommandExecution(CommandData var1) {
-      String var2 = MythicLib.plugin.getPlaceholderParser().parse(this.player, var1.getCommand());
-      if (!var1.hasDelay()) {
-         this.dispatchCommand(var2, var1.isConsoleCommand(), var1.hasOpPerms());
+   private void scheduleCommandExecution(CommandData commandData) {
+      String text = MythicLib.plugin.getPlaceholderParser().parse(this.player, commandData.getCommand());
+      if (!commandData.hasDelay()) {
+         this.dispatchCommand(text, commandData.isConsoleCommand(), commandData.hasOpPerms());
       } else {
          Bukkit.getScheduler()
-            .runTaskLater(MMOItems.plugin, () -> this.dispatchCommand(var2, var1.isConsoleCommand(), var1.hasOpPerms()), (long)var1.getDelay() * 20L);
+            .runTaskLater(MMOItems.plugin, () -> this.dispatchCommand(text, commandData.isConsoleCommand(), commandData.hasOpPerms()), (long)commandData.getDelay() * 20L);
       }
    }
 
-   private void dispatchCommand(String var1, boolean var2, boolean var3) {
-      if (var2) {
-         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), var1);
+   private void dispatchCommand(String text, boolean flag, boolean flag2) {
+      if (flag) {
+         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), text);
       } else {
-         if (var3 && !this.player.isOp()) {
+         if (flag2 && !this.player.isOp()) {
             this.player.setOp(true);
 
             try {
-               Bukkit.dispatchCommand(this.player, var1);
-            } catch (Exception var8) {
+               Bukkit.dispatchCommand(this.player, text);
+            } catch (Exception exception) {
                this.player.setOp(false);
             } finally {
                this.player.setOp(false);
             }
          } else {
-            Bukkit.dispatchCommand(this.player, var1);
+            Bukkit.dispatchCommand(this.player, text);
          }
       }
    }
 
    @Deprecated
    @Nullable
-   public static UseItem getItem(Player var0, NBTItem var1, String var2) {
-      return Type.get(var2).toUseItem(var0, var1);
+   public static UseItem getItem(Player player, NBTItem nbtItem, String text) {
+      return Type.get(text).toUseItem(player, nbtItem);
    }
 
    @Deprecated
-   public static UseItem getItem(@NotNull Player var0, @NotNull NBTItem var1, @NotNull Type var2) {
-      return var2.toUseItem(PlayerData.get(var0), var1);
+   public static UseItem getItem(@NotNull Player player, @NotNull NBTItem nbtItem, @NotNull Type type) {
+      return type.toUseItem(PlayerData.get(player), nbtItem);
    }
 }

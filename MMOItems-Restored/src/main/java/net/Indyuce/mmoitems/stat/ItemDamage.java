@@ -26,39 +26,39 @@ public class ItemDamage extends DoubleStat implements GemStoneStat {
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2) {
-      if (var1.getMeta() instanceof Damageable) {
-         int var3 = (int)var2.getValue();
-         if (var3 > 0) {
-            ((Damageable)var1.getMeta()).setDamage(var3);
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData) {
+      if (itemStackBuilder.getMeta() instanceof Damageable) {
+         int count = (int)doubleData.getValue();
+         if (count > 0) {
+            ((Damageable)itemStackBuilder.getMeta()).setDamage(count);
          }
       }
    }
 
    @Override
-   public void whenPreviewed(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2, @NotNull NumericStatFormula var3) {
-      this.whenApplied(var1, var2);
+   public void whenPreviewed(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData, @NotNull NumericStatFormula numericStatFormula) {
+      this.whenApplied(itemStackBuilder, doubleData);
    }
 
    @NotNull
    @Override
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData var1) {
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData doubleData) {
       return new ArrayList<>();
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      if (var1.getNBT().getItem().getItemMeta() instanceof Damageable) {
-         int var2 = ((Damageable)var1.getNBT().getItem().getItemMeta()).getDamage();
-         if (var2 > 0) {
-            var1.setData(ItemStats.ITEM_DAMAGE, new DoubleData(var2));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      if (readMMOItem.getNBT().getItem().getItemMeta() instanceof Damageable) {
+         int damage = ((Damageable)readMMOItem.getNBT().getItem().getItemMeta()).getDamage();
+         if (damage > 0) {
+            readMMOItem.setData(ItemStats.ITEM_DAMAGE, new DoubleData(damage));
          }
       }
    }
 
    @Nullable
    @Override
-   public DoubleData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
+   public DoubleData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
       return null;
    }
 

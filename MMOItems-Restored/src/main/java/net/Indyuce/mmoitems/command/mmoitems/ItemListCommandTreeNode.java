@@ -12,59 +12,59 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class ItemListCommandTreeNode extends CommandTreeNode {
-   public ItemListCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "itemlist");
+   public ItemListCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "itemlist");
       this.addParameter(MMOItemsCommandTreeRoot.TYPE);
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      if (var2.length < 2) {
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      if (texts.length < 2) {
          return CommandResult.THROW_USAGE;
       }
 
-      if (!Type.isValid(var2[1])) {
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + var2[1].toUpperCase().replace("-", "_"));
-         var1.sendMessage(MMOItems.plugin.getPrefix() + "Type " + ChatColor.GREEN + "/mi list type " + ChatColor.GRAY + "to see all the available item types.");
+      if (!Type.isValid(texts[1])) {
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + texts[1].toUpperCase().replace("-", "_"));
+         sender.sendMessage(MMOItems.plugin.getPrefix() + "Type " + ChatColor.GREEN + "/mi list type " + ChatColor.GRAY + "to see all the available item types.");
          return CommandResult.FAILURE;
       }
 
-      Type var3 = Type.get(var2[1]);
-      var1.sendMessage(ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "-----------------------------------------------------");
-      var1.sendMessage(ChatColor.GREEN + "List of all items in " + var3.getId().toLowerCase() + ".yml:");
-      FileConfiguration var4 = var3.getConfigFile().getConfig();
-      if (var1 instanceof Player) {
-         for (String var6 : var4.getKeys(false)) {
-            String var7 = var4.getConfigurationSection(var6).contains("name")
-               ? " " + ChatColor.WHITE + "(" + MythicLib.plugin.parseColors(var4.getString(var6 + ".name")) + ChatColor.WHITE + ")"
+      Type type = Type.get(texts[1]);
+      sender.sendMessage(ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "-----------------------------------------------------");
+      sender.sendMessage(ChatColor.GREEN + "List of all items in " + type.getId().toLowerCase() + ".yml:");
+      FileConfiguration config = type.getConfigFile().getConfig();
+      if (sender instanceof Player) {
+         for (String key : config.getKeys(false)) {
+            String text = config.getConfigurationSection(key).contains("name")
+               ? " " + ChatColor.WHITE + "(" + MythicLib.plugin.parseColors(config.getString(key + ".name")) + ChatColor.WHITE + ")"
                : "";
             MythicLib.plugin
                .getVersion()
                .getWrapper()
                .sendJson(
-                  (Player)var1,
+                  (Player)sender,
                   "{\"text\":\"* "
                      + ChatColor.GREEN
-                     + var6
-                     + var7
+                     + key
+                     + text
                      + "\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/mi edit "
-                     + var3.getId()
+                     + type.getId()
                      + " "
-                     + var6
+                     + key
                      + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"Click to edit "
-                     + (var7.equals("") ? var6 : MythicLib.plugin.parseColors(var4.getString(var6 + ".name")))
+                     + (text.equals("") ? key : MythicLib.plugin.parseColors(config.getString(key + ".name")))
                      + ChatColor.WHITE
                      + ".\",\"color\":\"white\"}}}"
                );
          }
       } else {
-         for (String var9 : var4.getKeys(false)) {
-            var1.sendMessage(
+         for (String key : config.getKeys(false)) {
+            sender.sendMessage(
                "* "
                   + ChatColor.GREEN
-                  + var9
+                  + key
                   + (
-                     var4.getConfigurationSection(var9).contains("name")
-                        ? " " + ChatColor.WHITE + "(" + MythicLib.plugin.parseColors(var4.getString(var9 + ".name")) + ChatColor.WHITE + ")"
+                     config.getConfigurationSection(key).contains("name")
+                        ? " " + ChatColor.WHITE + "(" + MythicLib.plugin.parseColors(config.getString(key + ".name")) + ChatColor.WHITE + ")"
                         : ""
                   )
             );

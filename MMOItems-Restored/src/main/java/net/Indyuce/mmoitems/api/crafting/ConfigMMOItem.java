@@ -15,25 +15,25 @@ public class ConfigMMOItem {
    private final int amount;
    private ItemStack preview;
 
-   public ConfigMMOItem(ConfigurationSection var1) {
-      Validate.notNull(var1, "Could not read MMOItem config");
-      Validate.isTrue(var1.contains("type") && var1.contains("id"), "Config must contain type and ID");
-      Type var2 = MMOItems.plugin.getTypes().getOrThrow(var1.getString("type").toUpperCase().replace("-", "_").replace(" ", "_"));
-      this.template = MMOItems.plugin.getTemplates().getTemplateOrThrow(var2, var1.getString("id"));
-      this.amount = Math.max(1, var1.getInt("amount"));
+   public ConfigMMOItem(ConfigurationSection section) {
+      Validate.notNull(section, "Could not read MMOItem config");
+      Validate.isTrue(section.contains("type") && section.contains("id"), "Config must contain type and ID");
+      Type type = MMOItems.plugin.getTypes().getOrThrow(section.getString("type").toUpperCase().replace("-", "_").replace(" ", "_"));
+      this.template = MMOItems.plugin.getTemplates().getTemplateOrThrow(type, section.getString("id"));
+      this.amount = Math.max(1, section.getInt("amount"));
    }
 
-   public ConfigMMOItem(MMOItemTemplate var1, int var2) {
-      Validate.notNull(var1, "Could not register recipe output");
-      this.template = var1;
-      this.amount = Math.max(1, var2);
+   public ConfigMMOItem(MMOItemTemplate mmoItemTemplate, int count) {
+      Validate.notNull(mmoItemTemplate, "Could not register recipe output");
+      this.template = mmoItemTemplate;
+      this.amount = Math.max(1, count);
    }
 
    @NotNull
-   public ItemStack generate(@NotNull RPGPlayer var1) {
-      ItemStack var2 = this.template.newBuilder(var1).build().newBuilder().build();
-      var2.setAmount(this.amount);
-      return var2;
+   public ItemStack generate(@NotNull RPGPlayer rpgPlayer) {
+      ItemStack item = this.template.newBuilder(rpgPlayer).build().newBuilder().build();
+      item.setAmount(this.amount);
+      return item;
    }
 
    public MMOItemTemplate getTemplate() {

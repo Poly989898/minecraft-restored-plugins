@@ -14,20 +14,20 @@ public class MushroomState {
    private final boolean south;
    private final boolean north;
 
-   public MushroomState(Material var1, boolean var2, boolean var3, boolean var4, boolean var5, boolean var6, boolean var7) {
-      this.material = var1;
-      this.up = var2;
-      this.down = var3;
-      this.west = var4;
-      this.east = var5;
-      this.south = var6;
-      this.north = var7;
+   public MushroomState(Material material, boolean flag, boolean flag2, boolean flag3, boolean flag4, boolean flag5, boolean flag6) {
+      this.material = material;
+      this.up = flag;
+      this.down = flag2;
+      this.west = flag3;
+      this.east = flag4;
+      this.south = flag5;
+      this.north = flag6;
    }
 
    public int getUniqueId() {
-      String var1 = this.material == Material.BROWN_MUSHROOM_BLOCK ? "0" : (this.material == Material.RED_MUSHROOM_BLOCK ? "1" : "2");
+      String text = this.material == Material.BROWN_MUSHROOM_BLOCK ? "0" : (this.material == Material.RED_MUSHROOM_BLOCK ? "1" : "2");
       return Integer.parseInt(
-         var1
+         text
             + (this.up ? "1" : "0")
             + (this.down ? "1" : "0")
             + (this.west ? "1" : "0")
@@ -37,13 +37,13 @@ public class MushroomState {
       );
    }
 
-   public boolean matches(MushroomState var1) {
-      return this.up == var1.up
-         && this.down == var1.down
-         && this.west == var1.west
-         && this.east == var1.east
-         && this.south == var1.south
-         && this.north == var1.north;
+   public boolean matches(MushroomState mushroomState) {
+      return this.up == mushroomState.up
+         && this.down == mushroomState.down
+         && this.west == mushroomState.west
+         && this.east == mushroomState.east
+         && this.south == mushroomState.south
+         && this.north == mushroomState.north;
    }
 
    public Material getType() {
@@ -51,19 +51,19 @@ public class MushroomState {
    }
 
    public BlockData getBlockData() {
-      MultipleFacing var1 = (MultipleFacing)this.material.createBlockData();
-      var1.setFace(BlockFace.UP, this.up);
-      var1.setFace(BlockFace.DOWN, this.down);
-      var1.setFace(BlockFace.NORTH, this.north);
-      var1.setFace(BlockFace.SOUTH, this.south);
-      var1.setFace(BlockFace.EAST, this.east);
-      var1.setFace(BlockFace.WEST, this.west);
-      return var1;
+      MultipleFacing blockData = (MultipleFacing)this.material.createBlockData();
+      blockData.setFace(BlockFace.UP, this.up);
+      blockData.setFace(BlockFace.DOWN, this.down);
+      blockData.setFace(BlockFace.NORTH, this.north);
+      blockData.setFace(BlockFace.SOUTH, this.south);
+      blockData.setFace(BlockFace.EAST, this.east);
+      blockData.setFace(BlockFace.WEST, this.west);
+      return blockData;
    }
 
-   public boolean getSide(String var1) {
-      var1 = var1.toLowerCase();
-      switch (var1) {
+   public boolean getSide(String text) {
+      text = text.toLowerCase();
+      switch (text) {
          case "up":
             return this.up;
          case "down":

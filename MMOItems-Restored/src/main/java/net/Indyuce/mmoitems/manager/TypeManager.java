@@ -20,90 +20,90 @@ import org.jetbrains.annotations.Nullable;
 public class TypeManager {
    private final Map<String, Type> map = new LinkedHashMap<>();
 
-   public void reload(boolean var1) {
-      if (var1) {
+   public void reload(boolean flag) {
+      if (flag) {
          this.map.clear();
       }
 
-      for (Field var5 : Type.class.getFields()) {
+      for (Field field : Type.class.getFields()) {
          try {
-            if (Modifier.isStatic(var5.getModifiers()) && Modifier.isFinal(var5.getModifiers()) && var5.get(null) instanceof Type) {
-               this.register((Type)var5.get(null));
+            if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()) && field.get(null) instanceof Type) {
+               this.register((Type)field.get(null));
             }
-         } catch (Exception var8) {
-            MMOItems.plugin.getLogger().log(Level.SEVERE, "Couldn't register type called '" + var5.getName() + "': " + var8.getMessage());
+         } catch (Exception exception) {
+            MMOItems.plugin.getLogger().log(Level.SEVERE, "Couldn't register type called '" + field.getName() + "': " + exception.getMessage());
          }
       }
 
       ConfigManager.DefaultFile.ITEM_TYPES.checkFile();
-      FileConfiguration var10 = new ConfigFile("item-types").getConfig();
+      FileConfiguration config = new ConfigFile("item-types").getConfig();
 
-      for (String var13 : var10.getKeys(false)) {
-         if (!this.map.containsKey(var13)) {
+      for (String key : config.getKeys(false)) {
+         if (!this.map.containsKey(key)) {
             try {
-               this.register(new Type(this, var10.getConfigurationSection(var13)));
-            } catch (IllegalArgumentException var7) {
-               MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not register type '" + var13 + "': " + var7.getMessage());
+               this.register(new Type(this, config.getConfigurationSection(key)));
+            } catch (IllegalArgumentException exception) {
+               MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not register type '" + key + "': " + exception.getMessage());
             }
          }
       }
 
-      Iterator var12 = this.map.values().iterator();
+      Iterator iterator = this.map.values().iterator();
 
-      while (var12.hasNext()) {
-         Type var14 = (Type)var12.next();
+      while (iterator.hasNext()) {
+         Type type = (Type)iterator.next();
 
          try {
-            ConfigurationSection var15 = var10.getConfigurationSection(var14.getId());
-            Validate.notNull(var15, "Could not find config section");
-            var14.load(var15);
-            if (var1) {
-               var14.getPostLoadAction().performAction();
+            ConfigurationSection section = config.getConfigurationSection(type.getId());
+            Validate.notNull(section, "Could not find config section");
+            type.load(section);
+            if (flag) {
+               type.getPostLoadAction().performAction();
             }
-         } catch (RuntimeException var9) {
-            MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not register type '" + var14.getId() + "': " + var9.getMessage());
-            var12.remove();
+         } catch (RuntimeException exception) {
+            MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not register type '" + type.getId() + "': " + exception.getMessage());
+            iterator.remove();
             continue;
          }
 
-         var14.getAvailableStats().clear();
-         MMOItems.plugin.getStats().getAll().stream().filter(var1x -> var1x.isCompatible(var14)).forEach(var1x -> var14.getAvailableStats().add(var1x));
+         type.getAvailableStats().clear();
+         MMOItems.plugin.getStats().getAll().stream().filter(var1x -> var1x.isCompatible(type)).forEach(var1x -> type.getAvailableStats().add(var1x));
       }
    }
 
    public void postload() {
-      for (Type var2 : this.map.values()) {
+      for (Type type : this.map.values()) {
          try {
-            var2.getPostLoadAction().performAction();
-         } catch (RuntimeException var4) {
-            MMOItems.plugin.getLogger().log(Level.SEVERE, "An error occured while post-loading type '" + var2.getId() + "': " + var4.getMessage());
+            type.getPostLoadAction().performAction();
+         } catch (RuntimeException exception) {
+            MMOItems.plugin.getLogger().log(Level.SEVERE, "An error occured while post-loading type '" + type.getId() + "': " + exception.getMessage());
          }
       }
    }
 
-   public void register(Type var1) {
-      this.map.put(var1.getId(), var1);
+   public void register(Type type) {
+      this.map.put(type.getId(), type);
    }
 
-   public void registerAll(Type... var1) {
-      for (Type var5 : var1) {
-         this.register(var5);
+   public void registerAll(Type... types) {
+      for (Type type : types) {
+         this.register(type);
       }
    }
 
    @Nullable
-   public Type get(@Nullable String var1) {
-      return var1 == null ? null : this.map.get(var1);
+   public Type get(@Nullable String text) {
+      return text == null ? null : this.map.get(text);
    }
 
    @NotNull
-   public Type getOrThrow(@Nullable String var1) {
-      Validate.isTrue(this.map.containsKey(var1), "Could not find item type with ID '" + var1 + "'");
-      return this.map.get(var1);
+   public Type getOrThrow(@Nullable String text) {
+      Validate.isTrue(this.map.containsKey(text), "Could not find item type with ID '" + text + "'");
+      return this.map.get(text);
    }
 
-   public boolean has(String var1) {
-      return this.map.containsKey(var1);
+   public boolean has(String text) {
+      return this.map.containsKey(text);
    }
 
    public Collection<Type> getAll() {
@@ -111,12 +111,12 @@ public class TypeManager {
    }
 
    public ArrayList<String> getAllTypeNames() {
-      ArrayList var1 = new ArrayList();
+      ArrayList list = new ArrayList();
 
-      for (Type var3 : this.getAll()) {
-         var1.add(var3.getId());
+      for (Type type : this.getAll()) {
+         list.add(type.getId());
       }
 
-      return var1;
+      return list;
    }
 }

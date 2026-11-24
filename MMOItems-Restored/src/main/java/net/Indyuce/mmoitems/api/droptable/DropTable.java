@@ -23,20 +23,20 @@ public class DropTable {
    private final Map<String, DropTable.Subtable> subtables = new HashMap<>();
    private static final Random random = new Random();
 
-   public DropTable(ConfigurationSection var1) {
-      Validate.notNull(var1, "Could not read the drop table config");
+   public DropTable(ConfigurationSection section) {
+      Validate.notNull(section, "Could not read the drop table config");
 
-      for (String var3 : var1.getKeys(false)) {
+      for (String key : section.getKeys(false)) {
          try {
-            for (int var4 = 0; var4 < var1.getInt(var3 + ".coef"); var4++) {
-               this.subtablesList.add(var3);
+            for (int i = 0; i < section.getInt(key + ".coef"); i++) {
+               this.subtablesList.add(key);
             }
 
-            this.subtables.put(var3, new DropTable.Subtable(var1.getConfigurationSection(var3)));
-         } catch (IllegalArgumentException var5) {
+            this.subtables.put(key, new DropTable.Subtable(section.getConfigurationSection(key)));
+         } catch (IllegalArgumentException exception) {
             MMOItems.plugin
                .getLogger()
-               .log(Level.SEVERE, "Could not read subtable '" + var3 + "' from drop table '" + var1.getName() + "': " + var5.getMessage());
+               .log(Level.SEVERE, "Could not read subtable '" + key + "' from drop table '" + section.getName() + "': " + exception.getMessage());
          }
       }
 
@@ -47,63 +47,63 @@ public class DropTable {
       return this.subtablesList.get(random.nextInt(this.subtablesList.size()));
    }
 
-   public List<ItemStack> read(@Nullable PlayerData var1, boolean var2) {
-      ArrayList var3 = new ArrayList();
-      String var4 = this.getRandomSubtable();
+   public List<ItemStack> read(@Nullable PlayerData playerData, boolean flag) {
+      ArrayList list = new ArrayList();
+      String randomSubtable = this.getRandomSubtable();
 
-      for (DropItem var6 : this.getSubtable(var4).getDropItems(var2)) {
-         if (var6.rollDrop()) {
-            ItemStack var7 = var6.getItem(var1);
-            if (var7 == null) {
-               MMOItems.plugin.getLogger().log(Level.SEVERE, "Couldn't read the subtable item " + var6.getKey());
+      for (DropItem dropItem : this.getSubtable(randomSubtable).getDropItems(flag)) {
+         if (dropItem.rollDrop()) {
+            ItemStack item = dropItem.getItem(playerData);
+            if (item == null) {
+               MMOItems.plugin.getLogger().log(Level.SEVERE, "Couldn't read the subtable item " + dropItem.getKey());
             } else {
-               var3.add(var7);
+               list.add(item);
             }
          }
       }
 
-      return var3;
+      return list;
    }
 
    public Collection<DropTable.Subtable> getSubtables() {
       return this.subtables.values();
    }
 
-   public DropTable.Subtable getSubtable(String var1) {
-      return this.subtables.get(var1);
+   public DropTable.Subtable getSubtable(String text) {
+      return this.subtables.get(text);
    }
 
    public static class Subtable {
       private final List<DropItem> items = new ArrayList<>();
       private final boolean disableSilkTouch;
 
-      public Subtable(ConfigurationSection var1) {
-         Validate.notNull(var1, "Could not read subtable config");
-         Validate.isTrue(var1.contains("coef"), "Could not read subtable coefficient.");
-         Validate.isTrue(var1.contains("items") || var1.contains("blocks"), "Could not find item/block list");
-         if (var1.contains("items")) {
-            for (String var3 : var1.getConfigurationSection("items").getKeys(false)) {
-               Type var4 = MMOItems.plugin.getTypes().getOrThrow(var3.toUpperCase().replace("-", "_"));
+      public Subtable(ConfigurationSection section) {
+         Validate.notNull(section, "Could not read subtable config");
+         Validate.isTrue(section.contains("coef"), "Could not read subtable coefficient.");
+         Validate.isTrue(section.contains("items") || section.contains("blocks"), "Could not find item/block list");
+         if (section.contains("items")) {
+            for (String key : section.getConfigurationSection("items").getKeys(false)) {
+               Type type = MMOItems.plugin.getTypes().getOrThrow(key.toUpperCase().replace("-", "_"));
 
-               for (String var6 : var1.getConfigurationSection("items." + var3).getKeys(false)) {
-                  this.items.add(new MMOItemDropItem(var4, var6, var1.getString("items." + var3 + "." + var6)));
+               for (String key2 : section.getConfigurationSection("items." + key).getKeys(false)) {
+                  this.items.add(new MMOItemDropItem(type, key2, section.getString("items." + key + "." + key2)));
                }
             }
          }
 
-         if (var1.contains("blocks")) {
-            for (String var8 : var1.getConfigurationSection("blocks").getKeys(false)) {
-               int var9 = Integer.parseInt(var8);
-               Validate.isTrue(var9 > 0 && var9 != 54 && var9 <= 160, var9 + " is not a valid block ID");
-               this.items.add(new BlockDropItem(var9, var1.getString("blocks." + var8)));
+         if (section.contains("blocks")) {
+            for (String key : section.getConfigurationSection("blocks").getKeys(false)) {
+               int count = Integer.parseInt(key);
+               Validate.isTrue(count > 0 && count != 54 && count <= 160, count + " is not a valid block ID");
+               this.items.add(new BlockDropItem(count, section.getString("blocks." + key)));
             }
          }
 
-         this.disableSilkTouch = var1.getBoolean("disable-silk-touch");
+         this.disableSilkTouch = section.getBoolean("disable-silk-touch");
       }
 
-      public List<DropItem> getDropItems(boolean var1) {
-         return var1 && this.disableSilkTouch ? new ArrayList<>() : this.items;
+      public List<DropItem> getDropItems(boolean flag) {
+         return flag && this.disableSilkTouch ? new ArrayList<>() : this.items;
       }
    }
 }

@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 
 public class RFFKeepAmount implements Listener {
    @EventHandler
-   public void onReforge(MMOItemReforgeFinishEvent var1) {
-      var1.getFinishedItem().setAmount(var1.getReforger().getNBTItem().getItem().getAmount());
+   public void onReforge(MMOItemReforgeFinishEvent event) {
+      event.getFinishedItem().setAmount(event.getReforger().getNBTItem().getItem().getAmount());
    }
 }

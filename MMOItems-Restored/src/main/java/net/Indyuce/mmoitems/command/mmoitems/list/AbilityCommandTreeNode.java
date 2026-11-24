@@ -8,12 +8,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class AbilityCommandTreeNode extends CommandTreeNode {
-   public AbilityCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "ability");
+   public AbilityCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "ability");
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      var1.sendMessage(
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      sender.sendMessage(
          ChatColor.DARK_GRAY
             + ""
             + ChatColor.STRIKETHROUGH
@@ -25,8 +25,8 @@ public class AbilityCommandTreeNode extends CommandTreeNode {
             + ChatColor.STRIKETHROUGH
             + "]-----------------"
       );
-      var1.sendMessage(ChatColor.WHITE + "Here are all the abilities you can bind to items.");
-      var1.sendMessage(
+      sender.sendMessage(ChatColor.WHITE + "Here are all the abilities you can bind to items.");
+      sender.sendMessage(
          ChatColor.WHITE
             + "The values inside brackets are "
             + ChatColor.UNDERLINE
@@ -35,10 +35,10 @@ public class AbilityCommandTreeNode extends CommandTreeNode {
             + " which allow you to change the ability values (cooldown, damage...)"
       );
 
-      for (RegisteredSkill var4 : MMOItems.plugin.getSkills().getAll()) {
-         String var5 = ChatColor.GRAY + String.join(ChatColor.WHITE + ", " + ChatColor.GRAY, var4.getHandler().getModifiers());
-         var5 = ChatColor.WHITE + "(" + var5 + ChatColor.WHITE + ")";
-         var1.sendMessage("* " + ChatColor.LIGHT_PURPLE + var4.getName() + " " + var5);
+      for (RegisteredSkill registeredSkill : MMOItems.plugin.getSkills().getAll()) {
+         String text = ChatColor.GRAY + String.join(ChatColor.WHITE + ", " + ChatColor.GRAY, registeredSkill.getHandler().getModifiers());
+         text = ChatColor.WHITE + "(" + text + ChatColor.WHITE + ")";
+         sender.sendMessage("* " + ChatColor.LIGHT_PURPLE + registeredSkill.getName() + " " + text);
       }
 
       return CommandResult.SUCCESS;

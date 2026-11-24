@@ -25,54 +25,54 @@ public class Lore extends StringListStat implements GemStoneStat {
    }
 
    @Override
-   public StringListData whenInitialized(Object var1) {
-      Validate.isTrue(var1 instanceof List, "Must specify a string list");
-      return new StringListData((List<String>)var1);
+   public StringListData whenInitialized(Object obj) {
+      Validate.isTrue(obj instanceof List, "Must specify a string list");
+      return new StringListData((List<String>)obj);
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull StringListData var2) {
-      var1.getLore().insert("lore", var2.getList());
-      var1.addItemTag(this.getAppliedNBT(var2));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull StringListData stringListData) {
+      itemStackBuilder.getLore().insert("lore", stringListData.getList());
+      itemStackBuilder.addItemTag(this.getAppliedNBT(stringListData));
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      if (var2.getAction() == InventoryAction.PICKUP_ALL) {
-         new StatEdition(var1, ItemStats.LORE).enable("Write in the chat the lore line you want to add.");
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      if (event.getAction() == InventoryAction.PICKUP_ALL) {
+         new StatEdition(editionInventory, ItemStats.LORE).enable("Write in the chat the lore line you want to add.");
       }
 
-      if (var2.getAction() == InventoryAction.PICKUP_HALF && var1.getEditedSection().contains("lore")) {
-         List var3 = var1.getEditedSection().getStringList("lore");
-         if (var3.isEmpty()) {
+      if (event.getAction() == InventoryAction.PICKUP_HALF && editionInventory.getEditedSection().contains("lore")) {
+         List lore = editionInventory.getEditedSection().getStringList("lore");
+         if (lore.isEmpty()) {
             return;
          }
 
-         String var4 = (String)var3.get(var3.size() - 1);
-         var3.remove(var4);
-         var1.getEditedSection().set("lore", var3.isEmpty() ? null : var3);
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + MythicLib.plugin.parseColors(var4) + ChatColor.GRAY + "'.");
+         String text = (String)lore.get(lore.size() - 1);
+         lore.remove(text);
+         editionInventory.getEditedSection().set("lore", lore.isEmpty() ? null : lore);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + MythicLib.plugin.parseColors(text) + ChatColor.GRAY + "'.");
       }
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      List var4 = var1.getEditedSection().contains("lore") ? var1.getEditedSection().getStringList("lore") : new ArrayList();
-      var4.add(var2);
-      var1.getEditedSection().set("lore", var4);
-      var1.registerTemplateEdition();
-      var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Lore successfully added.");
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      List list = editionInventory.getEditedSection().contains("lore") ? editionInventory.getEditedSection().getStringList("lore") : new ArrayList();
+      list.add(text);
+      editionInventory.getEditedSection().set("lore", list);
+      editionInventory.registerTemplateEdition();
+      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Lore successfully added.");
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<StringListData> var2) {
-      var2.ifPresentOrElse(var1x -> {
-         var1.add(ChatColor.GRAY + "Current Value:");
-         var1.addAll(MythicLib.plugin.parseColors(var1x.getList().stream().map(var0x -> ChatColor.GRAY + var0x).toList()));
-      }, () -> var1.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None"));
-      var1.add("");
-      var1.add(ChatColor.YELLOW + "►" + " Click to add a line.");
-      var1.add(ChatColor.YELLOW + "►" + " Right click to remove the last line.");
+   public void whenDisplayed(List<String> texts, Optional<StringListData> optional) {
+      optional.ifPresentOrElse(var1x -> {
+         texts.add(ChatColor.GRAY + "Current Value:");
+         texts.addAll(MythicLib.plugin.parseColors(var1x.getList().stream().map(var0x -> ChatColor.GRAY + var0x).toList()));
+      }, () -> texts.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None"));
+      texts.add("");
+      texts.add(ChatColor.YELLOW + "►" + " Click to add a line.");
+      texts.add(ChatColor.YELLOW + "►" + " Right click to remove the last line.");
    }
 }

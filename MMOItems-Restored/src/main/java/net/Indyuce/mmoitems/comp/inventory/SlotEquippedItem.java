@@ -12,16 +12,16 @@ public class SlotEquippedItem extends EquippedItem {
    private final Player player;
    private final int slotNumber;
 
-   public SlotEquippedItem(@NotNull Player var1, int var2, ItemStack var3, EquipmentSlot var4) {
-      super(var3, var4);
-      this.player = var1;
-      this.slotNumber = var2;
+   public SlotEquippedItem(@NotNull Player player, int count, ItemStack item, EquipmentSlot equipmentSlot) {
+      super(item, equipmentSlot);
+      this.player = player;
+      this.slotNumber = count;
    }
 
-   public SlotEquippedItem(@NotNull Player var1, int var2, NBTItem var3, EquipmentSlot var4) {
-      super(var3, var4);
-      this.player = var1;
-      this.slotNumber = var2;
+   public SlotEquippedItem(@NotNull Player player, int count, NBTItem nbtItem, EquipmentSlot equipmentSlot) {
+      super(nbtItem, equipmentSlot);
+      this.player = player;
+      this.slotNumber = count;
    }
 
    @NotNull
@@ -35,28 +35,28 @@ public class SlotEquippedItem extends EquippedItem {
    }
 
    @Override
-   public void setItem(@Nullable ItemStack var1) {
+   public void setItem(@Nullable ItemStack item) {
       switch (this.getSlotNumber()) {
          case -106:
-            this.getPlayer().getInventory().setItemInOffHand(var1);
+            this.getPlayer().getInventory().setItemInOffHand(item);
             break;
          case -7:
-            this.getPlayer().getInventory().setItemInMainHand(var1);
+            this.getPlayer().getInventory().setItemInMainHand(item);
             break;
          case 100:
-            this.getPlayer().getInventory().setBoots(var1);
+            this.getPlayer().getInventory().setBoots(item);
             break;
          case 101:
-            this.getPlayer().getInventory().setLeggings(var1);
+            this.getPlayer().getInventory().setLeggings(item);
             break;
          case 102:
-            this.getPlayer().getInventory().setChestplate(var1);
+            this.getPlayer().getInventory().setChestplate(item);
             break;
          case 103:
-            this.getPlayer().getInventory().setHelmet(var1);
+            this.getPlayer().getInventory().setHelmet(item);
             break;
          default:
-            this.getPlayer().getInventory().setItem(this.getSlotNumber(), var1);
+            this.getPlayer().getInventory().setItem(this.getSlotNumber(), item);
       }
    }
 }

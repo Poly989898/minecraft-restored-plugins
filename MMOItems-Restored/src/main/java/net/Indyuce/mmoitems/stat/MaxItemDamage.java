@@ -34,44 +34,44 @@ public class MaxItemDamage extends DoubleStat implements GemStoneStat {
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2) {
-      Validate.isTrue(var1.getMeta() instanceof Damageable, "Item is not damageable");
-      int var3 = (int)var2.getValue();
-      Validate.isTrue(var3 > 0, "Maximum durability must be positive");
-      ((Damageable)var1.getMeta()).setMaxDamage((int)var2.getValue());
-      var1.addItemTag(this.getAppliedNBT(var2));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData) {
+      Validate.isTrue(itemStackBuilder.getMeta() instanceof Damageable, "Item is not damageable");
+      int count = (int)doubleData.getValue();
+      Validate.isTrue(count > 0, "Maximum durability must be positive");
+      ((Damageable)itemStackBuilder.getMeta()).setMaxDamage((int)doubleData.getValue());
+      itemStackBuilder.addItemTag(this.getAppliedNBT(doubleData));
    }
 
    @Override
-   public void whenPreviewed(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2, @NotNull NumericStatFormula var3) {
-      this.whenApplied(var1, var2);
+   public void whenPreviewed(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData, @NotNull NumericStatFormula numericStatFormula) {
+      this.whenApplied(itemStackBuilder, doubleData);
    }
 
    @NotNull
    @Override
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData var1) {
-      ArrayList var2 = new ArrayList();
-      var2.add(new ItemTag(this.getNBTPath(), (int)var1.getValue()));
-      return var2;
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData doubleData) {
+      ArrayList list = new ArrayList();
+      list.add(new ItemTag(this.getNBTPath(), (int)doubleData.getValue()));
+      return list;
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      ArrayList var2 = new ArrayList();
-      if (var1.getNBT().hasTag(this.getNBTPath())) {
-         var2.add(ItemTag.getTagAtPath(this.getNBTPath(), var1.getNBT(), SupportedNBTTagValues.INTEGER));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      ArrayList list = new ArrayList();
+      if (readMMOItem.getNBT().hasTag(this.getNBTPath())) {
+         list.add(ItemTag.getTagAtPath(this.getNBTPath(), readMMOItem.getNBT(), SupportedNBTTagValues.INTEGER));
       }
 
-      DoubleData var3 = this.getLoadedNBT(var2);
-      if (var3 != null) {
-         var1.setData(this, var3);
+      DoubleData loadedNBT = this.getLoadedNBT(list);
+      if (loadedNBT != null) {
+         readMMOItem.setData(this, loadedNBT);
       }
    }
 
    @Nullable
    @Override
-   public DoubleData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
-      ItemTag var2 = ItemTag.getTagAtPath(this.getNBTPath(), var1);
-      return var2 != null ? new DoubleData(((Integer)var2.getValue()).intValue()) : null;
+   public DoubleData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
+      ItemTag tagAtPath = ItemTag.getTagAtPath(this.getNBTPath(), itemTags);
+      return tagAtPath != null ? new DoubleData(((Integer)tagAtPath.getValue()).intValue()) : null;
    }
 }

@@ -38,21 +38,21 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
    private final boolean moreIsBetter;
    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.####");
 
-   public DoubleStat(String var1, Material var2, String var3, String[] var4) {
-      this(var1, var2, var3, var4, new String[]{"!miscellaneous", "!block", "all"}, true);
+   public DoubleStat(String text, Material material, String text2, String[] texts) {
+      this(text, material, text2, texts, new String[]{"!miscellaneous", "!block", "all"}, true);
    }
 
-   public DoubleStat(String var1, Material var2, String var3, String var4) {
-      this(var1, var2, var3, MMOUtils.trimString(50, var4), new String[]{"!miscellaneous", "!block", "all"}, true);
+   public DoubleStat(String text, Material material, String text2, String text3) {
+      this(text, material, text2, MMOUtils.trimString(50, text3), new String[]{"!miscellaneous", "!block", "all"}, true);
    }
 
-   public DoubleStat(String var1, Material var2, String var3, String[] var4, String[] var5, Material... var6) {
-      this(var1, var2, var3, var4, var5, true, var6);
+   public DoubleStat(String text, Material material, String text2, String[] texts, String[] texts2, Material... materials) {
+      this(text, material, text2, texts, texts2, true, materials);
    }
 
-   public DoubleStat(String var1, Material var2, String var3, String[] var4, String[] var5, boolean var6, Material... var7) {
-      super(var1, var2, var3, var4, var5, var7);
-      this.moreIsBetter = var6;
+   public DoubleStat(String text, Material material, String text2, String[] texts, String[] texts2, boolean flag, Material... materials) {
+      super(text, material, text2, texts, texts2, materials);
+      this.moreIsBetter = flag;
    }
 
    public boolean handleNegativeStats() {
@@ -67,156 +67,156 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
       return this.moreIsBetter;
    }
 
-   public NumericStatFormula whenInitialized(Object var1) {
-      if (var1 instanceof Number) {
-         return new NumericStatFormula(Double.parseDouble(var1.toString()), 0.0, 0.0, 0.0);
-      } else if (var1 instanceof ConfigurationSection) {
-         return new NumericStatFormula(var1);
+   public NumericStatFormula whenInitialized(Object obj) {
+      if (obj instanceof Number) {
+         return new NumericStatFormula(Double.parseDouble(obj.toString()), 0.0, 0.0, 0.0);
+      } else if (obj instanceof ConfigurationSection) {
+         return new NumericStatFormula(obj);
       } else {
          throw new IllegalArgumentException("Must specify a number or a config section");
       }
    }
 
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2) {
-      double var3 = var2.getValue();
-      if (!(var3 < 0.0) || this.handleNegativeStats()) {
-         double var5 = 0.0;
-         if (UpgradeTemplate.isDisplayingUpgrades() && var1.getMMOItem().getUpgradeLevel() != 0) {
-            StatHistory var7 = var1.getMMOItem().getStatHistory(this);
-            if (var7 != null) {
-               DoubleData var8 = (DoubleData)var7.recalculateUnupgraded();
-               var5 = var3 - var8.getValue();
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData) {
+      double value = doubleData.getValue();
+      if (!(value < 0.0) || this.handleNegativeStats()) {
+         double value2 = 0.0;
+         if (UpgradeTemplate.isDisplayingUpgrades() && itemStackBuilder.getMMOItem().getUpgradeLevel() != 0) {
+            StatHistory statHistory = itemStackBuilder.getMMOItem().getStatHistory(this);
+            if (statHistory != null) {
+               DoubleData doubleData2 = (DoubleData)statHistory.recalculateUnupgraded();
+               value2 = value - doubleData2.getValue();
             }
          }
 
-         if (var3 != 0.0 || var5 != 0.0) {
-            String var9 = formatPath(this.getId(), this.getGeneralStatFormat(), this.moreIsBetter, var3 * this.multiplyWhenDisplaying());
-            if (var5 != 0.0) {
-               var9 = var9
+         if (value != 0.0 || value2 != 0.0) {
+            String text = formatPath(this.getId(), this.getGeneralStatFormat(), this.moreIsBetter, value * this.multiplyWhenDisplaying());
+            if (value2 != 0.0) {
+               text = text
                   + UpgradeTemplate.getUpgradeChangeSuffix(
-                     plus(true, var5 * this.multiplyWhenDisplaying()) + MythicLib.plugin.getMMOConfig().decimals.format(var5 * this.multiplyWhenDisplaying()),
-                     !this.isGood(var5 * this.multiplyWhenDisplaying())
+                     plus(true, value2 * this.multiplyWhenDisplaying()) + MythicLib.plugin.getMMOConfig().decimals.format(value2 * this.multiplyWhenDisplaying()),
+                     !this.isGood(value2 * this.multiplyWhenDisplaying())
                   );
             }
 
-            var1.getLore().insert(this.getPath(), var9);
+            itemStackBuilder.getLore().insert(this.getPath(), text);
          }
 
-         if (var2.getValue() != 0.0) {
-            var1.addItemTag(this.getAppliedNBT(var2));
+         if (doubleData.getValue() != 0.0) {
+            itemStackBuilder.addItemTag(this.getAppliedNBT(doubleData));
          }
       }
    }
 
    @Deprecated
-   public static String formatPath(@NotNull String var0, boolean var1, double var2) {
-      return formatPath("ATTACK_DAMAGE", var0, var1, var2);
+   public static String formatPath(@NotNull String text, boolean flag, double value) {
+      return formatPath("ATTACK_DAMAGE", text, flag, value);
    }
 
    @Deprecated
-   public static String formatPath(@NotNull String var0, boolean var1, double var2, double var4) {
-      return formatPath("ATTACK_DAMAGE", var0, var1, var2, var4);
+   public static String formatPath(@NotNull String text, boolean flag, double value, double value2) {
+      return formatPath("ATTACK_DAMAGE", text, flag, value, value2);
    }
 
    @NotNull
-   public static String formatPath(@NotNull String var0, @NotNull String var1, boolean var2, double var3) {
-      return formatPath(var0, var1, var2, true, var3);
+   public static String formatPath(@NotNull String text, @NotNull String text2, boolean flag, double value) {
+      return formatPath(text, text2, flag, true, value);
    }
 
    @NotNull
-   public static String formatPath(@NotNull String var0, @NotNull String var1, boolean var2, boolean var3, double var4) {
-      String var6 = StatManager.format(var0, var4);
-      String var7 = getColorPrefix(var4 < 0.0 && var2);
-      return var1.replace("{value}", var7 + var6).replace("<plus>", var7 + plus(var3, var4));
+   public static String formatPath(@NotNull String text, @NotNull String text2, boolean flag, boolean flag2, double value) {
+      String text3 = StatManager.format(text, value);
+      String colorPrefix = getColorPrefix(value < 0.0 && flag);
+      return text2.replace("{value}", colorPrefix + text3).replace("<plus>", colorPrefix + plus(flag2, value));
    }
 
    @NotNull
-   public static String formatPath(@NotNull String var0, @NotNull String var1, boolean var2, double var3, double var5) {
-      return formatPath(var0, var1, var2, true, var3, var5);
+   public static String formatPath(@NotNull String text, @NotNull String text2, boolean flag, double value, double value2) {
+      return formatPath(text, text2, flag, true, value, value2);
    }
 
    @NotNull
-   public static String formatPath(@NotNull String var0, @NotNull String var1, boolean var2, boolean var3, double var4, double var6) {
-      if (SilentNumbers.round(var4, 2) == SilentNumbers.round(var6, 2)) {
-         return formatPath(var0, var1, var2, var3, var4);
+   public static String formatPath(@NotNull String text, @NotNull String text2, boolean flag, boolean flag2, double value, double value2) {
+      if (SilentNumbers.round(value, 2) == SilentNumbers.round(value2, 2)) {
+         return formatPath(text, text2, flag, flag2, value);
       }
 
-      String var8 = plus(var3, var4) + StatManager.format(var0, var4);
-      String var9 = (var3 && var4 < 0.0 && var6 > 0.0 ? "+" : "") + StatManager.format(var0, var6);
-      String var10 = getColorPrefix(var4 < 0.0 && var2);
-      String var11 = getColorPrefix(var6 < 0.0 && var2);
-      return var1.replace("<plus>", "")
-         .replace("{value}", var10 + var8 + MMOItems.plugin.getConfig().getString("stats-displaying.range-dash", "⎓") + var11 + var9);
+      String text3 = plus(flag2, value) + StatManager.format(text, value);
+      String text4 = (flag2 && value < 0.0 && value2 > 0.0 ? "+" : "") + StatManager.format(text, value2);
+      String colorPrefix = getColorPrefix(value < 0.0 && flag);
+      String colorPrefix2 = getColorPrefix(value2 < 0.0 && flag);
+      return text2.replace("<plus>", "")
+         .replace("{value}", colorPrefix + text3 + MMOItems.plugin.getConfig().getString("stats-displaying.range-dash", "⎓") + colorPrefix2 + text4);
    }
 
    @NotNull
-   private static String getColorPrefix(boolean var0) {
-      return MMOItems.plugin.getConfig().getString("stats-displaying.color-" + (var0 ? "negative" : "positive"), "");
+   private static String getColorPrefix(boolean flag) {
+      return MMOItems.plugin.getConfig().getString("stats-displaying.color-" + (flag ? "negative" : "positive"), "");
    }
 
    @NotNull
-   private static String plus(boolean var0, double var1) {
-      return var0 && var1 > 0.0 ? "+" : "";
+   private static String plus(boolean flag, double value) {
+      return flag && value > 0.0 ? "+" : "";
    }
 
-   public void whenPreviewed(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2, @NotNull NumericStatFormula var3) {
-      Validate.isTrue(var2 instanceof DoubleData, "Current Data is not Double Data");
-      Validate.isTrue(var3 instanceof NumericStatFormula, "Template Data is not Numeric Stat Formula");
-      double var4 = var3.calculate(0.0, NumericStatFormula.FormulaInputType.LOWER_BOUND);
-      double var6 = var3.calculate(0.0, NumericStatFormula.FormulaInputType.UPPER_BOUND);
-      if (!(var6 < 0.0) || this.handleNegativeStats()) {
-         if (var4 < 0.0 && !this.handleNegativeStats()) {
-            var4 = 0.0;
+   public void whenPreviewed(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData, @NotNull NumericStatFormula numericStatFormula) {
+      Validate.isTrue(doubleData instanceof DoubleData, "Current Data is not Double Data");
+      Validate.isTrue(numericStatFormula instanceof NumericStatFormula, "Template Data is not Numeric Stat Formula");
+      double value = numericStatFormula.calculate(0.0, NumericStatFormula.FormulaInputType.LOWER_BOUND);
+      double value2 = numericStatFormula.calculate(0.0, NumericStatFormula.FormulaInputType.UPPER_BOUND);
+      if (!(value2 < 0.0) || this.handleNegativeStats()) {
+         if (value < 0.0 && !this.handleNegativeStats()) {
+            value = 0.0;
          }
 
-         var1.addItemTag(this.getAppliedNBT(var2));
-         if (var4 != 0.0 || var6 != 0.0) {
-            String var8 = formatPath(
-               this.getId(), this.getGeneralStatFormat(), this.moreIsBetter(), var4 * this.multiplyWhenDisplaying(), var6 * this.multiplyWhenDisplaying()
+         itemStackBuilder.addItemTag(this.getAppliedNBT(doubleData));
+         if (value != 0.0 || value2 != 0.0) {
+            String text = formatPath(
+               this.getId(), this.getGeneralStatFormat(), this.moreIsBetter(), value * this.multiplyWhenDisplaying(), value2 * this.multiplyWhenDisplaying()
             );
-            var1.getLore().insert(this.getPath(), var8);
+            itemStackBuilder.getLore().insert(this.getPath(), text);
          }
       }
    }
 
-   public boolean isGood(double var1) {
-      return this.moreIsBetter() ? var1 >= 0.0 : var1 <= 0.0;
+   public boolean isGood(double value) {
+      return this.moreIsBetter() ? value >= 0.0 : value <= 0.0;
    }
 
    @NotNull
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData var1) {
-      ArrayList var2 = new ArrayList();
-      var2.add(new ItemTag(this.getNBTPath(), var1.getValue()));
-      return var2;
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData doubleData) {
+      ArrayList list = new ArrayList();
+      list.add(new ItemTag(this.getNBTPath(), doubleData.getValue()));
+      return list;
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      ArrayList var2 = new ArrayList();
-      if (var1.getNBT().hasTag(this.getNBTPath())) {
-         var2.add(ItemTag.getTagAtPath(this.getNBTPath(), var1.getNBT(), SupportedNBTTagValues.DOUBLE));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      ArrayList list = new ArrayList();
+      if (readMMOItem.getNBT().hasTag(this.getNBTPath())) {
+         list.add(ItemTag.getTagAtPath(this.getNBTPath(), readMMOItem.getNBT(), SupportedNBTTagValues.DOUBLE));
       }
 
-      DoubleData var3 = this.getLoadedNBT(var2);
-      if (var3 != null) {
-         var1.setData(this, var3);
+      DoubleData loadedNBT = this.getLoadedNBT(list);
+      if (loadedNBT != null) {
+         readMMOItem.setData(this, loadedNBT);
       }
    }
 
    @Nullable
-   public DoubleData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
-      ItemTag var2 = ItemTag.getTagAtPath(this.getNBTPath(), var1);
-      return var2 != null ? new DoubleData(SilentNumbers.round((Double)var2.getValue(), 4)) : null;
+   public DoubleData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
+      ItemTag tagAtPath = ItemTag.getTagAtPath(this.getNBTPath(), itemTags);
+      return tagAtPath != null ? new DoubleData(SilentNumbers.round((Double)tagAtPath.getValue(), 4)) : null;
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      if (var2.getAction() == InventoryAction.PICKUP_HALF) {
-         var1.getEditedSection().set(this.getPath(), null);
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + this.getName() + ChatColor.GRAY + ".");
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      if (event.getAction() == InventoryAction.PICKUP_HALF) {
+         editionInventory.getEditedSection().set(this.getPath(), null);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + this.getName() + ChatColor.GRAY + ".");
       } else {
-         new StatEdition(var1, this)
+         new StatEdition(editionInventory, this)
             .enable(
                "Write in the chat the numeric value you want.",
                "Second Format: {Base} {Scaling Value} {Spread} {Max Spread} {Hard Min} {Hard Max}",
@@ -226,85 +226,85 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      NumericStatFormula var4 = new NumericStatFormula(var2);
-      var4.fillConfigurationSection(var1.getEditedSection(), this.getPath(), NumericStatFormula.FormulaSaveOption.DELETE_IF_ZERO);
-      var1.registerTemplateEdition();
-      var1.getPlayer()
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      NumericStatFormula numericStatFormula = new NumericStatFormula(text);
+      numericStatFormula.fillConfigurationSection(editionInventory.getEditedSection(), this.getPath(), NumericStatFormula.FormulaSaveOption.DELETE_IF_ZERO);
+      editionInventory.registerTemplateEdition();
+      editionInventory.getPlayer()
          .sendMessage(
             MMOItems.plugin.getPrefix()
                + this.getName()
                + " successfully changed to {"
-               + var4.getBase()
+               + numericStatFormula.getBase()
                + " - "
-               + var4.getScale()
+               + numericStatFormula.getScale()
                + " - "
-               + var4.getSpread()
+               + numericStatFormula.getSpread()
                + " - "
-               + var4.getMaxSpread()
+               + numericStatFormula.getMaxSpread()
                + " - ("
-               + var4.getMin()
+               + numericStatFormula.getMin()
                + " -> "
-               + var4.getMax()
+               + numericStatFormula.getMax()
                + ") }"
          );
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<NumericStatFormula> var2) {
-      if (var2.isPresent()) {
-         NumericStatFormula var3 = (NumericStatFormula)var2.get();
-         if (var3.isUniform()) {
-            var1.add(
+   public void whenDisplayed(List<String> texts, Optional<NumericStatFormula> optional) {
+      if (optional.isPresent()) {
+         NumericStatFormula numericStatFormula = (NumericStatFormula)optional.get();
+         if (numericStatFormula.isUniform()) {
+            texts.add(
                ChatColor.GRAY
                   + "Uniform: "
                   + ChatColor.GREEN
-                  + DECIMAL_FORMAT.format(var3.getMin())
+                  + DECIMAL_FORMAT.format(numericStatFormula.getMin())
                   + ChatColor.GRAY
                   + " -> "
                   + ChatColor.GREEN
-                  + DECIMAL_FORMAT.format(var3.getMax())
+                  + DECIMAL_FORMAT.format(numericStatFormula.getMax())
             );
          } else {
-            var1.add(
+            texts.add(
                ChatColor.GRAY
                   + "Base Value: "
                   + ChatColor.GREEN
-                  + DECIMAL_FORMAT.format(var3.getBase())
-                  + (var3.getScale() != 0.0 ? ChatColor.GRAY + " (+" + ChatColor.GREEN + DECIMAL_FORMAT.format(var3.getScale()) + ChatColor.GRAY + "/Lvl)" : "")
+                  + DECIMAL_FORMAT.format(numericStatFormula.getBase())
+                  + (numericStatFormula.getScale() != 0.0 ? ChatColor.GRAY + " (+" + ChatColor.GREEN + DECIMAL_FORMAT.format(numericStatFormula.getScale()) + ChatColor.GRAY + "/Lvl)" : "")
             );
-            if (var3.getSpread() > 0.0) {
-               var1.add(
+            if (numericStatFormula.getSpread() > 0.0) {
+               texts.add(
                   ChatColor.GRAY
                      + "Spread: "
                      + ChatColor.GREEN
-                     + DECIMAL_FORMAT.format(var3.getSpread() * 100.0)
+                     + DECIMAL_FORMAT.format(numericStatFormula.getSpread() * 100.0)
                      + "%"
                      + ChatColor.GRAY
                      + " (Max: "
                      + ChatColor.GREEN
-                     + DECIMAL_FORMAT.format(var3.getMaxSpread() * 100.0)
+                     + DECIMAL_FORMAT.format(numericStatFormula.getMaxSpread() * 100.0)
                      + "%"
                      + ChatColor.GRAY
                      + ")"
                );
             }
 
-            if (var3.hasMin()) {
-               var1.add(ChatColor.GRAY + "Min: " + ChatColor.GREEN + DECIMAL_FORMAT.format(var3.getMin()));
+            if (numericStatFormula.hasMin()) {
+               texts.add(ChatColor.GRAY + "Min: " + ChatColor.GREEN + DECIMAL_FORMAT.format(numericStatFormula.getMin()));
             }
 
-            if (var3.hasMax()) {
-               var1.add(ChatColor.GRAY + "Max: " + ChatColor.GREEN + DECIMAL_FORMAT.format(var3.getMax()));
+            if (numericStatFormula.hasMax()) {
+               texts.add(ChatColor.GRAY + "Max: " + ChatColor.GREEN + DECIMAL_FORMAT.format(numericStatFormula.getMax()));
             }
          }
       } else {
-         var1.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + "---");
+         texts.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + "---");
       }
 
-      var1.add("");
-      var1.add(ChatColor.YELLOW + "►" + " Left click to change this value.");
-      var1.add(ChatColor.YELLOW + "►" + " Right click to remove this value.");
+      texts.add("");
+      texts.add(ChatColor.YELLOW + "►" + " Left click to change this value.");
+      texts.add(ChatColor.YELLOW + "►" + " Right click to remove this value.");
    }
 
    @NotNull
@@ -314,32 +314,32 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
 
    @NotNull
    @Override
-   public UpgradeInfo loadUpgradeInfo(@Nullable Object var1) {
-      return DoubleStat.DoubleUpgradeInfo.GetFrom(var1);
+   public UpgradeInfo loadUpgradeInfo(@Nullable Object obj) {
+      return DoubleStat.DoubleUpgradeInfo.GetFrom(obj);
    }
 
    @NotNull
    @Override
-   public StatData apply(@NotNull StatData var1, @NotNull UpgradeInfo var2, int var3) {
-      int var4 = var3;
-      if (var1 instanceof DoubleData && var2 instanceof DoubleStat.DoubleUpgradeInfo) {
-         double var5 = ((DoubleData)var1).getValue();
-         if (var4 > 0) {
-            while (var4 > 0) {
-               var5 = ((DoubleStat.DoubleUpgradeInfo)var2).getPMP().apply(var5);
-               var4--;
+   public StatData apply(@NotNull StatData statData, @NotNull UpgradeInfo upgradeInfo, int count) {
+      int count2 = count;
+      if (statData instanceof DoubleData && upgradeInfo instanceof DoubleStat.DoubleUpgradeInfo) {
+         double value = ((DoubleData)statData).getValue();
+         if (count2 > 0) {
+            while (count2 > 0) {
+               value = ((DoubleStat.DoubleUpgradeInfo)upgradeInfo).getPMP().apply(value);
+               count2--;
             }
-         } else if (var4 < 0) {
-            while (var4 < 0) {
-               var5 = ((DoubleStat.DoubleUpgradeInfo)var2).getPMP().reverse(var5);
-               var4++;
+         } else if (count2 < 0) {
+            while (count2 < 0) {
+               value = ((DoubleStat.DoubleUpgradeInfo)upgradeInfo).getPMP().reverse(value);
+               count2++;
             }
          }
 
-         ((DoubleData)var1).setValue(var5);
+         ((DoubleData)statData).setValue(value);
       }
 
-      return var1;
+      return statData;
    }
 
    public static class DoubleUpgradeInfo implements UpgradeInfo {
@@ -347,33 +347,33 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
       PlusMinusPercent pmp;
 
       @NotNull
-      public static DoubleStat.DoubleUpgradeInfo GetFrom(@Nullable Object var0) {
-         Validate.notNull(var0, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Upgrade operation must not be null", new String[0]));
-         String var1 = var0.toString();
-         if (var1.isEmpty()) {
+      public static DoubleStat.DoubleUpgradeInfo GetFrom(@Nullable Object obj) {
+         Validate.notNull(obj, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Upgrade operation must not be null", new String[0]));
+         String text = obj.toString();
+         if (text.isEmpty()) {
             throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Upgrade operation is empty", new String[0]));
          }
 
-         char var2 = var1.charAt(0);
-         if (var2 == 's') {
-            var1 = var1.substring(1);
-         } else if (var2 != '+' && var2 != '-' && var2 != 'n') {
-            var1 = '+' + var1;
+         char ch = text.charAt(0);
+         if (ch == 's') {
+            text = text.substring(1);
+         } else if (ch != '+' && ch != '-' && ch != 'n') {
+            text = '+' + text;
          }
 
-         FriendlyFeedbackProvider var3 = new FriendlyFeedbackProvider(FFPMMOItems.get());
-         PlusMinusPercent var4 = PlusMinusPercent.getFromString(var1, var3);
-         if (var4 == null) {
+         FriendlyFeedbackProvider friendlyFeedbackProvider = new FriendlyFeedbackProvider(FFPMMOItems.get());
+         PlusMinusPercent plusMinusPercent = PlusMinusPercent.getFromString(text, friendlyFeedbackProvider);
+         if (plusMinusPercent == null) {
             throw new IllegalArgumentException(
-               ((FriendlyFeedbackMessage)var3.getFeedbackOf(FriendlyFeedbackCategory.ERROR).get(0)).forConsole(var3.getPalette())
+               ((FriendlyFeedbackMessage)friendlyFeedbackProvider.getFeedbackOf(FriendlyFeedbackCategory.ERROR).get(0)).forConsole(friendlyFeedbackProvider.getPalette())
             );
          } else {
-            return new DoubleStat.DoubleUpgradeInfo(var4);
+            return new DoubleStat.DoubleUpgradeInfo(plusMinusPercent);
          }
       }
 
-      public DoubleUpgradeInfo(@NotNull PlusMinusPercent var1) {
-         this.pmp = var1;
+      public DoubleUpgradeInfo(@NotNull PlusMinusPercent plusMinusPercent) {
+         this.pmp = plusMinusPercent;
       }
 
       @NotNull

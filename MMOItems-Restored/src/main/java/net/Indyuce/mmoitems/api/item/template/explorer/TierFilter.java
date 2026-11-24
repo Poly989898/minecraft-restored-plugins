@@ -8,12 +8,12 @@ import net.Indyuce.mmoitems.stat.data.random.RandomStatData;
 public class TierFilter implements Predicate<MMOItemTemplate> {
    private final String id;
 
-   public TierFilter(String var1) {
-      this.id = var1;
+   public TierFilter(String text) {
+      this.id = text;
    }
 
-   public boolean test(MMOItemTemplate var1) {
-      RandomStatData var2 = var1.getBaseItemData().get(ItemStats.TIER);
-      return var2 != null && var2.toString().equalsIgnoreCase(this.id);
+   public boolean test(MMOItemTemplate mmoItemTemplate) {
+      RandomStatData randomStatData = mmoItemTemplate.getBaseItemData().get(ItemStats.TIER);
+      return randomStatData != null && randomStatData.toString().equalsIgnoreCase(this.id);
    }
 }

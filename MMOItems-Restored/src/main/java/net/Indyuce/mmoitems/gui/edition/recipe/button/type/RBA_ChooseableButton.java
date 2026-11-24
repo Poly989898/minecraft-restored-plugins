@@ -9,24 +9,24 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class RBA_ChooseableButton extends RecipeButtonAction {
-   public RBA_ChooseableButton(@NotNull RecipeEditorGUI var1) {
-      super(var1);
+   public RBA_ChooseableButton(@NotNull RecipeEditorGUI recipeEditorGUI) {
+      super(recipeEditorGUI);
    }
 
    @Override
    public boolean runPrimary() {
-      String var1 = this.getCurrentChooseableValue();
-      int var2 = this.getChooseableList().indexOf(var1);
-      if (var2 == -1) {
+      String currentChooseableValue = this.getCurrentChooseableValue();
+      int index = this.getChooseableList().indexOf(currentChooseableValue);
+      if (index == -1) {
          return this.runSecondary();
       }
 
-      if (++var2 >= this.getChooseableList().size()) {
-         var2 = 0;
+      if (++index >= this.getChooseableList().size()) {
+         index = 0;
       }
 
-      String var3 = this.getChooseableList().get(var2);
-      this.getInv().getNameSection().set(this.getChooseableConfigPath(), var3);
+      String text = this.getChooseableList().get(index);
+      this.getInv().getNameSection().set(this.getChooseableConfigPath(), text);
       this.clickSFX();
       this.getInv().registerTemplateEdition();
       return true;
@@ -46,24 +46,24 @@ public abstract class RBA_ChooseableButton extends RecipeButtonAction {
    @NotNull
    @Override
    public ItemStack getButton() {
-      String var1 = this.getCurrentChooseableValue();
-      ArrayList var2 = new ArrayList();
-      var2.add("§7Current Value:§3 " + var1);
-      var2.addAll(SilentNumbers.chop(this.getChooseableDefinition(var1), 50, "  §b§o"));
-      var2.add("");
-      var2.add(ChatColor.YELLOW + "►" + " Right click to return to default value.");
-      var2.add(ChatColor.YELLOW + "►" + " Left click to cycle through the options:");
+      String currentChooseableValue = this.getCurrentChooseableValue();
+      ArrayList list = new ArrayList();
+      list.add("§7Current Value:§3 " + currentChooseableValue);
+      list.addAll(SilentNumbers.chop(this.getChooseableDefinition(currentChooseableValue), 50, "  §b§o"));
+      list.add("");
+      list.add(ChatColor.YELLOW + "►" + " Right click to return to default value.");
+      list.add(ChatColor.YELLOW + "►" + " Left click to cycle through the options:");
 
-      for (String var4 : this.getChooseableList()) {
-         String var5 = ChatColor.GOLD.toString();
-         if (var4.equals(var1)) {
-            var5 = ChatColor.RED.toString() + ChatColor.BOLD;
+      for (String chooseable : this.getChooseableList()) {
+         String text = ChatColor.GOLD.toString();
+         if (chooseable.equals(currentChooseableValue)) {
+            text = ChatColor.RED.toString() + ChatColor.BOLD;
          }
 
-         var2.add(var5 + "  " + "▸" + " §7" + var4);
+         list.add(text + "  " + "▸" + " §7" + chooseable);
       }
 
-      return RecipeEditorGUI.addLore(this.getChooseableButton().clone(), var2);
+      return RecipeEditorGUI.addLore(this.getChooseableButton().clone(), list);
    }
 
    @NotNull
@@ -74,21 +74,21 @@ public abstract class RBA_ChooseableButton extends RecipeButtonAction {
 
    @NotNull
    public String getCurrentChooseableValue() {
-      String var1 = this.getInv().getNameSection().getString(this.getChooseableConfigPath());
-      return var1 != null ? var1 : this.getDefaultValue();
+      String text = this.getInv().getNameSection().getString(this.getChooseableConfigPath());
+      return text != null ? text : this.getDefaultValue();
    }
 
    @NotNull
    public abstract String getDefaultValue();
 
    @NotNull
-   public abstract String getChooseableDefinition(@NotNull String var1);
+   public abstract String getChooseableDefinition(@NotNull String text);
 
    @Override
-   public void secondaryProcessInput(@NotNull String var1, Object... var2) {
+   public void secondaryProcessInput(@NotNull String text, Object... objs) {
    }
 
    @Override
-   public void primaryProcessInput(@NotNull String var1, Object... var2) {
+   public void primaryProcessInput(@NotNull String text, Object... objs) {
    }
 }

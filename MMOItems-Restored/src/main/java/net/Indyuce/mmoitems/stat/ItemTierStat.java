@@ -29,20 +29,20 @@ public class ItemTierStat extends StringStat implements GemStoneStat {
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull StringData var2) {
-      String var3 = var2.toString().toUpperCase().replace("-", "_").replace(" ", "_");
-      Validate.isTrue(MMOItems.plugin.getTiers().has(var3), "Could not find item tier with ID '" + var3 + "'");
-      ItemTier var4 = MMOItems.plugin.getTiers().get(var3);
-      var1.addItemTag(new ItemTag("MMOITEMS_TIER", var3));
-      var1.getLore().insert(this.getPath(), this.getGeneralStatFormat().replace("{value}", var4.getName()));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull StringData stringData) {
+      String text = stringData.toString().toUpperCase().replace("-", "_").replace(" ", "_");
+      Validate.isTrue(MMOItems.plugin.getTiers().has(text), "Could not find item tier with ID '" + text + "'");
+      ItemTier itemTier = MMOItems.plugin.getTiers().get(text);
+      itemStackBuilder.addItemTag(new ItemTag("MMOITEMS_TIER", text));
+      itemStackBuilder.getLore().insert(this.getPath(), this.getGeneralStatFormat().replace("{value}", itemTier.getName()));
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      String var4 = var2.toUpperCase().replace(" ", "_").replace("-", "_");
-      Validate.isTrue(MMOItems.plugin.getTiers().has(var4), "Couldn't find the tier called '" + var4 + "'.");
-      var1.getEditedSection().set(this.getPath(), var4);
-      var1.registerTemplateEdition();
-      var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Tier successfully changed to " + var4 + ".");
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      String text2 = text.toUpperCase().replace(" ", "_").replace("-", "_");
+      Validate.isTrue(MMOItems.plugin.getTiers().has(text2), "Couldn't find the tier called '" + text2 + "'.");
+      editionInventory.getEditedSection().set(this.getPath(), text2);
+      editionInventory.registerTemplateEdition();
+      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Tier successfully changed to " + text2 + ".");
    }
 }

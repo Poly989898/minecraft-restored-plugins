@@ -7,9 +7,9 @@ public class StringValue {
    private final String name;
    private final double value;
 
-   public StringValue(String var1, double var2) {
-      this.name = var1;
-      this.value = var2;
+   public StringValue(String text, double value) {
+      this.name = text;
+      this.value = value;
    }
 
    public String getName() {
@@ -21,18 +21,18 @@ public class StringValue {
    }
 
    @Deprecated
-   public static Map<String, Double> readFromArray(StringValue... var0) {
-      HashMap var1 = new HashMap();
+   public static Map<String, Double> readFromArray(StringValue... stringValues) {
+      HashMap map = new HashMap();
 
-      for (StringValue var5 : var0) {
-         var1.put(var5.getName(), var5.getValue());
+      for (StringValue stringValue : stringValues) {
+         map.put(stringValue.getName(), stringValue.getValue());
       }
 
-      return var1;
+      return map;
    }
 
    @Override
-   public boolean equals(Object var1) {
-      return var1 instanceof StringValue && ((StringValue)var1).name.equals(this.name) && ((StringValue)var1).value == this.value;
+   public boolean equals(Object obj) {
+      return obj instanceof StringValue && ((StringValue)obj).name.equals(this.name) && ((StringValue)obj).value == this.value;
    }
 }

@@ -15,36 +15,36 @@ import org.jetbrains.annotations.NotNull;
 public class ElementListData implements StatData, Mergeable<ElementListData> {
    private final Map<Pair<Element, ElementStatType>, Double> stats = new LinkedHashMap<>();
 
-   public double getStat(Element var1, ElementStatType var2) {
-      Double var3 = this.stats.get(Pair.of(var1, var2));
-      return var3 == null ? 0.0 : var3;
+   public double getStat(Element element, ElementStatType elementStatType) {
+      Double value = this.stats.get(Pair.of(element, elementStatType));
+      return value == null ? 0.0 : value;
    }
 
    public Set<Pair<Element, ElementStatType>> getKeys() {
       return this.stats.keySet();
    }
 
-   public void setStat(Element var1, ElementStatType var2, double var3) {
-      this.stats.put(Pair.of(var1, var2), var3);
+   public void setStat(Element element, ElementStatType elementStatType, double value) {
+      this.stats.put(Pair.of(element, elementStatType), value);
    }
 
-   public void mergeWith(@NotNull ElementListData var1) {
-      var1.stats.forEach((var1x, var2) -> this.stats.put((Pair<Element, ElementStatType>)var1x, var2 + this.stats.getOrDefault(var1x, 0.0)));
+   public void mergeWith(@NotNull ElementListData elementListData) {
+      elementListData.stats.forEach((var1x, value) -> this.stats.put((Pair<Element, ElementStatType>)var1x, value + this.stats.getOrDefault(var1x, 0.0)));
    }
 
    @NotNull
    public ElementListData clone() {
-      ElementListData var1 = new ElementListData();
+      ElementListData elementListData = new ElementListData();
 
-      for (Entry var3 : this.stats.entrySet()) {
-         Pair var4 = (Pair)var3.getKey();
-         Double var5 = (Double)var3.getValue();
-         if (var5 != 0.0) {
-            var1.stats.put(var4, var5);
+      for (Entry entry : this.stats.entrySet()) {
+         Pair key = (Pair)entry.getKey();
+         Double value = (Double)entry.getValue();
+         if (value != 0.0) {
+            elementListData.stats.put(key, value);
          }
       }
 
-      return var1;
+      return elementListData;
    }
 
    @Override
@@ -53,12 +53,12 @@ public class ElementListData implements StatData, Mergeable<ElementListData> {
    }
 
    @Override
-   public boolean equals(Object var1) {
-      if (this == var1) {
+   public boolean equals(Object obj) {
+      if (this == obj) {
          return true;
-      } else if (var1 != null && this.getClass() == var1.getClass()) {
-         ElementListData var2 = (ElementListData)var1;
-         return this.stats.equals(var2.stats);
+      } else if (obj != null && this.getClass() == obj.getClass()) {
+         ElementListData elementListData = (ElementListData)obj;
+         return this.stats.equals(elementListData.stats);
       } else {
          return false;
       }

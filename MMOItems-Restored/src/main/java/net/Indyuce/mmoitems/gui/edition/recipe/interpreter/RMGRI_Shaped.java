@@ -19,77 +19,77 @@ public class RMGRI_Shaped implements RMG_RecipeInterpreter {
    public static final String emptyRow = "v AIR 0|v AIR 0|v AIR 0";
 
    @NotNull
-   ProvidedUIFilter[][] buildIngredientsFromList(@NotNull List<String> var1) {
-      ProvidedUIFilter[][] var2 = new ProvidedUIFilter[3][3];
+   ProvidedUIFilter[][] buildIngredientsFromList(@NotNull List<String> texts) {
+      ProvidedUIFilter[][] providedUIFilterses = new ProvidedUIFilter[3][3];
 
-      for (int var3 = 0; var3 < 3; var3++) {
-         String var4 = var1.size() > var3 ? (String)var1.get(var3) : null;
-         String var5 = updateRow(var4);
-         String[] var6 = var5.split("\\|");
+      for (int i = 0; i < 3; i++) {
+         String text = texts.size() > i ? (String)texts.get(i) : null;
+         String text2 = updateRow(text);
+         String[] texts2 = text2.split("\\|");
 
-         for (int var7 = 0; var7 < 3; var7++) {
-            String var8 = var6.length > var7 ? var6[var7] : null;
-            ProvidedUIFilter var9 = ProvidedUIFilter.getFromString(var8, null);
-            if (var9 == null) {
-               var9 = RecipeEditorGUI.AIR.clone();
+         for (int j = 0; j < 3; j++) {
+            String text3 = texts2.length > j ? texts2[j] : null;
+            ProvidedUIFilter providedUIFilter = ProvidedUIFilter.getFromString(text3, null);
+            if (providedUIFilter == null) {
+               providedUIFilter = RecipeEditorGUI.AIR.clone();
             }
 
-            var2[var3][var7] = var9;
+            providedUIFilterses[i][j] = providedUIFilter;
          }
       }
 
-      return var2;
+      return providedUIFilterses;
    }
 
    @NotNull
-   ArrayList<String> toYML(@NotNull ProvidedUIFilter[][] var1) {
-      ArrayList var2 = new ArrayList();
+   ArrayList<String> toYML(@NotNull ProvidedUIFilter[][] providedUIFilterses) {
+      ArrayList list = new ArrayList();
 
-      for (int var3 = 0; var3 < 3; var3++) {
-         ProvidedUIFilter[] var4 = var1.length > var3 ? var1[var3] : new ProvidedUIFilter[3];
-         StringBuilder var5 = new StringBuilder();
+      for (int i = 0; i < 3; i++) {
+         ProvidedUIFilter[] providedUIFilters = providedUIFilterses.length > i ? providedUIFilterses[i] : new ProvidedUIFilter[3];
+         StringBuilder builder = new StringBuilder();
 
-         for (ProvidedUIFilter var9 : var4) {
-            ProvidedUIFilter var10 = var9;
-            if (var10 == null) {
-               var10 = RecipeEditorGUI.AIR.clone();
+         for (ProvidedUIFilter providedUIFilter : providedUIFilters) {
+            ProvidedUIFilter providedUIFilter2 = providedUIFilter;
+            if (providedUIFilter2 == null) {
+               providedUIFilter2 = RecipeEditorGUI.AIR.clone();
             }
 
-            if (var5.length() != 0) {
-               var5.append("|");
+            if (builder.length() != 0) {
+               builder.append("|");
             }
 
-            var5.append(var10);
+            builder.append(providedUIFilter2);
          }
 
-         var2.add(var5.toString());
+         list.add(builder.toString());
       }
 
-      return var2;
+      return list;
    }
 
-   public void setInput(int var1, @NotNull ProvidedUIFilter var2) {
-      if (var1 >= 0 && var1 <= 8) {
-         this.inputRecipe[SilentNumbers.floor(var1 / 3.0)][var1 - 3 * SilentNumbers.floor(var1 / 3.0)] = var2;
-      }
-   }
-
-   @Nullable
-   @Override
-   public ProvidedUIFilter getInput(int var1) {
-      return var1 >= 0 && var1 <= 8 ? this.inputRecipe[SilentNumbers.floor(var1 / 3.0)][var1 - 3 * SilentNumbers.floor(var1 / 3.0)] : null;
-   }
-
-   public void setOutput(int var1, @NotNull ProvidedUIFilter var2) {
-      if (var1 >= 0 && var1 <= 8) {
-         this.outputRecipe[SilentNumbers.floor(var1 / 3.0)][var1 - 3 * SilentNumbers.floor(var1 / 3.0)] = var2;
+   public void setInput(int count, @NotNull ProvidedUIFilter providedUIFilter) {
+      if (count >= 0 && count <= 8) {
+         this.inputRecipe[SilentNumbers.floor(count / 3.0)][count - 3 * SilentNumbers.floor(count / 3.0)] = providedUIFilter;
       }
    }
 
    @Nullable
    @Override
-   public ProvidedUIFilter getOutput(int var1) {
-      return var1 >= 0 && var1 <= 8 ? this.outputRecipe[SilentNumbers.floor(var1 / 3.0)][var1 - 3 * SilentNumbers.floor(var1 / 3.0)] : null;
+   public ProvidedUIFilter getInput(int count) {
+      return count >= 0 && count <= 8 ? this.inputRecipe[SilentNumbers.floor(count / 3.0)][count - 3 * SilentNumbers.floor(count / 3.0)] : null;
+   }
+
+   public void setOutput(int count, @NotNull ProvidedUIFilter providedUIFilter) {
+      if (count >= 0 && count <= 8) {
+         this.outputRecipe[SilentNumbers.floor(count / 3.0)][count - 3 * SilentNumbers.floor(count / 3.0)] = providedUIFilter;
+      }
+   }
+
+   @Nullable
+   @Override
+   public ProvidedUIFilter getOutput(int count) {
+      return count >= 0 && count <= 8 ? this.outputRecipe[SilentNumbers.floor(count / 3.0)][count - 3 * SilentNumbers.floor(count / 3.0)] : null;
    }
 
    @NotNull
@@ -97,77 +97,77 @@ public class RMGRI_Shaped implements RMG_RecipeInterpreter {
       return this.section;
    }
 
-   public RMGRI_Shaped(@NotNull ConfigurationSection var1) {
-      this.section = var1;
+   public RMGRI_Shaped(@NotNull ConfigurationSection section) {
+      this.section = section;
       this.inputRecipe = this.buildIngredientsFromList(this.section.getStringList("input"));
       this.outputRecipe = this.buildIngredientsFromList(this.section.getStringList("output"));
    }
 
    @Override
-   public void editInput(@NotNull ProvidedUIFilter var1, int var2) {
-      this.setInput(var2, var1);
+   public void editInput(@NotNull ProvidedUIFilter providedUIFilter, int count) {
+      this.setInput(count, providedUIFilter);
       this.section.set("input", this.toYML(this.inputRecipe));
    }
 
    @Override
-   public void editOutput(@NotNull ProvidedUIFilter var1, int var2) {
-      this.setOutput(var2, var1);
+   public void editOutput(@NotNull ProvidedUIFilter providedUIFilter, int count) {
+      this.setOutput(count, providedUIFilter);
       this.section.set("output", this.toYML(this.outputRecipe));
    }
 
    @Override
-   public void deleteInput(int var1) {
-      this.editInput(RecipeEditorGUI.AIR.clone(), var1);
+   public void deleteInput(int count) {
+      this.editInput(RecipeEditorGUI.AIR.clone(), count);
    }
 
    @Override
-   public void deleteOutput(int var1) {
-      this.editOutput(RecipeEditorGUI.AIR.clone(), var1);
+   public void deleteOutput(int count) {
+      this.editOutput(RecipeEditorGUI.AIR.clone(), count);
    }
 
    @NotNull
-   public static String updateRow(@Nullable String var0) {
-      if (var0 != null && !var0.isEmpty()) {
-         if (var0.contains("|")) {
-            String[] var4 = var0.split("\\|");
-            if (var4.length == 3) {
-               return var0;
+   public static String updateRow(@Nullable String text) {
+      if (text != null && !text.isEmpty()) {
+         if (text.contains("|")) {
+            String[] texts = text.split("\\|");
+            if (texts.length == 3) {
+               return text;
             }
 
-            StringBuilder var5 = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
 
-            for (int var6 = 0; var6 < 3; var6++) {
-               if (var6 != 0) {
-                  var5.append("|");
+            for (int i = 0; i < 3; i++) {
+               if (i != 0) {
+                  builder.append("|");
                }
 
-               if (var6 < var4.length) {
-                  var5.append(RecipeEditorGUI.poofFromLegacy(var4[var6]));
+               if (i < texts.length) {
+                  builder.append(RecipeEditorGUI.poofFromLegacy(texts[i]));
                } else {
-                  var5.append("v AIR 0");
+                  builder.append("v AIR 0");
                }
             }
 
-            return var5.toString();
-         } else if (var0.contains(" ")) {
-            StringBuilder var1 = new StringBuilder();
-            String[] var2 = var0.split(" ");
+            return builder.toString();
+         } else if (text.contains(" ")) {
+            StringBuilder builder = new StringBuilder();
+            String[] texts = text.split(" ");
 
-            for (int var3 = 0; var3 < 3; var3++) {
-               if (var3 != 0) {
-                  var1.append("|");
+            for (int i = 0; i < 3; i++) {
+               if (i != 0) {
+                  builder.append("|");
                }
 
-               if (var3 < var2.length) {
-                  var1.append(RecipeEditorGUI.poofFromLegacy(var2[var3]));
+               if (i < texts.length) {
+                  builder.append(RecipeEditorGUI.poofFromLegacy(texts[i]));
                } else {
-                  var1.append("v AIR 0");
+                  builder.append("v AIR 0");
                }
             }
 
-            return var1.toString();
+            return builder.toString();
          } else {
-            return RecipeEditorGUI.poofFromLegacy(var0) + "|v AIR 0|v AIR 0";
+            return RecipeEditorGUI.poofFromLegacy(text) + "|v AIR 0|v AIR 0";
          }
       } else {
          return "v AIR 0|v AIR 0|v AIR 0";

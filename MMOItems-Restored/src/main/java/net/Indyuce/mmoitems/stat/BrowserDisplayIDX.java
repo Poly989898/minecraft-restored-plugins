@@ -29,74 +29,74 @@ public class BrowserDisplayIDX extends DoubleStat {
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2) {
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData) {
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
    }
 
    @NotNull
-   public static HashMap<Double, ArrayList<MMOItemTemplate>> select(@NotNull Collection<MMOItemTemplate> var0) {
-      HashMap var1 = new HashMap();
+   public static HashMap<Double, ArrayList<MMOItemTemplate>> select(@NotNull Collection<MMOItemTemplate> mmoItemTemplates) {
+      HashMap map = new HashMap();
 
-      for (MMOItemTemplate var3 : var0) {
-         if (var3 != null) {
-            Double var4 = null;
-            if (var3.getType().getAvailableStats().contains(ItemStats.BROWSER_DISPLAY_IDX)) {
-               NumericStatFormula var5 = (NumericStatFormula)var3.getBaseItemData().get(ItemStats.BROWSER_DISPLAY_IDX);
-               if (var5 != null && var5.getBase() != 0.0) {
-                  var4 = var5.getBase();
+      for (MMOItemTemplate mmoItemTemplate : mmoItemTemplates) {
+         if (mmoItemTemplate != null) {
+            Double value = null;
+            if (mmoItemTemplate.getType().getAvailableStats().contains(ItemStats.BROWSER_DISPLAY_IDX)) {
+               NumericStatFormula numericStatFormula = (NumericStatFormula)mmoItemTemplate.getBaseItemData().get(ItemStats.BROWSER_DISPLAY_IDX);
+               if (numericStatFormula != null && numericStatFormula.getBase() != 0.0) {
+                  value = numericStatFormula.getBase();
                }
             }
 
-            ArrayList var6 = (ArrayList)var1.get(var4);
-            if (var6 == null) {
-               var6 = new ArrayList();
+            ArrayList list = (ArrayList)map.get(value);
+            if (list == null) {
+               list = new ArrayList();
             }
 
-            var6.add(var3);
-            var1.put(var4, var6);
+            list.add(mmoItemTemplate);
+            map.put(value, list);
          }
       }
 
-      return var1;
+      return map;
    }
 
    @Nullable
-   public static MMOItemTemplate getAt(int var0, @NotNull HashMap<Double, ArrayList<MMOItemTemplate>> var1) {
-      Entry<Double, ArrayList<MMOItemTemplate>> var2 = null;
+   public static MMOItemTemplate getAt(int count, @NotNull HashMap<Double, ArrayList<MMOItemTemplate>> map) {
+      Entry<Double, ArrayList<MMOItemTemplate>> entry = null;
 
-      for (Entry<Double, ArrayList<MMOItemTemplate>> var4 : var1.entrySet()) {
-         if (var4.getKey() == null) {
-            var2 = var4;
+      for (Entry<Double, ArrayList<MMOItemTemplate>> entry2 : map.entrySet()) {
+         if (entry2.getKey() == null) {
+            entry = entry2;
          } else {
-            ArrayList<MMOItemTemplate> var5 = (ArrayList)var4.getValue();
+            ArrayList<MMOItemTemplate> mmoItemTemplates = (ArrayList)entry2.getValue();
 
-            while (var5.size() % 4 != 0) {
-               var5.add(null);
+            while (mmoItemTemplates.size() % 4 != 0) {
+               mmoItemTemplates.add(null);
             }
 
-            for (MMOItemTemplate var7 : var5) {
-               if (var0 == 0) {
-                  return var7;
+            for (MMOItemTemplate mmoItemTemplate : mmoItemTemplates) {
+               if (count == 0) {
+                  return mmoItemTemplate;
                }
 
-               var0--;
+               count--;
             }
          }
       }
 
-      if (var2 == null) {
+      if (entry == null) {
          return null;
       }
 
-      for (MMOItemTemplate var10 : var2.getValue()) {
-         if (var0 == 0) {
-            return var10;
+      for (MMOItemTemplate mmoItemTemplate : entry.getValue()) {
+         if (count == 0) {
+            return mmoItemTemplate;
          }
 
-         var0--;
+         count--;
       }
 
       return null;

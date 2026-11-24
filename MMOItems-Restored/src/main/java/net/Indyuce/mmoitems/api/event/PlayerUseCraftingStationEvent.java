@@ -21,35 +21,35 @@ public class PlayerUseCraftingStationEvent extends PlayerDataEvent {
    private final ItemStack result;
    private static final HandlerList handlers = new HandlerList();
 
-   public PlayerUseCraftingStationEvent(PlayerData var1, CraftingStation var2, CheckedRecipe var3) {
-      this(var1, var2, var3, var3.getRecipe(), null, PlayerUseCraftingStationEvent.StationAction.INTERACT_WITH_RECIPE);
+   public PlayerUseCraftingStationEvent(PlayerData playerData, CraftingStation craftingStation, CheckedRecipe checkedRecipe) {
+      this(playerData, craftingStation, checkedRecipe, checkedRecipe.getRecipe(), null, PlayerUseCraftingStationEvent.StationAction.INTERACT_WITH_RECIPE);
    }
 
-   public PlayerUseCraftingStationEvent(PlayerData var1, CraftingStation var2, UpgradingRecipe.CheckedUpgradingRecipe var3) {
-      this(var1, var2, var3, var3.getRecipe(), null, PlayerUseCraftingStationEvent.StationAction.UPGRADE_RECIPE);
+   public PlayerUseCraftingStationEvent(PlayerData playerData, CraftingStation craftingStation, UpgradingRecipe.CheckedUpgradingRecipe checkedUpgradingRecipe) {
+      this(playerData, craftingStation, checkedUpgradingRecipe, checkedUpgradingRecipe.getRecipe(), null, PlayerUseCraftingStationEvent.StationAction.UPGRADE_RECIPE);
    }
 
-   public PlayerUseCraftingStationEvent(PlayerData var1, CraftingStation var2, CheckedRecipe var3, ItemStack var4) {
-      this(var1, var2, var3, var3.getRecipe(), var4, PlayerUseCraftingStationEvent.StationAction.INSTANT_RECIPE);
+   public PlayerUseCraftingStationEvent(PlayerData playerData, CraftingStation craftingStation, CheckedRecipe checkedRecipe, ItemStack item) {
+      this(playerData, craftingStation, checkedRecipe, checkedRecipe.getRecipe(), item, PlayerUseCraftingStationEvent.StationAction.INSTANT_RECIPE);
    }
 
-   public PlayerUseCraftingStationEvent(PlayerData var1, CraftingStation var2, Recipe var3, ItemStack var4) {
-      this(var1, var2, null, var3, var4, PlayerUseCraftingStationEvent.StationAction.CRAFTING_QUEUE);
+   public PlayerUseCraftingStationEvent(PlayerData playerData, CraftingStation craftingStation, Recipe recipe, ItemStack item) {
+      this(playerData, craftingStation, null, recipe, item, PlayerUseCraftingStationEvent.StationAction.CRAFTING_QUEUE);
    }
 
-   public PlayerUseCraftingStationEvent(PlayerData var1, CraftingStation var2, Recipe var3) {
-      this(var1, var2, null, var3, null, PlayerUseCraftingStationEvent.StationAction.CANCEL_QUEUE);
+   public PlayerUseCraftingStationEvent(PlayerData playerData, CraftingStation craftingStation, Recipe recipe) {
+      this(playerData, craftingStation, null, recipe, null, PlayerUseCraftingStationEvent.StationAction.CANCEL_QUEUE);
    }
 
    private PlayerUseCraftingStationEvent(
-      PlayerData var1, CraftingStation var2, CheckedRecipe var3, Recipe var4, ItemStack var5, PlayerUseCraftingStationEvent.StationAction var6
+      PlayerData playerData, CraftingStation craftingStation, CheckedRecipe checkedRecipe, Recipe recipe, ItemStack item, PlayerUseCraftingStationEvent.StationAction stationAction
    ) {
-      super(var1);
-      this.station = var2;
-      this.recipe = var4;
-      this.recipeInfo = var3;
-      this.result = var5;
-      this.action = var6;
+      super(playerData);
+      this.station = craftingStation;
+      this.recipe = recipe;
+      this.recipeInfo = checkedRecipe;
+      this.result = item;
+      this.action = stationAction;
    }
 
    public CraftingStation getStation() {

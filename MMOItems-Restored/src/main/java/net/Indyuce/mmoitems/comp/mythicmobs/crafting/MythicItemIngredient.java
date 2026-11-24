@@ -16,13 +16,13 @@ public class MythicItemIngredient extends Ingredient<MythicItemPlayerIngredient>
    private final MythicItem mythicitem;
    private final String display;
 
-   public MythicItemIngredient(MMOLineConfig var1) {
-      super("mythicitem", var1);
-      var1.validate(new String[]{"item"});
-      Optional var2 = MythicBukkit.inst().getItemManager().getItem(var1.getString("item"));
-      Validate.isTrue(var2.isPresent(), "Could not find MM Item with ID '" + var1.getString("item") + "'");
-      this.display = var1.contains("display") ? var1.getString("display") : ((MythicItem)var2.get()).getDisplayName();
-      this.mythicitem = (MythicItem)var2.get();
+   public MythicItemIngredient(MMOLineConfig mmoLineConfig) {
+      super("mythicitem", mmoLineConfig);
+      mmoLineConfig.validate(new String[]{"item"});
+      Optional item = MythicBukkit.inst().getItemManager().getItem(mmoLineConfig.getString("item"));
+      Validate.isTrue(item.isPresent(), "Could not find MM Item with ID '" + mmoLineConfig.getString("item") + "'");
+      this.display = mmoLineConfig.contains("display") ? mmoLineConfig.getString("display") : ((MythicItem)item.get()).getDisplayName();
+      this.mythicitem = (MythicItem)item.get();
    }
 
    @Override
@@ -31,17 +31,17 @@ public class MythicItemIngredient extends Ingredient<MythicItemPlayerIngredient>
    }
 
    @Override
-   public String formatDisplay(String var1) {
-      return var1.replace("#item#", this.display).replace("#amount#", "" + this.getAmount());
+   public String formatDisplay(String text) {
+      return text.replace("#item#", this.display).replace("#amount#", "" + this.getAmount());
    }
 
-   public boolean matches(MythicItemPlayerIngredient var1) {
+   public boolean matches(MythicItemPlayerIngredient mythicItemPlayerIngredient) {
       return false;
    }
 
    @NotNull
    @Override
-   public ItemStack generateItemStack(@NotNull RPGPlayer var1, boolean var2) {
+   public ItemStack generateItemStack(@NotNull RPGPlayer rpgPlayer, boolean flag) {
       return BukkitAdapter.adapt(this.mythicitem.generateItemStack(this.getAmount()));
    }
 

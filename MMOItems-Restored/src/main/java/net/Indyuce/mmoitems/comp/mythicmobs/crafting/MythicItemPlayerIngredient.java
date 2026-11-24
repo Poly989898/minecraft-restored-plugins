@@ -8,9 +8,9 @@ public class MythicItemPlayerIngredient extends PlayerIngredient {
    private final String type;
    private final String id;
 
-   public MythicItemPlayerIngredient(NBTItem var1) {
-      super(var1);
-      this.type = var1.getString("MYTHIC_TYPE").toLowerCase();
+   public MythicItemPlayerIngredient(NBTItem nbtItem) {
+      super(nbtItem);
+      this.type = nbtItem.getString("MYTHIC_TYPE").toLowerCase();
       this.id = null;
    }
 

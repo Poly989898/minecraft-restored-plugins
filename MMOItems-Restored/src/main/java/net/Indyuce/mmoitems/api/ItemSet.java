@@ -24,53 +24,53 @@ public class ItemSet {
    private final String id;
    private static final int itemLimit = 10;
 
-   public ItemSet(ConfigurationSection var1) {
-      this.id = var1.getName().toUpperCase().replace("-", "_");
-      this.loreTag = var1.getStringList("lore-tag");
-      this.name = var1.getString("name");
-      Validate.isTrue(var1.isConfigurationSection("bonuses"), "Could not find item set bonuses");
+   public ItemSet(ConfigurationSection section) {
+      this.id = section.getName().toUpperCase().replace("-", "_");
+      this.loreTag = section.getStringList("lore-tag");
+      this.name = section.getString("name");
+      Validate.isTrue(section.isConfigurationSection("bonuses"), "Could not find item set bonuses");
 
-      for (int var2 = 2; var2 <= 10; var2++) {
-         if (var1.getConfigurationSection("bonuses").contains(String.valueOf(var2))) {
-            String var3 = String.format("bonuses.%d", var2);
-            ItemSet.SetBonuses var4 = new ItemSet.SetBonuses();
-            ConfigurationSection var5 = var1.getConfigurationSection(var3);
-            Validate.notNull(var5, String.format("Item set '%s' is not a valid configuration section.", this.id));
+      for (int i = 2; i <= 10; i++) {
+         if (section.getConfigurationSection("bonuses").contains(String.valueOf(i))) {
+            String text = String.format("bonuses.%d", i);
+            ItemSet.SetBonuses setBonuses = new ItemSet.SetBonuses();
+            ConfigurationSection section2 = section.getConfigurationSection(text);
+            Validate.notNull(section2, String.format("Item set '%s' is not a valid configuration section.", this.id));
 
-            for (String var7 : var5.getStringList("granted-permissions")) {
-               var4.addPermission(var7);
+            for (String text2 : section2.getStringList("granted-permissions")) {
+               setBonuses.addPermission(text2);
             }
 
-            for (String var12 : var5.getKeys(false)) {
-               if (!var12.equals("granted-permissions")) {
+            for (String key : section2.getKeys(false)) {
+               if (!key.equals("granted-permissions")) {
                   try {
-                     String var8 = var12.toUpperCase().replace("-", "_").replace(" ", "_");
-                     if (var12.startsWith("ability-")) {
-                        ConfigurationSection var9 = var1.getConfigurationSection(String.format("%s.%s", var3, var12));
-                        Validate.notNull(var9, String.format("Ability '%s' is not a valid configuration section.", var12));
-                        var4.addAbility(new AbilityData(var9));
-                     } else if (var12.startsWith("potion-")) {
-                        PotionEffectType var13 = PotionEffectType.getByName(var8.substring("potion-".length()));
-                        Validate.notNull(var13, String.format("Could not load potion effect type from '%s'", var8));
-                        var4.addPotionEffect(
-                           new PotionEffect(var13, MMOUtils.getEffectDuration(var13), var1.getInt(String.format("%s.%s", var3, var12)) - 1, true, false)
+                     String text2 = key.toUpperCase().replace("-", "_").replace(" ", "_");
+                     if (key.startsWith("ability-")) {
+                        ConfigurationSection section3 = section.getConfigurationSection(String.format("%s.%s", text, key));
+                        Validate.notNull(section3, String.format("Ability '%s' is not a valid configuration section.", key));
+                        setBonuses.addAbility(new AbilityData(section3));
+                     } else if (key.startsWith("potion-")) {
+                        PotionEffectType potionEffectType = PotionEffectType.getByName(text2.substring("potion-".length()));
+                        Validate.notNull(potionEffectType, String.format("Could not load potion effect type from '%s'", text2));
+                        setBonuses.addPotionEffect(
+                           new PotionEffect(potionEffectType, MMOUtils.getEffectDuration(potionEffectType), section.getInt(String.format("%s.%s", text, key)) - 1, true, false)
                         );
-                     } else if (var12.startsWith("particle-")) {
-                        ConfigurationSection var14 = var1.getConfigurationSection(String.format("bonuses.%d.%s", var2, var12));
-                        Validate.notNull(var14, String.format("Particle effect '%s' is not a valid configuration section.", var12));
-                        var4.addParticle(new ParticleData(var14));
+                     } else if (key.startsWith("particle-")) {
+                        ConfigurationSection section3 = section.getConfigurationSection(String.format("bonuses.%d.%s", i, key));
+                        Validate.notNull(section3, String.format("Particle effect '%s' is not a valid configuration section.", key));
+                        setBonuses.addParticle(new ParticleData(section3));
                      } else {
-                        ItemStat var15 = MMOItems.plugin.getStats().get(var8);
-                        Validate.notNull(var15, String.format("Could not find stat called '%s'", var8));
-                        var4.addStat(var15, var1.getDouble(String.format("bonuses.%d.%s", var2, var12)));
+                        ItemStat itemStat = MMOItems.plugin.getStats().get(text2);
+                        Validate.notNull(itemStat, String.format("Could not find stat called '%s'", text2));
+                        setBonuses.addStat(itemStat, section.getDouble(String.format("bonuses.%d.%s", i, key)));
                      }
-                  } catch (IllegalArgumentException var10) {
-                     throw new IllegalArgumentException(String.format("Could not load set bonus '%s': %s", var12, var10.getMessage()));
+                  } catch (IllegalArgumentException exception) {
+                     throw new IllegalArgumentException(String.format("Could not load set bonus '%s': %s", key, exception.getMessage()));
                   }
                }
             }
 
-            this.bonuses.put(var2, var4);
+            this.bonuses.put(i, setBonuses);
          }
       }
    }
@@ -84,17 +84,17 @@ public class ItemSet {
    }
 
    @NotNull
-   public ItemSet.SetBonuses getBonuses(int var1) {
-      ItemSet.SetBonuses var2 = new ItemSet.SetBonuses();
+   public ItemSet.SetBonuses getBonuses(int count) {
+      ItemSet.SetBonuses setBonuses = new ItemSet.SetBonuses();
 
-      for (int var3 = 2; var3 <= Math.min(var1, 10); var3++) {
-         ItemSet.SetBonuses var4 = this.bonuses.get(var3);
-         if (var4 != null) {
-            var2.merge(var4);
+      for (int i = 2; i <= Math.min(count, 10); i++) {
+         ItemSet.SetBonuses setBonuses2 = this.bonuses.get(i);
+         if (setBonuses2 != null) {
+            setBonuses.merge(setBonuses2);
          }
       }
 
-      return var2;
+      return setBonuses;
    }
 
    public List<String> getLoreTag() {
@@ -102,12 +102,12 @@ public class ItemSet {
    }
 
    @Override
-   public boolean equals(Object var1) {
-      if (this == var1) {
+   public boolean equals(Object obj) {
+      if (this == obj) {
          return true;
-      } else if (var1 != null && this.getClass() == var1.getClass()) {
-         ItemSet var2 = (ItemSet)var1;
-         return this.id.equals(var2.id);
+      } else if (obj != null && this.getClass() == obj.getClass()) {
+         ItemSet itemSet = (ItemSet)obj;
+         return this.id.equals(itemSet.id);
       } else {
          return false;
       }
@@ -125,32 +125,32 @@ public class ItemSet {
       private final List<ParticleData> particles = new ArrayList<>();
       private final ArrayList<String> permissions = new ArrayList<>();
 
-      public void addStat(ItemStat<?, ?> var1, double var2) {
-         this.stats.put(var1, var2);
+      public void addStat(ItemStat<?, ?> itemStat, double value) {
+         this.stats.put(itemStat, value);
       }
 
-      public void addPotionEffect(PotionEffect var1) {
-         this.permEffects.put(var1.getType(), var1);
+      public void addPotionEffect(PotionEffect potionEffect) {
+         this.permEffects.put(potionEffect.getType(), potionEffect);
       }
 
-      public void addAbility(AbilityData var1) {
-         this.abilities.add(var1);
+      public void addAbility(AbilityData abilityData) {
+         this.abilities.add(abilityData);
       }
 
-      public void addParticle(ParticleData var1) {
-         this.particles.add(var1);
+      public void addParticle(ParticleData particleData) {
+         this.particles.add(particleData);
       }
 
-      public void addPermission(@NotNull String var1) {
-         this.permissions.add(var1);
+      public void addPermission(@NotNull String text) {
+         this.permissions.add(text);
       }
 
-      public boolean hasStat(ItemStat<?, ?> var1) {
-         return this.stats.containsKey(var1);
+      public boolean hasStat(ItemStat<?, ?> itemStat) {
+         return this.stats.containsKey(itemStat);
       }
 
-      public double getStat(ItemStat<?, ?> var1) {
-         return this.stats.get(var1);
+      public double getStat(ItemStat<?, ?> itemStat) {
+         return this.stats.get(itemStat);
       }
 
       public Map<ItemStat<?, ?>, Double> getStats() {
@@ -174,18 +174,18 @@ public class ItemSet {
          return this.permissions;
       }
 
-      public void merge(ItemSet.SetBonuses var1) {
-         var1.getStats().forEach((var1x, var2) -> this.stats.put((ItemStat<?, ?>)var1x, (this.stats.containsKey(var1x) ? this.stats.get(var1x) : 0.0) + var2));
+      public void merge(ItemSet.SetBonuses setBonuses) {
+         setBonuses.getStats().forEach((var1x, value) -> this.stats.put((ItemStat<?, ?>)var1x, (this.stats.containsKey(var1x) ? this.stats.get(var1x) : 0.0) + value));
 
-         for (PotionEffect var3 : var1.getPotionEffects()) {
-            if (!this.permEffects.containsKey(var3.getType()) || this.permEffects.get(var3.getType()).getAmplifier() < var3.getAmplifier()) {
-               this.permEffects.put(var3.getType(), var3);
+         for (PotionEffect potionEffect : setBonuses.getPotionEffects()) {
+            if (!this.permEffects.containsKey(potionEffect.getType()) || this.permEffects.get(potionEffect.getType()).getAmplifier() < potionEffect.getAmplifier()) {
+               this.permEffects.put(potionEffect.getType(), potionEffect);
             }
          }
 
-         this.abilities.addAll(var1.abilities);
-         this.particles.addAll(var1.particles);
-         this.permissions.addAll(var1.permissions);
+         this.abilities.addAll(setBonuses.abilities);
+         this.particles.addAll(setBonuses.particles);
+         this.permissions.addAll(setBonuses.permissions);
       }
    }
 }

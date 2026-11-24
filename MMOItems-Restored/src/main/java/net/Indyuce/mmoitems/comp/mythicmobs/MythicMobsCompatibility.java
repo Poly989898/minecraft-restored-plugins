@@ -22,50 +22,50 @@ import org.bukkit.event.Listener;
 public class MythicMobsCompatibility implements Listener {
    public MythicMobsCompatibility() {
       try {
-         for (String var2 : this.getFactions()) {
-            MMOItems.plugin.getStats().register(new FactionDamage(var2));
+         for (String faction : this.getFactions()) {
+            MMOItems.plugin.getStats().register(new FactionDamage(faction));
          }
-      } catch (Exception var3) {
-         MMOItems.plugin.getLogger().log(Level.WARNING, "Exception while enabling MythicMobs compatibility: " + var3.getMessage());
+      } catch (Exception exception) {
+         MMOItems.plugin.getLogger().log(Level.WARNING, "Exception while enabling MythicMobs compatibility: " + exception.getMessage());
       }
 
       Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
    }
 
    @EventHandler(priority = EventPriority.HIGH)
-   public void b(MythicMechanicLoadEvent var1) {
-      switch (var1.getMechanicName().toLowerCase()) {
+   public void b(MythicMechanicLoadEvent event) {
+      switch (event.getMechanicName().toLowerCase()) {
          case "mmoitemsvolley":
-            var1.register(
-               new MMOItemsArrowVolleyMechanic(var1.getContainer().getManager(), var1.getContainer().getFile(), var1.getConfig().getLine(), var1.getConfig())
+            event.register(
+               new MMOItemsArrowVolleyMechanic(event.getContainer().getManager(), event.getContainer().getFile(), event.getConfig().getLine(), event.getConfig())
             );
             break;
          case "onmmoitemuse":
-            var1.register(new MMOItemsOnUseAura(var1.getContainer().getManager(), var1.getContainer().getFile(), var1.getConfig().getLine(), var1.getConfig()));
+            event.register(new MMOItemsOnUseAura(event.getContainer().getManager(), event.getContainer().getFile(), event.getConfig().getLine(), event.getConfig()));
       }
    }
 
    @EventHandler(priority = EventPriority.HIGH)
-   public void a(MythicReloadedEvent var1) {
+   public void a(MythicReloadedEvent event) {
       MMOItems.plugin.getSkills().initialize(true);
 
-      for (Player var3 : Bukkit.getOnlinePlayers()) {
-         PlayerData var4 = PlayerData.get(var3);
-         var4.updateInventory();
+      for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+         PlayerData playerData = PlayerData.get(onlinePlayer);
+         playerData.updateInventory();
       }
    }
 
    private Set<String> getFactions() {
-      HashSet var1 = new HashSet();
-      ArrayList<MythicMob> var2 = new ArrayList(MythicBukkit.inst().getMobManager().getVanillaTypes());
-      var2.addAll(MythicBukkit.inst().getMobManager().getMobTypes());
+      HashSet set = new HashSet();
+      ArrayList<MythicMob> mythicMobs = new ArrayList(MythicBukkit.inst().getMobManager().getVanillaTypes());
+      mythicMobs.addAll(MythicBukkit.inst().getMobManager().getMobTypes());
 
-      for (MythicMob var4 : var2) {
-         if (var4.hasFaction()) {
-            var1.add(var4.getFaction());
+      for (MythicMob mythicMob : mythicMobs) {
+         if (mythicMob.hasFaction()) {
+            set.add(mythicMob.getFaction());
          }
       }
 
-      return var1;
+      return set;
    }
 }

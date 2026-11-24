@@ -33,23 +33,23 @@ public class QueueItemDisplay extends ConfigItem {
       );
    }
 
-   public QueueItemDisplay.ItemBuilder newBuilder(CraftingStatus.CraftingQueue.QueueItem var1, int var2) {
-      return new QueueItemDisplay.ItemBuilder(var1, var2);
+   public QueueItemDisplay.ItemBuilder newBuilder(CraftingStatus.CraftingQueue.QueueItem queueItem, int count) {
+      return new QueueItemDisplay.ItemBuilder(queueItem, count);
    }
 
-   private String formatDelay(long var1) {
-      StringBuilder var3 = new StringBuilder();
-      int var4 = 0;
+   private String formatDelay(long value) {
+      StringBuilder builder = new StringBuilder();
+      int count = 0;
 
-      for (int var5 = ms.length - 1; var5 >= 0 && var4 < 2; var5--) {
-         if (var1 >= ms[var5]) {
-            var3.append(var1 / ms[var5]).append(chars[var5]).append(" ");
-            var1 %= ms[var5];
-            var4++;
+      for (int i = ms.length - 1; i >= 0 && count < 2; i--) {
+         if (value >= ms[i]) {
+            builder.append(value / ms[i]).append(chars[i]).append(" ");
+            value %= ms[i];
+            count++;
          }
       }
 
-      return var3.length() == 0 ? "1s" : var3.toString();
+      return builder.length() == 0 ? "1s" : builder.toString();
    }
 
    public class ItemBuilder {
@@ -64,41 +64,41 @@ public class QueueItemDisplay extends ConfigItem {
       }
 
       public ItemStack build() {
-         HashMap<String, String> var1 = new HashMap<>();
-         Iterator var2 = this.lore.iterator();
+         HashMap<String, String> map = new HashMap<>();
+         Iterator iterator = this.lore.iterator();
 
-         while (var2.hasNext()) {
-            String var3 = (String)var2.next();
-            if (var3.startsWith("{queue}")) {
+         while (iterator.hasNext()) {
+            String text = (String)iterator.next();
+            if (text.startsWith("{queue}")) {
                if (this.crafting.isReady()) {
-                  var2.remove();
+                  iterator.remove();
                   continue;
                }
 
-               var1.put(var3, var3.replace("{queue}", ""));
+               map.put(text, text.replace("{queue}", ""));
             }
 
-            if (var3.startsWith("{ready}")) {
+            if (text.startsWith("{ready}")) {
                if (!this.crafting.isReady()) {
-                  var2.remove();
+                  iterator.remove();
                } else {
-                  var1.put(var3, var3.replace("{ready}", ""));
+                  map.put(text, text.replace("{ready}", ""));
                }
             }
          }
 
-         for (String var6 : var1.keySet()) {
-            this.lore.set(this.lore.indexOf(var6), ((String)var1.get(var6)).replace("#left#", QueueItemDisplay.this.formatDelay(this.crafting.getLeft())));
+         for (String key : map.keySet()) {
+            this.lore.set(this.lore.indexOf(key), ((String)map.get(key)).replace("#left#", QueueItemDisplay.this.formatDelay(this.crafting.getLeft())));
          }
 
-         ItemStack var5 = this.crafting.getRecipe().getPreviewItemStack();
-         var5.setAmount(this.position);
-         ItemMeta var7 = var5.getItemMeta();
-         AdventureUtils.setDisplayName(var7, this.name.replace("#name#", var7.getDisplayName()));
-         AdventureUtils.setLore(var7, this.lore);
-         var7.addItemFlags(ItemFlag.values());
-         var5.setItemMeta(var7);
-         return NBTItem.get(var5).addTag(new ItemTag[]{new ItemTag("queueId", this.crafting.getUniqueId().toString())}).toItem();
+         ItemStack previewItemStack = this.crafting.getRecipe().getPreviewItemStack();
+         previewItemStack.setAmount(this.position);
+         ItemMeta itemMeta = previewItemStack.getItemMeta();
+         AdventureUtils.setDisplayName(itemMeta, this.name.replace("#name#", itemMeta.getDisplayName()));
+         AdventureUtils.setLore(itemMeta, this.lore);
+         itemMeta.addItemFlags(ItemFlag.values());
+         previewItemStack.setItemMeta(itemMeta);
+         return NBTItem.get(previewItemStack).addTag(new ItemTag[]{new ItemTag("queueId", this.crafting.getUniqueId().toString())}).toItem();
       }
    }
 }

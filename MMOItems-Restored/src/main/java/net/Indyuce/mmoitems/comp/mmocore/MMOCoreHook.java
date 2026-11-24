@@ -32,67 +32,67 @@ import org.bukkit.inventory.meta.Damageable;
 
 public class MMOCoreHook implements RPGHandler, Listener {
    public MMOCoreHook() {
-      for (PlayerAttribute var2 : MMOCore.plugin.attributeManager.getAll()) {
-         MMOItems.plugin.getStats().register(new RequiredAttribute(var2));
-         MMOItems.plugin.getStats().register(new ExtraAttribute(var2));
+      for (PlayerAttribute playerAttribute : MMOCore.plugin.attributeManager.getAll()) {
+         MMOItems.plugin.getStats().register(new RequiredAttribute(playerAttribute));
+         MMOItems.plugin.getStats().register(new ExtraAttribute(playerAttribute));
       }
 
-      for (Profession var4 : MMOCore.plugin.professionManager.getAll()) {
+      for (Profession profession : MMOCore.plugin.professionManager.getAll()) {
          MMOItems.plugin
             .getStats()
             .register(
                new DoubleStat(
-                  (StatType.ADDITIONAL_EXPERIENCE.name() + '_' + var4.getId()).replace('-', '_').replace(' ', '_').toUpperCase(Locale.ROOT),
+                  (StatType.ADDITIONAL_EXPERIENCE.name() + '_' + profession.getId()).replace('-', '_').replace(' ', '_').toUpperCase(Locale.ROOT),
                   Material.EXPERIENCE_BOTTLE,
-                  var4.getName() + ' ' + "Additional Experience (MMOCore)",
-                  new String[]{"Additional MMOCore profession " + var4.getName() + " experience in %."},
+                  profession.getName() + ' ' + "Additional Experience (MMOCore)",
+                  new String[]{"Additional MMOCore profession " + profession.getName() + " experience in %."},
                   new String[]{"!block", "all"}
                )
             );
-         MMOItems.plugin.getStats().register(new RequiredProfession(var4));
+         MMOItems.plugin.getStats().register(new RequiredProfession(profession));
       }
    }
 
    @Override
-   public void refreshStats(PlayerData var1) {
+   public void refreshStats(PlayerData playerData) {
    }
 
    @Override
-   public RPGPlayer getInfo(PlayerData var1) {
-      return new MMOCoreHook.MMOCoreRPGPlayer(var1);
+   public RPGPlayer getInfo(PlayerData playerData) {
+      return new MMOCoreHook.MMOCoreRPGPlayer(playerData);
    }
 
    @EventHandler
-   public void updateInventoryOnLevelUp(PlayerLevelUpEvent var1) {
-      PlayerData.get(var1.getPlayer()).getInventory().scheduleUpdate();
+   public void updateInventoryOnLevelUp(PlayerLevelUpEvent event) {
+      PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
    }
 
    @EventHandler
-   public void updateInventoryOnClassChange(PlayerChangeClassEvent var1) {
-      PlayerData.get(var1.getPlayer()).getInventory().scheduleUpdate();
+   public void updateInventoryOnClassChange(PlayerChangeClassEvent event) {
+      PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
    }
 
    @EventHandler
-   public void updateInventoryOnLoad(SynchronizedDataLoadEvent var1) {
-      if (var1.getManager().getOwningPlugin().equals(MMOCore.plugin) && PlayerData.has(var1.getHolder().getPlayer())) {
-         PlayerData.get(var1.getHolder().getPlayer()).getInventory().scheduleUpdate();
+   public void updateInventoryOnLoad(SynchronizedDataLoadEvent event) {
+      if (event.getManager().getOwningPlugin().equals(MMOCore.plugin) && PlayerData.has(event.getHolder().getPlayer())) {
+         PlayerData.get(event.getHolder().getPlayer()).getInventory().scheduleUpdate();
       }
    }
 
    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-   public void handleVanillaRepairs(RepairItemEvent var1) {
-      ExperienceSourceManager<RepairItemExperienceSource> var2 = MMOCore.plugin.experience.getManager(RepairItemExperienceSource.class);
-      if (var2 != null) {
-         ItemStack var3 = var1.getTargetItem().getItem();
-         if (MMOCore.plugin.smithingManager.hasExperience(var3.getType())) {
-            Player var4 = var1.getPlayer();
-            net.Indyuce.mmocore.api.player.PlayerData var5 = net.Indyuce.mmocore.api.player.PlayerData.get(var4);
-            int var6 = Math.min(var1.getRepaired(), ((Damageable)var3.getItemMeta()).getDamage());
+   public void handleVanillaRepairs(RepairItemEvent event) {
+      ExperienceSourceManager<RepairItemExperienceSource> manager = MMOCore.plugin.experience.getManager(RepairItemExperienceSource.class);
+      if (manager != null) {
+         ItemStack item = event.getTargetItem().getItem();
+         if (MMOCore.plugin.smithingManager.hasExperience(item.getType())) {
+            Player player = event.getPlayer();
+            net.Indyuce.mmocore.api.player.PlayerData playerData = net.Indyuce.mmocore.api.player.PlayerData.get(player);
+            int count = Math.min(event.getRepaired(), ((Damageable)item.getItemMeta()).getDamage());
 
-            for (RepairItemExperienceSource var8 : var2.getSources()) {
-               if (var8.matches(var5, var3)) {
-                  double var9 = MMOCore.plugin.smithingManager.getBaseExperience(var3.getType()) * var6 / 100.0;
-                  var8.getDispenser().giveExperience(var5, var9, var5.getPlayer().getLocation(), EXPSource.SOURCE);
+            for (RepairItemExperienceSource source : manager.getSources()) {
+               if (source.matches(playerData, item)) {
+                  double value = MMOCore.plugin.smithingManager.getBaseExperience(item.getType()) * count / 100.0;
+                  source.getDispenser().giveExperience(playerData, value, playerData.getPlayer().getLocation(), EXPSource.SOURCE);
                }
             }
          }
@@ -100,19 +100,19 @@ public class MMOCoreHook implements RPGHandler, Listener {
    }
 
    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-   public void handleCustomRepairs(ItemCustomRepairEvent var1) {
-      ExperienceSourceManager<RepairItemExperienceSource> var2 = MMOCore.plugin.experience.getManager(RepairItemExperienceSource.class);
-      if (var2 != null) {
-         ItemStack var3 = var1.getSourceItem().getNBTItem().getItem();
-         if (MMOCore.plugin.smithingManager.hasExperience(var3.getType())) {
-            Player var4 = var1.getPlayer();
-            net.Indyuce.mmocore.api.player.PlayerData var5 = net.Indyuce.mmocore.api.player.PlayerData.get(var4);
-            int var6 = Math.min(var1.getDurabilityIncrease(), var1.getSourceItem().getMaxDurability() - var1.getSourceItem().getDurability());
+   public void handleCustomRepairs(ItemCustomRepairEvent event) {
+      ExperienceSourceManager<RepairItemExperienceSource> manager = MMOCore.plugin.experience.getManager(RepairItemExperienceSource.class);
+      if (manager != null) {
+         ItemStack item = event.getSourceItem().getNBTItem().getItem();
+         if (MMOCore.plugin.smithingManager.hasExperience(item.getType())) {
+            Player player = event.getPlayer();
+            net.Indyuce.mmocore.api.player.PlayerData playerData = net.Indyuce.mmocore.api.player.PlayerData.get(player);
+            int count = Math.min(event.getDurabilityIncrease(), event.getSourceItem().getMaxDurability() - event.getSourceItem().getDurability());
 
-            for (RepairItemExperienceSource var8 : var2.getSources()) {
-               if (var8.matches(var5, var3)) {
-                  double var9 = MMOCore.plugin.smithingManager.getBaseExperience(var3.getType()) * var6 / 100.0;
-                  var8.getDispenser().giveExperience(var5, var9, var5.getPlayer().getLocation(), EXPSource.SOURCE);
+            for (RepairItemExperienceSource source : manager.getSources()) {
+               if (source.matches(playerData, item)) {
+                  double value = MMOCore.plugin.smithingManager.getBaseExperience(item.getType()) * count / 100.0;
+                  source.getDispenser().giveExperience(playerData, value, playerData.getPlayer().getLocation(), EXPSource.SOURCE);
                }
             }
          }
@@ -122,9 +122,9 @@ public class MMOCoreHook implements RPGHandler, Listener {
    public static class MMOCoreRPGPlayer extends RPGPlayer {
       private final net.Indyuce.mmocore.api.player.PlayerData data;
 
-      public MMOCoreRPGPlayer(PlayerData var1) {
-         super(var1);
-         this.data = net.Indyuce.mmocore.api.player.PlayerData.get(var1.getPlayer());
+      public MMOCoreRPGPlayer(PlayerData playerData) {
+         super(playerData);
+         this.data = net.Indyuce.mmocore.api.player.PlayerData.get(playerData.getPlayer());
       }
 
       public net.Indyuce.mmocore.api.player.PlayerData getData() {
@@ -152,23 +152,23 @@ public class MMOCoreHook implements RPGHandler, Listener {
       }
 
       @Override
-      public void setMana(double var1) {
-         this.data.setMana(var1);
+      public void setMana(double value) {
+         this.data.setMana(value);
       }
 
       @Override
-      public void setStamina(double var1) {
-         this.data.setStamina(var1);
+      public void setStamina(double value) {
+         this.data.setStamina(value);
       }
 
       @Override
-      public void giveMana(double var1) {
-         this.data.giveMana(var1, UpdateReason.OTHER);
+      public void giveMana(double value) {
+         this.data.giveMana(value, UpdateReason.OTHER);
       }
 
       @Override
-      public void giveStamina(double var1) {
-         this.data.giveStamina(var1, UpdateReason.OTHER);
+      public void giveStamina(double value) {
+         this.data.giveStamina(value, UpdateReason.OTHER);
       }
    }
 }

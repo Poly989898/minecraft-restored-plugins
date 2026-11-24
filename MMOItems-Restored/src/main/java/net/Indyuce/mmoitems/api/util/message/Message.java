@@ -90,8 +90,8 @@ public enum Message {
       return this.raw;
    }
 
-   public void setRaw(@NotNull String var1) {
-      this.raw = Objects.requireNonNull(var1);
+   public void setRaw(@NotNull String text) {
+      this.raw = Objects.requireNonNull(text);
    }
 
    public boolean isActionBarMessage() {
@@ -103,11 +103,11 @@ public enum Message {
    }
 
    @Deprecated
-   public String formatRaw(@Nullable ChatColor var1, String... var2) {
-      return this.format(var1, var2).toString();
+   public String formatRaw(@Nullable ChatColor chatColor, String... texts) {
+      return this.format(chatColor, texts).toString();
    }
 
-   public FormattedMessage format(@Nullable ChatColor var1, String... var2) {
-      return new FormattedMessage(this).format(var1, var2);
+   public FormattedMessage format(@Nullable ChatColor chatColor, String... texts) {
+      return new FormattedMessage(this).format(chatColor, texts);
    }
 }

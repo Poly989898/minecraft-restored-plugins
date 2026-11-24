@@ -9,14 +9,14 @@ import org.bukkit.Material;
 public class MaterialData implements StatData, RandomStatData<MaterialData> {
    private Material material;
 
-   public MaterialData(Material var1) {
-      Validate.notNull(var1, "Material must not be null");
-      this.material = var1;
+   public MaterialData(Material material) {
+      Validate.notNull(material, "Material must not be null");
+      this.material = material;
    }
 
-   public void setMaterial(Material var1) {
-      Validate.notNull(var1, "Material must not be null");
-      this.material = var1;
+   public void setMaterial(Material material) {
+      Validate.notNull(material, "Material must not be null");
+      this.material = material;
    }
 
    public Material getMaterial() {
@@ -28,7 +28,7 @@ public class MaterialData implements StatData, RandomStatData<MaterialData> {
       return false;
    }
 
-   public MaterialData randomize(MMOItemBuilder var1) {
+   public MaterialData randomize(MMOItemBuilder mmoItemBuilder) {
       return this;
    }
 }

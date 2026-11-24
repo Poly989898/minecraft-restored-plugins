@@ -41,34 +41,34 @@ public class AdvancedEnchantsStat extends ItemStat<RandomStatData<AdvancedEnchan
    }
 
    @Override
-   public RandomStatData<AdvancedEnchantMap> whenInitialized(Object var1) {
+   public RandomStatData<AdvancedEnchantMap> whenInitialized(Object obj) {
       throw new RuntimeException("Not supported");
    }
 
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull AdvancedEnchantMap var2) {
-      var2.enchants.forEach((var2x, var3) -> {
-         if (var2x != null && var3 != null && !var2x.isEmpty()) {
-            var1.getLore().insert(0, AEAPI.getEnchantLore(var2x, var3));
-            var1.getMeta().getPersistentDataContainer().set(new NamespacedKey(this.ae, "ae_enchantment-" + var2x), PersistentDataType.INTEGER, var3);
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull AdvancedEnchantMap advancedEnchantMap) {
+      advancedEnchantMap.enchants.forEach((var2x, value) -> {
+         if (var2x != null && value != null && !var2x.isEmpty()) {
+            itemStackBuilder.getLore().insert(0, AEAPI.getEnchantLore(var2x, value));
+            itemStackBuilder.getMeta().getPersistentDataContainer().set(new NamespacedKey(this.ae, "ae_enchantment-" + var2x), PersistentDataType.INTEGER, value);
          }
       });
    }
 
    @NotNull
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull AdvancedEnchantMap var1) {
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull AdvancedEnchantMap advancedEnchantMap) {
       return new ArrayList<>();
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<RandomStatData<AdvancedEnchantMap>> var2) {
+   public void whenDisplayed(List<String> texts, Optional<RandomStatData<AdvancedEnchantMap>> optional) {
    }
 
    @NotNull
@@ -77,40 +77,40 @@ public class AdvancedEnchantsStat extends ItemStat<RandomStatData<AdvancedEnchan
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      ItemMeta var2 = var1.getNBT().getItem().getItemMeta();
-      if (var2 != null) {
-         AdvancedEnchantMap var3 = new AdvancedEnchantMap();
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      ItemMeta itemMeta = readMMOItem.getNBT().getItem().getItemMeta();
+      if (itemMeta != null) {
+         AdvancedEnchantMap advancedEnchantMap = new AdvancedEnchantMap();
 
-         for (String var5 : var1.getNBT().getTags()) {
-            if (var5 != null && var5.startsWith("ae_enchantment;")) {
-               String var6 = var5.substring("ae_enchantment;".length());
-               int var7 = var1.getNBT().getInteger(var5);
-               var3.enchants.put(var6, var7);
+         for (String tag : readMMOItem.getNBT().getTags()) {
+            if (tag != null && tag.startsWith("ae_enchantment;")) {
+               String text = tag.substring("ae_enchantment;".length());
+               int count = readMMOItem.getNBT().getInteger(tag);
+               advancedEnchantMap.enchants.put(text, count);
             }
          }
 
-         for (NamespacedKey var10 : var2.getPersistentDataContainer().getKeys()) {
-            if (var10.getNamespace().equals(this.aeNamespace)) {
-               String var11 = var10.getKey();
-               if (var11.startsWith("ae_enchantment-")) {
-                  Integer var12 = (Integer)var2.getPersistentDataContainer().get(var10, PersistentDataType.INTEGER);
-                  if (var12 != null && var12 != 0) {
-                     String var8 = var11.substring("ae_enchantment-".length());
-                     var3.enchants.put(var8, var12);
+         for (NamespacedKey key : itemMeta.getPersistentDataContainer().getKeys()) {
+            if (key.getNamespace().equals(this.aeNamespace)) {
+               String key2 = key.getKey();
+               if (key2.startsWith("ae_enchantment-")) {
+                  Integer value = (Integer)itemMeta.getPersistentDataContainer().get(key, PersistentDataType.INTEGER);
+                  if (value != null && value != 0) {
+                     String text = key2.substring("ae_enchantment-".length());
+                     advancedEnchantMap.enchants.put(text, value);
                   }
                }
             }
          }
 
-         if (!var3.enchants.isEmpty()) {
-            var1.setData(this, var3);
+         if (!advancedEnchantMap.enchants.isEmpty()) {
+            readMMOItem.setData(this, advancedEnchantMap);
          }
       }
    }
 
    @Nullable
-   public AdvancedEnchantMap getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
+   public AdvancedEnchantMap getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
       return null;
    }
 }

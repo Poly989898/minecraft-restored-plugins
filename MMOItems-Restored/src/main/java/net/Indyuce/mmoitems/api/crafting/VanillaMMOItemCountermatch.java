@@ -13,7 +13,7 @@ public class VanillaMMOItemCountermatch implements UIFilterCountermatch {
       VanillaUIFilter.get().addMatchOverride(new VanillaMMOItemCountermatch());
    }
 
-   public boolean preventsMatching(@NotNull ItemStack var1, @Nullable FriendlyFeedbackProvider var2) {
-      return NBTItem.get(var1).hasType();
+   public boolean preventsMatching(@NotNull ItemStack item, @Nullable FriendlyFeedbackProvider friendlyFeedbackProvider) {
+      return NBTItem.get(item).hasType();
    }
 }

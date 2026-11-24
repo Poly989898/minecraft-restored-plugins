@@ -11,10 +11,10 @@ public class IdentifyItemEvent extends PlayerDataEvent {
    private final VolatileMMOItem consumable;
    private final NBTItem unidentified;
 
-   public IdentifyItemEvent(PlayerData var1, VolatileMMOItem var2, NBTItem var3) {
-      super(var1);
-      this.consumable = var2;
-      this.unidentified = var3;
+   public IdentifyItemEvent(PlayerData playerData, VolatileMMOItem volatileMMOItem, NBTItem nbtItem) {
+      super(playerData);
+      this.consumable = volatileMMOItem;
+      this.unidentified = nbtItem;
    }
 
    public VolatileMMOItem getConsumable() {

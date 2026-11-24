@@ -9,13 +9,13 @@ public class PluginHelp {
    private static final int commandsPerPage = 8;
    private final CommandSender sender;
 
-   public PluginHelp(CommandSender var1) {
-      this.sender = var1;
+   public PluginHelp(CommandSender sender) {
+      this.sender = sender;
    }
 
-   public void open(int var1) {
-      if (var1 >= 1 && (var1 - 1) * 8 < PluginHelp.PluginCommand.values().length) {
-         for (int var2 = 0; var2 < 10; var2++) {
+   public void open(int count) {
+      if (count >= 1 && (count - 1) * 8 < PluginHelp.PluginCommand.values().length) {
+         for (int i = 0; i < 10; i++) {
             this.sender.sendMessage("");
          }
 
@@ -35,15 +35,15 @@ public class PluginHelp {
                   + "-------------------"
             );
          if (this.sender instanceof Player) {
-            int var6 = (var1 - 1) * 8;
-            int var3 = var1 * 8;
+            int count2 = (count - 1) * 8;
+            int count3 = count * 8;
 
-            int var4;
-            for (var4 = 0; var6 + var4 < var3 && var6 + var4 < PluginHelp.PluginCommand.values().length && var6 + var4 > -1; var4++) {
-               PluginHelp.PluginCommand.values()[var6 + var4].sendAsJson((Player)this.sender);
+            int count4;
+            for (count4 = 0; count2 + count4 < count3 && count2 + count4 < PluginHelp.PluginCommand.values().length && count2 + count4 > -1; count4++) {
+               PluginHelp.PluginCommand.values()[count2 + count4].sendAsJson((Player)this.sender);
             }
 
-            while (var4++ < 8) {
+            while (count4++ < 8) {
                this.sender.sendMessage("");
             }
 
@@ -60,7 +60,7 @@ public class PluginHelp {
                      + "[\"},{\"text\":\""
                      + ChatColor.RED
                      + "««\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/mi help "
-                     + (var1 - 1)
+                     + (count - 1)
                      + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"Previous Page\"}}},{\"text\":\""
                      + ChatColor.DARK_GRAY
                      + "]"
@@ -69,7 +69,7 @@ public class PluginHelp {
                      + ChatColor.DARK_GRAY
                      + "("
                      + ChatColor.GREEN
-                     + var1
+                     + count
                      + ChatColor.DARK_GRAY
                      + "/"
                      + ChatColor.GREEN
@@ -82,7 +82,7 @@ public class PluginHelp {
                      + "[\"},{\"text\":\""
                      + ChatColor.GREEN
                      + "»»\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/mi help "
-                     + (var1 + 1)
+                     + (count + 1)
                      + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"Next Page\"}}},{\"text\":\""
                      + ChatColor.DARK_GRAY
                      + "]"
@@ -90,8 +90,8 @@ public class PluginHelp {
                      + "-----------------\"}]"
                );
          } else {
-            for (PluginHelp.PluginCommand var5 : PluginHelp.PluginCommand.values()) {
-               var5.sendAsMessage(this.sender);
+            for (PluginHelp.PluginCommand pluginCommand : PluginHelp.PluginCommand.values()) {
+               pluginCommand.sendAsMessage(this.sender);
             }
          }
       }
@@ -156,13 +156,13 @@ public class PluginHelp {
          return this.help != null;
       }
 
-      private void sendAsJson(Player var1) {
+      private void sendAsJson(Player player) {
          if (this.isCommand()) {
             MythicLib.plugin
                .getVersion()
                .getWrapper()
                .sendJson(
-                  var1,
+                  player,
                   "{\"text\":\""
                      + ChatColor.LIGHT_PURPLE
                      + "►"
@@ -174,15 +174,15 @@ public class PluginHelp {
                      + "\"}}}"
                );
          } else {
-            var1.sendMessage(ChatColor.LIGHT_PURPLE + this.usage);
+            player.sendMessage(ChatColor.LIGHT_PURPLE + this.usage);
          }
       }
 
-      private void sendAsMessage(CommandSender var1) {
+      private void sendAsMessage(CommandSender sender) {
          if (this.isCommand()) {
-            var1.sendMessage(ChatColor.LIGHT_PURPLE + "- /" + this.usage + ChatColor.WHITE + " | " + this.help);
+            sender.sendMessage(ChatColor.LIGHT_PURPLE + "- /" + this.usage + ChatColor.WHITE + " | " + this.help);
          } else {
-            var1.sendMessage(ChatColor.LIGHT_PURPLE + this.usage);
+            sender.sendMessage(ChatColor.LIGHT_PURPLE + this.usage);
          }
       }
    }

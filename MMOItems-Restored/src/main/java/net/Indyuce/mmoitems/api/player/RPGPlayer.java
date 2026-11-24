@@ -15,13 +15,13 @@ public abstract class RPGPlayer {
    private final Player player;
 
    @Deprecated
-   public RPGPlayer(Player var1) {
-      this(PlayerData.get(var1));
+   public RPGPlayer(Player player) {
+      this(PlayerData.get(player));
    }
 
-   public RPGPlayer(@NotNull PlayerData var1) {
-      this.player = var1.getPlayer();
-      this.playerData = var1;
+   public RPGPlayer(@NotNull PlayerData playerData) {
+      this.player = playerData.getPlayer();
+      this.playerData = playerData;
    }
 
    public PlayerData getPlayerData() {
@@ -40,37 +40,37 @@ public abstract class RPGPlayer {
 
    public abstract double getStamina();
 
-   public abstract void setMana(double var1);
+   public abstract void setMana(double value);
 
-   public abstract void setStamina(double var1);
+   public abstract void setStamina(double value);
 
-   public void giveMana(double var1) {
-      this.setMana(this.getMana() + var1);
+   public void giveMana(double value) {
+      this.setMana(this.getMana() + value);
    }
 
-   public void giveStamina(double var1) {
-      this.setStamina(this.getStamina() + var1);
+   public void giveStamina(double value) {
+      this.setStamina(this.getStamina() + value);
    }
 
-   public boolean canUse(NBTItem var1, boolean var2) {
-      return this.canUse(var1, var2, false);
+   public boolean canUse(NBTItem nbtItem, boolean flag) {
+      return this.canUse(nbtItem, flag, false);
    }
 
-   public boolean canUse(@NotNull NBTItem var1, boolean var2, boolean var3) {
-      if (var1.hasTag("MMOITEMS_UNIDENTIFIED_ITEM")) {
-         if (var2) {
+   public boolean canUse(@NotNull NBTItem nbtItem, boolean flag, boolean flag2) {
+      if (nbtItem.hasTag("MMOITEMS_UNIDENTIFIED_ITEM")) {
+         if (flag) {
             Message.UNIDENTIFIED_ITEM.format(ChatColor.RED).send(this.player.getPlayer());
             this.player.getPlayer().playSound(this.player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);
          }
 
          return false;
       } else {
-         if (MMOItems.plugin.getLanguage().disableRemovedItems && MMOUtils.hasBeenRemoved(var1)) {
+         if (MMOItems.plugin.getLanguage().disableRemovedItems && MMOUtils.hasBeenRemoved(nbtItem)) {
             return false;
          }
 
-         for (ItemRestriction var5 : MMOItems.plugin.getStats().getItemRestrictionStats()) {
-            if ((!var5.isDynamic() || !var3) && !var5.canUse(this, var1, var2)) {
+         for (ItemRestriction itemRestrictionStat : MMOItems.plugin.getStats().getItemRestrictionStats()) {
+            if ((!itemRestrictionStat.isDynamic() || !flag2) && !itemRestrictionStat.canUse(this, nbtItem, flag)) {
                return false;
             }
          }

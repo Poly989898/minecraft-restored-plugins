@@ -31,91 +31,91 @@ public class CustomBlockListener implements Listener {
    }
 
    @EventHandler(ignoreCancelled = true)
-   public void a(BlockPhysicsEvent var1) {
-      if (MMOItems.plugin.getCustomBlocks().isMushroomBlock(var1.getChangedType())) {
-         var1.setCancelled(true);
-         var1.getBlock().getState().update(true, false);
+   public void a(BlockPhysicsEvent event) {
+      if (MMOItems.plugin.getCustomBlocks().isMushroomBlock(event.getChangedType())) {
+         event.setCancelled(true);
+         event.getBlock().getState().update(true, false);
       }
    }
 
    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-   public void b(BlockBreakEvent var1) {
-      if (var1.getPlayer().getGameMode() != GameMode.CREATIVE) {
-         Optional var2 = MMOItems.plugin.getCustomBlocks().getFromBlock(var1.getBlock().getBlockData());
-         if (var2.isPresent()) {
-            CustomBlock var3 = (CustomBlock)var2.get();
-            int var4 = MMOUtils.getPickaxePower(var1.getPlayer());
-            if (var4 < var3.getRequiredPower()) {
-               if (var3.requirePowerToBreak()) {
-                  var1.setCancelled(true);
+   public void b(BlockBreakEvent event) {
+      if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+         Optional optional = MMOItems.plugin.getCustomBlocks().getFromBlock(event.getBlock().getBlockData());
+         if (optional.isPresent()) {
+            CustomBlock customBlock = (CustomBlock)optional.get();
+            int pickaxePower = MMOUtils.getPickaxePower(event.getPlayer());
+            if (pickaxePower < customBlock.getRequiredPower()) {
+               if (customBlock.requirePowerToBreak()) {
+                  event.setCancelled(true);
                } else {
-                  var1.setDropItems(false);
-                  var1.setExpToDrop(0);
+                  event.setDropItems(false);
+                  event.setExpToDrop(0);
                }
             } else {
-               var1.setDropItems(false);
-               var1.setExpToDrop(var1.getPlayer().getGameMode() == GameMode.CREATIVE ? 0 : var3.rollExperience());
+               event.setDropItems(false);
+               event.setExpToDrop(event.getPlayer().getGameMode() == GameMode.CREATIVE ? 0 : customBlock.rollExperience());
             }
          }
       }
    }
 
    @Deprecated
-   private static int getPickaxePower(Player var0) {
-      return MMOUtils.getPickaxePower(var0);
+   private static int getPickaxePower(Player player) {
+      return MMOUtils.getPickaxePower(player);
    }
 
    @EventHandler(priority = EventPriority.HIGHEST)
-   public void c(BlockPlaceEvent var1) {
-      if (!var1.isCancelled() && !this.isMushroomBlock(var1.getBlockPlaced().getType())) {
-         NBTItem var2 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var1.getItemInHand());
-         int var3 = var2.getInteger("MMOITEMS_BLOCK_ID");
-         if (var3 > 160 || var3 < 1 || var3 == 54) {
+   public void c(BlockPlaceEvent event) {
+      if (!event.isCancelled() && !this.isMushroomBlock(event.getBlockPlaced().getType())) {
+         NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItemInHand());
+         int mMOITEMSBLOCKID = nBTItem.getInteger("MMOITEMS_BLOCK_ID");
+         if (mMOITEMSBLOCKID > 160 || mMOITEMSBLOCKID < 1 || mMOITEMSBLOCKID == 54) {
             return;
          }
 
-         if (MMOItems.plugin.getCustomBlocks().getBlock(var3) == null) {
-            MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load custom block '" + var3 + "':  Block is not registered.");
+         if (MMOItems.plugin.getCustomBlocks().getBlock(mMOITEMSBLOCKID) == null) {
+            MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load custom block '" + mMOITEMSBLOCKID + "':  Block is not registered.");
             MMOItems.plugin.getLogger().log(Level.SEVERE, "Try reloading the plugin to solve the issue.");
-            var1.setCancelled(true);
+            event.setCancelled(true);
             return;
          }
 
-         CustomBlock var4 = MMOItems.plugin.getCustomBlocks().getBlock(var3);
-         Block var5 = var1.getBlockPlaced();
-         var5.setType(var4.getState().getType(), false);
-         var5.setBlockData(var4.getState().getBlockData(), false);
-         BlockPlaceEvent var6 = new BlockPlaceEvent(
-            var5, var5.getState(), var1.getBlockAgainst(), var1.getItemInHand(), var1.getPlayer(), true, EquipmentSlot.HAND
+         CustomBlock block = MMOItems.plugin.getCustomBlocks().getBlock(mMOITEMSBLOCKID);
+         Block blockPlaced = event.getBlockPlaced();
+         blockPlaced.setType(block.getState().getType(), false);
+         blockPlaced.setBlockData(block.getState().getBlockData(), false);
+         BlockPlaceEvent event2 = new BlockPlaceEvent(
+            blockPlaced, blockPlaced.getState(), event.getBlockAgainst(), event.getItemInHand(), event.getPlayer(), true, EquipmentSlot.HAND
          );
-         Bukkit.getServer().getPluginManager().callEvent(var6);
+         Bukkit.getServer().getPluginManager().callEvent(event2);
       }
    }
 
    @EventHandler(ignoreCancelled = true)
-   public void d(BlockIgniteEvent var1) {
-      if (var1.getCause() == IgniteCause.LAVA || var1.getCause() == IgniteCause.SPREAD) {
-         BlockFace[] var2 = new BlockFace[]{BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST, BlockFace.EAST};
+   public void d(BlockIgniteEvent event) {
+      if (event.getCause() == IgniteCause.LAVA || event.getCause() == IgniteCause.SPREAD) {
+         BlockFace[] blockFaces = new BlockFace[]{BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST, BlockFace.EAST};
 
-         for (BlockFace var6 : var2) {
-            if (MMOItems.plugin.getCustomBlocks().getFromBlock(var1.getBlock().getRelative(var6).getBlockData()).isPresent()) {
-               var1.setCancelled(true);
+         for (BlockFace blockFace : blockFaces) {
+            if (MMOItems.plugin.getCustomBlocks().getFromBlock(event.getBlock().getRelative(blockFace).getBlockData()).isPresent()) {
+               event.setCancelled(true);
             }
          }
       }
    }
 
-   private boolean isMushroomBlock(Material var1) {
-      return var1 == Material.BROWN_MUSHROOM_BLOCK || var1 == Material.MUSHROOM_STEM || var1 == Material.RED_MUSHROOM_BLOCK;
+   private boolean isMushroomBlock(Material material) {
+      return material == Material.BROWN_MUSHROOM_BLOCK || material == Material.MUSHROOM_STEM || material == Material.RED_MUSHROOM_BLOCK;
    }
 
    public static class MushroomReplacer implements Listener {
       @EventHandler(ignoreCancelled = true)
-      public void d(BlockBreakEvent var1) {
-         if (MMOItems.plugin.getCustomBlocks().isMushroomBlock(var1.getBlock().getType()) && MMOItems.plugin.getDropTables().hasSilkTouchTool(var1.getPlayer())
+      public void d(BlockBreakEvent event) {
+         if (MMOItems.plugin.getCustomBlocks().isMushroomBlock(event.getBlock().getType()) && MMOItems.plugin.getDropTables().hasSilkTouchTool(event.getPlayer())
             )
           {
-            var1.setDropItems(false);
+            event.setDropItems(false);
          }
       }
    }

@@ -57,10 +57,10 @@ public enum CraftingType {
       return this.mustBeHigher.length == 0 || MythicLib.plugin.getVersion().isStrictlyHigher(this.mustBeHigher);
    }
 
-   public static CraftingType getBySlot(int var0) {
-      for (CraftingType var4 : values()) {
-         if (var4.getSlot() == var0) {
-            return var4;
+   public static CraftingType getBySlot(int count) {
+      for (CraftingType craftingType : values()) {
+         if (craftingType.getSlot() == count) {
+            return craftingType;
          }
       }
 

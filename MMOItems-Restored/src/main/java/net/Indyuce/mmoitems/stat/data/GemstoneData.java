@@ -33,27 +33,27 @@ public class GemstoneData {
    private Integer levelPut;
 
    public GemstoneData cloneGem() {
-      GemstoneData var1 = new GemstoneData(this.getName(), this.getMMOItemType(), this.getMMOItemID(), this.getSocketColor(), this.getHistoricUUID());
+      GemstoneData gemstoneData = new GemstoneData(this.getName(), this.getMMOItemType(), this.getMMOItemID(), this.getSocketColor(), this.getHistoricUUID());
 
-      for (AbilityData var3 : this.abilities) {
-         var1.addAbility(var3);
+      for (AbilityData ability : this.abilities) {
+         gemstoneData.addAbility(ability);
       }
 
-      for (PotionEffectData var6 : this.effects) {
-         var1.addPermanentEffect(var6);
+      for (PotionEffectData effect : this.effects) {
+         gemstoneData.addPermanentEffect(effect);
       }
 
-      for (ItemStat var7 : this.stats.keySet()) {
-         var1.setStat(var7, this.stats.get(var7));
+      for (ItemStat key : this.stats.keySet()) {
+         gemstoneData.setStat(key, this.stats.get(key));
       }
 
-      var1.setLevel(this.getLevel());
-      return var1;
+      gemstoneData.setLevel(this.getLevel());
+      return gemstoneData;
    }
 
    @Override
-   public boolean equals(Object var1) {
-      return !(var1 instanceof GemstoneData) ? false : ((GemstoneData)var1).getHistoricUUID().equals(this.getHistoricUUID());
+   public boolean equals(Object obj) {
+      return !(obj instanceof GemstoneData) ? false : ((GemstoneData)obj).getHistoricUUID().equals(this.getHistoricUUID());
    }
 
    @Nullable
@@ -71,42 +71,42 @@ public class GemstoneData {
       return this.socketColor;
    }
 
-   public GemstoneData(@NotNull JsonObject var1) {
-      this.name = var1.get("Name").getAsString();
-      JsonElement var2 = var1.get("History");
-      if (var2 != null) {
-         String var3 = var2.getAsString();
-         UUID var4 = MMOUtils.UUIDFromString(var3);
-         if (var4 != null) {
-            this.historicUUID = var4;
+   public GemstoneData(@NotNull JsonObject jsonObject) {
+      this.name = jsonObject.get("Name").getAsString();
+      JsonElement history = jsonObject.get("History");
+      if (history != null) {
+         String asString = history.getAsString();
+         UUID uuid = MMOUtils.UUIDFromString(asString);
+         if (uuid != null) {
+            this.historicUUID = uuid;
          } else {
             this.historicUUID = UUID.randomUUID();
          }
 
-         JsonElement var5 = var1.get("Type");
-         JsonElement var6 = var1.get("Id");
-         if (var5 != null) {
-            this.mmoitemType = var5.getAsString();
+         JsonElement type = jsonObject.get("Type");
+         JsonElement id = jsonObject.get("Id");
+         if (type != null) {
+            this.mmoitemType = type.getAsString();
          } else {
             this.mmoitemType = null;
          }
 
-         if (var6 != null) {
-            this.mmoitemID = var6.getAsString();
+         if (id != null) {
+            this.mmoitemID = id.getAsString();
          } else {
             this.mmoitemID = null;
          }
 
-         JsonElement var7 = var1.get("Level");
-         if (var7 != null && var7.isJsonPrimitive()) {
-            this.levelPut = var7.getAsJsonPrimitive().getAsInt();
+         JsonElement level = jsonObject.get("Level");
+         if (level != null && level.isJsonPrimitive()) {
+            this.levelPut = level.getAsJsonPrimitive().getAsInt();
          } else {
             this.levelPut = null;
          }
 
-         JsonElement var8 = var1.get("Color");
-         if (var8 != null && var8.isJsonPrimitive()) {
-            this.socketColor = var8.getAsJsonPrimitive().getAsString();
+         JsonElement color = jsonObject.get("Color");
+         if (color != null && color.isJsonPrimitive()) {
+            this.socketColor = color.getAsJsonPrimitive().getAsString();
          } else {
             this.socketColor = null;
          }
@@ -118,37 +118,37 @@ public class GemstoneData {
       }
    }
 
-   public GemstoneData(@NotNull LiveMMOItem var1, @Nullable String var2) {
-      this(var1, var2, UUID.randomUUID());
+   public GemstoneData(@NotNull LiveMMOItem liveMMOItem, @Nullable String text) {
+      this(liveMMOItem, text, UUID.randomUUID());
    }
 
-   public GemstoneData(@NotNull LiveMMOItem var1, @Nullable String var2, @NotNull UUID var3) {
-      this.name = MMOUtils.getDisplayName(var1.getNBT().getItem());
-      if (var1.hasData(ItemStats.ABILITIES)) {
-         this.abilities.addAll(((AbilityListData)var1.getData(ItemStats.ABILITIES)).getAbilities());
+   public GemstoneData(@NotNull LiveMMOItem liveMMOItem, @Nullable String text, @NotNull UUID uuid) {
+      this.name = MMOUtils.getDisplayName(liveMMOItem.getNBT().getItem());
+      if (liveMMOItem.hasData(ItemStats.ABILITIES)) {
+         this.abilities.addAll(((AbilityListData)liveMMOItem.getData(ItemStats.ABILITIES)).getAbilities());
       }
 
-      if (var1.hasData(ItemStats.PERM_EFFECTS)) {
-         this.effects.addAll(((PotionEffectListData)var1.getData(ItemStats.PERM_EFFECTS)).getEffects());
+      if (liveMMOItem.hasData(ItemStats.PERM_EFFECTS)) {
+         this.effects.addAll(((PotionEffectListData)liveMMOItem.getData(ItemStats.PERM_EFFECTS)).getEffects());
       }
 
-      this.historicUUID = var3;
-      this.mmoitemID = var1.getId();
-      this.mmoitemType = var1.getType().getId();
-      this.socketColor = var2;
+      this.historicUUID = uuid;
+      this.mmoitemID = liveMMOItem.getId();
+      this.mmoitemType = liveMMOItem.getType().getId();
+      this.socketColor = text;
    }
 
    /** @deprecated */
-   public GemstoneData(@NotNull String var1) {
-      this.name = var1;
+   public GemstoneData(@NotNull String text) {
+      this.name = text;
       this.mmoitemID = null;
       this.mmoitemType = null;
       this.socketColor = null;
       this.historicUUID = UUID.randomUUID();
    }
 
-   public void setLevel(@Nullable Integer var1) {
-      this.levelPut = var1;
+   public void setLevel(@Nullable Integer value) {
+      this.levelPut = value;
    }
 
    @Nullable
@@ -160,32 +160,32 @@ public class GemstoneData {
       return this.levelPut != null;
    }
 
-   public GemstoneData(@NotNull String var1, @Nullable String var2, @Nullable String var3, @Nullable String var4) {
-      this.name = var1;
-      this.mmoitemID = var3;
-      this.mmoitemType = var2;
-      this.socketColor = var4;
+   public GemstoneData(@NotNull String text, @Nullable String text2, @Nullable String text3, @Nullable String text4) {
+      this.name = text;
+      this.mmoitemID = text3;
+      this.mmoitemType = text2;
+      this.socketColor = text4;
       this.historicUUID = UUID.randomUUID();
    }
 
-   public GemstoneData(@NotNull String var1, @Nullable String var2, @Nullable String var3, @Nullable String var4, @NotNull UUID var5) {
-      this.name = var1;
-      this.mmoitemID = var3;
-      this.mmoitemType = var2;
-      this.socketColor = var4;
-      this.historicUUID = var5;
+   public GemstoneData(@NotNull String text, @Nullable String text2, @Nullable String text3, @Nullable String text4, @NotNull UUID uuid) {
+      this.name = text;
+      this.mmoitemID = text3;
+      this.mmoitemType = text2;
+      this.socketColor = text4;
+      this.historicUUID = uuid;
    }
 
-   public void addAbility(@NotNull AbilityData var1) {
-      this.abilities.add(var1);
+   public void addAbility(@NotNull AbilityData abilityData) {
+      this.abilities.add(abilityData);
    }
 
-   public void addPermanentEffect(@NotNull PotionEffectData var1) {
-      this.effects.add(var1);
+   public void addPermanentEffect(@NotNull PotionEffectData potionEffectData) {
+      this.effects.add(potionEffectData);
    }
 
-   public void setStat(@NotNull ItemStat var1, double var2) {
-      this.stats.put(var1, var2);
+   public void setStat(@NotNull ItemStat itemStat, double value) {
+      this.stats.put(itemStat, value);
    }
 
    @NotNull
@@ -193,8 +193,8 @@ public class GemstoneData {
       return this.name;
    }
 
-   public void setColour(@Nullable String var1) {
-      this.socketColor = var1;
+   public void setColour(@Nullable String text) {
+      this.socketColor = text;
    }
 
    @NotNull
@@ -204,22 +204,22 @@ public class GemstoneData {
 
    @NotNull
    public JsonObject toJson() {
-      JsonObject var1 = new JsonObject();
-      var1.addProperty("Name", this.name);
-      var1.addProperty("History", this.historicUUID.toString());
+      JsonObject jsonObject = new JsonObject();
+      jsonObject.addProperty("Name", this.name);
+      jsonObject.addProperty("History", this.historicUUID.toString());
       if (this.mmoitemID != null) {
-         var1.addProperty("Id", this.mmoitemID);
+         jsonObject.addProperty("Id", this.mmoitemID);
       }
 
       if (this.mmoitemType != null) {
-         var1.addProperty("Type", this.mmoitemType);
+         jsonObject.addProperty("Type", this.mmoitemType);
       }
 
       if (this.levelPut != null) {
-         var1.addProperty("Level", this.levelPut);
+         jsonObject.addProperty("Level", this.levelPut);
       }
 
-      var1.addProperty("Color", this.socketColor);
-      return var1;
+      jsonObject.addProperty("Color", this.socketColor);
+      return jsonObject;
    }
 }

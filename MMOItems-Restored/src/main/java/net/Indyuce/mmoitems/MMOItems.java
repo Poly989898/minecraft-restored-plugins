@@ -125,12 +125,12 @@ public class MMOItems extends MMOPlugin {
 
    public void onLoad() {
       this.getLogger().log(Level.INFO, "Plugin file is called '" + this.getFile().getName() + "'");
-      PluginUtils.isDependencyPresent("WorldEdit", var1 -> {
+      PluginUtils.isDependencyPresent("WorldEdit", voidValue -> {
          try {
             new WorldEditSupport();
             this.getLogger().log(Level.INFO, "Hooked onto WorldEdit");
-         } catch (Exception var3) {
-            this.getLogger().log(Level.SEVERE, "Could not initialize support with WorldEdit 7: ", var3);
+         } catch (Exception exception) {
+            this.getLogger().log(Level.SEVERE, "Could not initialize support with WorldEdit 7: ", exception);
          }
       });
       this.saveDefaultConfig();
@@ -138,14 +138,14 @@ public class MMOItems extends MMOPlugin {
       this.statManager.loadBuiltins();
       this.typeManager.reload(false);
       this.templateManager.preloadObjects();
-      PluginUtils.isDependencyPresent("MMOCore", var0 -> new MMOCoreMMOLoader());
-      PluginUtils.isDependencyPresent("mcMMO", var1 -> this.statManager.register(McMMOHook.disableMcMMORepair));
-      PluginUtils.hookDependencyIfPresent("AdvancedEnchantments", var1 -> {
+      PluginUtils.isDependencyPresent("MMOCore", voidValue -> new MMOCoreMMOLoader());
+      PluginUtils.isDependencyPresent("mcMMO", voidValue -> this.statManager.register(McMMOHook.disableMcMMORepair));
+      PluginUtils.hookDependencyIfPresent("AdvancedEnchantments", voidValue -> {
          this.statManager.register(AdvancedEnchantmentsHook.ADVANCED_ENCHANTMENTS);
          this.statManager.register(AdvancedEnchantmentsHook.DISABLE_ADVANCED_ENCHANTMENTS);
       });
-      PluginUtils.hookDependencyIfPresent("MythicEnchants", var1 -> this.enchantPlugins.add(new MythicEnchantsSupport()));
-      PluginUtils.isDependencyPresent("Heroes", var1 -> {
+      PluginUtils.hookDependencyIfPresent("MythicEnchants", voidValue -> this.enchantPlugins.add(new MythicEnchantsSupport()));
+      PluginUtils.isDependencyPresent("Heroes", voidValue -> {
          this.statManager.register(HeroesHook.MAX_STAMINA);
          this.statManager.register(HeroesHook.REQUIRED_SECONDARY_HERO_LEVEL);
       });
@@ -171,7 +171,7 @@ public class MMOItems extends MMOPlugin {
             Bukkit.getPluginManager().registerEvents(new LootsplosionListener(), this);
          }
       });
-      PluginUtils.hookDependencyIfPresent("MMOInventory", var0 -> new MMOInventorySupport());
+      PluginUtils.hookDependencyIfPresent("MMOInventory", voidValue -> new MMOInventorySupport());
       this.findRpgPlugins();
       this.statManager.loadElements();
       this.loreManager.reload();
@@ -192,7 +192,7 @@ public class MMOItems extends MMOPlugin {
 
       try {
          Class.forName("net.Indyuce.mmoitems.MMOItemsBukkit").getConstructor(MMOItems.class).newInstance(this);
-      } catch (Throwable var1338) {
+      } catch (Throwable exception) {
          throw new RuntimeException("Cannot run an API build on Spigot!");
       }
 
@@ -211,7 +211,7 @@ public class MMOItems extends MMOPlugin {
 
       PluginUtils.hookDependencyIfPresent("CrazyEnchantments", var1x -> this.getStats().register(new CrazyEnchantsStat()));
       PluginUtils.hookDependencyIfPresent("AdvancedEnchantments", var1x -> Bukkit.getPluginManager().registerEvents(new AdvancedEnchantmentsHook(), this));
-      PluginUtils.hookDependencyIfPresent("PlaceholderAPI", var0 -> new MMOItemsPlaceholders().register());
+      PluginUtils.hookDependencyIfPresent("PlaceholderAPI", voidValue -> new MMOItemsPlaceholders().register());
       if (Bukkit.getPluginManager().getPlugin("BossShopPro") != null) {
          this.getLogger().log(Level.INFO, "Hooked onto BossShopPro");
          new BukkitRunnable() {
@@ -282,41 +282,41 @@ public class MMOItems extends MMOPlugin {
    public void findRpgPlugins() {
       Validate.isTrue(this.rpgPlugins.isEmpty(), "RPG hooks have already been computed");
       this.rpgPlugins.add(new DefaultHook());
-      String var1 = plugin.getConfig().getString("preferred-rpg-provider");
+      String preferredRpgProvider = plugin.getConfig().getString("preferred-rpg-provider");
 
-      for (RPGHandler.PluginEnum var5 : RPGHandler.PluginEnum.values()) {
-         if (Bukkit.getPluginManager().getPlugin(var5.getName()) != null) {
+      for (RPGHandler.PluginEnum pluginEnum : RPGHandler.PluginEnum.values()) {
+         if (Bukkit.getPluginManager().getPlugin(pluginEnum.getName()) != null) {
             try {
-               RPGHandler var6 = var5.load();
-               this.rpgPlugins.add(var6);
-               this.getLogger().log(Level.INFO, "Hooked onto " + var5.getName());
-               if (var1.equalsIgnoreCase(var5.name())) {
+               RPGHandler rpgHandler = pluginEnum.load();
+               this.rpgPlugins.add(rpgHandler);
+               this.getLogger().log(Level.INFO, "Hooked onto " + pluginEnum.getName());
+               if (preferredRpgProvider.equalsIgnoreCase(pluginEnum.name())) {
                   Collections.swap(this.rpgPlugins, 0, this.rpgPlugins.size() - 1);
-                  this.getLogger().log(Level.INFO, "Now using " + var5.getName() + " as RPG core plugin");
+                  this.getLogger().log(Level.INFO, "Now using " + pluginEnum.getName() + " as RPG core plugin");
                }
-            } catch (Exception var7) {
-               plugin.getLogger().log(Level.SEVERE, "Could not initialize RPG plugin compatibility with " + var5.getName() + ":");
-               var7.printStackTrace();
+            } catch (Exception exception) {
+               plugin.getLogger().log(Level.SEVERE, "Could not initialize RPG plugin compatibility with " + pluginEnum.getName() + ":");
+               exception.printStackTrace();
             }
          }
       }
 
-      RPGHandler var8 = this.rpgPlugins.get(0);
+      RPGHandler rpgHandler = this.rpgPlugins.get(0);
       if (this.rpgPlugins.get(0) instanceof Listener) {
-         Bukkit.getPluginManager().registerEvents((Listener)var8, this);
+         Bukkit.getPluginManager().registerEvents((Listener)rpgHandler, this);
       }
    }
 
-   public void setRPG(@NotNull RPGHandler var1) {
-      Validate.notNull(var1, "RPGHandler cannot be null");
+   public void setRPG(@NotNull RPGHandler rpgHandler) {
+      Validate.notNull(rpgHandler, "RPGHandler cannot be null");
       if (this.getMainRPG() instanceof Listener && this.isEnabled()) {
          HandlerList.unregisterAll((Plugin)this.getMainRPG());
       }
 
-      this.rpgPlugins.add(0, var1);
-      this.getLogger().log(Level.INFO, "Now using " + var1.getClass().getSimpleName() + " as RPG provider");
-      if (var1 instanceof Listener && this.isEnabled()) {
-         Bukkit.getPluginManager().registerEvents((Listener)var1, this);
+      this.rpgPlugins.add(0, rpgHandler);
+      this.getLogger().log(Level.INFO, "Now using " + rpgHandler.getClass().getSimpleName() + " as RPG provider");
+      if (rpgHandler instanceof Listener && this.isEnabled()) {
+         Bukkit.getPluginManager().registerEvents((Listener)rpgHandler, this);
       }
    }
 
@@ -328,19 +328,19 @@ public class MMOItems extends MMOPlugin {
       return this.inventory;
    }
 
-   public void registerPlayerInventory(PlayerInventory var1) {
-      this.getInventory().register(var1);
+   public void registerPlayerInventory(PlayerInventory playerInventory) {
+      this.getInventory().register(playerInventory);
    }
 
    @Deprecated
-   public void setPlayerInventory(PlayerInventory var1) {
+   public void setPlayerInventory(PlayerInventory playerInventory) {
       this.getInventory().unregisterAll();
-      this.getInventory().register(var1);
+      this.getInventory().register(playerInventory);
    }
 
-   public void registerEnchantPlugin(EnchantPlugin var1) {
-      Validate.notNull(var1, "Enchant plugin cannot be null");
-      this.enchantPlugins.add(var1);
+   public void registerEnchantPlugin(EnchantPlugin enchantPlugin) {
+      Validate.notNull(enchantPlugin, "Enchant plugin cannot be null");
+      this.enchantPlugins.add(enchantPlugin);
    }
 
    public PlayerDataManager getPlayerDataManager() {
@@ -422,107 +422,107 @@ public class MMOItems extends MMOPlugin {
    }
 
    @Nullable
-   public MMOItem getMMOItem(@Nullable Type var1, @Nullable String var2, @Nullable PlayerData var3) {
-      if (var1 != null && var2 != null) {
-         MMOItemTemplate var4 = this.getTemplates().getTemplate(var1, var2);
-         return var4 == null ? null : var4.newBuilder(var3).build();
+   public MMOItem getMMOItem(@Nullable Type type, @Nullable String text, @Nullable PlayerData playerData) {
+      if (type != null && text != null) {
+         MMOItemTemplate template = this.getTemplates().getTemplate(type, text);
+         return template == null ? null : template.newBuilder(playerData).build();
       } else {
          return null;
       }
    }
 
    @Nullable
-   public ItemStack getItem(@Nullable Type var1, @Nullable String var2, @NotNull PlayerData var3) {
-      MMOItem var4 = this.getMMOItem(var1, var2, var3);
-      return var4 == null ? null : var4.newBuilder().build();
+   public ItemStack getItem(@Nullable Type type, @Nullable String text, @NotNull PlayerData playerData) {
+      MMOItem mMOItem = this.getMMOItem(type, text, playerData);
+      return mMOItem == null ? null : mMOItem.newBuilder().build();
    }
 
    @Nullable
-   public MMOItem getMMOItem(@Nullable Type var1, @Nullable String var2, int var3, @Nullable ItemTier var4) {
-      if (var1 != null && var2 != null) {
-         MMOItemTemplate var5 = this.getTemplates().getTemplate(var1, var2);
-         return var5 == null ? null : var5.newBuilder(var3, var4).build();
+   public MMOItem getMMOItem(@Nullable Type type, @Nullable String text, int count, @Nullable ItemTier itemTier) {
+      if (type != null && text != null) {
+         MMOItemTemplate template = this.getTemplates().getTemplate(type, text);
+         return template == null ? null : template.newBuilder(count, itemTier).build();
       } else {
          return null;
       }
    }
 
    @Nullable
-   public ItemStack getItem(@Nullable Type var1, @Nullable String var2, int var3, @Nullable ItemTier var4) {
-      MMOItem var5 = this.getMMOItem(var1, var2, var3, var4);
-      return var5 == null ? null : var5.newBuilder().build();
+   public ItemStack getItem(@Nullable Type type, @Nullable String text, int count, @Nullable ItemTier itemTier) {
+      MMOItem mMOItem = this.getMMOItem(type, text, count, itemTier);
+      return mMOItem == null ? null : mMOItem.newBuilder().build();
    }
 
    @Nullable
-   public MMOItem getMMOItem(@Nullable Type var1, @Nullable String var2) {
-      return this.getMMOItem(var1, var2, 0, null);
+   public MMOItem getMMOItem(@Nullable Type type, @Nullable String text) {
+      return this.getMMOItem(type, text, 0, null);
    }
 
    @Nullable
-   public ItemStack getItem(@Nullable String var1, @Nullable String var2) {
-      return var1 != null && var2 != null ? this.getItem(this.getTypes().get(var1), var2) : null;
+   public ItemStack getItem(@Nullable String text, @Nullable String text2) {
+      return text != null && text2 != null ? this.getItem(this.getTypes().get(text), text2) : null;
    }
 
    @Nullable
-   public ItemStack getItem(@Nullable Type var1, @Nullable String var2) {
-      if (var1 != null && var2 != null) {
-         MMOItem var3 = this.getMMOItem(var1, var2);
-         return var3 == null ? null : var3.newBuilder().build();
+   public ItemStack getItem(@Nullable Type type, @Nullable String text) {
+      if (type != null && text != null) {
+         MMOItem mMOItem = this.getMMOItem(type, text);
+         return mMOItem == null ? null : mMOItem.newBuilder().build();
       } else {
          return null;
       }
    }
 
    @Nullable
-   public static Type getType(@Nullable ItemStack var0) {
-      return getType(NBTItem.get(var0));
+   public static Type getType(@Nullable ItemStack item) {
+      return getType(NBTItem.get(item));
    }
 
    @Nullable
-   public static Type getType(@Nullable NBTItem var0) {
-      return plugin.getTypes().get(getTypeName(var0));
+   public static Type getType(@Nullable NBTItem nbtItem) {
+      return plugin.getTypes().get(getTypeName(nbtItem));
    }
 
    @Nullable
-   public static String getTypeName(@Nullable ItemStack var0) {
-      return getTypeName(NBTItem.get(var0));
+   public static String getTypeName(@Nullable ItemStack item) {
+      return getTypeName(NBTItem.get(item));
    }
 
    @Nullable
-   public static String getTypeName(@Nullable NBTItem var0) {
-      if (var0 == null) {
+   public static String getTypeName(@Nullable NBTItem nbtItem) {
+      if (nbtItem == null) {
          return null;
       } else {
-         return !var0.hasType() ? null : var0.getType();
+         return !nbtItem.hasType() ? null : nbtItem.getType();
       }
    }
 
    @Nullable
-   public static String getID(@Nullable ItemStack var0) {
-      return getID(NBTItem.get(var0));
+   public static String getID(@Nullable ItemStack item) {
+      return getID(NBTItem.get(item));
    }
 
    @Nullable
-   public static String getID(@Nullable NBTItem var0) {
-      return var0 == null ? null : var0.getString("MMOITEMS_ITEM_ID");
+   public static String getID(@Nullable NBTItem nbtItem) {
+      return nbtItem == null ? null : nbtItem.getString("MMOITEMS_ITEM_ID");
    }
 
-   public static void print(@Nullable Level var0, @Nullable String var1, @Nullable String var2, @NotNull String... var3) {
-      if (var1 == null) {
-         var1 = "< null >";
+   public static void print(@Nullable Level level, @Nullable String text, @Nullable String text2, @NotNull String... texts) {
+      if (text == null) {
+         text = "< null >";
       }
 
-      if (var0 != null) {
-         plugin.getLogger().log(var0, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), var1, var3));
+      if (level != null) {
+         plugin.getLogger().log(level, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), text, texts));
       } else {
-         FriendlyFeedbackMessage var4 = new FriendlyFeedbackMessage("", var2);
-         FriendlyFeedbackMessage var5 = FriendlyFeedbackProvider.generateMessage(var4, var1, var3);
-         getConsole().sendMessage(var5.forConsole(FFPMMOItems.get()));
+         FriendlyFeedbackMessage friendlyFeedbackMessage = new FriendlyFeedbackMessage("", text2);
+         FriendlyFeedbackMessage friendlyFeedbackMessage2 = FriendlyFeedbackProvider.generateMessage(friendlyFeedbackMessage, text, texts);
+         getConsole().sendMessage(friendlyFeedbackMessage2.forConsole(FFPMMOItems.get()));
       }
    }
 
-   public static void log(@Nullable String var0, @NotNull String... var1) {
-      print(null, var0, null, var1);
+   public static void log(@Nullable String text, @NotNull String... texts) {
+      print(null, text, null, texts);
    }
 
    @NotNull

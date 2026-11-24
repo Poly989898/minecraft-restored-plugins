@@ -32,24 +32,24 @@ public class CanUnsocket extends BooleanStat implements ConsumableItemInteractio
 
    @Override
    public boolean handleConsumableEffect(
-      @NotNull InventoryClickEvent var1, @NotNull PlayerData var2, @NotNull Consumable var3, @NotNull NBTItem var4, Type var5
+      @NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem nbtItem, Type type
    ) {
-      if (var5 == null) {
+      if (type == null) {
          return false;
       }
 
-      VolatileMMOItem var6 = new VolatileMMOItem(var4);
-      if (!var6.hasData(ItemStats.GEM_SOCKETS)) {
+      VolatileMMOItem volatileMMOItem = new VolatileMMOItem(nbtItem);
+      if (!volatileMMOItem.hasData(ItemStats.GEM_SOCKETS)) {
          return false;
       }
 
-      GemSocketsData var7 = (GemSocketsData)var6.getData(ItemStats.GEM_SOCKETS);
-      if (var7 != null && var7.getGemstones().size() != 0) {
-         Player var8 = var2.getPlayer();
-         LiveMMOItem var10 = new LiveMMOItem(var4);
-         List var9 = var10.extractGemstones();
-         if (var9.isEmpty()) {
-            Message.RANDOM_UNSOCKET_GEM_TOO_OLD.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(var1.getCurrentItem())).send(var8);
+      GemSocketsData data = (GemSocketsData)volatileMMOItem.getData(ItemStats.GEM_SOCKETS);
+      if (data != null && data.getGemstones().size() != 0) {
+         Player player = playerData.getPlayer();
+         LiveMMOItem liveMMOItem = new LiveMMOItem(nbtItem);
+         List list = liveMMOItem.extractGemstones();
+         if (list.isEmpty()) {
+            Message.RANDOM_UNSOCKET_GEM_TOO_OLD.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(event.getCurrentItem())).send(player);
             return false;
          } else {
             return true;

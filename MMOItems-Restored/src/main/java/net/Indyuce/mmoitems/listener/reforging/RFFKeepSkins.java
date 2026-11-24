@@ -10,13 +10,13 @@ import org.bukkit.inventory.ItemStack;
 
 public class RFFKeepSkins implements Listener {
    @EventHandler
-   public void onReforge(MMOItemReforgeFinishEvent var1) {
-      if (var1.getOptions().shouldKeepSkins()) {
-         String var2 = var1.getReforger().getNBTItem().getString("MMOITEMS_SKIN_ID");
-         if (var2 != null && !var2.isEmpty()) {
-            NBTItem var3 = NBTItem.get(var1.getFinishedItem());
-            ItemStack var4 = ItemSkin.applySkin(var3, new VolatileMMOItem(var1.getReforger().getNBTItem()));
-            var1.setFinishedItem(var4);
+   public void onReforge(MMOItemReforgeFinishEvent event) {
+      if (event.getOptions().shouldKeepSkins()) {
+         String mMOITEMSSKINID = event.getReforger().getNBTItem().getString("MMOITEMS_SKIN_ID");
+         if (mMOITEMSSKINID != null && !mMOITEMSSKINID.isEmpty()) {
+            NBTItem nbtItem = NBTItem.get(event.getFinishedItem());
+            ItemStack item = ItemSkin.applySkin(nbtItem, new VolatileMMOItem(event.getReforger().getNBTItem()));
+            event.setFinishedItem(item);
          }
       }
    }

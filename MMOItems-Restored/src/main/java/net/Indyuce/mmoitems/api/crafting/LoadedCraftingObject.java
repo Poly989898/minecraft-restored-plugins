@@ -8,18 +8,18 @@ public class LoadedCraftingObject<C> {
    private final Function<MMOLineConfig, C> function;
    private ConditionalDisplay display;
 
-   public LoadedCraftingObject(String var1, Function<MMOLineConfig, C> var2, ConditionalDisplay var3) {
-      this.id = var1;
-      this.function = var2;
-      this.display = var3;
+   public LoadedCraftingObject(String text, Function<MMOLineConfig, C> function, ConditionalDisplay conditionalDisplay) {
+      this.id = text;
+      this.function = function;
+      this.display = conditionalDisplay;
    }
 
    public String getId() {
       return this.id;
    }
 
-   public void setDisplay(ConditionalDisplay var1) {
-      this.display = var1;
+   public void setDisplay(ConditionalDisplay conditionalDisplay) {
+      this.display = conditionalDisplay;
    }
 
    public boolean hasDisplay() {
@@ -30,7 +30,7 @@ public class LoadedCraftingObject<C> {
       return this.display;
    }
 
-   public C load(MMOLineConfig var1) {
-      return this.function.apply(var1);
+   public C load(MMOLineConfig mmoLineConfig) {
+      return this.function.apply(mmoLineConfig);
    }
 }

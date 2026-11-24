@@ -19,8 +19,8 @@ public class RBA_SmithingUpgrades extends RBA_ChooseableButton {
    public static final String SMITH_UPGRADES = "upgrades";
    static ArrayList<String> smithingList;
 
-   public RBA_SmithingUpgrades(@NotNull RecipeEditorGUI var1) {
-      super(var1);
+   public RBA_SmithingUpgrades(@NotNull RecipeEditorGUI recipeEditorGUI) {
+      super(recipeEditorGUI);
    }
 
    @NotNull
@@ -49,15 +49,15 @@ public class RBA_SmithingUpgrades extends RBA_ChooseableButton {
 
    @NotNull
    @Override
-   public String getChooseableDefinition(@NotNull String var1) {
-      SmithingCombinationType var2 = SmithingCombinationType.MAXIMUM;
+   public String getChooseableDefinition(@NotNull String text) {
+      SmithingCombinationType smithingCombinationType = SmithingCombinationType.MAXIMUM;
 
       try {
-         var2 = SmithingCombinationType.valueOf(this.getCurrentChooseableValue());
-      } catch (IllegalArgumentException var4) {
+         smithingCombinationType = SmithingCombinationType.valueOf(this.getCurrentChooseableValue());
+      } catch (IllegalArgumentException exception) {
       }
 
-      switch (var2) {
+      switch (smithingCombinationType) {
          case EVEN:
             return "Will take the average of the upgrade levels of the combined items.";
          case NONE:
@@ -81,8 +81,8 @@ public class RBA_SmithingUpgrades extends RBA_ChooseableButton {
 
       smithingList = new ArrayList<>();
 
-      for (SmithingCombinationType var3 : SmithingCombinationType.values()) {
-         smithingList.add(var3.toString());
+      for (SmithingCombinationType smithingCombinationType : SmithingCombinationType.values()) {
+         smithingList.add(smithingCombinationType.toString());
       }
 
       return smithingList;

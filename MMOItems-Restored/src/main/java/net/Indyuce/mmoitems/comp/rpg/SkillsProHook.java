@@ -12,43 +12,43 @@ import org.skills.main.SkillsPro;
 
 public class SkillsProHook implements RPGHandler, Listener {
    @EventHandler
-   public void a(SkillLevelUpEvent var1) {
-      Player var2 = var1.getPlayer();
-      if (var2.isOnline()) {
-         PlayerData.get(var2).getInventory().scheduleUpdate();
+   public void a(SkillLevelUpEvent event) {
+      Player player = event.getPlayer();
+      if (player.isOnline()) {
+         PlayerData.get(player).getInventory().scheduleUpdate();
       }
    }
 
    @Override
-   public void refreshStats(PlayerData var1) {
+   public void refreshStats(PlayerData playerData) {
    }
 
    @Override
-   public RPGPlayer getInfo(PlayerData var1) {
-      return new SkillsProHook.SkillsPlayer(var1);
+   public RPGPlayer getInfo(PlayerData playerData) {
+      return new SkillsProHook.SkillsPlayer(playerData);
    }
 
    public static class SkillsPlayer extends RPGPlayer {
-      public SkillsPlayer(PlayerData var1) {
-         super(var1);
+      public SkillsPlayer(PlayerData playerData) {
+         super(playerData);
       }
 
       @Override
       public int getLevel() {
-         SkilledPlayer var1 = (SkilledPlayer)SkillsPro.get().getPlayerDataManager().getData(this.getPlayerData().getPlayer().getUniqueId());
-         return var1.getLevel();
+         SkilledPlayer data = (SkilledPlayer)SkillsPro.get().getPlayerDataManager().getData(this.getPlayerData().getPlayer().getUniqueId());
+         return data.getLevel();
       }
 
       @Override
       public String getClassName() {
-         SkilledPlayer var1 = (SkilledPlayer)SkillsPro.get().getPlayerDataManager().getData(this.getPlayerData().getPlayer().getUniqueId());
-         return ChatColor.stripColor(var1.getSkill().getDisplayName());
+         SkilledPlayer data = (SkilledPlayer)SkillsPro.get().getPlayerDataManager().getData(this.getPlayerData().getPlayer().getUniqueId());
+         return ChatColor.stripColor(data.getSkill().getDisplayName());
       }
 
       @Override
       public double getMana() {
-         SkilledPlayer var1 = (SkilledPlayer)SkillsPro.get().getPlayerDataManager().getData(this.getPlayerData().getPlayer().getUniqueId());
-         return var1.getEnergy();
+         SkilledPlayer data = (SkilledPlayer)SkillsPro.get().getPlayerDataManager().getData(this.getPlayerData().getPlayer().getUniqueId());
+         return data.getEnergy();
       }
 
       @Override
@@ -57,14 +57,14 @@ public class SkillsProHook implements RPGHandler, Listener {
       }
 
       @Override
-      public void setMana(double var1) {
-         SkilledPlayer var3 = (SkilledPlayer)SkillsPro.get().getPlayerDataManager().getData(this.getPlayerData().getPlayer().getUniqueId());
-         var3.setEnergy(var1);
+      public void setMana(double value) {
+         SkilledPlayer data = (SkilledPlayer)SkillsPro.get().getPlayerDataManager().getData(this.getPlayerData().getPlayer().getUniqueId());
+         data.setEnergy(value);
       }
 
       @Override
-      public void setStamina(double var1) {
-         this.getPlayer().setFoodLevel((int)var1);
+      public void setStamina(double value) {
+         this.getPlayer().setFoodLevel((int)value);
       }
    }
 }

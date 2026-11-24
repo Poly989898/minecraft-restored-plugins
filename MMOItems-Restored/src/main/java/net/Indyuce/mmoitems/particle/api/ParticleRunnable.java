@@ -8,9 +8,9 @@ public abstract class ParticleRunnable extends BukkitRunnable {
    protected final ParticleData particle;
    protected final PlayerData player;
 
-   public ParticleRunnable(ParticleData var1, PlayerData var2) {
-      this.particle = var1;
-      this.player = var2;
+   public ParticleRunnable(ParticleData particleData, PlayerData playerData) {
+      this.particle = particleData;
+      this.player = playerData;
    }
 
    public void run() {

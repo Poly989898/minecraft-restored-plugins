@@ -45,73 +45,73 @@ public class Amphibian extends ChooseStat implements ItemRestriction, GemStoneSt
    }
 
    @Override
-   public boolean canUse(RPGPlayer var1, NBTItem var2, boolean var3) {
-      if (!var2.hasTag(this.getNBTPath())) {
+   public boolean canUse(RPGPlayer rpgPlayer, NBTItem nbtItem, boolean flag) {
+      if (!nbtItem.hasTag(this.getNBTPath())) {
          return true;
       }
 
-      ArrayList var4 = new ArrayList();
-      if (var2.hasTag(this.getNBTPath())) {
-         var4.add(ItemTag.getTagAtPath(this.getNBTPath(), var2, SupportedNBTTagValues.STRING));
+      ArrayList list = new ArrayList();
+      if (nbtItem.hasTag(this.getNBTPath())) {
+         list.add(ItemTag.getTagAtPath(this.getNBTPath(), nbtItem, SupportedNBTTagValues.STRING));
       }
 
-      String var5 = this.getLoadedNBT(var4).toString();
-      if (var5 != null) {
-         switch (var5) {
+      String text = this.getLoadedNBT(list).toString();
+      if (text != null) {
+         switch (text) {
             case "NORMAL":
             default:
                return true;
             case "DRY":
-               for (Block var21 : this.blocksTouchedByPlayer(var1.getPlayer())) {
-                  if (var21.isLiquid()) {
+               for (Block block : this.blocksTouchedByPlayer(rpgPlayer.getPlayer())) {
+                  if (block.isLiquid()) {
                      return false;
                   }
                }
 
                return true;
             case "WET":
-               for (Block var20 : this.blocksTouchedByPlayer(var1.getPlayer())) {
-                  if (var20.getType().equals(Material.WATER)) {
+               for (Block block : this.blocksTouchedByPlayer(rpgPlayer.getPlayer())) {
+                  if (block.getType().equals(Material.WATER)) {
                      return true;
                   }
                }
 
                return false;
             case "DAMP":
-               for (Block var19 : this.blocksTouchedByPlayer(var1.getPlayer())) {
-                  if (!var19.getType().equals(Material.WATER)) {
+               for (Block block : this.blocksTouchedByPlayer(rpgPlayer.getPlayer())) {
+                  if (!block.getType().equals(Material.WATER)) {
                      return false;
                   }
                }
 
                return true;
             case "LAVA":
-               for (Block var18 : this.blocksTouchedByPlayer(var1.getPlayer())) {
-                  if (var18.getType().equals(Material.LAVA)) {
+               for (Block block : this.blocksTouchedByPlayer(rpgPlayer.getPlayer())) {
+                  if (block.getType().equals(Material.LAVA)) {
                      return true;
                   }
                }
 
                return false;
             case "MOLTEN":
-               for (Block var17 : this.blocksTouchedByPlayer(var1.getPlayer())) {
-                  if (!var17.getType().equals(Material.LAVA)) {
+               for (Block block : this.blocksTouchedByPlayer(rpgPlayer.getPlayer())) {
+                  if (!block.getType().equals(Material.LAVA)) {
                      return false;
                   }
                }
 
                return true;
             case "LIQUID":
-               for (Block var16 : this.blocksTouchedByPlayer(var1.getPlayer())) {
-                  if (var16.isLiquid()) {
+               for (Block block : this.blocksTouchedByPlayer(rpgPlayer.getPlayer())) {
+                  if (block.isLiquid()) {
                      return true;
                   }
                }
 
                return false;
             case "SUBMERGED":
-               for (Block var9 : this.blocksTouchedByPlayer(var1.getPlayer())) {
-                  if (!var9.isLiquid()) {
+               for (Block block : this.blocksTouchedByPlayer(rpgPlayer.getPlayer())) {
+                  if (!block.isLiquid()) {
                      return false;
                   }
                }
@@ -128,24 +128,24 @@ public class Amphibian extends ChooseStat implements ItemRestriction, GemStoneSt
       return true;
    }
 
-   ArrayList<Block> blocksTouchedByPlayer(@NotNull Player var1) {
-      BoundingBox var2 = var1.getBoundingBox();
-      ArrayList var3 = new ArrayList();
+   ArrayList<Block> blocksTouchedByPlayer(@NotNull Player player) {
+      BoundingBox boundingBox = player.getBoundingBox();
+      ArrayList list = new ArrayList();
 
-      for (double var4 = var2.getMinX(); var4 <= var2.getMaxX(); var4 += Math.min(1.0, Math.max(var2.getWidthX() - (var4 - var2.getMinX()), 0.001))) {
-         for (double var6 = var2.getMinY(); var6 <= var2.getMaxY(); var6 += Math.min(1.0, Math.max(var2.getHeight() - (var6 - var2.getMinY()), 0.001))) {
-            for (double var8 = var2.getMinZ(); var8 <= var2.getMaxZ(); var8 += Math.min(1.0, Math.max(var2.getWidthZ() - (var8 - var2.getMinZ()), 0.001))) {
-               int var10 = SilentNumbers.floor(var4);
-               int var11 = SilentNumbers.floor(var6);
-               int var12 = SilentNumbers.floor(var8);
-               Block var13 = var1.getLocation().getWorld().getBlockAt(var10, var11, var12);
-               if (!var3.contains(var13)) {
-                  var3.add(var13);
+      for (double minX = boundingBox.getMinX(); minX <= boundingBox.getMaxX(); minX += Math.min(1.0, Math.max(boundingBox.getWidthX() - (minX - boundingBox.getMinX()), 0.001))) {
+         for (double minY = boundingBox.getMinY(); minY <= boundingBox.getMaxY(); minY += Math.min(1.0, Math.max(boundingBox.getHeight() - (minY - boundingBox.getMinY()), 0.001))) {
+            for (double minZ = boundingBox.getMinZ(); minZ <= boundingBox.getMaxZ(); minZ += Math.min(1.0, Math.max(boundingBox.getWidthZ() - (minZ - boundingBox.getMinZ()), 0.001))) {
+               int count = SilentNumbers.floor(minX);
+               int count2 = SilentNumbers.floor(minY);
+               int count3 = SilentNumbers.floor(minZ);
+               Block blockAt = player.getLocation().getWorld().getBlockAt(count, count2, count3);
+               if (!list.contains(blockAt)) {
+                  list.add(blockAt);
                }
             }
          }
       }
 
-      return var3;
+      return list;
    }
 }

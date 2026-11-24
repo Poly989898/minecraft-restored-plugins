@@ -20,27 +20,27 @@ public class MineMIBlockExperienceSource extends SpecificExperienceSource<Intege
    private final boolean silkTouch;
    private final boolean playerPlaced;
 
-   public MineMIBlockExperienceSource(ExperienceDispenser var1, MMOLineConfig var2) {
-      super(var1, var2);
-      var2.validate(new String[]{"id"});
-      this.id = var2.getInt("id", 1);
-      this.silkTouch = var2.getBoolean("silk-touch", true);
-      this.playerPlaced = var2.getBoolean("player-placed", false);
+   public MineMIBlockExperienceSource(ExperienceDispenser experienceDispenser, MMOLineConfig mmoLineConfig) {
+      super(experienceDispenser, mmoLineConfig);
+      mmoLineConfig.validate(new String[]{"id"});
+      this.id = mmoLineConfig.getInt("id", 1);
+      this.silkTouch = mmoLineConfig.getBoolean("silk-touch", true);
+      this.playerPlaced = mmoLineConfig.getBoolean("player-placed", false);
    }
 
    public ExperienceSourceManager<MineMIBlockExperienceSource> newManager() {
       return new ExperienceSourceManager<MineMIBlockExperienceSource>() {
          @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-         public void a(BlockBreakEvent var1) {
-            if (var1.getPlayer().getGameMode() == GameMode.SURVIVAL) {
-               PlayerData var2 = PlayerData.get(var1.getPlayer());
-               Optional var3 = MMOItems.plugin.getCustomBlocks().getFromBlock(var1.getBlock().getBlockData());
-               if (var3.isPresent()) {
-                  for (MineMIBlockExperienceSource var5 : this.getSources()) {
-                     if ((!var5.silkTouch || !MineMIBlockExperienceSource.this.hasSilkTouch(var1.getPlayer().getInventory().getItemInMainHand()))
-                        && (var5.playerPlaced || !var1.getBlock().hasMetadata("player_placed"))
-                        && var5.matches(var2, ((CustomBlock)var3.get()).getId())) {
-                        var5.giveExperience(var2, 1.0, var1.getBlock().getLocation());
+         public void a(BlockBreakEvent event) {
+            if (event.getPlayer().getGameMode() == GameMode.SURVIVAL) {
+               PlayerData playerData = PlayerData.get(event.getPlayer());
+               Optional optional = MMOItems.plugin.getCustomBlocks().getFromBlock(event.getBlock().getBlockData());
+               if (optional.isPresent()) {
+                  for (MineMIBlockExperienceSource source : this.getSources()) {
+                     if ((!source.silkTouch || !MineMIBlockExperienceSource.this.hasSilkTouch(event.getPlayer().getInventory().getItemInMainHand()))
+                        && (source.playerPlaced || !event.getBlock().hasMetadata("player_placed"))
+                        && source.matches(playerData, ((CustomBlock)optional.get()).getId())) {
+                        source.giveExperience(playerData, 1.0, event.getBlock().getLocation());
                      }
                   }
                }
@@ -49,11 +49,11 @@ public class MineMIBlockExperienceSource extends SpecificExperienceSource<Intege
       };
    }
 
-   private boolean hasSilkTouch(ItemStack var1) {
-      return var1 != null && var1.hasItemMeta() && var1.getItemMeta().hasEnchant(Enchantment.SILK_TOUCH);
+   private boolean hasSilkTouch(ItemStack item) {
+      return item != null && item.hasItemMeta() && item.getItemMeta().hasEnchant(Enchantment.SILK_TOUCH);
    }
 
-   public boolean matchesParameter(PlayerData var1, Integer var2) {
-      return this.id == var2;
+   public boolean matchesParameter(PlayerData playerData, Integer value) {
+      return this.id == value;
    }
 }

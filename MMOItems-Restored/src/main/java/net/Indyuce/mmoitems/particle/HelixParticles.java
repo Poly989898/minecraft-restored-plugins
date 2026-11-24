@@ -14,29 +14,29 @@ public class HelixParticles extends ParticleRunnable {
    private final int amount;
    private double j = 0.0;
 
-   public HelixParticles(ParticleData var1, PlayerData var2) {
-      super(var1, var2);
-      this.speed = (float)var1.getModifier("speed");
-      this.height = (float)var1.getModifier("height");
-      this.radius = (float)var1.getModifier("radius");
-      this.r_speed = (float)var1.getModifier("rotation-speed");
-      this.y_speed = (float)var1.getModifier("y-speed");
-      this.amount = (int)var1.getModifier("amount");
+   public HelixParticles(ParticleData particleData, PlayerData playerData) {
+      super(particleData, playerData);
+      this.speed = (float)particleData.getModifier("speed");
+      this.height = (float)particleData.getModifier("height");
+      this.radius = (float)particleData.getModifier("radius");
+      this.r_speed = (float)particleData.getModifier("rotation-speed");
+      this.y_speed = (float)particleData.getModifier("y-speed");
+      this.amount = (int)particleData.getModifier("amount");
    }
 
    @Override
    public void createParticles() {
-      Location var1 = this.player.getPlayer().getLocation();
+      Location location = this.player.getPlayer().getLocation();
 
-      for (double var2 = 0.0; var2 < this.amount; var2++) {
-         double var4 = this.j + var2 * Math.PI * 2.0 / this.amount;
+      for (double value = 0.0; value < this.amount; value++) {
+         double value2 = this.j + value * Math.PI * 2.0 / this.amount;
          this.particle
             .display(
-               var1.clone()
+               location.clone()
                   .add(
-                     Math.cos(var4) * Math.cos(this.j * this.y_speed) * this.radius,
+                     Math.cos(value2) * Math.cos(this.j * this.y_speed) * this.radius,
                      1.0 + Math.sin(this.j * this.y_speed) * this.height,
-                     Math.sin(var4) * Math.cos(this.j * this.y_speed) * this.radius
+                     Math.sin(value2) * Math.cos(this.j * this.y_speed) * this.radius
                   ),
                this.speed
             );

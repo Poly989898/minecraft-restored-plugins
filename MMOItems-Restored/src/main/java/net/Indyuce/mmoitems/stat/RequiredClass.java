@@ -39,89 +39,89 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
    }
 
    @Override
-   public StringListData whenInitialized(Object var1) {
-      Validate.isTrue(var1 instanceof List, "Must specify a string list");
-      return new StringListData((List<String>)var1);
+   public StringListData whenInitialized(Object obj) {
+      Validate.isTrue(obj instanceof List, "Must specify a string list");
+      return new StringListData((List<String>)obj);
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      if (var2.getAction() == InventoryAction.PICKUP_ALL) {
-         new StatEdition(var1, this).enable("Write in the chat the class you want your item to support.");
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      if (event.getAction() == InventoryAction.PICKUP_ALL) {
+         new StatEdition(editionInventory, this).enable("Write in the chat the class you want your item to support.");
       }
 
-      if (var2.getAction() == InventoryAction.PICKUP_HALF && var1.getEditedSection().getKeys(false).contains("required-class")) {
-         List var3 = var1.getEditedSection().getStringList("required-class");
-         if (var3.size() < 1) {
+      if (event.getAction() == InventoryAction.PICKUP_HALF && editionInventory.getEditedSection().getKeys(false).contains("required-class")) {
+         List requiredClass = editionInventory.getEditedSection().getStringList("required-class");
+         if (requiredClass.size() < 1) {
             return;
          }
 
-         String var4 = (String)var3.remove(var3.size() - 1);
-         var1.getEditedSection().set(this.getPath(), var3.size() == 0 ? null : var3);
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + var4 + ".");
+         String text = (String)requiredClass.remove(requiredClass.size() - 1);
+         editionInventory.getEditedSection().set(this.getPath(), requiredClass.size() == 0 ? null : requiredClass);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + text + ".");
       }
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      List var4 = var1.getEditedSection().getKeys(false).contains("required-class") ? var1.getEditedSection().getStringList("required-class") : new ArrayList();
-      var4.add(var2);
-      var1.getEditedSection().set(this.getPath(), var4);
-      var1.registerTemplateEdition();
-      var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Required Class successfully added.");
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      List list = editionInventory.getEditedSection().getKeys(false).contains("required-class") ? editionInventory.getEditedSection().getStringList("required-class") : new ArrayList();
+      list.add(text);
+      editionInventory.getEditedSection().set(this.getPath(), list);
+      editionInventory.registerTemplateEdition();
+      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Required Class successfully added.");
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      ArrayList var2 = new ArrayList();
-      if (var1.getNBT().hasTag(this.getNBTPath())) {
-         var2.add(ItemTag.getTagAtPath(this.getNBTPath(), var1.getNBT(), SupportedNBTTagValues.STRING));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      ArrayList list = new ArrayList();
+      if (readMMOItem.getNBT().hasTag(this.getNBTPath())) {
+         list.add(ItemTag.getTagAtPath(this.getNBTPath(), readMMOItem.getNBT(), SupportedNBTTagValues.STRING));
       }
 
-      StringListData var3 = this.getLoadedNBT(var2);
-      if (var3 != null) {
-         var1.setData(this, var3);
+      StringListData loadedNBT = this.getLoadedNBT(list);
+      if (loadedNBT != null) {
+         readMMOItem.setData(this, loadedNBT);
       }
    }
 
    @Nullable
    @Override
-   public StringListData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
-      ItemTag var2 = ItemTag.getTagAtPath(this.getNBTPath(), var1);
-      return var2 != null ? new StringListData(((String)var2.getValue()).split(Pattern.quote(", "))) : null;
+   public StringListData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
+      ItemTag tagAtPath = ItemTag.getTagAtPath(this.getNBTPath(), itemTags);
+      return tagAtPath != null ? new StringListData(((String)tagAtPath.getValue()).split(Pattern.quote(", "))) : null;
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<StringListData> var2) {
-      if (var2.isPresent()) {
-         var1.add(ChatColor.GRAY + "Current Value:");
-         StringListData var3 = (StringListData)var2.get();
-         var3.getList().forEach(var1x -> var1.add(ChatColor.GRAY + "* " + ChatColor.GREEN + var1x));
+   public void whenDisplayed(List<String> texts, Optional<StringListData> optional) {
+      if (optional.isPresent()) {
+         texts.add(ChatColor.GRAY + "Current Value:");
+         StringListData stringListData = (StringListData)optional.get();
+         stringListData.getList().forEach(var1x -> texts.add(ChatColor.GRAY + "* " + ChatColor.GREEN + var1x));
       } else {
-         var1.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+         texts.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
       }
 
-      var1.add("");
-      var1.add(ChatColor.YELLOW + "►" + " Click to add a class.");
-      var1.add(ChatColor.YELLOW + "►" + " Right click to remove the last class.");
+      texts.add("");
+      texts.add(ChatColor.YELLOW + "►" + " Click to add a class.");
+      texts.add(ChatColor.YELLOW + "►" + " Right click to remove the last class.");
    }
 
    @NotNull
    @Override
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull StringListData var1) {
-      ArrayList var2 = new ArrayList();
-      var2.add(new ItemTag(this.getNBTPath(), String.join(", ", var1.getList())));
-      return var2;
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull StringListData stringListData) {
+      ArrayList list = new ArrayList();
+      list.add(new ItemTag(this.getNBTPath(), String.join(", ", stringListData.getList())));
+      return list;
    }
 
    @Override
-   public boolean canUse(RPGPlayer var1, NBTItem var2, boolean var3) {
-      String var4 = var2.getString(ItemStats.REQUIRED_CLASS.getNBTPath());
-      if (!var4.equals("") && !this.hasRightClass(var1, var4) && !var1.getPlayer().hasPermission("mmoitems.bypass.class")) {
-         if (var3) {
-            Message.WRONG_CLASS.format(ChatColor.RED).send(var1.getPlayer());
-            var1.getPlayer().playSound(var1.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);
+   public boolean canUse(RPGPlayer rpgPlayer, NBTItem nbtItem, boolean flag) {
+      String text = nbtItem.getString(ItemStats.REQUIRED_CLASS.getNBTPath());
+      if (!text.equals("") && !this.hasRightClass(rpgPlayer, text) && !rpgPlayer.getPlayer().hasPermission("mmoitems.bypass.class")) {
+         if (flag) {
+            Message.WRONG_CLASS.format(ChatColor.RED).send(rpgPlayer.getPlayer());
+            rpgPlayer.getPlayer().playSound(rpgPlayer.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);
          }
 
          return false;
@@ -130,11 +130,11 @@ public class RequiredClass extends StringListStat implements ItemRestriction, Ge
       }
    }
 
-   private boolean hasRightClass(RPGPlayer var1, String var2) {
-      String var3 = ChatColor.stripColor(var1.getClassName());
+   private boolean hasRightClass(RPGPlayer rpgPlayer, String text) {
+      String text2 = ChatColor.stripColor(rpgPlayer.getClassName());
 
-      for (String var7 : var2.split(Pattern.quote(", "))) {
-         if (var7.equalsIgnoreCase(var3)) {
+      for (String text3 : text.split(Pattern.quote(", "))) {
+         if (text3.equalsIgnoreCase(text2)) {
             return true;
          }
       }

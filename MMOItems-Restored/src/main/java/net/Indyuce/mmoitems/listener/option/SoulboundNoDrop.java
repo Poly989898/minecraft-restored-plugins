@@ -20,21 +20,21 @@ import org.jetbrains.annotations.Nullable;
 
 public class SoulboundNoDrop implements Listener {
    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-   public void cannotDrop(PlayerDropItemEvent var1) {
-      if (this.isBound(var1.getItemDrop().getItemStack(), var1.getPlayer())) {
-         var1.setCancelled(true);
+   public void cannotDrop(PlayerDropItemEvent event) {
+      if (this.isBound(event.getItemDrop().getItemStack(), event.getPlayer())) {
+         event.setCancelled(true);
       }
    }
 
    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-   public void cannotDragAround(InventoryDragEvent var1) {
-      VInventoryView var2 = VersionUtils.getView(var1);
-      if (var2.getType() != InventoryType.CRAFTING) {
-         int var3 = var2.getTopInventory().getContents().length;
+   public void cannotDragAround(InventoryDragEvent event) {
+      VInventoryView view = VersionUtils.getView(event);
+      if (view.getType() != InventoryType.CRAFTING) {
+         int length = view.getTopInventory().getContents().length;
 
-         for (Entry var5 : var1.getNewItems().entrySet()) {
-            if ((Integer)var5.getKey() < var3 && this.isBound((ItemStack)var5.getValue(), var1.getWhoClicked())) {
-               var1.setCancelled(true);
+         for (Entry entry : event.getNewItems().entrySet()) {
+            if ((Integer)entry.getKey() < length && this.isBound((ItemStack)entry.getValue(), event.getWhoClicked())) {
+               event.setCancelled(true);
                return;
             }
          }
@@ -42,23 +42,23 @@ public class SoulboundNoDrop implements Listener {
    }
 
    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-   public void cannotMoveAround(InventoryClickEvent var1) {
-      if (VersionUtils.getView(var1).getType() != InventoryType.CRAFTING) {
+   public void cannotMoveAround(InventoryClickEvent event) {
+      if (VersionUtils.getView(event).getType() != InventoryType.CRAFTING) {
          try {
-            boolean var2 = this.isSafe(var1);
-            if (!var2) {
-               var1.setCancelled(true);
+            boolean isSafe = this.isSafe(event);
+            if (!isSafe) {
+               event.setCancelled(true);
             }
-         } catch (RuntimeException var3) {
-            if (this.isBound(var1.getCurrentItem(), var1.getWhoClicked()) || this.isBound(var1.getCursor(), var1.getWhoClicked())) {
-               var1.setCancelled(true);
+         } catch (RuntimeException exception) {
+            if (this.isBound(event.getCurrentItem(), event.getWhoClicked()) || this.isBound(event.getCursor(), event.getWhoClicked())) {
+               event.setCancelled(true);
             }
          }
       }
    }
 
-   private boolean isSafe(@NotNull InventoryClickEvent var1) {
-      switch (var1.getAction()) {
+   private boolean isSafe(@NotNull InventoryClickEvent event) {
+      switch (event.getAction()) {
          case NOTHING:
          case PICKUP_ALL:
          case PICKUP_SOME:
@@ -70,39 +70,39 @@ public class SoulboundNoDrop implements Listener {
             return true;
          case DROP_ONE_CURSOR:
          case DROP_ALL_CURSOR:
-            return !this.isBound(var1.getCursor(), var1.getWhoClicked());
+            return !this.isBound(event.getCursor(), event.getWhoClicked());
          case DROP_ALL_SLOT:
          case DROP_ONE_SLOT:
-            return !this.isBound(var1.getCurrentItem(), var1.getWhoClicked());
+            return !this.isBound(event.getCurrentItem(), event.getWhoClicked());
          case SWAP_WITH_CURSOR:
          case PLACE_ALL:
          case PLACE_SOME:
          case PLACE_ONE:
-            if (var1.getClickedInventory().getType() == InventoryType.PLAYER) {
+            if (event.getClickedInventory().getType() == InventoryType.PLAYER) {
                return true;
             }
 
-            return !this.isBound(var1.getCursor(), var1.getWhoClicked());
+            return !this.isBound(event.getCursor(), event.getWhoClicked());
          case HOTBAR_SWAP:
-            if (var1.getClickedInventory().getType() == InventoryType.PLAYER) {
+            if (event.getClickedInventory().getType() == InventoryType.PLAYER) {
                return true;
             }
 
-            ItemStack var2 = var1.getWhoClicked().getInventory().getItem(var1.getHotbarButton());
-            return !this.isBound(var2, var1.getWhoClicked());
+            ItemStack item = event.getWhoClicked().getInventory().getItem(event.getHotbarButton());
+            return !this.isBound(item, event.getWhoClicked());
          case MOVE_TO_OTHER_INVENTORY:
-            if (var1.getClickedInventory().getType() != InventoryType.PLAYER) {
+            if (event.getClickedInventory().getType() != InventoryType.PLAYER) {
                return true;
             }
 
-            return !this.isBound(var1.getCurrentItem(), var1.getWhoClicked());
+            return !this.isBound(event.getCurrentItem(), event.getWhoClicked());
          case UNKNOWN:
          default:
             throw new RuntimeException("Not implemented");
       }
    }
 
-   private boolean isBound(@Nullable ItemStack var1, @NotNull HumanEntity var2) {
-      return var1 != null && var1.hasItemMeta() && MMOUtils.isSoulboundTo(NBTItem.get(var1), (Player)var2);
+   private boolean isBound(@Nullable ItemStack item, @NotNull HumanEntity humanEntity) {
+      return item != null && item.hasItemMeta() && MMOUtils.isSoulboundTo(NBTItem.get(item), (Player)humanEntity);
    }
 }

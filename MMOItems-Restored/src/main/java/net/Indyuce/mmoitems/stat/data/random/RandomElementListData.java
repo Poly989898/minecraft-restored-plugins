@@ -18,56 +18,56 @@ import org.jetbrains.annotations.NotNull;
 public class RandomElementListData implements RandomStatData<ElementListData>, UpdatableRandomStatData<ElementListData> {
    private final Map<Pair<Element, ElementStatType>, NumericStatFormula> stats = new LinkedHashMap<>();
 
-   public RandomElementListData(ConfigurationSection var1) {
-      Validate.notNull(var1, "Config cannot be null");
+   public RandomElementListData(ConfigurationSection section) {
+      Validate.notNull(section, "Config cannot be null");
 
-      for (Element var3 : Element.values()) {
-         for (ElementStatType var7 : ElementStatType.values()) {
-            String var8 = var7.getConcatenatedConfigPath(var3);
-            if (var1.contains(var8)) {
-               this.stats.put(Pair.of(var3, var7), new NumericStatFormula(var1.get(var8)));
+      for (Element element : Element.values()) {
+         for (ElementStatType elementStatType : ElementStatType.values()) {
+            String concatenatedConfigPath = elementStatType.getConcatenatedConfigPath(element);
+            if (section.contains(concatenatedConfigPath)) {
+               this.stats.put(Pair.of(element, elementStatType), new NumericStatFormula(section.get(concatenatedConfigPath)));
             }
          }
       }
    }
 
-   public boolean hasStat(Element var1, ElementStatType var2) {
-      return this.stats.containsKey(Pair.of(var1, var2));
+   public boolean hasStat(Element element, ElementStatType elementStatType) {
+      return this.stats.containsKey(Pair.of(element, elementStatType));
    }
 
    @NotNull
-   public NumericStatFormula getStat(Element var1, ElementStatType var2) {
-      return this.stats.getOrDefault(Pair.of(var1, var2), NumericStatFormula.ZERO);
+   public NumericStatFormula getStat(Element element, ElementStatType elementStatType) {
+      return this.stats.getOrDefault(Pair.of(element, elementStatType), NumericStatFormula.ZERO);
    }
 
    public Set<Pair<Element, ElementStatType>> getKeys() {
       return this.stats.keySet();
    }
 
-   public void setStat(Element var1, ElementStatType var2, NumericStatFormula var3) {
-      this.stats.put(Pair.of(var1, var2), var3);
+   public void setStat(Element element, ElementStatType elementStatType, NumericStatFormula numericStatFormula) {
+      this.stats.put(Pair.of(element, elementStatType), numericStatFormula);
    }
 
-   public ElementListData randomize(MMOItemBuilder var1) {
-      ElementListData var2 = new ElementListData();
-      this.stats.forEach((var2x, var3) -> var2.setStat(var2x.getKey(), var2x.getValue(), var3.calculate(var1.getLevel())));
-      return var2;
+   public ElementListData randomize(MMOItemBuilder mmoItemBuilder) {
+      ElementListData elementListData = new ElementListData();
+      this.stats.forEach((var2x, numericStatFormula) -> elementListData.setStat(var2x.getKey(), var2x.getValue(), numericStatFormula.calculate(mmoItemBuilder.getLevel())));
+      return elementListData;
    }
 
    @NotNull
-   public ElementListData reroll(@NotNull ItemStat var1, @NotNull ElementListData var2, int var3) {
-      ElementListData var4 = new ElementListData();
-      ElementListData var5 = var2;
+   public ElementListData reroll(@NotNull ItemStat itemStat, @NotNull ElementListData elementListData, int count) {
+      ElementListData elementListData2 = new ElementListData();
+      ElementListData elementListData3 = elementListData;
 
-      for (Element var7 : Element.values()) {
-         for (ElementStatType var11 : ElementStatType.values()) {
-            NumericStatFormula var12 = this.getStat(var7, var11);
-            DoubleData var13 = new DoubleData(var5.getStat(var7, var11));
-            DoubleData var14 = var12.reroll(var1, var13, var3);
-            var4.setStat(var7, var11, var14.getValue());
+      for (Element element : Element.values()) {
+         for (ElementStatType elementStatType : ElementStatType.values()) {
+            NumericStatFormula stat = this.getStat(element, elementStatType);
+            DoubleData doubleData = new DoubleData(elementListData3.getStat(element, elementStatType));
+            DoubleData doubleData2 = stat.reroll(itemStat, doubleData, count);
+            elementListData2.setStat(element, elementStatType, doubleData2.getValue());
          }
       }
 
-      return var4;
+      return elementListData2;
    }
 }

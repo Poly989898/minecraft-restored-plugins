@@ -59,9 +59,9 @@ public class MMOCoreMMOLoader extends MMOLoader {
 
    public MMOCoreMMOLoader() {
       MMOCore.plugin.loadManager.registerLoader(this);
-      MMOCore.plugin.mineManager.registerBlockType(var0 -> {
-         Optional<CustomBlock> var1 = MMOItems.plugin.getCustomBlocks().getFromBlock(var0.getBlockData());
-         return var1.<BlockType>map(MMOItemsBlockType::new);
+      MMOCore.plugin.mineManager.registerBlockType(block -> {
+         Optional<CustomBlock> optional = MMOItems.plugin.getCustomBlocks().getFromBlock(block.getBlockData());
+         return optional.<BlockType>map(MMOItemsBlockType::new);
       });
       MMOItems.plugin.getStats().register(HEALTH_REGENERATION);
       MMOItems.plugin.getStats().register(MAX_HEALTH_REGENERATION);
@@ -88,40 +88,40 @@ public class MMOCoreMMOLoader extends MMOLoader {
       MMOItems.plugin.getCrafting().registerTrigger("exp", ExperienceCraftingTrigger::new);
    }
 
-   public Condition loadCondition(MMOLineConfig var1) {
+   public Condition loadCondition(MMOLineConfig mmoLineConfig) {
       return null;
    }
 
-   public Trigger loadTrigger(MMOLineConfig var1) {
-      return var1.getKey().equals("mmoitem") ? new MMOItemTrigger(var1) : null;
+   public Trigger loadTrigger(MMOLineConfig mmoLineConfig) {
+      return mmoLineConfig.getKey().equals("mmoitem") ? new MMOItemTrigger(mmoLineConfig) : null;
    }
 
-   public DropItem loadDropItem(MMOLineConfig var1) {
-      if (var1.getKey().equals("mmoitem") || var1.getKey().equals("mmoitemtemplate")) {
-         return new ItemTemplateDropItem(var1);
+   public DropItem loadDropItem(MMOLineConfig mmoLineConfig) {
+      if (mmoLineConfig.getKey().equals("mmoitem") || mmoLineConfig.getKey().equals("mmoitemtemplate")) {
+         return new ItemTemplateDropItem(mmoLineConfig);
       } else {
-         return var1.getKey().equals("miloot") ? new RandomItemDropItem(var1) : null;
+         return mmoLineConfig.getKey().equals("miloot") ? new RandomItemDropItem(mmoLineConfig) : null;
       }
    }
 
-   public Objective loadObjective(MMOLineConfig var1, ConfigurationSection var2) {
-      return var1.getKey().equals("getmmoitem") ? new GetMMOItemObjective(var2, var1) : null;
+   public Objective loadObjective(MMOLineConfig mmoLineConfig, ConfigurationSection section) {
+      return mmoLineConfig.getKey().equals("getmmoitem") ? new GetMMOItemObjective(section, mmoLineConfig) : null;
    }
 
-   public ExperienceSource<?> loadExperienceSource(MMOLineConfig var1, ExperienceDispenser var2) {
-      if (var1.getKey().equals("minemiblock")) {
-         return new MineMIBlockExperienceSource(var2, var1);
+   public ExperienceSource<?> loadExperienceSource(MMOLineConfig mmoLineConfig, ExperienceDispenser experienceDispenser) {
+      if (mmoLineConfig.getKey().equals("minemiblock")) {
+         return new MineMIBlockExperienceSource(experienceDispenser, mmoLineConfig);
       } else {
-         return var1.getKey().equalsIgnoreCase("smeltmmoitem") ? new SmeltMMOItemExperienceSource(var2, var1) : null;
+         return mmoLineConfig.getKey().equalsIgnoreCase("smeltmmoitem") ? new SmeltMMOItemExperienceSource(experienceDispenser, mmoLineConfig) : null;
       }
    }
 
-   public BlockType loadBlockType(MMOLineConfig var1) {
-      return !var1.getKey().equalsIgnoreCase("miblock")
-            && !var1.getKey().equals("mmoitemsblock")
-            && !var1.getKey().equals("mmoitem")
-            && !var1.getKey().equals("mmoitems")
+   public BlockType loadBlockType(MMOLineConfig mmoLineConfig) {
+      return !mmoLineConfig.getKey().equalsIgnoreCase("miblock")
+            && !mmoLineConfig.getKey().equals("mmoitemsblock")
+            && !mmoLineConfig.getKey().equals("mmoitem")
+            && !mmoLineConfig.getKey().equals("mmoitems")
          ? null
-         : new MMOItemsBlockType(var1);
+         : new MMOItemsBlockType(mmoLineConfig);
    }
 }

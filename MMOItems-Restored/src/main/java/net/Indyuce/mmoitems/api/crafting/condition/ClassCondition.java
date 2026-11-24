@@ -8,23 +8,23 @@ import net.Indyuce.mmoitems.api.player.PlayerData;
 public class ClassCondition extends Condition {
    private final List<String> classes;
 
-   public ClassCondition(MMOLineConfig var1) {
+   public ClassCondition(MMOLineConfig mmoLineConfig) {
       super("class");
-      var1.validate(new String[]{"list"});
-      this.classes = Arrays.asList(var1.getString("list").split(","));
+      mmoLineConfig.validate(new String[]{"list"});
+      this.classes = Arrays.asList(mmoLineConfig.getString("list").split(","));
    }
 
    @Override
-   public boolean isMet(PlayerData var1) {
-      return this.classes.contains(var1.getRPG().getClassName());
+   public boolean isMet(PlayerData playerData) {
+      return this.classes.contains(playerData.getRPG().getClassName());
    }
 
    @Override
-   public String formatDisplay(String var1) {
-      return var1.replace("#class#", String.join(", ", this.classes));
+   public String formatDisplay(String text) {
+      return text.replace("#class#", String.join(", ", this.classes));
    }
 
    @Override
-   public void whenCrafting(PlayerData var1) {
+   public void whenCrafting(PlayerData playerData) {
    }
 }

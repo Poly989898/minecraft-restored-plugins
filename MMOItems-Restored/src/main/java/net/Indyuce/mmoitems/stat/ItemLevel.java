@@ -23,54 +23,54 @@ public class ItemLevel extends ItemStat<NumericStatFormula, DoubleData> implemen
       super("ITEM_LEVEL", Material.EXPERIENCE_BOTTLE, "Item Level", new String[]{"The item level"}, new String[0]);
    }
 
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2) {
-      var1.addItemTag(this.getAppliedNBT(var2));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData) {
+      itemStackBuilder.addItemTag(this.getAppliedNBT(doubleData));
    }
 
    @Nullable
-   public NumericStatFormula whenInitialized(Object var1) {
+   public NumericStatFormula whenInitialized(Object obj) {
       throw new NotImplementedException();
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
       throw new NotImplementedException();
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
       throw new NotImplementedException();
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<NumericStatFormula> var2) {
+   public void whenDisplayed(List<String> texts, Optional<NumericStatFormula> optional) {
       throw new NotImplementedException();
    }
 
    @NotNull
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData var1) {
-      ArrayList var2 = new ArrayList();
-      var2.add(new ItemTag(this.getNBTPath(), var1.getValue()));
-      return var2;
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData doubleData) {
+      ArrayList list = new ArrayList();
+      list.add(new ItemTag(this.getNBTPath(), doubleData.getValue()));
+      return list;
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      ArrayList var2 = new ArrayList();
-      if (var1.getNBT().hasTag(this.getNBTPath())) {
-         var2.add(ItemTag.getTagAtPath(this.getNBTPath(), var1.getNBT(), SupportedNBTTagValues.DOUBLE));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      ArrayList list = new ArrayList();
+      if (readMMOItem.getNBT().hasTag(this.getNBTPath())) {
+         list.add(ItemTag.getTagAtPath(this.getNBTPath(), readMMOItem.getNBT(), SupportedNBTTagValues.DOUBLE));
       }
 
-      DoubleData var3 = this.getLoadedNBT(var2);
-      if (var3 != null) {
-         var1.setData(this, var3);
+      DoubleData loadedNBT = this.getLoadedNBT(list);
+      if (loadedNBT != null) {
+         readMMOItem.setData(this, loadedNBT);
       }
    }
 
    @Nullable
-   public DoubleData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
-      ItemTag var2 = ItemTag.getTagAtPath(this.getNBTPath(), var1);
-      return var2 != null ? new DoubleData((Double)var2.getValue()) : null;
+   public DoubleData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
+      ItemTag tagAtPath = ItemTag.getTagAtPath(this.getNBTPath(), itemTags);
+      return tagAtPath != null ? new DoubleData((Double)tagAtPath.getValue()) : null;
    }
 
    @NotNull

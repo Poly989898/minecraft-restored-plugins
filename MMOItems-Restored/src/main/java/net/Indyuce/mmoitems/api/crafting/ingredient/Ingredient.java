@@ -13,21 +13,21 @@ public abstract class Ingredient<C extends PlayerIngredient> {
    private final String id;
    private int amount;
 
-   public Ingredient(String var1, MMOLineConfig var2) {
-      this(var1, var2.getInt("amount", 1));
+   public Ingredient(String text, MMOLineConfig mmoLineConfig) {
+      this(text, mmoLineConfig.getInt("amount", 1));
    }
 
-   public Ingredient(String var1, int var2) {
-      this.id = var1;
-      this.amount = var2;
+   public Ingredient(String text, int count) {
+      this.id = text;
+      this.amount = count;
    }
 
    public String getId() {
       return this.id;
    }
 
-   public void setAmount(int var1) {
-      this.amount = var1;
+   public void setAmount(int count) {
+      this.amount = count;
    }
 
    public int getAmount() {
@@ -35,20 +35,20 @@ public abstract class Ingredient<C extends PlayerIngredient> {
    }
 
    public ConditionalDisplay getDisplay() {
-      return MMOItems.plugin.getCrafting().getIngredients().stream().filter(var1 -> var1.getId().equals(this.id)).findAny().orElseThrow().getDisplay();
+      return MMOItems.plugin.getCrafting().getIngredients().stream().filter(ingredientType -> ingredientType.getId().equals(this.id)).findAny().orElseThrow().getDisplay();
    }
 
    @Deprecated
    public abstract String getKey();
 
-   public abstract String formatDisplay(String var1);
+   public abstract String formatDisplay(String text);
 
-   public abstract boolean matches(C var1);
+   public abstract boolean matches(C value);
 
    @NotNull
-   public abstract ItemStack generateItemStack(@NotNull RPGPlayer var1, boolean var2);
+   public abstract ItemStack generateItemStack(@NotNull RPGPlayer rpgPlayer, boolean flag);
 
-   public CheckedIngredient evaluateIngredient(@NotNull IngredientInventory var1) {
-      return var1.findMatching(this);
+   public CheckedIngredient evaluateIngredient(@NotNull IngredientInventory ingredientInventory) {
+      return ingredientInventory.findMatching(this);
    }
 }

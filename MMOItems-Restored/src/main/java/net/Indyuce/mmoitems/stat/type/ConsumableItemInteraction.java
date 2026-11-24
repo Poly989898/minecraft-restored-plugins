@@ -10,6 +10,6 @@ import org.jetbrains.annotations.Nullable;
 
 public interface ConsumableItemInteraction {
    boolean handleConsumableEffect(
-      @NotNull InventoryClickEvent var1, @NotNull PlayerData var2, @NotNull Consumable var3, @NotNull NBTItem var4, @Nullable Type var5
+      @NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem nbtItem, @Nullable Type type
    );
 }

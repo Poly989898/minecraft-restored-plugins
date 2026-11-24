@@ -7,10 +7,10 @@ import org.bukkit.event.Listener;
 
 public class McMMONonRPGHook implements Listener {
    @EventHandler(ignoreCancelled = true)
-   public void handleNoMcMMORepair(McMMOPlayerRepairCheckEvent var1) {
-      NBTItem var2 = NBTItem.get(var1.getRepairedObject());
-      if (var2.hasType() && var2.getBoolean("MMOITEMS_DISABLE_MCMMO_REPAIR")) {
-         var1.setCancelled(true);
+   public void handleNoMcMMORepair(McMMOPlayerRepairCheckEvent event) {
+      NBTItem nbtItem = NBTItem.get(event.getRepairedObject());
+      if (nbtItem.hasType() && nbtItem.getBoolean("MMOITEMS_DISABLE_MCMMO_REPAIR")) {
+         event.setCancelled(true);
       }
    }
 }

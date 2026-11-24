@@ -25,32 +25,32 @@ public class LoreFormatManager implements Reloadable {
    public void reload() {
       this.formats.clear();
       this.tooltips.clear();
-      File var1 = new File(MMOItems.plugin.getDataFolder() + "/language/lore-formats");
+      File file = new File(MMOItems.plugin.getDataFolder() + "/language/lore-formats");
 
-      for (File var5 : var1.listFiles()) {
+      for (File listFile : file.listFiles()) {
          try {
-            YamlConfiguration var6 = YamlConfiguration.loadConfiguration(var5);
-            Validate.isTrue(var6.isList("lore-format"), "Invalid lore-format! (" + var5.getName() + ")");
-            this.formats.put(var5.getName().substring(0, var5.getName().length() - 4), var6.getStringList("lore-format"));
-         } catch (IllegalArgumentException var8) {
-            MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load layout '" + var5.getName() + "': " + var8.getMessage());
+            YamlConfiguration config = YamlConfiguration.loadConfiguration(listFile);
+            Validate.isTrue(config.isList("lore-format"), "Invalid lore-format! (" + listFile.getName() + ")");
+            this.formats.put(listFile.getName().substring(0, listFile.getName().length() - 4), config.getStringList("lore-format"));
+         } catch (IllegalArgumentException exception) {
+            MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load layout '" + listFile.getName() + "': " + exception.getMessage());
          }
       }
 
-      FileConfiguration var9 = new ConfigFile("tooltips").getConfig();
+      FileConfiguration config = new ConfigFile("tooltips").getConfig();
 
-      for (String var11 : var9.getKeys(false)) {
+      for (String key : config.getKeys(false)) {
          try {
-            TooltipTexture var12 = new TooltipTexture(var9.getConfigurationSection(var11));
-            this.tooltips.put(var12.getId(), var12);
-         } catch (Exception var7) {
-            MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load tooltip '" + var11 + "': " + var7.getMessage());
+            TooltipTexture tooltipTexture = new TooltipTexture(config.getConfigurationSection(key));
+            this.tooltips.put(tooltipTexture.getId(), tooltipTexture);
+         } catch (Exception exception) {
+            MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load tooltip '" + key + "': " + exception.getMessage());
          }
       }
    }
 
-   public boolean hasFormat(@NotNull String var1) {
-      return this.formats.containsKey(var1);
+   public boolean hasFormat(@NotNull String text) {
+      return this.formats.containsKey(text);
    }
 
    @NotNull
@@ -58,8 +58,8 @@ public class LoreFormatManager implements Reloadable {
       return this.formats.values();
    }
 
-   public boolean hasTooltip(@NotNull String var1) {
-      return this.tooltips.containsKey(var1);
+   public boolean hasTooltip(@NotNull String text) {
+      return this.tooltips.containsKey(text);
    }
 
    @NotNull
@@ -68,23 +68,23 @@ public class LoreFormatManager implements Reloadable {
    }
 
    @Nullable
-   public TooltipTexture getTooltip(@NotNull String var1) {
-      return this.tooltips.get(var1);
+   public TooltipTexture getTooltip(@NotNull String text) {
+      return this.tooltips.get(text);
    }
 
    @NotNull
-   public List<String> getFormat(@NotNull MMOItem var1) {
-      if (var1.hasData(ItemStats.LORE_FORMAT)) {
-         List var2 = this.formats.get(var1.getData(ItemStats.LORE_FORMAT).toString());
-         if (var2 != null) {
-            return var2;
+   public List<String> getFormat(@NotNull MMOItem mmoItem) {
+      if (mmoItem.hasData(ItemStats.LORE_FORMAT)) {
+         List list = this.formats.get(mmoItem.getData(ItemStats.LORE_FORMAT).toString());
+         if (list != null) {
+            return list;
          }
       }
 
-      if (var1.getType().getLoreFormat() != null) {
-         List var3 = this.formats.get(var1.getType().getLoreFormat());
-         if (var3 != null) {
-            return var3;
+      if (mmoItem.getType().getLoreFormat() != null) {
+         List list = this.formats.get(mmoItem.getType().getLoreFormat());
+         if (list != null) {
+            return list;
          }
       }
 
@@ -93,11 +93,11 @@ public class LoreFormatManager implements Reloadable {
 
    @Deprecated
    @NotNull
-   public List<String> getFormat(@NotNull String... var1) {
-      for (String var5 : var1) {
-         List var6 = this.formats.get(var5);
-         if (var6 != null) {
-            return var6;
+   public List<String> getFormat(@NotNull String... texts) {
+      for (String text : texts) {
+         List list = this.formats.get(text);
+         if (list != null) {
+            return list;
          }
       }
 

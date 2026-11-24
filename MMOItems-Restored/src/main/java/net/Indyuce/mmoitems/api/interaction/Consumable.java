@@ -23,12 +23,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class Consumable extends UseItem {
    @Deprecated
-   public Consumable(Player var1, NBTItem var2) {
-      super(var1, var2);
+   public Consumable(Player player, NBTItem nbtItem) {
+      super(player, nbtItem);
    }
 
-   public Consumable(PlayerData var1, NBTItem var2) {
-      super(var1, var2);
+   public Consumable(PlayerData playerData, NBTItem nbtItem) {
+      super(playerData, nbtItem);
    }
 
    @Override
@@ -36,15 +36,15 @@ public class Consumable extends UseItem {
       return MythicLib.plugin.getFlags().isFlagAllowed(this.player, CustomFlag.MI_CONSUMABLES) && this.playerData.getRPG().canUse(this.getNBTItem(), true);
    }
 
-   public boolean useOnItem(@NotNull InventoryClickEvent var1, @NotNull NBTItem var2) {
-      if (var1.getClickedInventory() != var1.getWhoClicked().getInventory()) {
+   public boolean useOnItem(@NotNull InventoryClickEvent event, @NotNull NBTItem nbtItem) {
+      if (event.getClickedInventory() != event.getWhoClicked().getInventory()) {
          return false;
       }
 
-      Type var3 = MMOItems.getType(var2);
+      Type type = MMOItems.getType(nbtItem);
 
-      for (ConsumableItemInteraction var5 : MMOItems.plugin.getStats().getConsumableActions()) {
-         if (var5.handleConsumableEffect(var1, this.playerData, this, var2, var3)) {
+      for (ConsumableItemInteraction consumableAction : MMOItems.plugin.getStats().getConsumableActions()) {
+         if (consumableAction.handleConsumableEffect(event, this.playerData, this, nbtItem, type)) {
             return true;
          }
       }
@@ -52,42 +52,42 @@ public class Consumable extends UseItem {
       return false;
    }
 
-   public Consumable.ConsumableConsumeResult useOnPlayer(EquipmentSlot var1, boolean var2) {
-      NBTItem var3 = this.getNBTItem();
-      if (var3.getBoolean(ItemStats.INEDIBLE.getNBTPath())) {
+   public Consumable.ConsumableConsumeResult useOnPlayer(EquipmentSlot equipmentSlot, boolean flag) {
+      NBTItem nBTItem = this.getNBTItem();
+      if (nBTItem.getBoolean(ItemStats.INEDIBLE.getNBTPath())) {
          return Consumable.ConsumableConsumeResult.CANCEL;
       }
 
-      ConsumableConsumedEvent var4 = new ConsumableConsumedEvent(this.playerData, this.mmoitem, this);
-      Bukkit.getPluginManager().callEvent(var4);
-      if (var4.isCancelled()) {
+      ConsumableConsumedEvent event = new ConsumableConsumedEvent(this.playerData, this.mmoitem, this);
+      Bukkit.getPluginManager().callEvent(event);
+      if (event.isCancelled()) {
          return Consumable.ConsumableConsumeResult.CANCEL;
       }
 
-      for (PlayerConsumable var6 : MMOItems.plugin.getStats().getPlayerConsumables()) {
-         var6.onConsume(this.mmoitem, this.player, var2);
+      for (PlayerConsumable playerConsumable : MMOItems.plugin.getStats().getPlayerConsumables()) {
+         playerConsumable.onConsume(this.mmoitem, this.player, flag);
       }
 
-      int var11 = var3.getInteger(ItemStats.MAX_CONSUME.getNBTPath());
-      if (var11 > 1) {
-         var3.addTag(new ItemTag[]{new ItemTag(ItemStats.MAX_CONSUME.getNBTPath(), --var11)});
-         String var13 = MythicLib.inst().parseColors(ItemStats.MAX_CONSUME.getGeneralStatFormat());
-         String var7 = var13.replace("{value}", String.valueOf(var11 + 1));
-         String var8 = var13.replace("{value}", String.valueOf(var11));
-         ItemStack var9 = new LoreUpdate(var3.toItem(), var7, var8).updateLore();
-         ItemStack var10 = var3.getItem();
-         if (var10.getAmount() > 1) {
-            var9.setAmount(1);
-            this.player.getInventory().setItem(var1, var9);
-            var10.setAmount(var10.getAmount() - 1);
-            new SmartGive(this.player).give(new ItemStack[]{var10});
+      int count = nBTItem.getInteger(ItemStats.MAX_CONSUME.getNBTPath());
+      if (count > 1) {
+         nBTItem.addTag(new ItemTag[]{new ItemTag(ItemStats.MAX_CONSUME.getNBTPath(), --count)});
+         String colors = MythicLib.inst().parseColors(ItemStats.MAX_CONSUME.getGeneralStatFormat());
+         String text = colors.replace("{value}", String.valueOf(count + 1));
+         String text2 = colors.replace("{value}", String.valueOf(count));
+         ItemStack item = new LoreUpdate(nBTItem.toItem(), text, text2).updateLore();
+         ItemStack item2 = nBTItem.getItem();
+         if (item2.getAmount() > 1) {
+            item.setAmount(1);
+            this.player.getInventory().setItem(equipmentSlot, item);
+            item2.setAmount(item2.getAmount() - 1);
+            new SmartGive(this.player).give(new ItemStack[]{item2});
          } else {
-            this.player.getInventory().setItem(var1, var9);
+            this.player.getInventory().setItem(equipmentSlot, item);
          }
 
          return Consumable.ConsumableConsumeResult.NOT_CONSUME;
       } else {
-         return var4.isConsumed() && !var3.getBoolean(ItemStats.DISABLE_RIGHT_CLICK_CONSUME.getNBTPath())
+         return event.isConsumed() && !nBTItem.getBoolean(ItemStats.DISABLE_RIGHT_CLICK_CONSUME.getNBTPath())
             ? Consumable.ConsumableConsumeResult.CONSUME
             : Consumable.ConsumableConsumeResult.NOT_CONSUME;
       }

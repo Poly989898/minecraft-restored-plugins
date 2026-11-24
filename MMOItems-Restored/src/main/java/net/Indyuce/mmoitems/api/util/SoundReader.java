@@ -12,23 +12,23 @@ public class SoundReader {
    @Nullable
    private final String soundKey;
 
-   public SoundReader(@NotNull String var1, @NotNull Sound var2) {
-      if (var1.isEmpty()) {
-         this.sound = var2;
+   public SoundReader(@NotNull String text, @NotNull Sound sound) {
+      if (text.isEmpty()) {
+         this.sound = sound;
          this.soundKey = "";
       } else {
-         Sound var3;
-         String var4;
+         Sound sound2;
+         String text2;
          try {
-            var3 = Sound.valueOf(var1);
-            var4 = null;
-         } catch (Exception var6) {
-            var3 = null;
-            var4 = var1.toLowerCase();
+            sound2 = Sound.valueOf(text);
+            text2 = null;
+         } catch (Exception exception) {
+            sound2 = null;
+            text2 = text.toLowerCase();
          }
 
-         this.sound = var3;
-         this.soundKey = var4;
+         this.sound = sound2;
+         this.soundKey = text2;
       }
    }
 
@@ -42,27 +42,27 @@ public class SoundReader {
       return this.soundKey;
    }
 
-   public void play(@NotNull Player var1) {
-      this.play(var1, 1.0F, 1.0F);
+   public void play(@NotNull Player player) {
+      this.play(player, 1.0F, 1.0F);
    }
 
-   public void play(@NotNull Player var1, float var2, float var3) {
+   public void play(@NotNull Player player, float value, float value2) {
       if (this.sound != null) {
-         var1.playSound(var1.getLocation(), this.sound, var2, var3);
+         player.playSound(player.getLocation(), this.sound, value, value2);
       } else {
-         var1.playSound(var1.getLocation(), this.soundKey, var2, var3);
+         player.playSound(player.getLocation(), this.soundKey, value, value2);
       }
    }
 
-   public void play(@NotNull Location var1) {
-      this.play(var1, 1.0F, 1.0F);
+   public void play(@NotNull Location location) {
+      this.play(location, 1.0F, 1.0F);
    }
 
-   public void play(@NotNull Location var1, float var2, float var3) {
+   public void play(@NotNull Location location, float value, float value2) {
       if (this.sound != null) {
-         var1.getWorld().playSound(var1, this.sound, var2, var3);
+         location.getWorld().playSound(location, this.sound, value, value2);
       } else {
-         var1.getWorld().playSound(var1, this.soundKey, var2, var3);
+         location.getWorld().playSound(location, this.soundKey, value, value2);
       }
    }
 }

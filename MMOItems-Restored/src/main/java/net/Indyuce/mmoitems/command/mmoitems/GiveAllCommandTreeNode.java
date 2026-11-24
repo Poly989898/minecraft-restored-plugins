@@ -18,31 +18,31 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class GiveAllCommandTreeNode extends CommandTreeNode {
-   public GiveAllCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "giveall");
+   public GiveAllCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "giveall");
       this.addParameter(MMOItemsCommandTreeRoot.TYPE);
       this.addParameter(MMOItemsCommandTreeRoot.ID_2);
-      this.addParameter(new Parameter("<min-max>", (var0, var1x) -> var1x.add("1-3")));
-      this.addParameter(new Parameter("<unidentify-chance>", (var0, var1x) -> var1x.add("<unidentify-chance>")));
+      this.addParameter(new Parameter("<min-max>", (commandTreeExplorer, var1x) -> var1x.add("1-3")));
+      this.addParameter(new Parameter("<unidentify-chance>", (commandTreeExplorer, var1x) -> var1x.add("<unidentify-chance>")));
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
+   public CommandResult execute(CommandSender sender, String[] texts) {
       try {
-         Validate.isTrue(var2.length > 4, "Usage: /mi giveall <type> <item-id> <min-max> <unidentified-chance>");
-         Type var3 = MMOItems.plugin.getTypes().getOrThrow(var2[1]);
-         ItemStack var4 = new MMOItemDropItem(var3, var2[2], 1.0, Double.parseDouble(var2[4]) / 100.0, new RandomAmount(var2[3])).getItem(null);
+         Validate.isTrue(texts.length > 4, "Usage: /mi giveall <type> <item-id> <min-max> <unidentified-chance>");
+         Type type = MMOItems.plugin.getTypes().getOrThrow(texts[1]);
+         ItemStack item = new MMOItemDropItem(type, texts[2], 1.0, Double.parseDouble(texts[4]) / 100.0, new RandomAmount(texts[3])).getItem(null);
          Validate.isTrue(
-            var4 != null && var4.getType() != Material.AIR,
-            "Couldn't find/generate the item called '" + var2[1].toUpperCase() + "'. Check your console for potential item generation issues."
+            item != null && item.getType() != Material.AIR,
+            "Couldn't find/generate the item called '" + texts[1].toUpperCase() + "'. Check your console for potential item generation issues."
          );
 
-         for (Player var6 : Bukkit.getOnlinePlayers()) {
-            new SmartGive(var6).give(new ItemStack[]{var4});
+         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            new SmartGive(onlinePlayer).give(new ItemStack[]{item});
          }
 
          return CommandResult.SUCCESS;
-      } catch (IllegalArgumentException var7) {
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + var7.getMessage());
+      } catch (IllegalArgumentException exception) {
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + exception.getMessage());
          return CommandResult.FAILURE;
       }
    }

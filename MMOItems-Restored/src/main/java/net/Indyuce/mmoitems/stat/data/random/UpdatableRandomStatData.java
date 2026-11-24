@@ -7,5 +7,5 @@ import org.jetbrains.annotations.NotNull;
 @FunctionalInterface
 public interface UpdatableRandomStatData<S extends StatData> {
    @NotNull
-   S reroll(@NotNull ItemStat var1, @NotNull S var2, int var3);
+   S reroll(@NotNull ItemStat itemStat, @NotNull S value, int count);
 }

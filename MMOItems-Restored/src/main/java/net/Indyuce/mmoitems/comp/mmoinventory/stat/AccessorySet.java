@@ -24,16 +24,16 @@ public class AccessorySet extends StringStat implements GemStoneStat {
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull StringData var2) {
-      var1.addItemTag(new ItemTag(this.getNBTPath(), var2.toString()));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull StringData stringData) {
+      itemStackBuilder.addItemTag(new ItemTag(this.getNBTPath(), stringData.toString()));
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      var2 = var2.toLowerCase();
-      var1.getEditedSection().set(this.getPath(), var2);
-      var1.registerTemplateEdition();
-      var1.getPlayer()
-         .sendMessage(MMOItems.plugin.getPrefix() + this.getName() + " successfully changed to " + MythicLib.plugin.parseColors(var2) + ChatColor.GRAY + ".");
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      text = text.toLowerCase();
+      editionInventory.getEditedSection().set(this.getPath(), text);
+      editionInventory.registerTemplateEdition();
+      editionInventory.getPlayer()
+         .sendMessage(MMOItems.plugin.getPrefix() + this.getName() + " successfully changed to " + MythicLib.plugin.parseColors(text) + ChatColor.GRAY + ".");
    }
 }

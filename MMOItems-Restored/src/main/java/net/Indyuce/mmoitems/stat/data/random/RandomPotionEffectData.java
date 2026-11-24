@@ -13,22 +13,22 @@ public class RandomPotionEffectData {
    private final NumericStatFormula duration;
    private final NumericStatFormula amplifier;
 
-   public RandomPotionEffectData(ConfigurationSection var1) {
-      Validate.notNull(var1, "Potion effect config cannot be null");
-      this.type = PotionEffectType.getByName(var1.getName().toUpperCase().replace("-", "_").replace(" ", "_"));
-      Validate.notNull(this.type, "Could not find potion effect with name '" + var1.getName() + "'");
-      this.duration = new NumericStatFormula(var1.get("duration"));
-      this.amplifier = new NumericStatFormula(var1.get("amplifier"));
+   public RandomPotionEffectData(ConfigurationSection section) {
+      Validate.notNull(section, "Potion effect config cannot be null");
+      this.type = PotionEffectType.getByName(section.getName().toUpperCase().replace("-", "_").replace(" ", "_"));
+      Validate.notNull(this.type, "Could not find potion effect with name '" + section.getName() + "'");
+      this.duration = new NumericStatFormula(section.get("duration"));
+      this.amplifier = new NumericStatFormula(section.get("amplifier"));
    }
 
-   public RandomPotionEffectData(PotionEffectType var1, NumericStatFormula var2) {
-      this(var1, new NumericStatFormula(MMOUtils.getEffectDuration(var1) / 20.0, 0.0, 0.0, 0.0), var2);
+   public RandomPotionEffectData(PotionEffectType potionEffectType, NumericStatFormula numericStatFormula) {
+      this(potionEffectType, new NumericStatFormula(MMOUtils.getEffectDuration(potionEffectType) / 20.0, 0.0, 0.0, 0.0), numericStatFormula);
    }
 
-   public RandomPotionEffectData(PotionEffectType var1, NumericStatFormula var2, NumericStatFormula var3) {
-      this.type = var1;
-      this.duration = var2;
-      this.amplifier = var3;
+   public RandomPotionEffectData(PotionEffectType potionEffectType, NumericStatFormula numericStatFormula, NumericStatFormula numericStatFormula2) {
+      this.type = potionEffectType;
+      this.duration = numericStatFormula;
+      this.amplifier = numericStatFormula2;
    }
 
    public PotionEffectType getType() {
@@ -43,7 +43,7 @@ public class RandomPotionEffectData {
       return this.amplifier;
    }
 
-   public PotionEffectData randomize(MMOItemBuilder var1) {
-      return new PotionEffectData(this.type, this.duration.calculate(var1.getLevel()), (int)this.amplifier.calculate(var1.getLevel()));
+   public PotionEffectData randomize(MMOItemBuilder mmoItemBuilder) {
+      return new PotionEffectData(this.type, this.duration.calculate(mmoItemBuilder.getLevel()), (int)this.amplifier.calculate(mmoItemBuilder.getLevel()));
    }
 }

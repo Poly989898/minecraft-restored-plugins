@@ -9,18 +9,18 @@ public class SoundTrigger extends Trigger {
    private final float vol;
    private final float pitch;
 
-   public SoundTrigger(MMOLineConfig var1) {
+   public SoundTrigger(MMOLineConfig mmoLineConfig) {
       super("sound");
-      var1.validate(new String[]{"sound"});
-      this.sound = Sound.valueOf(var1.getString("sound").toUpperCase().replace("-", "_"));
-      this.vol = (float)var1.getDouble("volume", 1.0);
-      this.pitch = (float)var1.getDouble("pitch", 1.0);
+      mmoLineConfig.validate(new String[]{"sound"});
+      this.sound = Sound.valueOf(mmoLineConfig.getString("sound").toUpperCase().replace("-", "_"));
+      this.vol = (float)mmoLineConfig.getDouble("volume", 1.0);
+      this.pitch = (float)mmoLineConfig.getDouble("pitch", 1.0);
    }
 
    @Override
-   public void whenCrafting(PlayerData var1) {
-      if (var1.isOnline()) {
-         var1.getPlayer().playSound(var1.getPlayer().getLocation(), this.sound, this.vol, this.pitch);
+   public void whenCrafting(PlayerData playerData) {
+      if (playerData.isOnline()) {
+         playerData.getPlayer().playSound(playerData.getPlayer().getLocation(), this.sound, this.vol, this.pitch);
       }
    }
 }

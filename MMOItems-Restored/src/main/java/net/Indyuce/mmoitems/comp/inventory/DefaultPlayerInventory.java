@@ -10,18 +10,18 @@ import org.jetbrains.annotations.NotNull;
 public class DefaultPlayerInventory implements PlayerInventory {
    @NotNull
    @Override
-   public List<EquippedItem> getInventory(Player var1) {
-      ArrayList var2 = new ArrayList();
-      if (var1.getEquipment() == null) {
-         return var2;
+   public List<EquippedItem> getInventory(Player player) {
+      ArrayList list = new ArrayList();
+      if (player.getEquipment() == null) {
+         return list;
       }
 
-      var2.add(new SlotEquippedItem(var1, -7, var1.getEquipment().getItemInMainHand(), EquipmentSlot.MAIN_HAND));
-      var2.add(new SlotEquippedItem(var1, -106, var1.getEquipment().getItemInOffHand(), EquipmentSlot.OFF_HAND));
-      var2.add(new SlotEquippedItem(var1, 103, var1.getEquipment().getHelmet(), EquipmentSlot.ARMOR));
-      var2.add(new SlotEquippedItem(var1, 102, var1.getEquipment().getChestplate(), EquipmentSlot.ARMOR));
-      var2.add(new SlotEquippedItem(var1, 101, var1.getEquipment().getLeggings(), EquipmentSlot.ARMOR));
-      var2.add(new SlotEquippedItem(var1, 100, var1.getEquipment().getBoots(), EquipmentSlot.ARMOR));
-      return var2;
+      list.add(new SlotEquippedItem(player, -7, player.getEquipment().getItemInMainHand(), EquipmentSlot.MAIN_HAND));
+      list.add(new SlotEquippedItem(player, -106, player.getEquipment().getItemInOffHand(), EquipmentSlot.OFF_HAND));
+      list.add(new SlotEquippedItem(player, 103, player.getEquipment().getHelmet(), EquipmentSlot.ARMOR));
+      list.add(new SlotEquippedItem(player, 102, player.getEquipment().getChestplate(), EquipmentSlot.ARMOR));
+      list.add(new SlotEquippedItem(player, 101, player.getEquipment().getLeggings(), EquipmentSlot.ARMOR));
+      list.add(new SlotEquippedItem(player, 100, player.getEquipment().getBoots(), EquipmentSlot.ARMOR));
+      return list;
    }
 }

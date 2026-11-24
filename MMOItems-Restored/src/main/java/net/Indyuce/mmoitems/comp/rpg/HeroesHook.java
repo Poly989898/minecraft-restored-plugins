@@ -54,62 +54,62 @@ public class HeroesHook implements RPGHandler, Listener, AttackHandler {
    }
 
    @NotNull
-   private DamageType[] mapSkillTypes(Set<SkillType> var1) {
-      ArrayList<DamageType> var2 = new ArrayList<>();
+   private DamageType[] mapSkillTypes(Set<SkillType> skillTypes) {
+      ArrayList<DamageType> damageTypes = new ArrayList<>();
 
-      for (SkillType var4 : var1) {
-         DamageType var5 = this.damages.get(var4);
-         if (var5 != null) {
-            var2.add(var5);
+      for (SkillType skillType : skillTypes) {
+         DamageType damageType = this.damages.get(skillType);
+         if (damageType != null) {
+            damageTypes.add(damageType);
          }
       }
 
-      var2.add(DamageType.SKILL);
-      return var2.toArray(new DamageType[0]);
+      damageTypes.add(DamageType.SKILL);
+      return damageTypes.toArray(new DamageType[0]);
    }
 
    @Nullable
-   public AttackMetadata getAttack(EntityDamageEvent var1) {
-      SkillUseInfo var2 = Heroes.getInstance().getDamageManager().getSpellTargetInfo(var1.getEntity());
-      if (var2 != null && var2.getCharacter().getEntity() instanceof Player) {
-         Player var3 = (Player)var2.getCharacter().getEntity();
-         DamageMetadata var4 = new DamageMetadata(var1.getDamage(), this.mapSkillTypes(var2.getSkill().getTypes()));
-         return new AttackMetadata(var4, (LivingEntity)var1.getEntity(), MMOPlayerData.get(var3).getStatMap().cache(EquipmentSlot.MAIN_HAND));
+   public AttackMetadata getAttack(EntityDamageEvent event) {
+      SkillUseInfo spellTargetInfo = Heroes.getInstance().getDamageManager().getSpellTargetInfo(event.getEntity());
+      if (spellTargetInfo != null && spellTargetInfo.getCharacter().getEntity() instanceof Player) {
+         Player entity = (Player)spellTargetInfo.getCharacter().getEntity();
+         DamageMetadata damageMetadata = new DamageMetadata(event.getDamage(), this.mapSkillTypes(spellTargetInfo.getSkill().getTypes()));
+         return new AttackMetadata(damageMetadata, (LivingEntity)event.getEntity(), MMOPlayerData.get(entity).getStatMap().cache(EquipmentSlot.MAIN_HAND));
       } else {
          return null;
       }
    }
 
    @Override
-   public void refreshStats(PlayerData var1) {
-      Hero var2 = Heroes.getInstance().getCharacterManager().getHero(var1.getPlayer());
-      var2.removeMaxMana("MMOItems");
-      var2.addMaxMana("MMOItems", (int)var1.getStats().getStat(ItemStats.MAX_MANA));
-      var2.removeMaxStamina("MMOItems");
-      var2.addMaxStamina("MMOItems", (int)var1.getStats().getStat(MAX_STAMINA));
-      var2.removeMaxHealth("MMOItems");
+   public void refreshStats(PlayerData playerData) {
+      Hero hero = Heroes.getInstance().getCharacterManager().getHero(playerData.getPlayer());
+      hero.removeMaxMana("MMOItems");
+      hero.addMaxMana("MMOItems", (int)playerData.getStats().getStat(ItemStats.MAX_MANA));
+      hero.removeMaxStamina("MMOItems");
+      hero.addMaxStamina("MMOItems", (int)playerData.getStats().getStat(MAX_STAMINA));
+      hero.removeMaxHealth("MMOItems");
    }
 
    @Override
-   public RPGPlayer getInfo(PlayerData var1) {
-      return new HeroesHook.PlayerWrapper(var1);
+   public RPGPlayer getInfo(PlayerData playerData) {
+      return new HeroesHook.PlayerWrapper(playerData);
    }
 
    @EventHandler
-   public void a(HeroChangeLevelEvent var1) {
-      PlayerData.get(var1.getHero().getPlayer()).getInventory().scheduleUpdate();
+   public void a(HeroChangeLevelEvent event) {
+      PlayerData.get(event.getHero().getPlayer()).getInventory().scheduleUpdate();
    }
 
    @EventHandler
-   public void b(ClassChangeEvent var1) {
-      PlayerData.get(var1.getHero().getPlayer()).getInventory().scheduleUpdate();
+   public void b(ClassChangeEvent event) {
+      PlayerData.get(event.getHero().getPlayer()).getInventory().scheduleUpdate();
    }
 
    private static class PlayerWrapper extends RPGPlayer {
       private final Hero hero = Heroes.getInstance().getCharacterManager().getHero(this.getPlayer());
 
-      public PlayerWrapper(PlayerData var1) {
-         super(var1);
+      public PlayerWrapper(PlayerData playerData) {
+         super(playerData);
       }
 
       @Override
@@ -133,13 +133,13 @@ public class HeroesHook implements RPGHandler, Listener, AttackHandler {
       }
 
       @Override
-      public void setMana(double var1) {
-         this.hero.setMana((int)var1);
+      public void setMana(double value) {
+         this.hero.setMana((int)value);
       }
 
       @Override
-      public void setStamina(double var1) {
-         this.hero.setStamina((int)var1);
+      public void setStamina(double value) {
+         this.hero.setStamina((int)value);
       }
    }
 
@@ -149,20 +149,20 @@ public class HeroesHook implements RPGHandler, Listener, AttackHandler {
       }
 
       @Override
-      public boolean canUse(RPGPlayer var1, NBTItem var2, boolean var3) {
-         int var4 = var2.getInteger(this.getNBTPath());
-         if (var4 <= 0) {
+      public boolean canUse(RPGPlayer rpgPlayer, NBTItem nbtItem, boolean flag) {
+         int count = nbtItem.getInteger(this.getNBTPath());
+         if (count <= 0) {
             return true;
          }
 
-         Validate.isTrue(var1 instanceof HeroesHook.PlayerWrapper, "Cannot use secondary hero level requirement while Heroes is not the RPG provider");
-         Hero var5 = ((HeroesHook.PlayerWrapper)var1).hero;
-         HeroClass var6 = var5.getSecondaryClass();
-         int var7 = var6 == null ? 1 : var5.getHeroLevel(var5.getSecondaryClass());
-         if (var7 < var4 && !var1.getPlayer().hasPermission("mmoitems.bypass.level")) {
-            if (var3) {
-               Message.NOT_ENOUGH_LEVELS.format(ChatColor.RED).send(var1.getPlayer());
-               var1.getPlayer().playSound(var1.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);
+         Validate.isTrue(rpgPlayer instanceof HeroesHook.PlayerWrapper, "Cannot use secondary hero level requirement while Heroes is not the RPG provider");
+         Hero hero = ((HeroesHook.PlayerWrapper)rpgPlayer).hero;
+         HeroClass secondaryClass = hero.getSecondaryClass();
+         int count2 = secondaryClass == null ? 1 : hero.getHeroLevel(hero.getSecondaryClass());
+         if (count2 < count && !rpgPlayer.getPlayer().hasPermission("mmoitems.bypass.level")) {
+            if (flag) {
+               Message.NOT_ENOUGH_LEVELS.format(ChatColor.RED).send(rpgPlayer.getPlayer());
+               rpgPlayer.getPlayer().playSound(rpgPlayer.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);
             }
 
             return false;

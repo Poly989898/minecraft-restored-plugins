@@ -11,21 +11,21 @@ public class LoreUpdate {
    private final String replace;
    private final List<String> lore;
 
-   public LoreUpdate(ItemStack var1, String var2, String var3) {
-      this.item = var1;
-      this.old = var2;
-      this.replace = var3;
-      this.lore = var1.getItemMeta().getLore();
+   public LoreUpdate(ItemStack item, String text, String text2) {
+      this.item = item;
+      this.old = text;
+      this.replace = text2;
+      this.lore = item.getItemMeta().getLore();
    }
 
    public ItemStack updateLore() {
       if (this.lore != null && !this.lore.isEmpty()) {
-         for (int var1 = 0; var1 < this.lore.size(); var1++) {
-            if (this.lore.get(var1).equalsIgnoreCase(this.old)) {
-               this.lore.set(var1, this.replace);
-               ItemMeta var2 = this.item.getItemMeta();
-               AdventureUtils.setLore(var2, this.lore);
-               this.item.setItemMeta(var2);
+         for (int i = 0; i < this.lore.size(); i++) {
+            if (this.lore.get(i).equalsIgnoreCase(this.old)) {
+               this.lore.set(i, this.replace);
+               ItemMeta itemMeta = this.item.getItemMeta();
+               AdventureUtils.setLore(itemMeta, this.lore);
+               this.item.setItemMeta(itemMeta);
                return this.item;
             }
          }

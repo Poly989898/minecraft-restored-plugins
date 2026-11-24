@@ -23,9 +23,9 @@ import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 public class UnidentifiedItem extends ConfigItem {
-   public UnidentifiedItem(Type var1) {
-      super("unidentified", var1.getItem().getType());
-      this.setName("#prefix#Unidentified " + var1.getName());
+   public UnidentifiedItem(Type type) {
+      super("unidentified", type.getItem().getType());
+      this.setName("#prefix#Unidentified " + type.getName());
       this.setLore(
          Arrays.asList(
             "&7This item is unidentified. I must",
@@ -38,8 +38,8 @@ public class UnidentifiedItem extends ConfigItem {
       );
    }
 
-   public UnidentifiedItem.ItemBuilder newBuilder(NBTItem var1) {
-      return new UnidentifiedItem.ItemBuilder(var1);
+   public UnidentifiedItem.ItemBuilder newBuilder(NBTItem nbtItem) {
+      return new UnidentifiedItem.ItemBuilder(nbtItem);
    }
 
    public class ItemBuilder {
@@ -54,67 +54,67 @@ public class UnidentifiedItem extends ConfigItem {
       }
 
       public ItemStack build() {
-         VolatileMMOItem var1 = new VolatileMMOItem(this.item);
-         ItemTier var2 = ItemTier.ofItem(this.item);
-         int var3 = var1.hasData(ItemStats.REQUIRED_LEVEL) ? (int)((DoubleData)var1.getData(ItemStats.REQUIRED_LEVEL)).getValue() : -1;
-         HashMap<String, String> var4 = new HashMap<>();
-         if (var2 != null) {
-            var4.put("prefix", var2.getUnidentificationInfo().getPrefix());
-            var4.put("tier", var2.getUnidentificationInfo().getDisplayName());
-            if (var3 > -1) {
-               int[] var5 = var2.getUnidentificationInfo().calculateRange(var3);
-               var4.put("range", var5[0] + "-" + var5[1]);
+         VolatileMMOItem volatileMMOItem = new VolatileMMOItem(this.item);
+         ItemTier itemTier = ItemTier.ofItem(this.item);
+         int count = volatileMMOItem.hasData(ItemStats.REQUIRED_LEVEL) ? (int)((DoubleData)volatileMMOItem.getData(ItemStats.REQUIRED_LEVEL)).getValue() : -1;
+         HashMap<String, String> map = new HashMap<>();
+         if (itemTier != null) {
+            map.put("prefix", itemTier.getUnidentificationInfo().getPrefix());
+            map.put("tier", itemTier.getUnidentificationInfo().getDisplayName());
+            if (count > -1) {
+               int[] range = itemTier.getUnidentificationInfo().calculateRange(count);
+               map.put("range", range[0] + "-" + range[1]);
             }
          } else {
             this.name = this.name.replace("#prefix#", "");
          }
 
-         this.lore.removeIf(var2x -> var2x.startsWith("{tier}") && var2 == null || var2x.startsWith("{range}") && (var2 == null || var3 < 0));
+         this.lore.removeIf(var2x -> var2x.startsWith("{tier}") && itemTier == null || var2x.startsWith("{range}") && (itemTier == null || count < 0));
 
-         for (String var6 : var4.keySet()) {
-            this.name = this.name.replace("#" + var6 + "#", (CharSequence)var4.get(var6));
+         for (String key : map.keySet()) {
+            this.name = this.name.replace("#" + key + "#", (CharSequence)map.get(key));
          }
 
-         for (int var10 = 0; var10 < this.lore.size(); var10++) {
-            String var12 = this.lore.get(var10);
+         for (int i = 0; i < this.lore.size(); i++) {
+            String text = this.lore.get(i);
 
-            for (String var8 : var4.keySet()) {
-               var12 = var12.replace("#" + var8 + "#", (CharSequence)var4.get(var8));
+            for (String key : map.keySet()) {
+               text = text.replace("#" + key + "#", (CharSequence)map.get(key));
             }
 
-            this.lore.set(var10, MythicLib.plugin.parseColors(var12.replace("{range}", "").replace("{tier}", "")));
+            this.lore.set(i, MythicLib.plugin.parseColors(text.replace("{range}", "").replace("{tier}", "")));
          }
 
          this.item.getItem().setAmount(1);
-         ItemStack var11 = NBTItem.get(new ItemStack(UnidentifiedItem.this.material != null ? UnidentifiedItem.this.material : this.item.getItem().getType()))
+         ItemStack item = NBTItem.get(new ItemStack(UnidentifiedItem.this.material != null ? UnidentifiedItem.this.material : this.item.getItem().getType()))
             .addTag(new ItemTag[]{new ItemTag("MMOITEMS_UNIDENTIFIED_ITEM", this.serialize(this.item.getItem()))})
             .toItem();
-         ItemMeta var13 = var11.getItemMeta();
+         ItemMeta itemMeta = item.getItemMeta();
          if (UnidentifiedItem.this.customModelData != null) {
-            var13.setCustomModelData(UnidentifiedItem.this.customModelData);
+            itemMeta.setCustomModelData(UnidentifiedItem.this.customModelData);
          } else if (this.item.getItem().hasItemMeta() && this.item.getItem().getItemMeta().hasCustomModelData()) {
-            var13.setCustomModelData(this.item.getItem().getItemMeta().getCustomModelData());
+            itemMeta.setCustomModelData(this.item.getItem().getItemMeta().getCustomModelData());
          }
 
-         var11.setAmount(this.amount);
-         var13.addItemFlags(ItemFlag.values());
-         var13.setUnbreakable(true);
-         AdventureUtils.setDisplayName(var13, this.name);
-         AdventureUtils.setLore(var13, this.lore);
-         var11.setItemMeta(var13);
-         return var11;
+         item.setAmount(this.amount);
+         itemMeta.addItemFlags(ItemFlag.values());
+         itemMeta.setUnbreakable(true);
+         AdventureUtils.setDisplayName(itemMeta, this.name);
+         AdventureUtils.setLore(itemMeta, this.lore);
+         item.setItemMeta(itemMeta);
+         return item;
       }
 
       @NotNull
-      private String serialize(ItemStack var1) {
+      private String serialize(ItemStack item) {
          try {
-            ByteArrayOutputStream var2 = new ByteArrayOutputStream();
-            BukkitObjectOutputStream var3 = new BukkitObjectOutputStream(var2);
-            var3.writeObject(var1);
-            var3.close();
-            return Base64Coder.encodeLines(var2.toByteArray());
-         } catch (Exception var4) {
-            throw new RuntimeException(var4);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            BukkitObjectOutputStream bukkitObjectOutputStream = new BukkitObjectOutputStream(byteArrayOutputStream);
+            bukkitObjectOutputStream.writeObject(item);
+            bukkitObjectOutputStream.close();
+            return Base64Coder.encodeLines(byteArrayOutputStream.toByteArray());
+         } catch (Exception exception) {
+            throw new RuntimeException(exception);
          }
       }
    }

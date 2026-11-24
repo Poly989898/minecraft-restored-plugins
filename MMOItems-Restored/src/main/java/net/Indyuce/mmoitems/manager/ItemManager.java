@@ -7,12 +7,12 @@ import org.bukkit.inventory.ItemStack;
 
 public class ItemManager {
    @Deprecated
-   public MMOItem getMMOItem(Type var1, String var2) {
-      return MMOItems.plugin.getMMOItem(var1, var2);
+   public MMOItem getMMOItem(Type type, String text) {
+      return MMOItems.plugin.getMMOItem(type, text);
    }
 
    @Deprecated
-   public ItemStack getItem(Type var1, String var2) {
-      return MMOItems.plugin.getItem(var1, var2);
+   public ItemStack getItem(Type type, String text) {
+      return MMOItems.plugin.getItem(type, text);
    }
 }

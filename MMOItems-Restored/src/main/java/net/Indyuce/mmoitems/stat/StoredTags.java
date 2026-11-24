@@ -32,42 +32,42 @@ public class StoredTags extends ItemStat<RandomStatData<StoredTagsData>, StoredT
 
    @Nullable
    @Override
-   public RandomStatData<StoredTagsData> whenInitialized(Object var1) {
+   public RandomStatData<StoredTagsData> whenInitialized(Object obj) {
       throw new NotImplementedException();
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
       throw new NotImplementedException();
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
       throw new NotImplementedException();
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<RandomStatData<StoredTagsData>> var2) {
+   public void whenDisplayed(List<String> texts, Optional<RandomStatData<StoredTagsData>> optional) {
       throw new NotImplementedException();
    }
 
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull StoredTagsData var2) {
-      var1.addItemTag(this.getAppliedNBT(var2));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull StoredTagsData storedTagsData) {
+      itemStackBuilder.addItemTag(this.getAppliedNBT(storedTagsData));
    }
 
    @NotNull
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull StoredTagsData var1) {
-      return new ArrayList<>(var1.getTags());
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull StoredTagsData storedTagsData) {
+      return new ArrayList<>(storedTagsData.getTags());
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      var1.setData(ItemStats.STORED_TAGS, new StoredTagsData(var1.getNBT()));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      readMMOItem.setData(ItemStats.STORED_TAGS, new StoredTagsData(readMMOItem.getNBT()));
    }
 
    @Nullable
-   public StoredTagsData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
-      return new StoredTagsData(var1);
+   public StoredTagsData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
+      return new StoredTagsData(itemTags);
    }
 
    @NotNull

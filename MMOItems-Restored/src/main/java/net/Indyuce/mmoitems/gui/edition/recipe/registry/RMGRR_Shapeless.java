@@ -48,68 +48,68 @@ public class RMGRR_Shapeless implements RecipeRegistry {
    }
 
    @Override
-   public void openForPlayer(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      new RMG_Shapeless(var1.getPlayer(), var1.getEdited(), var2, this).open(var1);
+   public void openForPlayer(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      new RMG_Shapeless(editionInventory.getPlayer(), editionInventory.getEdited(), text, this).open(editionInventory);
    }
 
    @NotNull
    @Override
    public MythicRecipeBlueprint sendToMythicLib(
-      @NotNull MMOItemTemplate var1,
-      @NotNull ConfigurationSection var2,
-      @NotNull String var3,
-      @NotNull Ref<NamespacedKey> var4,
-      @NotNull FriendlyFeedbackProvider var5
+      @NotNull MMOItemTemplate mmoItemTemplate,
+      @NotNull ConfigurationSection section,
+      @NotNull String text,
+      @NotNull Ref<NamespacedKey> ref,
+      @NotNull FriendlyFeedbackProvider friendlyFeedbackProvider
    ) {
-      RecipeEditorGUI.moveInput(var2, var3);
-      ConfigurationSection var6 = RecipeEditorGUI.getSection(var2, var3);
-      NamespacedKey var7 = (NamespacedKey)var4.getValue();
-      if (var7 == null) {
+      RecipeEditorGUI.moveInput(section, text);
+      ConfigurationSection section2 = RecipeEditorGUI.getSection(section, text);
+      NamespacedKey namespacedKey = (NamespacedKey)ref.getValue();
+      if (namespacedKey == null) {
          throw new IllegalArgumentException(FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Illegal (Null) Namespace", new String[0]));
       }
 
-      ArrayList var8 = new ArrayList();
-      ArrayList<String> var9 = new ArrayList(var6.getStringList("input"));
-      boolean var10 = false;
+      ArrayList list = new ArrayList();
+      ArrayList<String> texts = new ArrayList(section2.getStringList("input"));
+      boolean flag = false;
 
-      for (String var12 : var9) {
-         if (var12 != null && !"AIR".equals(var12)) {
-            ProvidedUIFilter var13 = RecipeEditorGUI.readIngredientFrom(var12, var5);
-            if (!var13.isAir()) {
-               var10 = true;
-               var8.add(new MythicRecipeIngredient(var13));
+      for (String text2 : texts) {
+         if (text2 != null && !"AIR".equals(text2)) {
+            ProvidedUIFilter ingredientFrom = RecipeEditorGUI.readIngredientFrom(text2, friendlyFeedbackProvider);
+            if (!ingredientFrom.isAir()) {
+               flag = true;
+               list.add(new MythicRecipeIngredient(ingredientFrom));
             }
          }
       }
 
-      if (!var10) {
+      if (!flag) {
          throw new IllegalArgumentException(
             FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Shapeless recipe containing only AIR, $fignored$b.", new String[0])
          );
       }
 
-      ShapelessRecipe var20 = new ShapelessRecipe(var7.getKey(), var8);
-      ShapedRecipe var21 = RMGRR_Shaped.shapedRecipeFromList(var7.getKey(), new ArrayList<>(var6.getStringList("output")), var5);
-      int var22 = var6.getInt("amount", 1);
-      boolean var14 = var6.getBoolean("hidden", false);
-      ShapedRecipe var15 = ShapedRecipe.single(
-         var7.getKey(), new ProvidedUIFilter[]{new ProvidedUIFilter(MMOItemUIFilter.get(), var1.getType().getId(), var1.getId(), Math.max(var22, 1))}
+      ShapelessRecipe shapelessRecipe = new ShapelessRecipe(namespacedKey.getKey(), list);
+      ShapedRecipe shapedRecipe = RMGRR_Shaped.shapedRecipeFromList(namespacedKey.getKey(), new ArrayList<>(section2.getStringList("output")), friendlyFeedbackProvider);
+      int amount = section2.getInt("amount", 1);
+      boolean hidden = section2.getBoolean("hidden", false);
+      ShapedRecipe shapedRecipe2 = ShapedRecipe.single(
+         namespacedKey.getKey(), new ProvidedUIFilter[]{new ProvidedUIFilter(MMOItemUIFilter.get(), mmoItemTemplate.getType().getId(), mmoItemTemplate.getId(), Math.max(amount, 1))}
       );
-      MRORecipe var16 = new MRORecipe(var15, var21);
-      MythicRecipeBlueprint var17 = new MythicRecipeBlueprint(var20, var16, var7);
-      RandomStatData var18 = var1.getBaseItemData().get(ItemStats.CRAFT_PERMISSION);
-      if (var18 instanceof StringData) {
-         String var19 = ((StringData)var18).getString();
-         if (var19 != null) {
-            var17.addRequiredPermission(var19);
+      MRORecipe mroRecipe = new MRORecipe(shapedRecipe2, shapedRecipe);
+      MythicRecipeBlueprint mythicRecipeBlueprint = new MythicRecipeBlueprint(shapelessRecipe, mroRecipe, namespacedKey);
+      RandomStatData randomStatData = mmoItemTemplate.getBaseItemData().get(ItemStats.CRAFT_PERMISSION);
+      if (randomStatData instanceof StringData) {
+         String text2 = ((StringData)randomStatData).getString();
+         if (text2 != null) {
+            mythicRecipeBlueprint.addRequiredPermission(text2);
          }
       }
 
-      var17.deploy(MythicRecipeStation.WORKBENCH, var4);
-      if (var14) {
-         var4.setValue(null);
+      mythicRecipeBlueprint.deploy(MythicRecipeStation.WORKBENCH, ref);
+      if (hidden) {
+         ref.setValue(null);
       }
 
-      return var17;
+      return mythicRecipeBlueprint;
    }
 }

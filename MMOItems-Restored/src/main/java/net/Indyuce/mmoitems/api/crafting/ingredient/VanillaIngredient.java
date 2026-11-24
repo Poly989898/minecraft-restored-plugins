@@ -40,33 +40,33 @@ public class VanillaIngredient extends Ingredient<VanillaPlayerIngredient> {
       return this.material;
    }
 
-   public VanillaIngredient(MMOLineConfig var1) {
-      super("vanilla", var1);
-      FriendlyFeedbackProvider var2 = new FriendlyFeedbackProvider(FFPMMOItems.get());
-      var1.validate(new String[]{"type"});
-      String var3 = var1.getString("type", "");
-      if (var3.contains(" ")) {
+   public VanillaIngredient(MMOLineConfig mmoLineConfig) {
+      super("vanilla", mmoLineConfig);
+      FriendlyFeedbackProvider friendlyFeedbackProvider = new FriendlyFeedbackProvider(FFPMMOItems.get());
+      mmoLineConfig.validate(new String[]{"type"});
+      String type = mmoLineConfig.getString("type", "");
+      if (type.contains(" ")) {
          this.vanillaBackward = false;
-         ProvidedUIFilter var4 = UIFilterManager.getUIFilter(var3, var2);
-         if (var4 == null) {
+         ProvidedUIFilter uIFilter = UIFilterManager.getUIFilter(type, friendlyFeedbackProvider);
+         if (uIFilter == null) {
             throw new IllegalArgumentException(
                SilentNumbers.collapseList(
                   SilentNumbers.transcribeList(
-                     var2.getFeedbackOf(FriendlyFeedbackCategory.ERROR),
-                     var0 -> var0 instanceof FriendlyFeedbackMessage ? ((FriendlyFeedbackMessage)var0).forConsole(FFPMMOItems.get()) : ""
+                     friendlyFeedbackProvider.getFeedbackOf(FriendlyFeedbackCategory.ERROR),
+                     obj -> obj instanceof FriendlyFeedbackMessage ? ((FriendlyFeedbackMessage)obj).forConsole(FFPMMOItems.get()) : ""
                   ),
                   ""
                )
             );
          }
 
-         this.filter = var4;
-         if (!this.filter.isValid(var2)) {
+         this.filter = uIFilter;
+         if (!this.filter.isValid(friendlyFeedbackProvider)) {
             throw new IllegalArgumentException(
                SilentNumbers.collapseList(
                   SilentNumbers.transcribeList(
-                     var2.getFeedbackOf(FriendlyFeedbackCategory.ERROR),
-                     var0 -> var0 instanceof FriendlyFeedbackMessage ? ((FriendlyFeedbackMessage)var0).forConsole(FFPMMOItems.get()) : ""
+                     friendlyFeedbackProvider.getFeedbackOf(FriendlyFeedbackCategory.ERROR),
+                     obj -> obj instanceof FriendlyFeedbackMessage ? ((FriendlyFeedbackMessage)obj).forConsole(FFPMMOItems.get()) : ""
                   ),
                   ""
                )
@@ -75,28 +75,28 @@ public class VanillaIngredient extends Ingredient<VanillaPlayerIngredient> {
 
          this.setAmount(this.filter.getAmount(this.getAmount()));
          this.filter.setAmount(this.getAmount());
-         this.display = var1.getString("display", this.findName());
+         this.display = mmoLineConfig.getString("display", this.findName());
          this.material = Material.STONE;
       } else {
-         this.material = Material.valueOf(var3.toUpperCase().replace("-", "_").replace(" ", "_"));
+         this.material = Material.valueOf(type.toUpperCase().replace("-", "_").replace(" ", "_"));
          this.filter = new ProvidedUIFilter(VanillaUIFilter.get(), this.material.toString(), "0");
          this.filter.setAmount(this.getAmount());
-         this.display = var1.getString("display", UtilityMethods.caseOnWords(this.material.toString().toLowerCase().replace("_", " ")));
+         this.display = mmoLineConfig.getString("display", UtilityMethods.caseOnWords(this.material.toString().toLowerCase().replace("_", " ")));
       }
 
       if (this.filter.getItemStack(null) == null) {
          throw new IllegalArgumentException(
             SilentNumbers.collapseList(
                SilentNumbers.transcribeList(
-                  var2.getFeedbackOf(FriendlyFeedbackCategory.ERROR),
-                  var0 -> var0 instanceof FriendlyFeedbackMessage ? ((FriendlyFeedbackMessage)var0).forConsole(FFPMMOItems.get()) : ""
+                  friendlyFeedbackProvider.getFeedbackOf(FriendlyFeedbackCategory.ERROR),
+                  obj -> obj instanceof FriendlyFeedbackMessage ? ((FriendlyFeedbackMessage)obj).forConsole(FFPMMOItems.get()) : ""
                ),
                ""
             )
          );
       }
 
-      this.displayName = var1.contains("name") ? var1.getString("name") : null;
+      this.displayName = mmoLineConfig.contains("name") ? mmoLineConfig.getString("name") : null;
    }
 
    @Override
@@ -108,34 +108,34 @@ public class VanillaIngredient extends Ingredient<VanillaPlayerIngredient> {
    }
 
    @Override
-   public String formatDisplay(String var1) {
-      return var1.replace("#item#", this.display).replace("#amount#", String.valueOf(this.getAmount()));
+   public String formatDisplay(String text) {
+      return text.replace("#item#", this.display).replace("#amount#", String.valueOf(this.getAmount()));
    }
 
-   public boolean matches(VanillaPlayerIngredient var1) {
+   public boolean matches(VanillaPlayerIngredient vanillaPlayerIngredient) {
       if (this.vanillaBackward) {
-         if (var1.getType() != this.material) {
+         if (vanillaPlayerIngredient.getType() != this.material) {
             return false;
          } else {
-            return var1.getDisplayName() != null ? var1.getDisplayName().equals(this.displayName) : this.displayName == null;
+            return vanillaPlayerIngredient.getDisplayName() != null ? vanillaPlayerIngredient.getDisplayName().equals(this.displayName) : this.displayName == null;
          }
       } else {
-         return this.filter.matches(var1.getSourceItem(), true, null);
+         return this.filter.matches(vanillaPlayerIngredient.getSourceItem(), true, null);
       }
    }
 
    @NotNull
    @Override
-   public ItemStack generateItemStack(@NotNull RPGPlayer var1, boolean var2) {
-      ItemStack var3 = this.filter.getItemStack(null);
-      var3.setAmount(this.getAmount());
+   public ItemStack generateItemStack(@NotNull RPGPlayer rpgPlayer, boolean flag) {
+      ItemStack itemStack = this.filter.getItemStack(null);
+      itemStack.setAmount(this.getAmount());
       if (this.displayName != null) {
-         ItemMeta var4 = var3.getItemMeta();
-         var4.setDisplayName(MythicLib.plugin.parseColors(this.displayName));
-         var3.setItemMeta(var4);
+         ItemMeta itemMeta = itemStack.getItemMeta();
+         itemMeta.setDisplayName(MythicLib.plugin.parseColors(this.displayName));
+         itemStack.setItemMeta(itemMeta);
       }
 
-      return var3;
+      return itemStack;
    }
 
    @NotNull

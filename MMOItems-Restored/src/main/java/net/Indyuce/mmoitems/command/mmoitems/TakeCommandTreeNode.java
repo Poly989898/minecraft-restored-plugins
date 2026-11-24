@@ -19,43 +19,43 @@ import org.bukkit.inventory.ItemStack;
 public class TakeCommandTreeNode extends CommandTreeNode {
    private static final Random random = new Random();
 
-   public TakeCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "take");
+   public TakeCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "take");
       this.addParameter(MMOItemsCommandTreeRoot.TYPE);
       this.addParameter(MMOItemsCommandTreeRoot.ID_2);
       this.addParameter(Parameter.PLAYER);
       this.addParameter(Parameter.AMOUNT);
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      if (var2.length != 5) {
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      if (texts.length != 5) {
          return CommandResult.THROW_USAGE;
       }
 
       try {
-         Type var3 = MMOItems.plugin.getTypes().getOrThrow(var2[1].toUpperCase().replace("-", "_"));
-         String var4 = var2[2].toUpperCase().replace("-", "_");
-         Player var5 = Bukkit.getPlayer(var2[3]);
-         Validate.notNull(var5, "Could not find player called '" + var2[3] + "'.");
-         int var6 = Integer.parseInt(var2[4]);
+         Type type = MMOItems.plugin.getTypes().getOrThrow(texts[1].toUpperCase().replace("-", "_"));
+         String text = texts[2].toUpperCase().replace("-", "_");
+         Player player = Bukkit.getPlayer(texts[3]);
+         Validate.notNull(player, "Could not find player called '" + texts[3] + "'.");
+         int count = Integer.parseInt(texts[4]);
 
-         for (int var7 = 0; var7 < var5.getInventory().getSize() && var6 > 0; var7++) {
-            ItemStack var8 = var5.getInventory().getItem(var7);
-            if (var8 != null && var8.getType() != Material.AIR) {
-               NBTItem var9 = NBTItem.get(var8);
-               String var10 = var9.getType();
-               if (var3.getId().equals(var10) && var9.getString("MMOITEMS_ITEM_ID").equals(var4)) {
-                  int var11 = Math.min(var6, var8.getAmount());
-                  var6 -= var11;
-                  var8.setAmount(var8.getAmount() - var11);
-                  var5.getInventory().setItem(var7, var8);
+         for (int i = 0; i < player.getInventory().getSize() && count > 0; i++) {
+            ItemStack item = player.getInventory().getItem(i);
+            if (item != null && item.getType() != Material.AIR) {
+               NBTItem nbtItem = NBTItem.get(item);
+               String type2 = nbtItem.getType();
+               if (type.getId().equals(type2) && nbtItem.getString("MMOITEMS_ITEM_ID").equals(text)) {
+                  int count2 = Math.min(count, item.getAmount());
+                  count -= count2;
+                  item.setAmount(item.getAmount() - count2);
+                  player.getInventory().setItem(i, item);
                }
             }
          }
 
          return CommandResult.SUCCESS;
-      } catch (IllegalArgumentException var12) {
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + var12.getMessage());
+      } catch (IllegalArgumentException exception) {
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + exception.getMessage());
          return CommandResult.FAILURE;
       }
    }

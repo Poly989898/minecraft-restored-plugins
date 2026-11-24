@@ -34,31 +34,31 @@ public class CanDeconstruct extends BooleanStat implements ConsumableItemInterac
 
    @Override
    public boolean handleConsumableEffect(
-      @NotNull InventoryClickEvent var1, @NotNull PlayerData var2, @NotNull Consumable var3, @NotNull NBTItem var4, Type var5
+      @NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem nbtItem, Type type
    ) {
-      String var6 = var4.getString("MMOITEMS_TIER");
-      if (!var6.equals("") && var3.getNBTItem().getBoolean("MMOITEMS_CAN_DECONSTRUCT")) {
-         ItemTier var7 = MMOItems.plugin.getTiers().get(var6);
-         List<ItemStack> var8 = var7.getDeconstructedLoot(var2);
-         if (var8.isEmpty()) {
+      String mMOITEMSTIER = nbtItem.getString("MMOITEMS_TIER");
+      if (!mMOITEMSTIER.equals("") && consumable.getNBTItem().getBoolean("MMOITEMS_CAN_DECONSTRUCT")) {
+         ItemTier itemTier = MMOItems.plugin.getTiers().get(mMOITEMSTIER);
+         List<ItemStack> deconstructedLoot = itemTier.getDeconstructedLoot(playerData);
+         if (deconstructedLoot.isEmpty()) {
             return false;
          }
 
-         DeconstructItemEvent var9 = new DeconstructItemEvent(var2, var3.getMMOItem(), var4, var8);
-         Bukkit.getPluginManager().callEvent(var9);
-         if (var9.isCancelled()) {
+         DeconstructItemEvent event2 = new DeconstructItemEvent(playerData, consumable.getMMOItem(), nbtItem, deconstructedLoot);
+         Bukkit.getPluginManager().callEvent(event2);
+         if (event2.isCancelled()) {
             return false;
          }
 
-         Player var10 = var2.getPlayer();
-         Message.SUCCESSFULLY_DECONSTRUCTED.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(var1.getCurrentItem())).send(var10);
-         var1.getCurrentItem().setAmount(var1.getCurrentItem().getAmount() - 1);
+         Player player = playerData.getPlayer();
+         Message.SUCCESSFULLY_DECONSTRUCTED.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(event.getCurrentItem())).send(player);
+         event.getCurrentItem().setAmount(event.getCurrentItem().getAmount() - 1);
 
-         for (ItemStack var12 : var10.getInventory().addItem(var8.toArray(new ItemStack[0])).values()) {
-            var10.getWorld().dropItem(var10.getLocation(), var12);
+         for (ItemStack item : player.getInventory().addItem(deconstructedLoot.toArray(new ItemStack[0])).values()) {
+            player.getWorld().dropItem(player.getLocation(), item);
          }
 
-         var10.playSound(var10.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 2.0F);
+         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 2.0F);
          return true;
       } else {
          return false;

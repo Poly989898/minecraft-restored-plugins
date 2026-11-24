@@ -13,10 +13,10 @@ public class MaxConsume extends DoubleStat {
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2) {
-      int var3 = (int)var2.getValue();
-      var1.addItemTag(new ItemTag(this.getNBTPath(), var3));
-      String var4 = this.getGeneralStatFormat().replace("{value}", String.valueOf(var3));
-      var1.getLore().insert(this.getPath(), var4);
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData) {
+      int count = (int)doubleData.getValue();
+      itemStackBuilder.addItemTag(new ItemTag(this.getNBTPath(), count));
+      String text = this.getGeneralStatFormat().replace("{value}", String.valueOf(count));
+      itemStackBuilder.getLore().insert(this.getPath(), text);
    }
 }

@@ -19,13 +19,13 @@ public class DeathItemsHandler {
    private final UUID playerId;
    private static final Map<UUID, DeathItemsHandler> PLAYER_INFO = new WeakHashMap<>();
 
-   public DeathItemsHandler(@NotNull Player var1) {
-      this.playerId = var1.getUniqueId();
-      this.lastLocation = var1.getLocation();
+   public DeathItemsHandler(@NotNull Player player) {
+      this.playerId = player.getUniqueId();
+      this.lastLocation = player.getLocation();
    }
 
-   public void registerItem(@NotNull ItemStack var1) {
-      this.items.add(var1);
+   public void registerItem(@NotNull ItemStack item) {
+      this.items.add(item);
    }
 
    public void registerIfNecessary() {
@@ -35,23 +35,23 @@ public class DeathItemsHandler {
    }
 
    public void dropItems() {
-      for (ItemStack var2 : this.items) {
-         this.lastLocation.getWorld().dropItem(this.lastLocation, var2);
+      for (ItemStack item : this.items) {
+         this.lastLocation.getWorld().dropItem(this.lastLocation, item);
       }
    }
 
-   public void giveItems(@NotNull Player var1) {
-      ItemStack[] var2 = this.items.toArray(new ItemStack[0]);
+   public void giveItems(@NotNull Player player) {
+      ItemStack[] items = this.items.toArray(new ItemStack[0]);
 
-      for (ItemStack var4 : var1.getInventory().addItem(var2).values()) {
-         var1.getWorld().dropItem(var1.getLocation(), var4);
+      for (ItemStack item : player.getInventory().addItem(items).values()) {
+         player.getWorld().dropItem(player.getLocation(), item);
       }
    }
 
-   public static void readAndRemove(@NotNull Player var0) {
-      DeathItemsHandler var1 = PLAYER_INFO.remove(var0.getUniqueId());
-      if (var1 != null) {
-         Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> var1.giveItems(var0), 10L);
+   public static void readAndRemove(@NotNull Player player) {
+      DeathItemsHandler deathItemsHandler = PLAYER_INFO.remove(player.getUniqueId());
+      if (deathItemsHandler != null) {
+         Bukkit.getScheduler().runTaskLater(MMOItems.plugin, () -> deathItemsHandler.giveItems(player), 10L);
       }
    }
 

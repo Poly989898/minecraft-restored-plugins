@@ -9,20 +9,20 @@ import org.jetbrains.annotations.NotNull;
 public class LanguageFile extends ConfigFile {
    private boolean change;
 
-   public LanguageFile(String var1) {
-      super(MMOItems.plugin, "/language", var1);
+   public LanguageFile(String text) {
+      super(MMOItems.plugin, "/language", text);
    }
 
    @NotNull
-   public String computeTranslation(String var1, Supplier<String> var2) {
-      String var3 = this.getConfig().getString(var1);
-      if (var3 == null) {
+   public String computeTranslation(String text, Supplier<String> supplier) {
+      String text2 = this.getConfig().getString(text);
+      if (text2 == null) {
          this.change = true;
-         this.getConfig().set(var1, var3 = (String)var2.get());
-         MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not find translation for '" + var1 + "', generating it");
+         this.getConfig().set(text, text2 = (String)supplier.get());
+         MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not find translation for '" + text + "', generating it");
       }
 
-      return var3;
+      return text2;
    }
 
    @Override

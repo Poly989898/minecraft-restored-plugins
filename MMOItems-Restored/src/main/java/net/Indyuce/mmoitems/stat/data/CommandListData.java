@@ -13,22 +13,22 @@ public class CommandListData implements StatData, Mergeable<CommandListData>, Ra
    @NotNull
    private final List<CommandData> commands = new ArrayList<>();
 
-   public CommandListData(@NotNull List<CommandData> var1) {
-      this.add(var1);
+   public CommandListData(@NotNull List<CommandData> commandDatas) {
+      this.add(commandDatas);
    }
 
-   public CommandListData(CommandData... var1) {
-      this.add(var1);
+   public CommandListData(CommandData... commandDatas) {
+      this.add(commandDatas);
    }
 
-   public void add(CommandData... var1) {
-      for (CommandData var5 : var1) {
-         this.commands.add(var5);
+   public void add(CommandData... commandDatas) {
+      for (CommandData commandData : commandDatas) {
+         this.commands.add(commandData);
       }
    }
 
-   public void add(Collection<CommandData> var1) {
-      this.commands.addAll(var1);
+   public void add(Collection<CommandData> commandDatas) {
+      this.commands.addAll(commandDatas);
    }
 
    @NotNull
@@ -37,19 +37,19 @@ public class CommandListData implements StatData, Mergeable<CommandListData>, Ra
    }
 
    @Override
-   public boolean equals(Object var1) {
-      if (this == var1) {
+   public boolean equals(Object obj) {
+      if (this == obj) {
          return true;
-      } else if (var1 != null && this.getClass() == var1.getClass()) {
-         CommandListData var2 = (CommandListData)var1;
-         return this.commands.equals(var2.commands);
+      } else if (obj != null && this.getClass() == obj.getClass()) {
+         CommandListData commandListData = (CommandListData)obj;
+         return this.commands.equals(commandListData.commands);
       } else {
          return false;
       }
    }
 
-   public void mergeWith(CommandListData var1) {
-      this.commands.addAll(var1.commands);
+   public void mergeWith(CommandListData commandListData) {
+      this.commands.addAll(commandListData.commands);
    }
 
    @NotNull
@@ -62,7 +62,7 @@ public class CommandListData implements StatData, Mergeable<CommandListData>, Ra
       return this.commands.isEmpty();
    }
 
-   public CommandListData randomize(MMOItemBuilder var1) {
+   public CommandListData randomize(MMOItemBuilder mmoItemBuilder) {
       return this.clone();
    }
 }

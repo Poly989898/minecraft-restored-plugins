@@ -18,21 +18,21 @@ public class CheckedRecipe {
    private boolean ingredientsHad = true;
    private boolean conditionsMet = true;
 
-   public CheckedRecipe(Recipe var1, PlayerData var2, IngredientInventory var3) {
-      this.recipe = var1;
+   public CheckedRecipe(Recipe recipe, PlayerData playerData, IngredientInventory ingredientInventory) {
+      this.recipe = recipe;
 
-      for (Ingredient var5 : var1.getIngredients()) {
-         CheckedIngredient var6 = var5.evaluateIngredient(var3);
-         this.ingredients.add(var6);
-         if (!var6.isHad()) {
+      for (Ingredient ingredient : recipe.getIngredients()) {
+         CheckedIngredient checkedIngredient = ingredient.evaluateIngredient(ingredientInventory);
+         this.ingredients.add(checkedIngredient);
+         if (!checkedIngredient.isHad()) {
             this.ingredientsHad = false;
          }
       }
 
-      for (Condition var8 : var1.getConditions()) {
-         CheckedCondition var9 = var8.evaluateCondition(var2);
-         this.conditions.add(var9);
-         if (!var9.isMet()) {
+      for (Condition condition : recipe.getConditions()) {
+         CheckedCondition checkedCondition = condition.evaluateCondition(playerData);
+         this.conditions.add(checkedCondition);
+         if (!checkedCondition.isMet()) {
             this.conditionsMet = false;
          }
       }
@@ -64,7 +64,7 @@ public class CheckedRecipe {
    }
 
    public Set<CheckedCondition> getDisplayableConditions() {
-      return this.conditions.stream().filter(var0 -> var0.getCondition().getDisplay() != null).collect(Collectors.toSet());
+      return this.conditions.stream().filter(checkedCondition -> checkedCondition.getCondition().getDisplay() != null).collect(Collectors.toSet());
    }
 
    public Set<CheckedIngredient> getIngredients() {

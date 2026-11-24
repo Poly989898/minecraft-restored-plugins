@@ -12,19 +12,19 @@ import org.jetbrains.annotations.Nullable;
 public class ObjectComponent extends AbstractObjectComponent implements Upgradable {
    private final Map<String, StatComponent> components = new HashMap<>();
 
-   public ObjectComponent(String var1) {
-      super(var1);
+   public ObjectComponent(String text) {
+      super(text);
    }
 
    @Nullable
    @Override
-   public StatComponent getComponent(String var1) {
-      return this.components.get(var1);
+   public StatComponent getComponent(String text) {
+      return this.components.get(text);
    }
 
-   public void forEachComponent(Consumer<StatComponent> var1) {
-      for (StatComponent var3 : this.components.values()) {
-         var1.accept(var3);
+   public void forEachComponent(Consumer<StatComponent> consumer) {
+      for (StatComponent statComponent : this.components.values()) {
+         consumer.accept(statComponent);
       }
    }
 

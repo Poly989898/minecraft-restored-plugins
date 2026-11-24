@@ -21,8 +21,8 @@ public class RMGRI_LegacyBurning implements RMG_RecipeInterpreter {
       return this.input;
    }
 
-   public void setInput(@Nullable ProvidedUIFilter var1) {
-      this.input = var1 == null ? RecipeEditorGUI.AIR : var1;
+   public void setInput(@Nullable ProvidedUIFilter providedUIFilter) {
+      this.input = providedUIFilter == null ? RecipeEditorGUI.AIR : providedUIFilter;
    }
 
    @NotNull
@@ -30,44 +30,44 @@ public class RMGRI_LegacyBurning implements RMG_RecipeInterpreter {
       return this.section;
    }
 
-   public RMGRI_LegacyBurning(@NotNull ConfigurationSection var1) {
-      this.section = var1;
-      this.input = ProvidedUIFilter.getFromString(RecipeEditorGUI.poofFromLegacy(var1.getString("item")), null);
+   public RMGRI_LegacyBurning(@NotNull ConfigurationSection section) {
+      this.section = section;
+      this.input = ProvidedUIFilter.getFromString(RecipeEditorGUI.poofFromLegacy(section.getString("item")), null);
       if (this.input == null) {
          this.input = RecipeEditorGUI.AIR.clone();
       }
    }
 
    @Override
-   public void editInput(@NotNull ProvidedUIFilter var1, int var2) {
-      if (var2 == 0) {
-         this.setInput(var1);
-         this.section.set("item", var1.toString());
+   public void editInput(@NotNull ProvidedUIFilter providedUIFilter, int count) {
+      if (count == 0) {
+         this.setInput(providedUIFilter);
+         this.section.set("item", providedUIFilter.toString());
       }
    }
 
    @Override
-   public void editOutput(@NotNull ProvidedUIFilter var1, int var2) {
+   public void editOutput(@NotNull ProvidedUIFilter providedUIFilter, int count) {
    }
 
    @Override
-   public void deleteInput(int var1) {
-      this.editInput(RecipeEditorGUI.AIR.clone(), var1);
+   public void deleteInput(int count) {
+      this.editInput(RecipeEditorGUI.AIR.clone(), count);
    }
 
    @Override
-   public void deleteOutput(int var1) {
-   }
-
-   @Nullable
-   @Override
-   public ProvidedUIFilter getInput(int var1) {
-      return var1 == 0 ? this.input : null;
+   public void deleteOutput(int count) {
    }
 
    @Nullable
    @Override
-   public ProvidedUIFilter getOutput(int var1) {
+   public ProvidedUIFilter getInput(int count) {
+      return count == 0 ? this.input : null;
+   }
+
+   @Nullable
+   @Override
+   public ProvidedUIFilter getOutput(int count) {
       return null;
    }
 }

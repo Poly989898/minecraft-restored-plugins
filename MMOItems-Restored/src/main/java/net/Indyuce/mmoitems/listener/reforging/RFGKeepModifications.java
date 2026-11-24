@@ -10,19 +10,19 @@ import org.bukkit.event.Listener;
 
 public class RFGKeepModifications implements Listener {
    @EventHandler
-   public void onReforge(MMOItemReforgeEvent var1) {
-      if (var1.getOptions().shouldKeepMods()) {
-         for (StatHistory var3 : var1.getNewMMOItem().getStatHistories()) {
-            var3.clearModifiersBonus();
+   public void onReforge(MMOItemReforgeEvent event) {
+      if (event.getOptions().shouldKeepMods()) {
+         for (StatHistory statHistory : event.getNewMMOItem().getStatHistories()) {
+            statHistory.clearModifiersBonus();
          }
 
-         for (StatHistory var9 : var1.getOldMMOItem().getStatHistories()) {
-            StatHistory var4 = var1.getNewMMOItem().computeStatHistory(var9.getItemStat());
+         for (StatHistory statHistory : event.getOldMMOItem().getStatHistories()) {
+            StatHistory statHistory2 = event.getNewMMOItem().computeStatHistory(statHistory.getItemStat());
 
-            for (UUID var6 : var9.getAllModifiers()) {
-               StatData var7 = var9.getModifiersBonus(var6);
-               if (var7 != null) {
-                  var4.registerModifierBonus(var6, ((Mergeable)var7).clone());
+            for (UUID allModifier : statHistory.getAllModifiers()) {
+               StatData modifiersBonus = statHistory.getModifiersBonus(allModifier);
+               if (modifiersBonus != null) {
+                  statHistory2.registerModifierBonus(allModifier, ((Mergeable)modifiersBonus).clone());
                }
             }
          }

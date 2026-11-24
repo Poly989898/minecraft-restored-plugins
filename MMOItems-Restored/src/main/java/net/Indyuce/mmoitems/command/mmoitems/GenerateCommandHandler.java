@@ -6,15 +6,15 @@ import java.util.Set;
 public class GenerateCommandHandler {
    private final Set<String> arguments = new HashSet<>();
 
-   public GenerateCommandHandler(String... var1) {
-      for (String var5 : var1) {
-         this.arguments.add(var5.toLowerCase());
+   public GenerateCommandHandler(String... texts) {
+      for (String text : texts) {
+         this.arguments.add(text.toLowerCase());
       }
    }
 
-   public boolean hasArgument(String var1) {
-      for (String var3 : this.arguments) {
-         if (var3.startsWith("-" + var1)) {
+   public boolean hasArgument(String text) {
+      for (String argument : this.arguments) {
+         if (argument.startsWith("-" + text)) {
             return true;
          }
       }
@@ -22,13 +22,13 @@ public class GenerateCommandHandler {
       return false;
    }
 
-   public String getValue(String var1) {
-      for (String var3 : this.arguments) {
-         if (var3.startsWith("-" + var1 + ":")) {
-            return var3.substring(var1.length() + 2);
+   public String getValue(String text) {
+      for (String argument : this.arguments) {
+         if (argument.startsWith("-" + text + ":")) {
+            return argument.substring(text.length() + 2);
          }
       }
 
-      throw new IllegalArgumentException("Command has no argument '" + var1 + "'");
+      throw new IllegalArgumentException("Command has no argument '" + text + "'");
    }
 }

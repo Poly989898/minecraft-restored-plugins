@@ -28,14 +28,14 @@ public class SoulboundLevel extends DoubleStat {
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2) {
-      int var3 = (int)var2.getValue();
-      var1.addItemTag(new ItemTag("MMOITEMS_SOULBOUND_LEVEL", var3));
-      var1.getLore().insert("soulbound-level", this.getGeneralStatFormat().replace("{value}", MMOUtils.intToRoman(var3)));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData) {
+      int count = (int)doubleData.getValue();
+      itemStackBuilder.addItemTag(new ItemTag("MMOITEMS_SOULBOUND_LEVEL", count));
+      itemStackBuilder.getLore().insert("soulbound-level", this.getGeneralStatFormat().replace("{value}", MMOUtils.intToRoman(count)));
    }
 
    @Override
-   public void whenPreviewed(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2, @NotNull NumericStatFormula var3) {
-      this.whenApplied(var1, var2);
+   public void whenPreviewed(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData, @NotNull NumericStatFormula numericStatFormula) {
+      this.whenApplied(itemStackBuilder, doubleData);
    }
 }

@@ -13,10 +13,10 @@ public class StatCategory {
    public static final StatCategory REQUIREMENT = new StatCategory("REQUIREMENT", "Item Requirements", "Item Requirement");
    public static final StatCategory USE_COST = new StatCategory("USE_COST", "Item Costs", "Use Cost");
 
-   public StatCategory(String var1, String var2, String var3) {
-      this.id = var1;
-      this.name = var2;
-      this.loreTag = var3;
+   public StatCategory(String text, String text2, String text3) {
+      this.id = text;
+      this.name = text2;
+      this.loreTag = text3;
    }
 
    @NotNull

@@ -25,8 +25,8 @@ public class ItemEdition extends EditionInventory {
    private static final int[] slots = new int[]{19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43};
    private static final NamespacedKey STAT_ID_KEY = new NamespacedKey(MMOItems.plugin, "StatId");
 
-   public ItemEdition(Player var1, MMOItemTemplate var2) {
-      super(var1, var2);
+   public ItemEdition(Player player, MMOItemTemplate mmoItemTemplate) {
+      super(player, mmoItemTemplate);
    }
 
    @Override
@@ -36,82 +36,82 @@ public class ItemEdition extends EditionInventory {
 
    @Override
    public void arrangeInventory() {
-      int var1 = (this.page - 1) * slots.length;
-      int var2 = this.page * slots.length;
-      int var3 = 0;
-      List var4 = new ArrayList<>(this.getEdited().getType().getAvailableStats())
+      int count = (this.page - 1) * slots.length;
+      int count2 = this.page * slots.length;
+      int count3 = 0;
+      List list = new ArrayList<>(this.getEdited().getType().getAvailableStats())
          .stream()
          .filter(var1x -> var1x.hasValidMaterial(this.getCachedItem()) && !(var1x instanceof InternalStat))
          .collect(Collectors.toList());
 
-      for (int var5 = var1; var5 < Math.min(var4.size(), var2); var5++) {
-         ItemStat var6 = (ItemStat)var4.get(var5);
-         ItemStack var7 = new ItemStack(var6.getDisplayMaterial());
-         ItemMeta var8 = var7.getItemMeta();
-         var8.addItemFlags(ItemFlag.values());
-         VersionUtils.addEmptyAttributeModifier(var8);
-         var8.setDisplayName(ChatColor.GREEN + var6.getName());
-         List var9 = MythicLib.plugin.parseColors(Arrays.stream(var6.getLore()).map(var0 -> ChatColor.GRAY + var0).collect(Collectors.toList()));
-         var9.add("");
-         if (var6.getCategory() != null) {
-            var9.add(0, "");
-            var9.add(0, ChatColor.BLUE + var6.getCategory().getLoreTag());
+      for (int i = count; i < Math.min(list.size(), count2); i++) {
+         ItemStat itemStat = (ItemStat)list.get(i);
+         ItemStack item = new ItemStack(itemStat.getDisplayMaterial());
+         ItemMeta itemMeta = item.getItemMeta();
+         itemMeta.addItemFlags(ItemFlag.values());
+         VersionUtils.addEmptyAttributeModifier(itemMeta);
+         itemMeta.setDisplayName(ChatColor.GREEN + itemStat.getName());
+         List colors = MythicLib.plugin.parseColors(Arrays.stream(itemStat.getLore()).map(text -> ChatColor.GRAY + text).collect(Collectors.toList()));
+         colors.add("");
+         if (itemStat.getCategory() != null) {
+            colors.add(0, "");
+            colors.add(0, ChatColor.BLUE + itemStat.getCategory().getLoreTag());
          }
 
-         var6.whenDisplayed(var9, this.getEventualStatData(var6));
-         var8.getPersistentDataContainer().set(STAT_ID_KEY, PersistentDataType.STRING, var6.getId());
-         var8.setLore(var9);
-         var7.setItemMeta(var8);
-         this.inventory.setItem(slots[var3++], var7);
+         itemStat.whenDisplayed(colors, this.getEventualStatData(itemStat));
+         itemMeta.getPersistentDataContainer().set(STAT_ID_KEY, PersistentDataType.STRING, itemStat.getId());
+         itemMeta.setLore(colors);
+         item.setItemMeta(itemMeta);
+         this.inventory.setItem(slots[count3++], item);
       }
 
-      ItemStack var11 = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-      ItemMeta var12 = var11.getItemMeta();
-      var12.setDisplayName(ChatColor.RED + "- No Item Stat -");
-      var11.setItemMeta(var12);
-      ItemStack var13 = new ItemStack(Material.ARROW);
-      ItemMeta var14 = var13.getItemMeta();
-      var14.setDisplayName(ChatColor.GREEN + "Next Page");
-      var13.setItemMeta(var14);
-      ItemStack var15 = new ItemStack(Material.ARROW);
-      ItemMeta var10 = var15.getItemMeta();
-      var10.setDisplayName(ChatColor.GREEN + "Previous Page");
-      var15.setItemMeta(var10);
+      ItemStack item = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+      ItemMeta itemMeta = item.getItemMeta();
+      itemMeta.setDisplayName(ChatColor.RED + "- No Item Stat -");
+      item.setItemMeta(itemMeta);
+      ItemStack item2 = new ItemStack(Material.ARROW);
+      ItemMeta itemMeta2 = item2.getItemMeta();
+      itemMeta2.setDisplayName(ChatColor.GREEN + "Next Page");
+      item2.setItemMeta(itemMeta2);
+      ItemStack item3 = new ItemStack(Material.ARROW);
+      ItemMeta itemMeta3 = item3.getItemMeta();
+      itemMeta3.setDisplayName(ChatColor.GREEN + "Previous Page");
+      item3.setItemMeta(itemMeta3);
 
-      while (var3 < slots.length) {
-         this.inventory.setItem(slots[var3++], var11);
+      while (count3 < slots.length) {
+         this.inventory.setItem(slots[count3++], item);
       }
 
-      this.inventory.setItem(27, this.page > 1 ? var15 : null);
-      this.inventory.setItem(35, var4.size() > var2 ? var13 : null);
+      this.inventory.setItem(27, this.page > 1 ? item3 : null);
+      this.inventory.setItem(35, list.size() > count2 ? item2 : null);
    }
 
    @Override
-   public void whenClicked(InventoryClickEvent var1) {
-      var1.setCancelled(true);
-      if (var1.getInventory() == var1.getClickedInventory()) {
-         ItemStack var2 = var1.getCurrentItem();
-         if (MMOUtils.isMetaItem(var2, false) && var1.getInventory().getItem(4) != null) {
-            if (var2.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Next Page")) {
+   public void whenClicked(InventoryClickEvent event) {
+      event.setCancelled(true);
+      if (event.getInventory() == event.getClickedInventory()) {
+         ItemStack currentItem = event.getCurrentItem();
+         if (MMOUtils.isMetaItem(currentItem, false) && event.getInventory().getItem(4) != null) {
+            if (currentItem.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Next Page")) {
                this.page++;
                this.refreshInventory();
             }
 
-            if (var2.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Previous Page")) {
+            if (currentItem.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Previous Page")) {
                this.page--;
                this.refreshInventory();
             }
 
-            String var3 = (String)var2.getItemMeta().getPersistentDataContainer().get(STAT_ID_KEY, PersistentDataType.STRING);
-            if (var3 != null && !var3.isEmpty()) {
-               ItemStat var4 = MMOItems.plugin.getStats().get(var3);
+            String text = (String)currentItem.getItemMeta().getPersistentDataContainer().get(STAT_ID_KEY, PersistentDataType.STRING);
+            if (text != null && !text.isEmpty()) {
+               ItemStat itemStat = MMOItems.plugin.getStats().get(text);
                if (MMOItems.plugin.hasPermissions()
                   && MMOItems.plugin.getLanguage().opStatsEnabled
-                  && MMOItems.plugin.getLanguage().opStats.contains(var4.getId())
-                  && !MMOItems.plugin.getVault().getPermissions().has((Player)var1.getWhoClicked(), "mmoitems.edit.op")) {
-                  var1.getWhoClicked().sendMessage(ChatColor.RED + "You are lacking permission to edit this stat.");
+                  && MMOItems.plugin.getLanguage().opStats.contains(itemStat.getId())
+                  && !MMOItems.plugin.getVault().getPermissions().has((Player)event.getWhoClicked(), "mmoitems.edit.op")) {
+                  event.getWhoClicked().sendMessage(ChatColor.RED + "You are lacking permission to edit this stat.");
                } else {
-                  var4.whenClicked(this, var1);
+                  itemStat.whenClicked(this, event);
                }
             }
          }
@@ -119,8 +119,8 @@ public class ItemEdition extends EditionInventory {
    }
 
    @Deprecated
-   public ItemEdition onPage(int var1) {
-      this.page = var1;
+   public ItemEdition onPage(int count) {
+      this.page = count;
       return this;
    }
 }

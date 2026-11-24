@@ -25,12 +25,12 @@ public class RepairPowerPercent extends DoubleStat implements ConsumableItemInte
 
    @Override
    public boolean handleConsumableEffect(
-      @NotNull InventoryClickEvent var1, @NotNull PlayerData var2, @NotNull Consumable var3, @NotNull NBTItem var4, @Nullable Type var5
+      @NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem nbtItem, @Nullable Type type
    ) {
-      double var6 = var3.getNBTItem().getStat(ItemStats.REPAIR_PERCENT.getId());
-      return var6 <= 0.0 ? false : RepairPower.handleRepair(var2, var3, var4, var3x -> {
-         double var4x = var3x != null ? var3x.getMaxDurability() : var4.getItem().getType().getMaxDurability();
-         return (int)(var6 * var4x / 100.0);
+      double stat = consumable.getNBTItem().getStat(ItemStats.REPAIR_PERCENT.getId());
+      return stat <= 0.0 ? false : RepairPower.handleRepair(playerData, consumable, nbtItem, var3x -> {
+         double var4x = var3x != null ? var3x.getMaxDurability() : nbtItem.getItem().getType().getMaxDurability();
+         return (int)(stat * var4x / 100.0);
       });
    }
 }

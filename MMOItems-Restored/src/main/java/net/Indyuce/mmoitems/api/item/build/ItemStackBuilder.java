@@ -47,14 +47,14 @@ public class ItemStackBuilder {
    private static final AttributeModifier FAKE_MODIFIER = VersionUtils.attrMod(new NamespacedKey(MMOItems.plugin, "decoy"), 0.0, Operation.ADD_NUMBER);
    public static final String history_keyword = "HSTRY_";
 
-   public ItemStackBuilder(@NotNull MMOItem var1) {
-      this.mmoitem = var1;
-      this.item = new ItemStack(var1.hasData(ItemStats.MATERIAL) ? ((MaterialData)var1.getData(ItemStats.MATERIAL)).getMaterial() : Material.DIAMOND_SWORD);
-      this.lore = new LoreBuilder(var1);
+   public ItemStackBuilder(@NotNull MMOItem mmoItem) {
+      this.mmoitem = mmoItem;
+      this.item = new ItemStack(mmoItem.hasData(ItemStats.MATERIAL) ? ((MaterialData)mmoItem.getData(ItemStats.MATERIAL)).getMaterial() : Material.DIAMOND_SWORD);
+      this.lore = new LoreBuilder(mmoItem);
       this.meta = this.item.getItemMeta();
       this.meta.addItemFlags(new ItemFlag[]{ItemFlag.HIDE_ATTRIBUTES});
-      this.tags.add(new ItemTag("MMOITEMS_ITEM_TYPE", var1.getType().getId()));
-      this.tags.add(new ItemTag("MMOITEMS_ITEM_ID", var1.getId()));
+      this.tags.add(new ItemTag("MMOITEMS_ITEM_TYPE", mmoItem.getType().getId()));
+      this.tags.add(new ItemTag("MMOITEMS_ITEM_ID", mmoItem.getId()));
    }
 
    public LoreBuilder getLore() {
@@ -77,67 +77,67 @@ public class ItemStackBuilder {
    }
 
    @Deprecated
-   public void addFutureAction(Consumer<NBTItem> var1) {
+   public void addFutureAction(Consumer<NBTItem> consumer) {
       if (this.futureActions == null) {
          this.futureActions = new ArrayList<>();
       }
 
-      this.futureActions.add(var1);
+      this.futureActions.add(consumer);
    }
 
-   public void addItemTag(List<ItemTag> var1) {
-      this.tags.addAll(var1);
+   public void addItemTag(List<ItemTag> itemTags) {
+      this.tags.addAll(itemTags);
    }
 
-   public void addItemTag(ItemTag... var1) {
-      this.tags.addAll(Arrays.asList(var1));
+   public void addItemTag(ItemTag... itemTags) {
+      this.tags.addAll(Arrays.asList(itemTags));
    }
 
    public NBTItem buildNBT() {
       return this.buildNBT(false);
    }
 
-   public NBTItem buildNBT(boolean var1) {
-      MMOItem var2 = this.mmoitem.clone();
-      var2.computeData(ItemStats.ENCHANTS);
-      var2.computeStatHistory(ItemStats.ENCHANTS);
-      var2.computeData(ItemStats.NAME);
-      var2.computeStatHistory(ItemStats.NAME);
+   public NBTItem buildNBT(boolean flag) {
+      MMOItem mmoItem = this.mmoitem.clone();
+      mmoItem.computeData(ItemStats.ENCHANTS);
+      mmoItem.computeStatHistory(ItemStats.ENCHANTS);
+      mmoItem.computeData(ItemStats.NAME);
+      mmoItem.computeStatHistory(ItemStats.NAME);
 
-      for (ItemStat var4 : var2.getStats()) {
+      for (ItemStat stat : mmoItem.getStats()) {
          try {
-            StatHistory var5 = var2.getStatHistory(var4);
-            if (var5 != null) {
-               int var6 = this.mmoitem.getUpgradeLevel();
-               var2.setData(var4, var5.recalculate(var6));
-               if (!var5.isEmpty()) {
-                  this.addItemTag(new ItemTag("HSTRY_" + var4.getId(), var5.toNBTString()));
+            StatHistory statHistory = mmoItem.getStatHistory(stat);
+            if (statHistory != null) {
+               int upgradeLevel = this.mmoitem.getUpgradeLevel();
+               mmoItem.setData(stat, statHistory.recalculate(upgradeLevel));
+               if (!statHistory.isEmpty()) {
+                  this.addItemTag(new ItemTag("HSTRY_" + stat.getId(), statHistory.toNBTString()));
                }
             }
 
-            if (var1 && var4 instanceof Previewable) {
-               MMOItemTemplate var12 = MMOItems.plugin.getTemplates().getTemplate(var2.getType(), var2.getId());
-               if (var12 == null) {
-                  throw new IllegalArgumentException("MMOItem $r" + var2.getType().getId() + " " + var2.getId() + "$b doesn't exist.");
+            if (flag && stat instanceof Previewable) {
+               MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(mmoItem.getType(), mmoItem.getId());
+               if (template == null) {
+                  throw new IllegalArgumentException("MMOItem $r" + mmoItem.getType().getId() + " " + mmoItem.getId() + "$b doesn't exist.");
                }
 
-               ((Previewable)var4).whenPreviewed(this, var2.getData(var4), var12.getBaseItemData().get(var4));
+               ((Previewable)stat).whenPreviewed(this, mmoItem.getData(stat), template.getBaseItemData().get(stat));
             } else {
-               var4.whenApplied(this, var2.getData(var4));
+               stat.whenApplied(this, mmoItem.getData(stat));
             }
-         } catch (IllegalArgumentException | NullPointerException var8) {
+         } catch (IllegalArgumentException | NullPointerException exception) {
             MMOItems.print(
                Level.SEVERE,
                "An error occurred while trying to generate item '$f{0}$b' with stat '$f{1}$b': {2}",
                "ItemStackBuilder",
-               var2.getId(),
-               var4.getId(),
-               var8.getMessage()
+               mmoItem.getId(),
+               stat.getId(),
+               exception.getMessage()
             );
          }
       }
 
-      if (var2.getType() == Type.GEM_STONE) {
+      if (mmoItem.getType() == Type.GEM_STONE) {
          this.lore.insert("gem-stone-lore", MMOItems.plugin.getLanguage().gemStoneLoreTag);
       }
 
@@ -148,57 +148,57 @@ public class ItemStackBuilder {
                .getLanguage()
                .itemTypeLoreTag
                .replace(
-                  "{type}", var2.getStats().contains(ItemStats.DISPLAYED_TYPE) ? var2.getData(ItemStats.DISPLAYED_TYPE).toString() : var2.getType().getName()
+                  "{type}", mmoItem.getStats().contains(ItemStats.DISPLAYED_TYPE) ? mmoItem.getData(ItemStats.DISPLAYED_TYPE).toString() : mmoItem.getType().getName()
                )
          );
-      List var9 = this.lore.getLore();
-      List var10 = this.lore.build();
-      GenerateLoreEvent var11 = new GenerateLoreEvent(var2, this.lore, var10, var9);
-      Bukkit.getPluginManager().callEvent(var11);
-      AdventureUtils.setLore(this.meta, var11.getParsedLore());
+      List lore = this.lore.getLore();
+      List list = this.lore.build();
+      GenerateLoreEvent event = new GenerateLoreEvent(mmoItem, this.lore, list, lore);
+      Bukkit.getPluginManager().callEvent(event);
+      AdventureUtils.setLore(this.meta, event.getParsedLore());
       if (this.meta.hasDisplayName()) {
-         String var13 = this.meta.getDisplayName();
+         String displayName = this.meta.getDisplayName();
          if (this.lore.hasTooltip()) {
-            var13 = this.lore.getTooltip().getTop() + var13;
+            displayName = this.lore.getTooltip().getTop() + displayName;
          }
 
-         var13 = MythicLib.plugin.getPlaceholderParser().parse(null, var13);
-         var13 = this.lore.applySpecialPlaceholders(var13);
+         displayName = MythicLib.plugin.getPlaceholderParser().parse(null, displayName);
+         displayName = this.lore.applySpecialPlaceholders(displayName);
          if (this.lore.hasTooltip() && this.lore.getTooltip().getCenteringOptions() != null && this.lore.getTooltip().getCenteringOptions().displayName()) {
-            var13 = this.lore.getTooltip().getCenteringOptions().centerName(var13);
+            displayName = this.lore.getTooltip().getCenteringOptions().centerName(displayName);
          }
 
-         AdventureUtils.setDisplayName(this.meta, ChatColor.WHITE + var13);
+         AdventureUtils.setDisplayName(this.meta, ChatColor.WHITE + displayName);
       }
 
-      JsonArray var16 = new JsonArray();
-      var11.getParsedLore().forEach(var16::add);
-      if (!var16.isEmpty()) {
-         this.tags.add(new ItemTag("MMOITEMS_DYNAMIC_LORE", var16.toString()));
+      JsonArray jsonArray = new JsonArray();
+      event.getParsedLore().forEach(jsonArray::add);
+      if (!jsonArray.isEmpty()) {
+         this.tags.add(new ItemTag("MMOITEMS_DYNAMIC_LORE", jsonArray.toString()));
       }
 
       this.meta.addAttributeModifier(Attribute.ATTACK_SPEED, FAKE_MODIFIER);
       this.item.setItemMeta(this.meta);
-      NBTItem var7 = NBTItem.get(this.item).addTag(this.tags);
+      NBTItem nbtItem = NBTItem.get(this.item).addTag(this.tags);
       if (this.futureActions != null) {
-         this.futureActions.forEach(var1x -> var1x.accept(var7));
+         this.futureActions.forEach(var1x -> var1x.accept(nbtItem));
       }
 
-      return var7;
+      return nbtItem;
    }
 
    @Nullable
    public ItemStack build() {
-      ItemBuildEvent var1 = new ItemBuildEvent(this.buildNBT().toItem());
-      Bukkit.getServer().getPluginManager().callEvent(var1);
-      return var1.getItemStack();
+      ItemBuildEvent event = new ItemBuildEvent(this.buildNBT().toItem());
+      Bukkit.getServer().getPluginManager().callEvent(event);
+      return event.getItemStack();
    }
 
    public ItemStack buildSilently() {
       return this.buildNBT().toItem();
    }
 
-   public ItemStack build(boolean var1) {
-      return this.buildNBT(var1).toItem();
+   public ItemStack build(boolean flag) {
+      return this.buildNBT(flag).toItem();
    }
 }

@@ -6,11 +6,11 @@ import net.Indyuce.mmoitems.api.item.template.MMOItemTemplate;
 public class IDFilter implements Predicate<MMOItemTemplate> {
    private final String id;
 
-   public IDFilter(String var1) {
-      this.id = var1;
+   public IDFilter(String text) {
+      this.id = text;
    }
 
-   public boolean test(MMOItemTemplate var1) {
-      return var1.getId().equalsIgnoreCase(this.id);
+   public boolean test(MMOItemTemplate mmoItemTemplate) {
+      return mmoItemTemplate.getId().equalsIgnoreCase(this.id);
    }
 }

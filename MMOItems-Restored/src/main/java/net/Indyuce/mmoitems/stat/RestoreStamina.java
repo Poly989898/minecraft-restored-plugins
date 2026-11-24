@@ -22,11 +22,11 @@ public class RestoreStamina extends DoubleStat implements PlayerConsumable {
    }
 
    @Override
-   public void onConsume(@NotNull VolatileMMOItem var1, @NotNull Player var2, boolean var3) {
-      if (var1.hasData(ItemStats.RESTORE_STAMINA)) {
-         DoubleData var4 = (DoubleData)var1.getData(ItemStats.RESTORE_STAMINA);
-         if (var4.getValue() != 0.0) {
-            PlayerData.get(var2).getRPG().giveStamina(var4.getValue());
+   public void onConsume(@NotNull VolatileMMOItem volatileMMOItem, @NotNull Player player, boolean flag) {
+      if (volatileMMOItem.hasData(ItemStats.RESTORE_STAMINA)) {
+         DoubleData data = (DoubleData)volatileMMOItem.getData(ItemStats.RESTORE_STAMINA);
+         if (data.getValue() != 0.0) {
+            PlayerData.get(player).getRPG().giveStamina(data.getValue());
          }
       }
    }

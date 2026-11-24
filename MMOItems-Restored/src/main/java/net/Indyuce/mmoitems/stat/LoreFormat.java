@@ -23,17 +23,17 @@ public class LoreFormat extends StringStat implements GemStoneStat {
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull StringData var2) {
-      String var3 = var2.toString();
-      Validate.isTrue(MMOItems.plugin.getLore().hasFormat(var3), "Could not find lore format with ID '" + var3 + "'");
-      var1.addItemTag(new ItemTag(this.getNBTPath(), var3));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull StringData stringData) {
+      String text = stringData.toString();
+      Validate.isTrue(MMOItems.plugin.getLore().hasFormat(text), "Could not find lore format with ID '" + text + "'");
+      itemStackBuilder.addItemTag(new ItemTag(this.getNBTPath(), text));
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      Validate.isTrue(MMOItems.plugin.getLore().hasFormat(var2), "Couldn't find lore format with ID '" + var2 + "'.");
-      var1.getEditedSection().set(this.getPath(), var2);
-      var1.registerTemplateEdition();
-      var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Lore Format successfully changed to " + var2 + ".");
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      Validate.isTrue(MMOItems.plugin.getLore().hasFormat(text), "Couldn't find lore format with ID '" + text + "'.");
+      editionInventory.getEditedSection().set(this.getPath(), text);
+      editionInventory.registerTemplateEdition();
+      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Lore Format successfully changed to " + text + ".");
    }
 }

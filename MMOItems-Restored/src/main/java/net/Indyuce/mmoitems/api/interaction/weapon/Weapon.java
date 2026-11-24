@@ -32,12 +32,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class Weapon extends UseItem {
    @Deprecated
-   public Weapon(Player var1, NBTItem var2) {
-      this(PlayerData.get(var1), var2);
+   public Weapon(Player player, NBTItem nbtItem) {
+      this(PlayerData.get(player), nbtItem);
    }
 
-   public Weapon(PlayerData var1, NBTItem var2) {
-      super(var1, var2);
+   public Weapon(PlayerData playerData, NBTItem nbtItem) {
+      super(playerData, nbtItem);
    }
 
    @Override
@@ -63,17 +63,17 @@ public class Weapon extends UseItem {
       return true;
    }
 
-   public boolean checkWeaponCosts(boolean var1) {
-      if (var1 && this.getPlayerData().getMMOPlayerData().getCooldownMap().isOnCooldown(this.mmoitem.getType())) {
+   public boolean checkWeaponCosts(boolean flag) {
+      if (flag && this.getPlayerData().getMMOPlayerData().getCooldownMap().isOnCooldown(this.mmoitem.getType())) {
          return false;
       } else {
-         double var2 = this.getNBTItem().getStat("MANA_COST");
-         if (var2 > 0.0 && this.playerData.getRPG().getMana() < var2) {
+         double stat = this.getNBTItem().getStat("MANA_COST");
+         if (stat > 0.0 && this.playerData.getRPG().getMana() < stat) {
             Message.NOT_ENOUGH_MANA.format(ChatColor.RED).send(this.getPlayer());
             return false;
          } else {
-            double var4 = this.getNBTItem().getStat("STAMINA_COST");
-            if (var4 > 0.0 && this.playerData.getRPG().getStamina() < var4) {
+            double stat2 = this.getNBTItem().getStat("STAMINA_COST");
+            if (stat2 > 0.0 && this.playerData.getRPG().getStamina() < stat2) {
                Message.NOT_ENOUGH_STAMINA.format(ChatColor.RED).send(this.getPlayer());
                return false;
             } else {
@@ -83,140 +83,140 @@ public class Weapon extends UseItem {
       }
    }
 
-   public void applyWeaponCosts(@Nullable Double var1) {
-      double var2 = this.getNBTItem().getStat("MANA_COST");
-      if (var2 > 0.0) {
-         this.playerData.getRPG().giveMana(-var2);
+   public void applyWeaponCosts(@Nullable Double value) {
+      double stat = this.getNBTItem().getStat("MANA_COST");
+      if (stat > 0.0) {
+         this.playerData.getRPG().giveMana(-stat);
       }
 
-      double var4 = this.getNBTItem().getStat("STAMINA_COST");
-      if (var4 > 0.0) {
-         this.playerData.getRPG().giveStamina(-var4);
+      double stat2 = this.getNBTItem().getStat("STAMINA_COST");
+      if (stat2 > 0.0) {
+         this.playerData.getRPG().giveStamina(-stat2);
       }
 
-      if (var1 != null) {
-         this.getPlayerData().getMMOPlayerData().getCooldownMap().applyCooldown(this.mmoitem.getType(), var1);
+      if (value != null) {
+         this.getPlayerData().getMMOPlayerData().getCooldownMap().applyCooldown(this.mmoitem.getType(), value);
       }
    }
 
-   public boolean handleTargetedAttack(AttackMetadata var1, @NotNull PlayerMetadata var2, LivingEntity var3) {
+   public boolean handleTargetedAttack(AttackMetadata attackMetadata, @NotNull PlayerMetadata playerMetadata, LivingEntity entity) {
       if (!this.checkAndApplyWeaponCosts()) {
          return false;
       }
 
-      SkillHandler var4 = this.mmoitem.getType().onAttack();
-      if (var4 != null && !this.getNBTItem().getBoolean("MMOITEMS_DISABLE_ATTACK_PASSIVE")) {
-         new SimpleSkill(var4).cast(new TriggerMetadata(var2, TriggerType.API, var3, var1));
+      SkillHandler skillHandler = this.mmoitem.getType().onAttack();
+      if (skillHandler != null && !this.getNBTItem().getBoolean("MMOITEMS_DISABLE_ATTACK_PASSIVE")) {
+         new SimpleSkill(skillHandler).cast(new TriggerMetadata(playerMetadata, TriggerType.API, entity, attackMetadata));
       }
 
       return true;
    }
 
    @Nullable
-   private SkillHandler findClickSkill(boolean var1) {
-      String var2 = this.getNBTItem().getString((var1 ? ItemStats.RIGHT_CLICK_SCRIPT : ItemStats.LEFT_CLICK_SCRIPT).getNBTPath());
-      if (!var1 && (var2 == null || var2.isEmpty())) {
-         var2 = this.getNBTItem().getString("MMOITEMS_STAFF_SPIRIT");
+   private SkillHandler findClickSkill(boolean flag) {
+      String text = this.getNBTItem().getString((flag ? ItemStats.RIGHT_CLICK_SCRIPT : ItemStats.LEFT_CLICK_SCRIPT).getNBTPath());
+      if (!flag && (text == null || text.isEmpty())) {
+         text = this.getNBTItem().getString("MMOITEMS_STAFF_SPIRIT");
       }
 
-      if (var2 != null && !var2.isEmpty()) {
-         return MythicLib.plugin.getSkills().getHandler(var2);
+      if (text != null && !text.isEmpty()) {
+         return MythicLib.plugin.getSkills().getHandler(text);
       }
 
-      Type var3 = this.mmoitem.getType();
-      return var1 ? var3.onRightClick() : var3.onLeftClick();
+      Type type = this.mmoitem.getType();
+      return flag ? type.onRightClick() : type.onLeftClick();
    }
 
    @Nullable
-   public WeaponAttackResult handleUntargetedAttack(boolean var1, @NotNull EquipmentSlot var2) {
+   public WeaponAttackResult handleUntargetedAttack(boolean flag, @NotNull EquipmentSlot equipmentSlot) {
       if (this instanceof LegacyWeapon) {
-         return this.legacyHandleUntargetedAttack(var1, var2);
+         return this.legacyHandleUntargetedAttack(flag, equipmentSlot);
       }
 
-      SkillHandler var3 = this.findClickSkill(var1);
-      if (var3 == null) {
+      SkillHandler clickSkill = this.findClickSkill(flag);
+      if (clickSkill == null) {
          return WeaponAttackResult.NO_ATTACK;
       }
 
-      SkillMetadata var4 = new TriggerMetadata(this.getPlayerData().getMMOPlayerData(), TriggerType.API).toSkillMetadata(new SimpleSkill(var3));
-      SkillResult var5 = var3.getResult(var4);
-      if (!var5.isSuccessful()) {
+      SkillMetadata skillMetadata = new TriggerMetadata(this.getPlayerData().getMMOPlayerData(), TriggerType.API).toSkillMetadata(new SimpleSkill(clickSkill));
+      SkillResult result = clickSkill.getResult(skillMetadata);
+      if (!result.isSuccessful()) {
          return WeaponAttackResult.NO_ATTACK;
       }
 
-      UntargetedDurabilityItem var6 = new UntargetedDurabilityItem(this.getPlayer(), this.getNBTItem(), var2);
-      if (var6.isBroken()) {
+      UntargetedDurabilityItem untargetedDurabilityItem = new UntargetedDurabilityItem(this.getPlayer(), this.getNBTItem(), equipmentSlot);
+      if (untargetedDurabilityItem.isBroken()) {
          return WeaponAttackResult.DURABILITY;
       }
 
-      PlayerMetadata var7 = this.getPlayerData().getStats().newTemporary(var2);
+      PlayerMetadata temporary = this.getPlayerData().getStats().newTemporary(equipmentSlot);
       if (!this.checkWeaponCosts(true)) {
          return WeaponAttackResult.WEAPON_COSTS;
       }
 
-      UntargetedWeaponUseEvent var8 = new UntargetedWeaponUseEvent(this.playerData, this);
-      Bukkit.getPluginManager().callEvent(var8);
-      if (var8.isCancelled()) {
+      UntargetedWeaponUseEvent event = new UntargetedWeaponUseEvent(this.playerData, this);
+      Bukkit.getPluginManager().callEvent(event);
+      if (event.isCancelled()) {
          return WeaponAttackResult.BUKKIT_EVENT;
       }
 
-      double var9 = 1.0 / this.requireNonZero(var7.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed"));
-      this.applyWeaponCosts(var9);
-      var3.whenCast(var5, var4);
-      if (var6.isValid()) {
-         var6.decreaseDurability(1).inventoryUpdate();
+      double value = 1.0 / this.requireNonZero(temporary.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed"));
+      this.applyWeaponCosts(value);
+      clickSkill.whenCast(result, skillMetadata);
+      if (untargetedDurabilityItem.isValid()) {
+         untargetedDurabilityItem.decreaseDurability(1).inventoryUpdate();
       }
 
       return WeaponAttackResult.SUCCESS;
    }
 
    @Deprecated
-   private WeaponAttackResult legacyHandleUntargetedAttack(boolean var1, @NotNull EquipmentSlot var2) {
-      if (!((LegacyWeapon)this).canAttack(var1, var2)) {
+   private WeaponAttackResult legacyHandleUntargetedAttack(boolean flag, @NotNull EquipmentSlot equipmentSlot) {
+      if (!((LegacyWeapon)this).canAttack(flag, equipmentSlot)) {
          return WeaponAttackResult.NO_ATTACK;
       }
 
-      UntargetedDurabilityItem var3 = new UntargetedDurabilityItem(this.getPlayer(), this.getNBTItem(), var2);
-      if (var3.isBroken()) {
+      UntargetedDurabilityItem untargetedDurabilityItem = new UntargetedDurabilityItem(this.getPlayer(), this.getNBTItem(), equipmentSlot);
+      if (untargetedDurabilityItem.isBroken()) {
          return WeaponAttackResult.DURABILITY;
       }
 
-      PlayerMetadata var4 = this.getPlayerData().getStats().newTemporary(var2);
+      PlayerMetadata temporary = this.getPlayerData().getStats().newTemporary(equipmentSlot);
       if (!this.checkWeaponCosts(true)) {
          return WeaponAttackResult.WEAPON_COSTS;
       }
 
-      UntargetedWeaponUseEvent var5 = new UntargetedWeaponUseEvent(this.playerData, this);
-      Bukkit.getPluginManager().callEvent(var5);
-      if (var5.isCancelled()) {
+      UntargetedWeaponUseEvent event = new UntargetedWeaponUseEvent(this.playerData, this);
+      Bukkit.getPluginManager().callEvent(event);
+      if (event.isCancelled()) {
          return WeaponAttackResult.BUKKIT_EVENT;
       }
 
-      double var6 = 1.0 / this.requireNonZero(var4.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed"));
-      this.applyWeaponCosts(var6);
-      PlayerMetadata var8 = this.playerData.getMMOPlayerData().getStatMap().cache(var2);
-      ((LegacyWeapon)this).applyAttackEffect(var8, var2);
-      if (var3.isValid()) {
-         var3.decreaseDurability(1).inventoryUpdate();
+      double value = 1.0 / this.requireNonZero(temporary.getStat("ATTACK_SPEED"), MMOItems.plugin.getConfig().getDouble("default.attack-speed"));
+      this.applyWeaponCosts(value);
+      PlayerMetadata playerMetadata = this.playerData.getMMOPlayerData().getStatMap().cache(equipmentSlot);
+      ((LegacyWeapon)this).applyAttackEffect(playerMetadata, equipmentSlot);
+      if (untargetedDurabilityItem.isValid()) {
+         untargetedDurabilityItem.decreaseDurability(1).inventoryUpdate();
       }
 
       return WeaponAttackResult.SUCCESS;
    }
 
    @Deprecated
-   protected Location getGround(Location var1) {
-      for (int var2 = 0; var2 < 20; var2++) {
-         if (var1.getBlock().getType().isSolid()) {
-            return var1;
+   protected Location getGround(Location location) {
+      for (int i = 0; i < 20; i++) {
+         if (location.getBlock().getType().isSolid()) {
+            return location;
          }
 
-         var1.add(0.0, -1.0, 0.0);
+         location.add(0.0, -1.0, 0.0);
       }
 
-      return var1;
+      return location;
    }
 
-   protected double requireNonZero(double var1, double var3) {
-      return var1 <= 0.0 ? var3 : var1;
+   protected double requireNonZero(double value, double value2) {
+      return value <= 0.0 ? value2 : value;
    }
 }

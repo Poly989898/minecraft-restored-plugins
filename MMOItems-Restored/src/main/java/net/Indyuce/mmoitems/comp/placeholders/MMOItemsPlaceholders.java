@@ -35,71 +35,71 @@ public class MMOItemsPlaceholders extends PlaceholderExpansion {
       return true;
    }
 
-   public String onRequest(@Nullable OfflinePlayer var1, @NotNull String var2) {
-      if (var2.startsWith("type_")) {
-         String var12 = var2.substring(5, var2.lastIndexOf("_")).toUpperCase();
-         if (!MMOItems.plugin.getTypes().has(var12)) {
+   public String onRequest(@Nullable OfflinePlayer offlinePlayer, @NotNull String text) {
+      if (text.startsWith("type_")) {
+         String text2 = text.substring(5, text.lastIndexOf("_")).toUpperCase();
+         if (!MMOItems.plugin.getTypes().has(text2)) {
             return "Invalid type";
          }
 
-         net.Indyuce.mmoitems.api.Type var13 = net.Indyuce.mmoitems.api.Type.get(var12);
-         String var14 = var2.substring(6 + var12.length()).toLowerCase();
-         return "total".equals(var14) ? "" + MMOItems.plugin.getTemplates().getTemplates(var13).size() : var13.getName();
-      } else if (var1 == null) {
+         net.Indyuce.mmoitems.api.Type type = net.Indyuce.mmoitems.api.Type.get(text2);
+         String text3 = text.substring(6 + text2.length()).toLowerCase();
+         return "total".equals(text3) ? "" + MMOItems.plugin.getTemplates().getTemplates(type).size() : type.getName();
+      } else if (offlinePlayer == null) {
          return null;
-      } else if (var2.equals("stat_defense_percent")) {
-         double var11 = MMOPlayerData.get(var1).getStatMap().getStat("DEFENSE");
-         double var5 = 100.0 - new DefenseFormula().getAppliedDamage(var11, 100.0);
-         return MythicLib.plugin.getMMOConfig().decimal.format(var5);
-      } else if (var2.startsWith("stat_")) {
-         String var10 = UtilityMethods.enumName(var2.substring(5));
-         return StatManager.format(var10, MMOPlayerData.get(var1));
-      } else if (var2.startsWith("ability_cd_")) {
-         return MythicLib.plugin.getMMOConfig().decimal.format(MMOPlayerData.get(var1).getCooldownMap().getCooldown("skill_" + var2.substring(11)));
-      } else if (var2.startsWith("tier_")) {
-         String var9 = var2.substring(5).toUpperCase();
-         return !MMOItems.plugin.getTiers().has(var9) ? "Invalid tier" : MMOItems.plugin.getTiers().get(var9).getName();
-      } else if (!var1.isOnline()) {
+      } else if (text.equals("stat_defense_percent")) {
+         double stat = MMOPlayerData.get(offlinePlayer).getStatMap().getStat("DEFENSE");
+         double value = 100.0 - new DefenseFormula().getAppliedDamage(stat, 100.0);
+         return MythicLib.plugin.getMMOConfig().decimal.format(value);
+      } else if (text.startsWith("stat_")) {
+         String text2 = UtilityMethods.enumName(text.substring(5));
+         return StatManager.format(text2, MMOPlayerData.get(offlinePlayer));
+      } else if (text.startsWith("ability_cd_")) {
+         return MythicLib.plugin.getMMOConfig().decimal.format(MMOPlayerData.get(offlinePlayer).getCooldownMap().getCooldown("skill_" + text.substring(11)));
+      } else if (text.startsWith("tier_")) {
+         String text2 = text.substring(5).toUpperCase();
+         return !MMOItems.plugin.getTiers().has(text2) ? "Invalid tier" : MMOItems.plugin.getTiers().get(text2).getName();
+      } else if (!offlinePlayer.isOnline()) {
          return null;
-      } else if (var2.equals("durability")) {
-         NBTItem var8 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var1.getPlayer().getInventory().getItemInMainHand());
-         return String.valueOf(var8.hasTag("MMOITEMS_DURABILITY") ? var8.getInteger("MMOITEMS_DURABILITY") : var8.getInteger("MMOITEMS_MAX_DURABILITY"));
-      } else if (var2.equals("durability_max")) {
+      } else if (text.equals("durability")) {
+         NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(offlinePlayer.getPlayer().getInventory().getItemInMainHand());
+         return String.valueOf(nBTItem.hasTag("MMOITEMS_DURABILITY") ? nBTItem.getInteger("MMOITEMS_DURABILITY") : nBTItem.getInteger("MMOITEMS_MAX_DURABILITY"));
+      } else if (text.equals("durability_max")) {
          return ""
             + (int)MythicLib.plugin
                .getVersion()
                .getWrapper()
-               .getNBTItem(var1.getPlayer().getInventory().getItemInMainHand())
+               .getNBTItem(offlinePlayer.getPlayer().getInventory().getItemInMainHand())
                .getDouble("MMOITEMS_MAX_DURABILITY");
-      } else if (var2.equals("durability_ratio")) {
-         NBTItem var3 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var1.getPlayer().getInventory().getItemInMainHand());
-         double var4 = var3.getDouble("MMOITEMS_DURABILITY");
-         double var6 = var3.getDouble("MMOITEMS_MAX_DURABILITY");
-         return MythicLib.plugin.getMMOConfig().decimal.format(var4 / var6 * 100.0);
-      } else if (var2.equals("durability_bar_square")) {
-         return this.getCurrentDurabilityBar(var1.getPlayer().getInventory().getItemInMainHand(), "█", 10);
-      } else if (var2.equals("durability_bar_diamond")) {
-         return this.getCurrentDurabilityBar(var1.getPlayer().getInventory().getItemInMainHand(), "◆", 15);
+      } else if (text.equals("durability_ratio")) {
+         NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(offlinePlayer.getPlayer().getInventory().getItemInMainHand());
+         double mMOITEMSDURABILITY = nBTItem.getDouble("MMOITEMS_DURABILITY");
+         double mMOITEMSMAXDURABILITY = nBTItem.getDouble("MMOITEMS_MAX_DURABILITY");
+         return MythicLib.plugin.getMMOConfig().decimal.format(mMOITEMSDURABILITY / mMOITEMSMAXDURABILITY * 100.0);
+      } else if (text.equals("durability_bar_square")) {
+         return this.getCurrentDurabilityBar(offlinePlayer.getPlayer().getInventory().getItemInMainHand(), "█", 10);
+      } else if (text.equals("durability_bar_diamond")) {
+         return this.getCurrentDurabilityBar(offlinePlayer.getPlayer().getInventory().getItemInMainHand(), "◆", 15);
       } else {
-         return var2.equals("durability_bar_thin") ? this.getCurrentDurabilityBar(var1.getPlayer().getInventory().getItemInMainHand(), "|", 20) : null;
+         return text.equals("durability_bar_thin") ? this.getCurrentDurabilityBar(offlinePlayer.getPlayer().getInventory().getItemInMainHand(), "|", 20) : null;
       }
    }
 
-   private String getCurrentDurabilityBar(ItemStack var1, String var2, int var3) {
-      NBTItem var4 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var1);
-      double var5 = var4.getDouble("MMOITEMS_DURABILITY");
-      double var7 = var4.getDouble("MMOITEMS_MAX_DURABILITY");
-      long var9 = Math.round(var5 / var7 * var3);
-      StringBuilder var11 = new StringBuilder("" + ChatColor.GREEN);
+   private String getCurrentDurabilityBar(ItemStack item, String text, int count) {
+      NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item);
+      double mMOITEMSDURABILITY = nBTItem.getDouble("MMOITEMS_DURABILITY");
+      double mMOITEMSMAXDURABILITY = nBTItem.getDouble("MMOITEMS_MAX_DURABILITY");
+      long value = Math.round(mMOITEMSDURABILITY / mMOITEMSMAXDURABILITY * count);
+      StringBuilder builder = new StringBuilder("" + ChatColor.GREEN);
 
-      for (int var12 = 0; var12 < var3; var12++) {
-         var11.append(var12 == var9 ? ChatColor.WHITE : "").append(var2);
+      for (int i = 0; i < count; i++) {
+         builder.append(i == value ? ChatColor.WHITE : "").append(text);
       }
 
-      return var11.toString();
+      return builder.toString();
    }
 
-   private boolean hasItem(Player var1, EquipmentSlot var2) {
-      return var1.getInventory().getItem(var2) != null && var1.getInventory().getItem(var2).getType() != Material.AIR;
+   private boolean hasItem(Player player, EquipmentSlot equipmentSlot) {
+      return player.getInventory().getItem(equipmentSlot) != null && player.getInventory().getItem(equipmentSlot).getType() != Material.AIR;
    }
 }

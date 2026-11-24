@@ -14,17 +14,17 @@ public abstract class RecipeButtonAction {
       return this.inv;
    }
 
-   public RecipeButtonAction(@NotNull RecipeEditorGUI var1) {
-      this.inv = var1;
+   public RecipeButtonAction(@NotNull RecipeEditorGUI recipeEditorGUI) {
+      this.inv = recipeEditorGUI;
    }
 
    public abstract boolean runPrimary();
 
-   public abstract void primaryProcessInput(@NotNull String var1, Object... var2);
+   public abstract void primaryProcessInput(@NotNull String text, Object... objs);
 
    public abstract boolean runSecondary();
 
-   public abstract void secondaryProcessInput(@NotNull String var1, Object... var2);
+   public abstract void secondaryProcessInput(@NotNull String text, Object... objs);
 
    @NotNull
    public abstract ItemStack getButton();

@@ -32,47 +32,47 @@ public class MMOItemUIFilter implements UIFilter {
       return "m";
    }
 
-   public boolean matches(@NotNull ItemStack var1, @NotNull String var2, @NotNull String var3, @Nullable FriendlyFeedbackProvider var4) {
-      var2 = var2.replace(" ", "_").replace("-", "_").toUpperCase();
-      var3 = var3.replace(" ", "_").replace("-", "_").toUpperCase();
-      if (!this.isValid(var2, var3, var4)) {
+   public boolean matches(@NotNull ItemStack item, @NotNull String text, @NotNull String text2, @Nullable FriendlyFeedbackProvider friendlyFeedbackProvider) {
+      text = text.replace(" ", "_").replace("-", "_").toUpperCase();
+      text2 = text2.replace(" ", "_").replace("-", "_").toUpperCase();
+      if (!this.isValid(text, text2, friendlyFeedbackProvider)) {
          return false;
       }
 
-      if (this.cancelMatch(var1, var4)) {
+      if (this.cancelMatch(item, friendlyFeedbackProvider)) {
          return false;
       }
 
-      NBTItem var5 = NBTItem.get(var1);
-      MMOItemTemplate var6 = MMOItems.plugin.getTemplates().getTemplate(var5);
-      if (var6 == null) {
+      NBTItem nbtItem = NBTItem.get(item);
+      MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(nbtItem);
+      if (template == null) {
          FriendlyFeedbackProvider.log(
-            var4, FriendlyFeedbackCategory.FAILURE, "Item $r{0}$b is $fnot a MMOItem$b. ", new String[]{SilentNumbers.getItemName(var1)}
+            friendlyFeedbackProvider, FriendlyFeedbackCategory.FAILURE, "Item $r{0}$b is $fnot a MMOItem$b. ", new String[]{SilentNumbers.getItemName(item)}
          );
          return false;
       }
 
-      String var7 = "";
-      if (var3.contains("{")) {
-         var7 = var3.substring(var3.indexOf(123) + 1);
-         var3 = var3.substring(0, var3.indexOf(123));
-         if (var7.endsWith("}")) {
-            var7 = var7.substring(0, var7.length() - 1);
+      String text3 = "";
+      if (text2.contains("{")) {
+         text3 = text2.substring(text2.indexOf(123) + 1);
+         text2 = text2.substring(0, text2.indexOf(123));
+         if (text3.endsWith("}")) {
+            text3 = text3.substring(0, text3.length() - 1);
          }
       }
 
-      if (var6.getType().getId().equals(var2) && var6.getId().equals(var3)) {
-         if (!var7.isEmpty()) {
-            VolatileMMOItem var8 = new VolatileMMOItem(var5);
-            QuickNumberRange var9 = SilentNumbers.rangeFromBracketsTab(var7, "LEVEL");
-            if (var9 != null) {
-               int var10 = var8.getUpgradeLevel();
-               if (!var9.inRange(var10)) {
+      if (template.getType().getId().equals(text) && template.getId().equals(text2)) {
+         if (!text3.isEmpty()) {
+            VolatileMMOItem volatileMMOItem = new VolatileMMOItem(nbtItem);
+            QuickNumberRange quickNumberRange = SilentNumbers.rangeFromBracketsTab(text3, "LEVEL");
+            if (quickNumberRange != null) {
+               int upgradeLevel = volatileMMOItem.getUpgradeLevel();
+               if (!quickNumberRange.inRange(upgradeLevel)) {
                   FriendlyFeedbackProvider.log(
-                     var4,
+                     friendlyFeedbackProvider,
                      FriendlyFeedbackCategory.FAILURE,
                      "MMOItem $r{0} {1}$b is of level $u{2}$b though $r{3}$b was expected. $fNo Match. ",
-                     new String[]{var6.getType().getId(), var6.getId(), String.valueOf(var10), var9.toString()}
+                     new String[]{template.getType().getId(), template.getId(), String.valueOf(upgradeLevel), quickNumberRange.toString()}
                   );
                   return false;
                }
@@ -80,96 +80,96 @@ public class MMOItemUIFilter implements UIFilter {
          }
 
          FriendlyFeedbackProvider.log(
-            var4, FriendlyFeedbackCategory.SUCCESS, "Detected $r{0} {1} $sSuccessfully. ", new String[]{var6.getType().getId(), var6.getId()}
+            friendlyFeedbackProvider, FriendlyFeedbackCategory.SUCCESS, "Detected $r{0} {1} $sSuccessfully. ", new String[]{template.getType().getId(), template.getId()}
          );
          return true;
       } else {
          FriendlyFeedbackProvider.log(
-            var4,
+            friendlyFeedbackProvider,
             FriendlyFeedbackCategory.FAILURE,
             "MMOItem $r{0} {1}$b is not the expected $r{2} {3}$b. $fNo Match. ",
-            new String[]{var6.getType().getId(), var6.getId(), var2, var3}
+            new String[]{template.getType().getId(), template.getId(), text, text2}
          );
          return false;
       }
    }
 
-   public boolean isValid(@NotNull String var1, @NotNull String var2, @Nullable FriendlyFeedbackProvider var3) {
+   public boolean isValid(@NotNull String text, @NotNull String text2, @Nullable FriendlyFeedbackProvider friendlyFeedbackProvider) {
       if (reg) {
          return true;
       }
 
-      var1 = var1.replace(" ", "_").replace("-", "_").toUpperCase();
-      var2 = var2.replace(" ", "_").replace("-", "_").toUpperCase();
-      Type var4 = MMOItems.plugin.getTypes().get(var1);
-      if (var4 == null) {
-         FriendlyFeedbackProvider.log(var3, FriendlyFeedbackCategory.ERROR, "$fInvalid MMOItem Type $r{0}$f. ", new String[]{var1});
+      text = text.replace(" ", "_").replace("-", "_").toUpperCase();
+      text2 = text2.replace(" ", "_").replace("-", "_").toUpperCase();
+      Type type = MMOItems.plugin.getTypes().get(text);
+      if (type == null) {
+         FriendlyFeedbackProvider.log(friendlyFeedbackProvider, FriendlyFeedbackCategory.ERROR, "$fInvalid MMOItem Type $r{0}$f. ", new String[]{text});
          return false;
       }
 
-      if (var2.contains("{") && var2.contains("}")) {
-         var2 = var2.substring(0, var2.indexOf(123));
+      if (text2.contains("{") && text2.contains("}")) {
+         text2 = text2.substring(0, text2.indexOf(123));
       }
 
-      if (MMOItems.plugin.getMMOItem(var4, var2) == null) {
+      if (MMOItems.plugin.getMMOItem(type, text2) == null) {
          FriendlyFeedbackProvider.log(
-            var3, FriendlyFeedbackCategory.ERROR, "$fInvalid MMOItem $r{0} {1}$f: $bNo such MMOItem for Type $e{0}$b. ", new String[]{var1, var2}
+            friendlyFeedbackProvider, FriendlyFeedbackCategory.ERROR, "$fInvalid MMOItem $r{0} {1}$f: $bNo such MMOItem for Type $e{0}$b. ", new String[]{text, text2}
          );
          return false;
       } else {
-         FriendlyFeedbackProvider.log(var3, FriendlyFeedbackCategory.SUCCESS, "Valid MMOItem $r{0} {1}$b. $snice. ", new String[]{var1, var2});
+         FriendlyFeedbackProvider.log(friendlyFeedbackProvider, FriendlyFeedbackCategory.SUCCESS, "Valid MMOItem $r{0} {1}$b. $snice. ", new String[]{text, text2});
          return true;
       }
    }
 
    @NotNull
-   public ArrayList<String> tabCompleteArgument(@NotNull String var1) {
-      return SilentNumbers.smartFilter(MMOItems.plugin.getTypes().getAllTypeNames(), var1, true);
+   public ArrayList<String> tabCompleteArgument(@NotNull String text) {
+      return SilentNumbers.smartFilter(MMOItems.plugin.getTypes().getAllTypeNames(), text, true);
    }
 
    @NotNull
-   public ArrayList<String> tabCompleteData(@NotNull String var1, @NotNull String var2) {
-      Type var3 = MMOItems.plugin.getTypes().get(var1);
-      if (var3 != null) {
-         String var4 = "";
-         String var5 = "";
-         if (var2.contains("{")) {
-            var4 = var2.substring(var2.indexOf(123) + 1);
-            var2 = var2.substring(0, var2.indexOf(123));
-            int var6 = 0;
-            if (var4.contains(",")) {
-               var6 = var4.lastIndexOf(44) + 1;
+   public ArrayList<String> tabCompleteData(@NotNull String text, @NotNull String text2) {
+      Type type = MMOItems.plugin.getTypes().get(text);
+      if (type != null) {
+         String text3 = "";
+         String text4 = "";
+         if (text2.contains("{")) {
+            text3 = text2.substring(text2.indexOf(123) + 1);
+            text2 = text2.substring(0, text2.indexOf(123));
+            int count = 0;
+            if (text3.contains(",")) {
+               count = text3.lastIndexOf(44) + 1;
             }
 
-            var5 = var4.substring(var6);
-            var4 = var4.substring(0, var6);
+            text4 = text3.substring(count);
+            text3 = text3.substring(0, count);
          }
 
-         ArrayList<String> var14 = SilentNumbers.smartFilter(MMOItems.plugin.getTemplates().getTemplateNames(var3), var2, true);
-         ArrayList var7 = var14;
-         if (!var5.isEmpty()) {
-            ArrayList<String> var8 = new ArrayList();
-            if (var5.contains("=")) {
-               String var9 = var5.substring(0, var5.indexOf(61));
-               switch (var9.toLowerCase()) {
+         ArrayList<String> texts = SilentNumbers.smartFilter(MMOItems.plugin.getTemplates().getTemplateNames(type), text2, true);
+         ArrayList list = texts;
+         if (!text4.isEmpty()) {
+            ArrayList<String> texts2 = new ArrayList();
+            if (text4.contains("=")) {
+               String text5 = text4.substring(0, text4.indexOf(61));
+               switch (text5.toLowerCase()) {
                   case "level":
-                     SilentNumbers.addAll(var8, new String[]{"level=1..", "level=2..4", "level=..6"});
+                     SilentNumbers.addAll(texts2, new String[]{"level=1..", "level=2..4", "level=..6"});
                      break;
                   default:
-                     var8.add(var5);
+                     texts2.add(text4);
                }
             } else {
-               var8 = SilentNumbers.smartFilter(this.getValidDataments(), var5, true);
+               texts2 = SilentNumbers.smartFilter(this.getValidDataments(), text4, true);
             }
 
-            for (String var16 : var14) {
-               for (String var12 : var8) {
-                  var7.add(var16 + "{" + var4 + var12);
+            for (String text5 : texts) {
+               for (String text6 : texts2) {
+                  list.add(text5 + "{" + text3 + text6);
                }
             }
          }
 
-         return var7;
+         return list;
       } else {
          return SilentNumbers.toArrayList(new String[]{"Type_not_found,_check_your_spelling"});
       }
@@ -190,63 +190,63 @@ public class MMOItemUIFilter implements UIFilter {
    }
 
    @Nullable
-   public ItemStack getItemStack(@NotNull String var1, @NotNull String var2, @Nullable FriendlyFeedbackProvider var3) {
-      if (!this.isValid(var1, var2, var3)) {
+   public ItemStack getItemStack(@NotNull String text, @NotNull String text2, @Nullable FriendlyFeedbackProvider friendlyFeedbackProvider) {
+      if (!this.isValid(text, text2, friendlyFeedbackProvider)) {
          return null;
       }
 
-      var1 = var1.replace(" ", "_").replace("-", "_").toUpperCase();
-      var2 = var2.replace(" ", "_").replace("-", "_").toUpperCase();
-      return MMOItems.plugin.getItem(var1, var2);
+      text = text.replace(" ", "_").replace("-", "_").toUpperCase();
+      text2 = text2.replace(" ", "_").replace("-", "_").toUpperCase();
+      return MMOItems.plugin.getItem(text, text2);
    }
 
    @NotNull
-   public ItemStack getDisplayStack(@NotNull String var1, @NotNull String var2, @Nullable FriendlyFeedbackProvider var3) {
-      if (!this.isValid(var1, var2, var3)) {
-         return ItemFactory.of(Material.STRUCTURE_VOID).name("§cInvalid MMOItem §e" + var1 + " " + var2).build();
+   public ItemStack getDisplayStack(@NotNull String text, @NotNull String text2, @Nullable FriendlyFeedbackProvider friendlyFeedbackProvider) {
+      if (!this.isValid(text, text2, friendlyFeedbackProvider)) {
+         return ItemFactory.of(Material.STRUCTURE_VOID).name("§cInvalid MMOItem §e" + text + " " + text2).build();
       }
 
-      var1 = var1.replace(" ", "_").replace("-", "_").toUpperCase();
-      String var4 = "";
-      if (var2.contains("{")) {
-         var4 = var2.substring(var2.indexOf(123) + 1);
-         var2 = var2.substring(0, var2.indexOf(123));
-         if (var4.endsWith("}")) {
-            var4 = var4.substring(0, var4.length() - 1);
+      text = text.replace(" ", "_").replace("-", "_").toUpperCase();
+      String text3 = "";
+      if (text2.contains("{")) {
+         text3 = text2.substring(text2.indexOf(123) + 1);
+         text2 = text2.substring(0, text2.indexOf(123));
+         if (text3.endsWith("}")) {
+            text3 = text3.substring(0, text3.length() - 1);
          }
       }
 
-      var2 = var2.replace(" ", "_").replace("-", "_").toUpperCase();
-      MMOItem var5 = new MMOItemBuilder(MMOItems.plugin.getTemplates().getTemplate(MMOItems.plugin.getTypes().get(var1), var2), 0, null, true).build();
-      if (!var4.isEmpty() && var5.hasUpgradeTemplate()) {
-         QuickNumberRange var6 = SilentNumbers.rangeFromBracketsTab(var4, "level");
-         if (var6 != null) {
-            UpgradeData var7 = ((UpgradeData)var5.getData(ItemStats.UPGRADE)).clone();
-            var7.setLevel(SilentNumbers.floor(var6.getAsDouble(0.0)));
-            var5.setData(ItemStats.UPGRADE, var7);
+      text2 = text2.replace(" ", "_").replace("-", "_").toUpperCase();
+      MMOItem mmoItem = new MMOItemBuilder(MMOItems.plugin.getTemplates().getTemplate(MMOItems.plugin.getTypes().get(text), text2), 0, null, true).build();
+      if (!text3.isEmpty() && mmoItem.hasUpgradeTemplate()) {
+         QuickNumberRange quickNumberRange = SilentNumbers.rangeFromBracketsTab(text3, "level");
+         if (quickNumberRange != null) {
+            UpgradeData upgradeData = ((UpgradeData)mmoItem.getData(ItemStats.UPGRADE)).clone();
+            upgradeData.setLevel(SilentNumbers.floor(quickNumberRange.getAsDouble(0.0)));
+            mmoItem.setData(ItemStats.UPGRADE, upgradeData);
          }
       }
 
-      return var5.newBuilder().buildNBT(true).toItem();
+      return mmoItem.newBuilder().buildNBT(true).toItem();
    }
 
    @NotNull
-   public ArrayList<String> getDescription(@NotNull String var1, @NotNull String var2) {
-      if (!this.isValid(var1, var2, null)) {
+   public ArrayList<String> getDescription(@NotNull String text, @NotNull String text2) {
+      if (!this.isValid(text, text2, null)) {
          return SilentNumbers.toArrayList(new String[]{"This MMOItem is $finvalid$b."});
       }
 
-      var1 = var1.replace(" ", "_").replace("-", "_").toUpperCase();
-      var2 = var2.replace(" ", "_").replace("-", "_").toUpperCase();
-      return SilentNumbers.toArrayList(new String[]{SilentNumbers.getItemName(MMOItems.plugin.getItem(var1, var2))});
+      text = text.replace(" ", "_").replace("-", "_").toUpperCase();
+      text2 = text2.replace(" ", "_").replace("-", "_").toUpperCase();
+      return SilentNumbers.toArrayList(new String[]{SilentNumbers.getItemName(MMOItems.plugin.getItem(text, text2))});
    }
 
    public boolean determinateGeneration() {
       return false;
    }
 
-   public boolean partialDeterminateGeneration(@NotNull String var1, @NotNull String var2) {
-      return !this.isValid(var1, var2, null);
+   public boolean partialDeterminateGeneration(@NotNull String text, @NotNull String text2) {
+      return !this.isValid(text, text2, null);
    }
 
    @NotNull

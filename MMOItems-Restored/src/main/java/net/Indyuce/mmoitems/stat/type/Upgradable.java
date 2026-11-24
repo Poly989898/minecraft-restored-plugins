@@ -8,10 +8,10 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Upgradable {
    @NotNull
-   UpgradeInfo loadUpgradeInfo(@Nullable Object var1) throws IllegalArgumentException;
+   UpgradeInfo loadUpgradeInfo(@Nullable Object obj) throws IllegalArgumentException;
 
    @NotNull
-   StatData apply(@NotNull StatData var1, @NotNull UpgradeInfo var2, int var3);
+   StatData apply(@NotNull StatData statData, @NotNull UpgradeInfo upgradeInfo, int count);
 
    default void preprocess(@NotNull MMOItem item) {
    }

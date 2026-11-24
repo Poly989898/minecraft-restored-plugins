@@ -22,21 +22,21 @@ public class SkillManager {
    private final Map<String, RegisteredSkill> skills = new HashMap<>();
 
    @Nullable
-   public RegisteredSkill getSkill(String var1) {
-      return this.skills.get(var1);
+   public RegisteredSkill getSkill(String text) {
+      return this.skills.get(text);
    }
 
    @NotNull
-   public RegisteredSkill getSkillOrThrow(String var1) {
-      return Objects.requireNonNull(this.skills.get(var1), "Could not find skill with ID '" + var1 + "'");
+   public RegisteredSkill getSkillOrThrow(String text) {
+      return Objects.requireNonNull(this.skills.get(text), "Could not find skill with ID '" + text + "'");
    }
 
-   public void registerSkill(RegisteredSkill var1) {
-      this.skills.put(Objects.requireNonNull(var1, "Skill cannot be null").getHandler().getId(), var1);
+   public void registerSkill(RegisteredSkill registeredSkill) {
+      this.skills.put(Objects.requireNonNull(registeredSkill, "Skill cannot be null").getHandler().getId(), registeredSkill);
    }
 
-   public boolean hasSkill(String var1) {
-      return this.skills.containsKey(var1);
+   public boolean hasSkill(String text) {
+      return this.skills.containsKey(text);
    }
 
    @NotNull
@@ -44,44 +44,44 @@ public class SkillManager {
       return this.skills.values();
    }
 
-   public void initialize(boolean var1) {
-      if (var1) {
+   public void initialize(boolean flag) {
+      if (flag) {
          this.skills.clear();
       }
 
-      File var2 = new File(MMOItems.plugin.getDataFolder() + "/skill");
-      if (!var2.exists()) {
+      File file = new File(MMOItems.plugin.getDataFolder() + "/skill");
+      if (!file.exists()) {
          try {
-            var2.mkdir();
+            file.mkdir();
 
-            for (SkillHandler var4 : MythicLib.plugin.getSkills().getHandlers()) {
-               InputStream var5 = MMOItems.plugin.getResource("default/skill/" + var4.getLowerCaseId() + ".yml");
-               if (var5 != null) {
-                  Files.copy(var5, new File(MMOItems.plugin.getDataFolder() + "/skill/" + var4.getLowerCaseId() + ".yml").getAbsoluteFile().toPath());
+            for (SkillHandler handler : MythicLib.plugin.getSkills().getHandlers()) {
+               InputStream resource = MMOItems.plugin.getResource("default/skill/" + handler.getLowerCaseId() + ".yml");
+               if (resource != null) {
+                  Files.copy(resource, new File(MMOItems.plugin.getDataFolder() + "/skill/" + handler.getLowerCaseId() + ".yml").getAbsoluteFile().toPath());
                }
             }
-         } catch (IOException var9) {
-            MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not save default ability configs: " + var9.getMessage());
+         } catch (IOException exception) {
+            MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not save default ability configs: " + exception.getMessage());
          }
       }
 
-      for (SkillHandler<?> var11 : MythicLib.plugin.getSkills().getHandlers()) {
-         ConfigFile var12 = new ConfigFile("/skill", var11.getLowerCaseId());
-         if (!var12.exists()) {
-            var12.getConfig().set("name", UtilityMethods.caseOnWords(var11.getId().replace("_", " ").replace("-", " ").toLowerCase()));
+      for (SkillHandler<?> handler : MythicLib.plugin.getSkills().getHandlers()) {
+         ConfigFile configFile = new ConfigFile("/skill", handler.getLowerCaseId());
+         if (!configFile.exists()) {
+            configFile.getConfig().set("name", UtilityMethods.caseOnWords(handler.getId().replace("_", " ").replace("-", " ").toLowerCase()));
 
-            for (String var7 : var11.getModifiers()) {
-               var12.getConfig().set("modifier." + var7 + ".name", UtilityMethods.caseOnWords(var7.replace("-", " ").toLowerCase()));
-               var12.getConfig().set("modifier." + var7 + ".default-value", 0);
+            for (String modifier : handler.getModifiers()) {
+               configFile.getConfig().set("modifier." + modifier + ".name", UtilityMethods.caseOnWords(modifier.replace("-", " ").toLowerCase()));
+               configFile.getConfig().set("modifier." + modifier + ".default-value", 0);
             }
 
-            var12.save();
+            configFile.save();
          }
 
          try {
-            this.skills.put(var11.getId(), new RegisteredSkill(var11, var12.getConfig()));
-         } catch (RuntimeException var8) {
-            MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load skill '" + var11.getId() + "': " + var8.getMessage());
+            this.skills.put(handler.getId(), new RegisteredSkill(handler, configFile.getConfig()));
+         } catch (RuntimeException exception) {
+            MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load skill '" + handler.getId() + "': " + exception.getMessage());
          }
       }
    }

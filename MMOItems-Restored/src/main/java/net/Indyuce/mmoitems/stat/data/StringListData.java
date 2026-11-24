@@ -16,31 +16,31 @@ public class StringListData implements StatData, Mergeable<StringListData>, Rand
    private final List<String> list = new ArrayList<>();
 
    @Override
-   public boolean equals(Object var1) {
-      if (!(var1 instanceof StringListData)) {
+   public boolean equals(Object obj) {
+      if (!(obj instanceof StringListData)) {
          return false;
       } else {
-         return ((StringListData)var1).getList().size() != this.getList().size()
+         return ((StringListData)obj).getList().size() != this.getList().size()
             ? false
-            : SilentNumbers.hasAll(((StringListData)var1).getList(), this.getList());
+            : SilentNumbers.hasAll(((StringListData)obj).getList(), this.getList());
       }
    }
 
    public StringListData() {
    }
 
-   public StringListData(@NotNull String[] var1) {
-      for (String var5 : var1) {
-         this.list.add(var5);
+   public StringListData(@NotNull String[] texts) {
+      for (String text : texts) {
+         this.list.add(text);
       }
    }
 
-   public StringListData(@NotNull JsonArray var1) {
-      var1.forEach(var1x -> this.list.add(var1x.getAsString()));
+   public StringListData(@NotNull JsonArray jsonArray) {
+      jsonArray.forEach(var1x -> this.list.add(var1x.getAsString()));
    }
 
-   public StringListData(@NotNull List<String> var1) {
-      this.list.addAll(var1);
+   public StringListData(@NotNull List<String> texts) {
+      this.list.addAll(texts);
    }
 
    @NotNull
@@ -48,12 +48,12 @@ public class StringListData implements StatData, Mergeable<StringListData>, Rand
       return this.list;
    }
 
-   public StringListData randomize(MMOItemBuilder var1) {
+   public StringListData randomize(MMOItemBuilder mmoItemBuilder) {
       return new StringListData(new ArrayList<>(this.list));
    }
 
-   public void mergeWith(StringListData var1) {
-      this.list.addAll(var1.list);
+   public void mergeWith(StringListData stringListData) {
+      this.list.addAll(stringListData.list);
    }
 
    @NotNull
@@ -68,21 +68,21 @@ public class StringListData implements StatData, Mergeable<StringListData>, Rand
 
    @Override
    public String toString() {
-      StringBuilder var1 = new StringBuilder("§7");
+      StringBuilder builder = new StringBuilder("§7");
 
-      for (String var3 : this.getList()) {
-         if (var1.length() > 0) {
-            var1.append("§8;§7 ");
+      for (String text : this.getList()) {
+         if (builder.length() > 0) {
+            builder.append("§8;§7 ");
          }
 
-         var1.append(var3);
+         builder.append(text);
       }
 
-      return var1.toString();
+      return builder.toString();
    }
 
    @Deprecated
-   public boolean remove(@Nullable String var1) {
-      return this.list.remove(var1);
+   public boolean remove(@Nullable String text) {
+      return this.list.remove(text);
    }
 }

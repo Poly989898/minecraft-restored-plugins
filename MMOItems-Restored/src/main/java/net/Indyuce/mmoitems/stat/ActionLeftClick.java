@@ -35,34 +35,34 @@ public class ActionLeftClick extends StringStat {
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      String var4 = UtilityMethods.enumName(var2);
-      MythicLib.plugin.getSkills().getHandlerOrThrow(var4);
-      var1.getEditedSection().set(this.getPath(), var4);
-      var1.registerTemplateEdition();
-      var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + this.getName() + " successfully changed to '" + var4 + "'");
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      String text2 = UtilityMethods.enumName(text);
+      MythicLib.plugin.getSkills().getHandlerOrThrow(text2);
+      editionInventory.getEditedSection().set(this.getPath(), text2);
+      editionInventory.registerTemplateEdition();
+      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + this.getName() + " successfully changed to '" + text2 + "'");
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull StringData var2) {
-      var1.addItemTag(new ItemTag(this.getNBTPath(), UtilityMethods.enumName(var2.toString())));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull StringData stringData) {
+      itemStackBuilder.addItemTag(new ItemTag(this.getNBTPath(), UtilityMethods.enumName(stringData.toString())));
    }
 
    @Deprecated
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      ArrayList var2 = new ArrayList();
-      if (var1.getNBT().hasTag(this.getNBTPath())) {
-         var2.add(ItemTag.getTagAtPath(this.getNBTPath(), var1.getNBT(), SupportedNBTTagValues.STRING));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      ArrayList list = new ArrayList();
+      if (readMMOItem.getNBT().hasTag(this.getNBTPath())) {
+         list.add(ItemTag.getTagAtPath(this.getNBTPath(), readMMOItem.getNBT(), SupportedNBTTagValues.STRING));
       }
 
-      if (var1.getNBT().hasTag("MMOITEMS_STAFF_SPIRIT")) {
-         var2.add(new ItemTag(this.getNBTPath(), ItemTag.getTagAtPath("MMOITEMS_STAFF_SPIRIT", var1.getNBT(), SupportedNBTTagValues.STRING).getValue()));
+      if (readMMOItem.getNBT().hasTag("MMOITEMS_STAFF_SPIRIT")) {
+         list.add(new ItemTag(this.getNBTPath(), ItemTag.getTagAtPath("MMOITEMS_STAFF_SPIRIT", readMMOItem.getNBT(), SupportedNBTTagValues.STRING).getValue()));
       }
 
-      StringData var3 = this.getLoadedNBT(var2);
-      if (var3 != null) {
-         var1.setData(this, var3);
+      StringData loadedNBT = this.getLoadedNBT(list);
+      if (loadedNBT != null) {
+         readMMOItem.setData(this, loadedNBT);
       }
    }
 }

@@ -10,26 +10,26 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class UnidentifyCommandTreeNode extends CommandTreeNode {
-   public UnidentifyCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "unidentify");
+   public UnidentifyCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "unidentify");
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      if (!(var1 instanceof Player)) {
-         var1.sendMessage(ChatColor.RED + "This command is only for players.");
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      if (!(sender instanceof Player)) {
+         sender.sendMessage(ChatColor.RED + "This command is only for players.");
          return CommandResult.FAILURE;
       } else {
-         Player var3 = (Player)var1;
-         NBTItem var4 = NBTItem.get(var3.getInventory().getItemInMainHand());
-         if (var4.getType() == null) {
-            var1.sendMessage(MMOItems.plugin.getPrefix() + "Couldn't unidentify the item you are holding.");
+         Player player = (Player)sender;
+         NBTItem nbtItem = NBTItem.get(player.getInventory().getItemInMainHand());
+         if (nbtItem.getType() == null) {
+            sender.sendMessage(MMOItems.plugin.getPrefix() + "Couldn't unidentify the item you are holding.");
             return CommandResult.FAILURE;
-         } else if (var4.getBoolean("MMOITEMS_UNIDENTIFIED")) {
-            var1.sendMessage(MMOItems.plugin.getPrefix() + "The item you are holding is already unidentified.");
+         } else if (nbtItem.getBoolean("MMOITEMS_UNIDENTIFIED")) {
+            sender.sendMessage(MMOItems.plugin.getPrefix() + "The item you are holding is already unidentified.");
             return CommandResult.FAILURE;
          } else {
-            var3.getInventory().setItemInMainHand(Type.get(var4.getType()).getUnidentifiedTemplate().newBuilder(var4).build());
-            var1.sendMessage(MMOItems.plugin.getPrefix() + "Successfully unidentified the item you are holding.");
+            player.getInventory().setItemInMainHand(Type.get(nbtItem.getType()).getUnidentifiedTemplate().newBuilder(nbtItem).build());
+            sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully unidentified the item you are holding.");
             return CommandResult.SUCCESS;
          }
       }

@@ -14,21 +14,21 @@ public class MMOItemTrigger extends Trigger {
    private final MMOItemTemplate template;
    private final int amount;
 
-   public MMOItemTrigger(MMOLineConfig var1) {
-      super(var1);
-      var1.validate(new String[]{"type", "id"});
-      String var2 = var1.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
-      Validate.isTrue(MMOItems.plugin.getTypes().has(var2), "Could not find item type with ID '" + var2 + "'");
-      Type var3 = MMOItems.plugin.getTypes().get(var2);
-      String var4 = var1.getString("id").replace("-", "_").toUpperCase();
-      Validate.isTrue(MMOItems.plugin.getTemplates().hasTemplate(var3, var4), "Could not find MMOItem with ID '" + var4 + "'");
-      this.template = MMOItems.plugin.getTemplates().getTemplate(var3, var4);
-      this.amount = Math.max(1, var1.getInt("amount", 1));
+   public MMOItemTrigger(MMOLineConfig mmoLineConfig) {
+      super(mmoLineConfig);
+      mmoLineConfig.validate(new String[]{"type", "id"});
+      String text = mmoLineConfig.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
+      Validate.isTrue(MMOItems.plugin.getTypes().has(text), "Could not find item type with ID '" + text + "'");
+      Type type = MMOItems.plugin.getTypes().get(text);
+      String text2 = mmoLineConfig.getString("id").replace("-", "_").toUpperCase();
+      Validate.isTrue(MMOItems.plugin.getTemplates().hasTemplate(type, text2), "Could not find MMOItem with ID '" + text2 + "'");
+      this.template = MMOItems.plugin.getTemplates().getTemplate(type, text2);
+      this.amount = Math.max(1, mmoLineConfig.getInt("amount", 1));
    }
 
-   public void apply(PlayerData var1) {
-      ItemStack var2 = this.template.newBuilder(net.Indyuce.mmoitems.api.player.PlayerData.get(var1.getPlayer()).getRPG()).build().newBuilder().build();
-      var2.setAmount(this.amount);
-      new SmartGive(var1.getPlayer()).give(new ItemStack[]{var2});
+   public void apply(PlayerData playerData) {
+      ItemStack item = this.template.newBuilder(net.Indyuce.mmoitems.api.player.PlayerData.get(playerData.getPlayer()).getRPG()).build().newBuilder().build();
+      item.setAmount(this.amount);
+      new SmartGive(playerData.getPlayer()).give(new ItemStack[]{item});
    }
 }

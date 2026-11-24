@@ -40,36 +40,36 @@ public class ItemParticles extends ItemStat<ParticleData, ParticleData> {
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      if (var2.getAction() == InventoryAction.PICKUP_HALF) {
-         var1.getEditedSection().set(this.getPath(), null);
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + this.getName() + ChatColor.GRAY + ".");
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      if (event.getAction() == InventoryAction.PICKUP_HALF) {
+         editionInventory.getEditedSection().set(this.getPath(), null);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + this.getName() + ChatColor.GRAY + ".");
       } else {
-         new ParticlesEdition(var1.getPlayer(), var1.getEdited()).open(var1);
+         new ParticlesEdition(editionInventory.getPlayer(), editionInventory.getEdited()).open(editionInventory);
       }
    }
 
-   public ParticleData whenInitialized(Object var1) {
-      Validate.isTrue(var1 instanceof ConfigurationSection, "Must specify a config section");
-      return new ParticleData((ConfigurationSection)var1);
+   public ParticleData whenInitialized(Object obj) {
+      Validate.isTrue(obj instanceof ConfigurationSection, "Must specify a config section");
+      return new ParticleData((ConfigurationSection)obj);
    }
 
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull ParticleData var2) {
-      var1.addItemTag(this.getAppliedNBT(var2));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull ParticleData particleData) {
+      itemStackBuilder.addItemTag(this.getAppliedNBT(particleData));
    }
 
    @NotNull
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull ParticleData var1) {
-      ArrayList var2 = new ArrayList();
-      var2.add(new ItemTag(this.getNBTPath(), var1.toJson().toString()));
-      return var2;
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull ParticleData particleData) {
+      ArrayList list = new ArrayList();
+      list.add(new ItemTag(this.getNBTPath(), particleData.toJson().toString()));
+      return list;
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<ParticleData> var2) {
-      var1.add(ChatColor.YELLOW + "►" + " Left click to setup the item particles.");
-      var1.add(ChatColor.YELLOW + "►" + " Right click to clear.");
+   public void whenDisplayed(List<String> texts, Optional<ParticleData> optional) {
+      texts.add(ChatColor.YELLOW + "►" + " Left click to setup the item particles.");
+      texts.add(ChatColor.YELLOW + "►" + " Right click to clear.");
    }
 
    @NotNull
@@ -78,70 +78,70 @@ public class ItemParticles extends ItemStat<ParticleData, ParticleData> {
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      String var4 = (String)var3[0];
-      String var5 = var2.toUpperCase().replace("-", "_").replace(" ", "_");
-      if (var4.equals("particle-type")) {
-         ParticleType var12 = ParticleType.valueOf(var5);
-         var1.getEditedSection().set("item-particles.type", var12.name());
-         var1.registerTemplateEdition();
-         var1.getPlayer()
-            .sendMessage(MMOItems.plugin.getPrefix() + "Particle type successfully set to " + ChatColor.GOLD + var12.getDefaultName() + ChatColor.GRAY + ".");
-      } else if (var4.equals("particle-color")) {
-         String[] var11 = var2.split(" ");
-         int var7 = Integer.parseInt(var11[0]);
-         int var8 = Integer.parseInt(var11[1]);
-         int var9 = Integer.parseInt(var11[2]);
-         var1.getEditedSection().set("item-particles.color.red", var7);
-         var1.getEditedSection().set("item-particles.color.green", var8);
-         var1.getEditedSection().set("item-particles.color.blue", var9);
-         var1.registerTemplateEdition();
-         var1.getPlayer()
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      String text2 = (String)objs[0];
+      String text3 = text.toUpperCase().replace("-", "_").replace(" ", "_");
+      if (text2.equals("particle-type")) {
+         ParticleType particleType = ParticleType.valueOf(text3);
+         editionInventory.getEditedSection().set("item-particles.type", particleType.name());
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer()
+            .sendMessage(MMOItems.plugin.getPrefix() + "Particle type successfully set to " + ChatColor.GOLD + particleType.getDefaultName() + ChatColor.GRAY + ".");
+      } else if (text2.equals("particle-color")) {
+         String[] texts = text.split(" ");
+         int count = Integer.parseInt(texts[0]);
+         int count2 = Integer.parseInt(texts[1]);
+         int count3 = Integer.parseInt(texts[2]);
+         editionInventory.getEditedSection().set("item-particles.color.red", count);
+         editionInventory.getEditedSection().set("item-particles.color.green", count2);
+         editionInventory.getEditedSection().set("item-particles.color.blue", count3);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer()
             .sendMessage(
                MMOItems.plugin.getPrefix()
                   + "Particle color successfully set to "
                   + ChatColor.RED
                   + ChatColor.BOLD
-                  + var7
+                  + count
                   + ChatColor.GRAY
                   + " - "
                   + ChatColor.GREEN
                   + ChatColor.BOLD
-                  + var8
+                  + count2
                   + ChatColor.GRAY
                   + " - "
                   + ChatColor.BLUE
                   + ChatColor.BOLD
-                  + var9
+                  + count3
                   + ChatColor.GRAY
                   + "."
             );
-      } else if (var4.equals("particle")) {
-         Particle var10 = Particle.valueOf(var5);
-         var1.getEditedSection().set("item-particles.particle", var10.name());
-         var1.registerTemplateEdition();
-         var1.getPlayer()
+      } else if (text2.equals("particle")) {
+         Particle particle = Particle.valueOf(text3);
+         editionInventory.getEditedSection().set("item-particles.particle", particle.name());
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer()
             .sendMessage(
                MMOItems.plugin.getPrefix()
                   + "Particle successfully set to "
                   + ChatColor.GOLD
-                  + UtilityMethods.caseOnWords(var10.name().toLowerCase().replace("_", " "))
+                  + UtilityMethods.caseOnWords(particle.name().toLowerCase().replace("_", " "))
                   + ChatColor.GRAY
                   + "."
             );
       } else {
-         double var6 = MMOUtils.parseDouble(var2);
-         var1.getEditedSection().set("item-particles." + var4, var6);
-         var1.registerTemplateEdition();
-         var1.getPlayer()
+         double value = MMOUtils.parseDouble(text);
+         editionInventory.getEditedSection().set("item-particles." + text2, value);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer()
             .sendMessage(
                MMOItems.plugin.getPrefix()
                   + ChatColor.GOLD
-                  + UtilityMethods.caseOnWords(var4.replace("-", " "))
+                  + UtilityMethods.caseOnWords(text2.replace("-", " "))
                   + ChatColor.GRAY
                   + " set to "
                   + ChatColor.GOLD
-                  + var6
+                  + value
                   + ChatColor.GRAY
                   + "."
             );
@@ -149,25 +149,25 @@ public class ItemParticles extends ItemStat<ParticleData, ParticleData> {
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      ArrayList var2 = new ArrayList();
-      if (var1.getNBT().hasTag(this.getNBTPath())) {
-         var2.add(ItemTag.getTagAtPath(this.getNBTPath(), var1.getNBT(), SupportedNBTTagValues.STRING));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      ArrayList list = new ArrayList();
+      if (readMMOItem.getNBT().hasTag(this.getNBTPath())) {
+         list.add(ItemTag.getTagAtPath(this.getNBTPath(), readMMOItem.getNBT(), SupportedNBTTagValues.STRING));
       }
 
-      ParticleData var3 = this.getLoadedNBT(var2);
-      if (var3 != null) {
-         var1.setData(this, var3);
+      ParticleData loadedNBT = this.getLoadedNBT(list);
+      if (loadedNBT != null) {
+         readMMOItem.setData(this, loadedNBT);
       }
    }
 
    @Nullable
-   public ParticleData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
-      ItemTag var2 = ItemTag.getTagAtPath(this.getNBTPath(), var1);
-      if (var2 != null) {
+   public ParticleData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
+      ItemTag tagAtPath = ItemTag.getTagAtPath(this.getNBTPath(), itemTags);
+      if (tagAtPath != null) {
          try {
-            return new ParticleData(new JsonParser().parse((String)var2.getValue()).getAsJsonObject());
-         } catch (JsonSyntaxException | IllegalStateException var4) {
+            return new ParticleData(new JsonParser().parse((String)tagAtPath.getValue()).getAsJsonObject());
+         } catch (JsonSyntaxException | IllegalStateException exception) {
          }
       }
 

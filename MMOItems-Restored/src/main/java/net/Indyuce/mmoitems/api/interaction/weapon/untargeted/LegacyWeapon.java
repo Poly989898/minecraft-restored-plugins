@@ -6,8 +6,8 @@ import io.lumine.mythic.lib.player.PlayerMetadata;
 @Deprecated
 public interface LegacyWeapon {
    @Deprecated
-   boolean canAttack(boolean var1, EquipmentSlot var2);
+   boolean canAttack(boolean flag, EquipmentSlot equipmentSlot);
 
    @Deprecated
-   void applyAttackEffect(PlayerMetadata var1, EquipmentSlot var2);
+   void applyAttackEffect(PlayerMetadata playerMetadata, EquipmentSlot equipmentSlot);
 }

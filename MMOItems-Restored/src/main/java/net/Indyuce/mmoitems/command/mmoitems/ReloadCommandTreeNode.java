@@ -12,8 +12,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class ReloadCommandTreeNode extends CommandTreeNode {
-   public ReloadCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "reload");
+   public ReloadCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "reload");
       this.addChild(new ReloadCommandTreeNode.SubReloadCommandTreeNode("recipes", this, this::reloadRecipes));
       this.addChild(new ReloadCommandTreeNode.SubReloadCommandTreeNode("stations", this, this::reloadStations));
       this.addChild(new ReloadCommandTreeNode.SubReloadCommandTreeNode("skills", this, this::reloadSkills));
@@ -25,18 +25,18 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
       }));
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      this.reloadMain(var1);
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      this.reloadMain(sender);
       return CommandResult.SUCCESS;
    }
 
-   public void reloadSkills(CommandSender var1) {
+   public void reloadSkills(CommandSender sender) {
       MythicLib.plugin.getSkills().initialize(true);
       MMOItems.plugin.getSkills().initialize(true);
-      var1.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded " + MMOItems.plugin.getSkills().getAll().size() + " skills.");
+      sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded " + MMOItems.plugin.getSkills().getAll().size() + " skills.");
    }
 
-   public void reloadMain(CommandSender var1) {
+   public void reloadMain(CommandSender sender) {
       Bukkit.getPluginManager().callEvent(new MMOItemsReloadEvent());
       MMOItems.plugin.getLanguage().reload();
       MMOItems.plugin.getDropTables().reload();
@@ -50,20 +50,20 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
       MMOItems.plugin.getLore().reload();
       MMOItems.plugin.getTemplates().reload();
       MMOItems.plugin.getStats().reload(true);
-      var1.sendMessage(MMOItems.plugin.getPrefix() + MMOItems.plugin.getName() + " " + MMOItems.plugin.getDescription().getVersion() + " reloaded.");
-      var1.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getTypes().getAll().size() + ChatColor.GRAY + " Item Types");
-      var1.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getTiers().getAll().size() + ChatColor.GRAY + " Item Tiers");
-      var1.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getSets().getAll().size() + ChatColor.GRAY + " Item Sets");
-      var1.sendMessage(
+      sender.sendMessage(MMOItems.plugin.getPrefix() + MMOItems.plugin.getName() + " " + MMOItems.plugin.getDescription().getVersion() + " reloaded.");
+      sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getTypes().getAll().size() + ChatColor.GRAY + " Item Types");
+      sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getTiers().getAll().size() + ChatColor.GRAY + " Item Tiers");
+      sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getSets().getAll().size() + ChatColor.GRAY + " Item Sets");
+      sender.sendMessage(
          MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getUpgrades().getAll().size() + ChatColor.GRAY + " Upgrade Templates"
       );
       MMOItemReforger.reload();
    }
 
-   public void reloadRecipes(CommandSender var1) {
+   public void reloadRecipes(CommandSender sender) {
       MMOItems.plugin.getRecipes().reload();
-      var1.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded recipes.");
-      var1.sendMessage(
+      sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded recipes.");
+      sender.sendMessage(
          MMOItems.plugin.getPrefix()
             + "- "
             + ChatColor.RED
@@ -77,14 +77,14 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
       );
    }
 
-   public void reloadStations(CommandSender var1) {
+   public void reloadStations(CommandSender sender) {
       MMOItems.plugin.getLayouts().reload();
       MMOItems.plugin.getCrafting().reload();
-      var1.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded the crafting stations..");
-      var1.sendMessage(
+      sender.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reloaded the crafting stations..");
+      sender.sendMessage(
          MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getCrafting().getAll().size() + ChatColor.GRAY + " Crafting Stations"
       );
-      var1.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getCrafting().countRecipes() + ChatColor.GRAY + " Recipes");
+      sender.sendMessage(MMOItems.plugin.getPrefix() + "- " + ChatColor.RED + MMOItems.plugin.getCrafting().countRecipes() + ChatColor.GRAY + " Recipes");
    }
 
    public class SubReloadCommandTreeNode extends CommandTreeNode {
@@ -95,8 +95,8 @@ public class ReloadCommandTreeNode extends CommandTreeNode {
          this.action = nullxxx;
       }
 
-      public CommandResult execute(CommandSender var1, String[] var2) {
-         this.action.accept(var1);
+      public CommandResult execute(CommandSender sender, String[] texts) {
+         this.action.accept(sender);
          return CommandResult.SUCCESS;
       }
    }

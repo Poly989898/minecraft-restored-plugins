@@ -14,11 +14,11 @@ public class ApplyGemStoneEvent extends PlayerDataEvent {
    private final MMOItem targetItem;
    private GemStone.ResultType result;
 
-   public ApplyGemStoneEvent(PlayerData var1, VolatileMMOItem var2, MMOItem var3, GemStone.ResultType var4) {
-      super(var1);
-      this.gemStone = var2;
-      this.targetItem = var3;
-      this.result = var4;
+   public ApplyGemStoneEvent(PlayerData playerData, VolatileMMOItem volatileMMOItem, MMOItem mmoItem, GemStone.ResultType resultType) {
+      super(playerData);
+      this.gemStone = volatileMMOItem;
+      this.targetItem = mmoItem;
+      this.result = resultType;
    }
 
    public VolatileMMOItem getGemStone() {
@@ -33,9 +33,9 @@ public class ApplyGemStoneEvent extends PlayerDataEvent {
       return this.result;
    }
 
-   public void setResult(GemStone.ResultType var1) {
-      Validate.notNull(var1, "Result cannot be null");
-      this.result = var1;
+   public void setResult(GemStone.ResultType resultType) {
+      Validate.notNull(resultType, "Result cannot be null");
+      this.result = resultType;
    }
 
    public HandlerList getHandlers() {

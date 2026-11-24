@@ -27,8 +27,8 @@ public class RevisionInventory extends EditionInventory {
    static ItemStack revisionID;
    static final String REVISION = "§6Revision ID";
 
-   public RevisionInventory(@NotNull Player var1, @NotNull MMOItemTemplate var2) {
-      super(var1, var2);
+   public RevisionInventory(@NotNull Player player, @NotNull MMOItemTemplate mmoItemTemplate) {
+      super(player, mmoItemTemplate);
       if (revisionID == null) {
          name = ItemFactory.of(Material.NAME_TAG)
             .name("§3Name")
@@ -92,26 +92,26 @@ public class RevisionInventory extends EditionInventory {
 
    @Override
    public void arrangeInventory() {
-      for (int var1 = 0; var1 < this.inventory.getSize(); var1++) {
-         ItemStack var2 = null;
-         Boolean var3 = null;
-         Integer var4 = null;
-         switch (var1) {
+      for (int i = 0; i < this.inventory.getSize(); i++) {
+         ItemStack item = null;
+         Boolean flag = null;
+         Integer value = null;
+         switch (i) {
             case 19:
-               var2 = name.clone();
-               var3 = MMOItems.plugin.getLanguage().revisionOptions.shouldKeepName();
+               item = name.clone();
+               flag = MMOItems.plugin.getLanguage().revisionOptions.shouldKeepName();
                break;
             case 20:
-               var2 = lore.clone();
-               var3 = MMOItems.plugin.getLanguage().revisionOptions.shouldKeepLore();
+               item = lore.clone();
+               flag = MMOItems.plugin.getLanguage().revisionOptions.shouldKeepLore();
                break;
             case 21:
-               var2 = enchantments.clone();
-               var3 = MMOItems.plugin.getLanguage().revisionOptions.shouldKeepEnchantments();
+               item = enchantments.clone();
+               flag = MMOItems.plugin.getLanguage().revisionOptions.shouldKeepEnchantments();
                break;
             case 22:
-               var2 = external.clone();
-               var3 = MMOItems.plugin.getLanguage().revisionOptions.shouldKeepExternalSH();
+               item = external.clone();
+               flag = MMOItems.plugin.getLanguage().revisionOptions.shouldKeepExternalSH();
             case 23:
             case 24:
             case 25:
@@ -122,65 +122,65 @@ public class RevisionInventory extends EditionInventory {
             default:
                break;
             case 28:
-               var2 = upgrades.clone();
-               var3 = MMOItems.plugin.getLanguage().revisionOptions.shouldKeepUpgrades();
+               item = upgrades.clone();
+               flag = MMOItems.plugin.getLanguage().revisionOptions.shouldKeepUpgrades();
                break;
             case 29:
-               var2 = gemstones.clone();
-               var3 = MMOItems.plugin.getLanguage().revisionOptions.shouldKeepGemStones();
+               item = gemstones.clone();
+               flag = MMOItems.plugin.getLanguage().revisionOptions.shouldKeepGemStones();
                break;
             case 30:
-               var2 = soulbind.clone();
-               var3 = MMOItems.plugin.getLanguage().revisionOptions.shouldKeepSoulBind();
+               item = soulbind.clone();
+               flag = MMOItems.plugin.getLanguage().revisionOptions.shouldKeepSoulBind();
                break;
             case 33:
-               var4 = this.getEditedSection().getInt(ItemStats.REVISION_ID.getPath(), 1);
-               var2 = revisionID.clone();
+               value = this.getEditedSection().getInt(ItemStats.REVISION_ID.getPath(), 1);
+               item = revisionID.clone();
          }
 
-         if (var2 != null) {
-            if (var3 != null) {
-               this.inventory.setItem(var1, this.addLore(var2, "", "§8Enabled (in config)? §6" + var3.toString()));
-            } else if (var4 != null) {
-               this.inventory.setItem(var1, this.addLore(var2, "", "§8Current Value: §6" + var4));
+         if (item != null) {
+            if (flag != null) {
+               this.inventory.setItem(i, this.addLore(item, "", "§8Enabled (in config)? §6" + flag.toString()));
+            } else if (value != null) {
+               this.inventory.setItem(i, this.addLore(item, "", "§8Current Value: §6" + value));
             } else {
-               this.inventory.setItem(var1, var2);
+               this.inventory.setItem(i, item);
             }
          }
       }
    }
 
    @Override
-   public void whenClicked(InventoryClickEvent var1) {
-      ItemStack var2 = var1.getCurrentItem();
-      var1.setCancelled(true);
-      if (var1.getInventory() == var1.getClickedInventory() && MMOUtils.isMetaItem(var2, false)) {
-         if (var2.getItemMeta().getDisplayName().equals("§6Revision ID")) {
-            int var3 = this.getEditedSection().getInt(ItemStats.REVISION_ID.getPath(), 1);
-            if (var1.getAction() == InventoryAction.PICKUP_HALF) {
-               var3 = Math.max(var3 - 1, 1);
+   public void whenClicked(InventoryClickEvent event) {
+      ItemStack currentItem = event.getCurrentItem();
+      event.setCancelled(true);
+      if (event.getInventory() == event.getClickedInventory() && MMOUtils.isMetaItem(currentItem, false)) {
+         if (currentItem.getItemMeta().getDisplayName().equals("§6Revision ID")) {
+            int count = this.getEditedSection().getInt(ItemStats.REVISION_ID.getPath(), 1);
+            if (event.getAction() == InventoryAction.PICKUP_HALF) {
+               count = Math.max(count - 1, 1);
             } else {
-               var3 = Math.min(var3 + 1, Integer.MAX_VALUE);
+               count = Math.min(count + 1, Integer.MAX_VALUE);
             }
 
-            this.getEditedSection().set(ItemStats.REVISION_ID.getPath(), var3);
+            this.getEditedSection().set(ItemStats.REVISION_ID.getPath(), count);
             this.registerTemplateEdition();
-            var1.setCurrentItem(this.addLore(revisionID.clone(), "", "§8Current Value: §6" + var3));
+            event.setCurrentItem(this.addLore(revisionID.clone(), "", "§8Current Value: §6" + count));
          }
       }
    }
 
    @NotNull
-   ItemStack addLore(@NotNull ItemStack var1, String... var2) {
-      ArrayList var3 = new ArrayList();
-      ItemMeta var4 = var1.getItemMeta();
-      if (var4 != null && var4.getLore() != null) {
-         var3 = new ArrayList(var4.getLore());
+   ItemStack addLore(@NotNull ItemStack item, String... texts) {
+      ArrayList list = new ArrayList();
+      ItemMeta itemMeta = item.getItemMeta();
+      if (itemMeta != null && itemMeta.getLore() != null) {
+         list = new ArrayList(itemMeta.getLore());
       }
 
-      var3.addAll(Arrays.asList(var2));
-      var4.setLore(var3);
-      var1.setItemMeta(var4);
-      return var1;
+      list.addAll(Arrays.asList(texts));
+      itemMeta.setLore(list);
+      item.setItemMeta(itemMeta);
+      return item;
    }
 }

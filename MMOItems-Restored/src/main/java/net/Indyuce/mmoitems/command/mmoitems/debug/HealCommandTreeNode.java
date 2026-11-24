@@ -10,23 +10,23 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
 public class HealCommandTreeNode extends CommandTreeNode {
-   public HealCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "heal");
+   public HealCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "heal");
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      if (!(var1 instanceof Player)) {
-         var1.sendMessage(ChatColor.RED + "This command is only for players.");
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      if (!(sender instanceof Player)) {
+         sender.sendMessage(ChatColor.RED + "This command is only for players.");
          return CommandResult.FAILURE;
       }
 
-      Player var3 = (Player)var1;
-      var3.setHealth(var3.getAttribute(Attribute.MAX_HEALTH).getValue());
-      var3.setFoodLevel(20);
-      var3.setFireTicks(0);
-      var3.setSaturation(12.0F);
+      Player player = (Player)sender;
+      player.setHealth(player.getAttribute(Attribute.MAX_HEALTH).getValue());
+      player.setFoodLevel(20);
+      player.setFireTicks(0);
+      player.setSaturation(12.0F);
 
-      for (PotionEffectType var7 : new PotionEffectType[]{
+      for (PotionEffectType potionEffectType : new PotionEffectType[]{
          PotionEffectType.POISON,
          PotionEffectType.BLINDNESS,
          VPotionEffectType.NAUSEA.get(),
@@ -35,7 +35,7 @@ public class HealCommandTreeNode extends CommandTreeNode {
          VPotionEffectType.SLOWNESS.get(),
          PotionEffectType.MINING_FATIGUE
       }) {
-         var3.removePotionEffect(var7);
+         player.removePotionEffect(potionEffectType);
       }
 
       return CommandResult.SUCCESS;

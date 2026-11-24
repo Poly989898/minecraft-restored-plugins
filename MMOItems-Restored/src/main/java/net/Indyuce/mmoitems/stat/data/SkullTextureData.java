@@ -9,8 +9,8 @@ import org.jetbrains.annotations.Nullable;
 public class SkullTextureData implements StatData, RandomStatData<SkullTextureData> {
    private Object profile;
 
-   public SkullTextureData(Object var1) {
-      this.profile = var1;
+   public SkullTextureData(Object obj) {
+      this.profile = obj;
    }
 
    @Nullable
@@ -18,8 +18,8 @@ public class SkullTextureData implements StatData, RandomStatData<SkullTextureDa
       return this.profile;
    }
 
-   public void setGameProfile(@Nullable Object var1) {
-      this.profile = var1;
+   public void setGameProfile(@Nullable Object obj) {
+      this.profile = obj;
    }
 
    @NotNull
@@ -32,7 +32,7 @@ public class SkullTextureData implements StatData, RandomStatData<SkullTextureDa
       return this.profile == null;
    }
 
-   public SkullTextureData randomize(MMOItemBuilder var1) {
+   public SkullTextureData randomize(MMOItemBuilder mmoItemBuilder) {
       return this;
    }
 }

@@ -29,116 +29,116 @@ import org.jetbrains.annotations.Nullable;
 
 public class GemStone extends UseItem {
    @Deprecated
-   public GemStone(Player var1, NBTItem var2) {
-      super(var1, var2);
+   public GemStone(Player player, NBTItem nbtItem) {
+      super(player, nbtItem);
    }
 
-   public GemStone(PlayerData var1, NBTItem var2) {
-      super(var1, var2);
-   }
-
-   @NotNull
-   public GemStone.ApplyResult applyOntoItem(@NotNull NBTItem var1, @NotNull Type var2) {
-      return this.applyOntoItem(new LiveMMOItem(var1), var2, MMOUtils.getDisplayName(var1.getItem()), true, false);
+   public GemStone(PlayerData playerData, NBTItem nbtItem) {
+      super(playerData, nbtItem);
    }
 
    @NotNull
-   public GemStone.ApplyResult applyOntoItem(@NotNull MMOItem var1, @NotNull Type var2, @NotNull String var3, boolean var4, boolean var5) {
-      if (!var1.hasData(ItemStats.GEM_SOCKETS)) {
+   public GemStone.ApplyResult applyOntoItem(@NotNull NBTItem nbtItem, @NotNull Type type) {
+      return this.applyOntoItem(new LiveMMOItem(nbtItem), type, MMOUtils.getDisplayName(nbtItem.getItem()), true, false);
+   }
+
+   @NotNull
+   public GemStone.ApplyResult applyOntoItem(@NotNull MMOItem mmoItem, @NotNull Type type, @NotNull String text, boolean flag, boolean flag2) {
+      if (!mmoItem.hasData(ItemStats.GEM_SOCKETS)) {
          return new GemStone.ApplyResult(GemStone.ResultType.NONE);
       }
 
-      String var6 = this.getNBTItem().getString(ItemStats.GEM_COLOR.getNBTPath());
-      GemSocketsData var7 = (GemSocketsData)var1.getData(ItemStats.GEM_SOCKETS);
-      String var8 = var7.getEmptySocket(var6);
-      if (var8 == null) {
+      String text2 = this.getNBTItem().getString(ItemStats.GEM_COLOR.getNBTPath());
+      GemSocketsData data = (GemSocketsData)mmoItem.getData(ItemStats.GEM_SOCKETS);
+      String emptySocket = data.getEmptySocket(text2);
+      if (emptySocket == null) {
          return new GemStone.ApplyResult(GemStone.ResultType.NONE);
       }
 
-      String var9 = this.getNBTItem().getString(ItemStats.ITEM_TYPE_RESTRICTION.getNBTPath());
-      if (!var9.isEmpty() && (!var2.isWeapon() || !var9.contains("WEAPON")) && !var9.contains(var2.getId())) {
+      String text3 = this.getNBTItem().getString(ItemStats.ITEM_TYPE_RESTRICTION.getNBTPath());
+      if (!text3.isEmpty() && (!type.isWeapon() || !text3.contains("WEAPON")) && !text3.contains(type.getId())) {
          return new GemStone.ApplyResult(GemStone.ResultType.NONE);
       }
 
-      double var10 = this.getNBTItem().getStat(ItemStats.SUCCESS_RATE.getId());
-      if (var10 == 0.0) {
-         var10 = 100.0;
+      double stat = this.getNBTItem().getStat(ItemStats.SUCCESS_RATE.getId());
+      if (stat == 0.0) {
+         stat = 100.0;
       }
 
-      ApplyGemStoneEvent var12 = new ApplyGemStoneEvent(
-         this.playerData, this.mmoitem, var1, RANDOM.nextDouble() > var10 / 100.0 ? GemStone.ResultType.FAILURE : GemStone.ResultType.SUCCESS
+      ApplyGemStoneEvent event = new ApplyGemStoneEvent(
+         this.playerData, this.mmoitem, mmoItem, RANDOM.nextDouble() > stat / 100.0 ? GemStone.ResultType.FAILURE : GemStone.ResultType.SUCCESS
       );
-      Bukkit.getPluginManager().callEvent(var12);
-      if (!var12.isCancelled() && var12.getResult() != GemStone.ResultType.NONE) {
-         if (var12.getResult() == GemStone.ResultType.FAILURE) {
-            if (!var5) {
+      Bukkit.getPluginManager().callEvent(event);
+      if (!event.isCancelled() && event.getResult() != GemStone.ResultType.NONE) {
+         if (event.getResult() == GemStone.ResultType.FAILURE) {
+            if (!flag2) {
                this.player.playSound(this.player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0F, 1.0F);
-               Message.GEM_STONE_BROKE.format(ChatColor.RED, "#gem#", MMOUtils.getDisplayName(this.getItem()), "#item#", var3).send(this.player);
+               Message.GEM_STONE_BROKE.format(ChatColor.RED, "#gem#", MMOUtils.getDisplayName(this.getItem()), "#item#", text).send(this.player);
             }
 
             return new GemStone.ApplyResult(GemStone.ResultType.FAILURE);
          } else {
-            Enchants.separateEnchantments(var1);
-            LiveMMOItem var13 = new LiveMMOItem(this.getNBTItem());
-            GemstoneData var14 = new GemstoneData(var13, var8);
-            StatHistory var15 = var1.computeStatHistory(ItemStats.GEM_SOCKETS);
-            this.findEmptySocket(var15, var6, var14);
-            var1.setData(ItemStats.GEM_SOCKETS, var15.recalculate(var1.getUpgradeLevel()));
-            Integer var16 = null;
-            String var17 = var13.hasData(ItemStats.GEM_UPGRADE_SCALING)
-               ? var13.getData(ItemStats.GEM_UPGRADE_SCALING).toString()
+            Enchants.separateEnchantments(mmoItem);
+            LiveMMOItem liveMMOItem = new LiveMMOItem(this.getNBTItem());
+            GemstoneData gemstoneData = new GemstoneData(liveMMOItem, emptySocket);
+            StatHistory statHistory = mmoItem.computeStatHistory(ItemStats.GEM_SOCKETS);
+            this.findEmptySocket(statHistory, text2, gemstoneData);
+            mmoItem.setData(ItemStats.GEM_SOCKETS, statHistory.recalculate(mmoItem.getUpgradeLevel()));
+            Integer value = null;
+            String text4 = liveMMOItem.hasData(ItemStats.GEM_UPGRADE_SCALING)
+               ? liveMMOItem.getData(ItemStats.GEM_UPGRADE_SCALING).toString()
                : GemUpgradeScaling.defaultValue;
-            switch (var17) {
+            switch (text4) {
                case "HISTORIC":
-                  var16 = 0;
+                  value = 0;
                   break;
                case "SUBSEQUENT":
-                  var16 = var1.getUpgradeLevel();
+                  value = mmoItem.getUpgradeLevel();
             }
 
-            var14.setLevel(var16);
+            gemstoneData.setLevel(value);
 
-            for (ItemStat var22 : var13.getStats()) {
-               if (!(var22 instanceof GemStoneStat)) {
-                  StatData var20 = var13.getData(var22);
-                  if (var20 instanceof Mergeable) {
-                     var1.mergeData(var22, var20, var14.getHistoricUUID());
+            for (ItemStat stat2 : liveMMOItem.getStats()) {
+               if (!(stat2 instanceof GemStoneStat)) {
+                  StatData data2 = liveMMOItem.getData(stat2);
+                  if (data2 instanceof Mergeable) {
+                     mmoItem.mergeData(stat2, data2, gemstoneData.getHistoricUUID());
                   }
                }
             }
 
-            if (!var5) {
+            if (!flag2) {
                this.player.playSound(this.player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 2.0F);
-               Message.GEM_STONE_APPLIED.format(ChatColor.YELLOW, "#gem#", MMOUtils.getDisplayName(this.getItem()), "#item#", var3).send(this.player);
+               Message.GEM_STONE_APPLIED.format(ChatColor.YELLOW, "#gem#", MMOUtils.getDisplayName(this.getItem()), "#item#", text).send(this.player);
             }
 
-            return var4 ? new GemStone.ApplyResult(var1.newBuilder().build()) : new GemStone.ApplyResult(var1, GemStone.ResultType.SUCCESS);
+            return flag ? new GemStone.ApplyResult(mmoItem.newBuilder().build()) : new GemStone.ApplyResult(mmoItem, GemStone.ResultType.SUCCESS);
          }
       } else {
          return new GemStone.ApplyResult(GemStone.ResultType.NONE);
       }
    }
 
-   private void findEmptySocket(StatHistory var1, String var2, GemstoneData var3) {
-      GemSocketsData var4 = (GemSocketsData)var1.getOriginalData();
-      if (!var4.apply(var2, var3)) {
-         for (UUID var6 : var1.getAllModifiers()) {
-            var4 = (GemSocketsData)var1.getModifiersBonus(var6);
-            if (var4.apply(var2, var3)) {
+   private void findEmptySocket(StatHistory statHistory, String text, GemstoneData gemstoneData) {
+      GemSocketsData gemSocketsData = (GemSocketsData)statHistory.getOriginalData();
+      if (!gemSocketsData.apply(text, gemstoneData)) {
+         for (UUID allModifier : statHistory.getAllModifiers()) {
+            gemSocketsData = (GemSocketsData)statHistory.getModifiersBonus(allModifier);
+            if (gemSocketsData.apply(text, gemstoneData)) {
                return;
             }
          }
 
-         for (StatData var12 : var1.getExternalData()) {
-            var4 = (GemSocketsData)var12;
-            if (var4.apply(var2, var3)) {
+         for (StatData statData : statHistory.getExternalData()) {
+            gemSocketsData = (GemSocketsData)statData;
+            if (gemSocketsData.apply(text, gemstoneData)) {
                return;
             }
          }
 
-         for (UUID var13 : var1.getAllGemstones()) {
-            var4 = (GemSocketsData)var1.getGemstoneData(var13);
-            if (var4.apply(var2, var3)) {
+         for (UUID allGemstone : statHistory.getAllGemstones()) {
+            gemSocketsData = (GemSocketsData)statHistory.getGemstoneData(allGemstone);
+            if (gemSocketsData.apply(text, gemstoneData)) {
                return;
             }
          }
@@ -155,24 +155,24 @@ public class GemStone extends UseItem {
       @Nullable
       private final MMOItem resultAsMMOItem;
 
-      public ApplyResult(@NotNull GemStone.ResultType var1) {
-         this((ItemStack)null, var1);
+      public ApplyResult(@NotNull GemStone.ResultType resultType) {
+         this((ItemStack)null, resultType);
       }
 
-      public ApplyResult(@Nullable ItemStack var1) {
-         this(var1, GemStone.ResultType.SUCCESS);
+      public ApplyResult(@Nullable ItemStack item) {
+         this(item, GemStone.ResultType.SUCCESS);
       }
 
-      public ApplyResult(@Nullable ItemStack var1, @NotNull GemStone.ResultType var2) {
-         this.type = var2;
-         this.result = var1;
+      public ApplyResult(@Nullable ItemStack item, @NotNull GemStone.ResultType resultType) {
+         this.type = resultType;
+         this.result = item;
          this.resultAsMMOItem = null;
       }
 
-      public ApplyResult(@Nullable MMOItem var1, @NotNull GemStone.ResultType var2) {
-         this.type = var2;
+      public ApplyResult(@Nullable MMOItem mmoItem, @NotNull GemStone.ResultType resultType) {
+         this.type = resultType;
          this.result = null;
-         this.resultAsMMOItem = var1;
+         this.resultAsMMOItem = mmoItem;
       }
 
       @NotNull

@@ -20,27 +20,27 @@ public class SmeltMMOItemExperienceSource extends SpecificExperienceSource<NBTIt
    private final String type;
    private final String id;
 
-   public SmeltMMOItemExperienceSource(ExperienceDispenser var1, MMOLineConfig var2) {
-      super(var1, var2);
-      var2.validate(new String[]{"type", "id"});
-      this.type = var2.getString("type").replace("-", "_").replace(" ", "_").toUpperCase();
-      this.id = var2.getString("id").replace("-", "_").replace(" ", "_").toUpperCase();
+   public SmeltMMOItemExperienceSource(ExperienceDispenser experienceDispenser, MMOLineConfig mmoLineConfig) {
+      super(experienceDispenser, mmoLineConfig);
+      mmoLineConfig.validate(new String[]{"type", "id"});
+      this.type = mmoLineConfig.getString("type").replace("-", "_").replace(" ", "_").toUpperCase();
+      this.id = mmoLineConfig.getString("id").replace("-", "_").replace(" ", "_").toUpperCase();
    }
 
    public ExperienceSourceManager<SmeltMMOItemExperienceSource> newManager() {
       return new ExperienceSourceManager<SmeltMMOItemExperienceSource>() {
          @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-         public void a(BlockCookEvent var1) {
-            Optional var2 = SmeltMMOItemExperienceSource.this.getNearbyPlayer(var1.getBlock().getLocation());
-            if (var2.isPresent()) {
-               ItemStack var3 = var1.getResult();
-               NBTItem var4 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var3);
-               if (var4.hasType()) {
-                  PlayerData var5 = PlayerData.get((OfflinePlayer)var2.get());
+         public void a(BlockCookEvent event) {
+            Optional nearbyPlayer = SmeltMMOItemExperienceSource.this.getNearbyPlayer(event.getBlock().getLocation());
+            if (nearbyPlayer.isPresent()) {
+               ItemStack result = event.getResult();
+               NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(result);
+               if (nBTItem.hasType()) {
+                  PlayerData playerData = PlayerData.get((OfflinePlayer)nearbyPlayer.get());
 
-                  for (SmeltMMOItemExperienceSource var7 : this.getSources()) {
-                     if (var7.matches(var5, var4)) {
-                        var7.giveExperience(var5, 1.0, var1.getBlock().getLocation().add(0.5, 1.0, 0.5));
+                  for (SmeltMMOItemExperienceSource source : this.getSources()) {
+                     if (source.matches(playerData, nBTItem)) {
+                        source.giveExperience(playerData, 1.0, event.getBlock().getLocation().add(0.5, 1.0, 0.5));
                      }
                   }
                }
@@ -49,11 +49,11 @@ public class SmeltMMOItemExperienceSource extends SpecificExperienceSource<NBTIt
       };
    }
 
-   private Optional<Player> getNearbyPlayer(Location var1) {
-      return var1.getWorld().getPlayers().stream().filter(var1x -> var1x.getLocation().distanceSquared(var1) < 100.0).findAny();
+   private Optional<Player> getNearbyPlayer(Location location) {
+      return location.getWorld().getPlayers().stream().filter(var1x -> var1x.getLocation().distanceSquared(location) < 100.0).findAny();
    }
 
-   public boolean matchesParameter(PlayerData var1, NBTItem var2) {
-      return var2.getString("MMOITEMS_ITEM_TYPE").equals(this.type) && var2.getString("MMOITEMS_ITEM_ID").equals(this.id);
+   public boolean matchesParameter(PlayerData playerData, NBTItem nbtItem) {
+      return nbtItem.getString("MMOITEMS_ITEM_TYPE").equals(this.type) && nbtItem.getString("MMOITEMS_ITEM_ID").equals(this.id);
    }
 }

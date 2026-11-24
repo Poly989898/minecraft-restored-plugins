@@ -9,17 +9,17 @@ import org.jetbrains.annotations.NotNull;
 public abstract class PlayerInputHandler {
    private final Edition edition;
 
-   public PlayerInputHandler(Edition var1) {
-      this.edition = var1;
+   public PlayerInputHandler(Edition edition) {
+      this.edition = edition;
    }
 
    public Player getPlayer() {
       return this.edition.getInventory().getPlayer();
    }
 
-   protected void registerInput(@NotNull String var1) {
+   protected void registerInput(@NotNull String text) {
       Validate.isTrue(Bukkit.isPrimaryThread(), "Input must be registered on primary thread");
-      if (var1.equalsIgnoreCase("cancel") || this.edition.processInput(var1)) {
+      if (text.equalsIgnoreCase("cancel") || this.edition.processInput(text)) {
          if (this.edition.shouldGoBack()) {
             this.edition.getInventory().open();
          }

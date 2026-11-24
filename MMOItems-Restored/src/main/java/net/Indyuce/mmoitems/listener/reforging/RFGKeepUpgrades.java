@@ -8,15 +8,15 @@ import org.bukkit.event.Listener;
 
 public class RFGKeepUpgrades implements Listener {
    @EventHandler
-   public void onReforge(MMOItemReforgeEvent var1) {
-      UpgradeData var2 = (UpgradeData)var1.getOldMMOItem().getData(ItemStats.UPGRADE);
-      UpgradeData var3 = (UpgradeData)var1.getNewMMOItem().getData(ItemStats.UPGRADE);
-      if (var1.getOptions().shouldKeepUpgrades() && var2 != null && var3 != null && var3.getMaxUpgrades() > 0) {
-         UpgradeData var4 = new UpgradeData(
-            var3.getReference(), var3.getTemplateName(), var3.isWorkbench(), var3.isDestroy(), var3.getMax(), var3.getMin(), var3.getSuccess()
+   public void onReforge(MMOItemReforgeEvent event) {
+      UpgradeData data = (UpgradeData)event.getOldMMOItem().getData(ItemStats.UPGRADE);
+      UpgradeData data2 = (UpgradeData)event.getNewMMOItem().getData(ItemStats.UPGRADE);
+      if (event.getOptions().shouldKeepUpgrades() && data != null && data2 != null && data2.getMaxUpgrades() > 0) {
+         UpgradeData upgradeData = new UpgradeData(
+            data2.getReference(), data2.getTemplateName(), data2.isWorkbench(), data2.isDestroy(), data2.getMax(), data2.getMin(), data2.getSuccess()
          );
-         var4.setLevel(Math.min(var2.getLevel(), var3.getMaxUpgrades()));
-         var1.getNewMMOItem().setData(ItemStats.UPGRADE, var4);
+         upgradeData.setLevel(Math.min(data.getLevel(), data2.getMaxUpgrades()));
+         event.getNewMMOItem().setData(ItemStats.UPGRADE, upgradeData);
       }
    }
 }

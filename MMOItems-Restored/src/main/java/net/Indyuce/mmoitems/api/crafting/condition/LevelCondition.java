@@ -7,27 +7,27 @@ public class LevelCondition extends Condition {
    private final int level;
    private final boolean consume;
 
-   public LevelCondition(MMOLineConfig var1) {
+   public LevelCondition(MMOLineConfig mmoLineConfig) {
       super("level");
-      var1.validate(new String[]{"level"});
-      this.level = var1.getInt("level");
-      this.consume = var1.getBoolean("consume", false);
+      mmoLineConfig.validate(new String[]{"level"});
+      this.level = mmoLineConfig.getInt("level");
+      this.consume = mmoLineConfig.getBoolean("consume", false);
    }
 
    @Override
-   public boolean isMet(PlayerData var1) {
-      return var1.getRPG().getLevel() >= this.level;
+   public boolean isMet(PlayerData playerData) {
+      return playerData.getRPG().getLevel() >= this.level;
    }
 
    @Override
-   public String formatDisplay(String var1) {
-      return var1.replace("#level#", "" + this.level);
+   public String formatDisplay(String text) {
+      return text.replace("#level#", "" + this.level);
    }
 
    @Override
-   public void whenCrafting(PlayerData var1) {
+   public void whenCrafting(PlayerData playerData) {
       if (this.consume) {
-         var1.getPlayer().setLevel(Math.max(0, var1.getPlayer().getLevel() - this.level));
+         playerData.getPlayer().setLevel(Math.max(0, playerData.getPlayer().getLevel() - this.level));
       }
    }
 }

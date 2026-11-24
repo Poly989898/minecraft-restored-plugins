@@ -40,49 +40,49 @@ public class SoulbindingChance extends DoubleStat implements ConsumableItemInter
 
    @Override
    public boolean handleConsumableEffect(
-      @NotNull InventoryClickEvent var1, @NotNull PlayerData var2, @NotNull Consumable var3, @NotNull NBTItem var4, @Nullable Type var5
+      @NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem nbtItem, @Nullable Type type
    ) {
-      Player var6 = var2.getPlayer();
-      if (var5 == null) {
+      Player player = playerData.getPlayer();
+      if (type == null) {
          return false;
       }
 
-      double var7 = var3.getNBTItem().getStat("SOULBINDING_CHANCE");
-      if (var7 <= 0.0) {
+      double stat = consumable.getNBTItem().getStat("SOULBINDING_CHANCE");
+      if (stat <= 0.0) {
          return false;
       }
 
-      if (var4.getItem().getAmount() > 1) {
-         Message.CANT_BIND_STACKED.format(ChatColor.RED).send(var6);
+      if (nbtItem.getItem().getAmount() > 1) {
+         Message.CANT_BIND_STACKED.format(ChatColor.RED).send(player);
          return false;
       }
 
-      VolatileMMOItem var9 = new VolatileMMOItem(var4);
-      if (var9.hasData(ItemStats.SOULBOUND)) {
-         SoulboundData var13 = (SoulboundData)var9.getData(ItemStats.SOULBOUND);
-         Message.CANT_BIND_ITEM.format(ChatColor.RED, "#player#", var13.getName(), "#level#", MMOUtils.intToRoman(var13.getLevel())).send(var6);
+      VolatileMMOItem volatileMMOItem = new VolatileMMOItem(nbtItem);
+      if (volatileMMOItem.hasData(ItemStats.SOULBOUND)) {
+         SoulboundData data = (SoulboundData)volatileMMOItem.getData(ItemStats.SOULBOUND);
+         Message.CANT_BIND_ITEM.format(ChatColor.RED, "#player#", data.getName(), "#level#", MMOUtils.intToRoman(data.getLevel())).send(player);
          return false;
       }
 
-      if (random.nextDouble() < var7 / 100.0) {
-         ApplySoulboundEvent var10 = new ApplySoulboundEvent(var2, var3.getMMOItem(), var4);
-         Bukkit.getPluginManager().callEvent(var10);
-         if (var10.isCancelled()) {
+      if (random.nextDouble() < stat / 100.0) {
+         ApplySoulboundEvent event2 = new ApplySoulboundEvent(playerData, consumable.getMMOItem(), nbtItem);
+         Bukkit.getPluginManager().callEvent(event2);
+         if (event2.isCancelled()) {
             return false;
          }
 
-         int var11 = (int)Math.max(1.0, var3.getNBTItem().getStat("SOULBOUND_LEVEL"));
-         LiveMMOItem var12;
-         (var12 = new LiveMMOItem(var4)).setData(ItemStats.SOULBOUND, new SoulboundData(var6.getUniqueId(), var6.getName(), var11));
-         var4.getItem().setItemMeta(var12.newBuilder().build().getItemMeta());
+         int count = (int)Math.max(1.0, consumable.getNBTItem().getStat("SOULBOUND_LEVEL"));
+         LiveMMOItem liveMMOItem;
+         (liveMMOItem = new LiveMMOItem(nbtItem)).setData(ItemStats.SOULBOUND, new SoulboundData(player.getUniqueId(), player.getName(), count));
+         nbtItem.getItem().setItemMeta(liveMMOItem.newBuilder().build().getItemMeta());
          Message.SUCCESSFULLY_BIND_ITEM
-            .format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(var4.getItem()), "#level#", MMOUtils.intToRoman(var11))
-            .send(var6);
-         var6.playSound(var6.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 2.0F);
+            .format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(nbtItem.getItem()), "#level#", MMOUtils.intToRoman(count))
+            .send(player);
+         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 2.0F);
          return true;
       } else {
-         Message.UNSUCCESSFUL_SOULBOUND.format(ChatColor.RED).send(var6);
-         var6.playSound(var6.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.0F);
+         Message.UNSUCCESSFUL_SOULBOUND.format(ChatColor.RED).send(player);
+         player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.0F);
          return true;
       }
    }

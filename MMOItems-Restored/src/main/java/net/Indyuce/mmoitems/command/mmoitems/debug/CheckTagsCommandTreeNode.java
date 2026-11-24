@@ -8,21 +8,21 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CheckTagsCommandTreeNode extends CommandTreeNode {
-   public CheckTagsCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "checktags");
+   public CheckTagsCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "checktags");
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      if (!(var1 instanceof Player)) {
-         var1.sendMessage(ChatColor.RED + "This command is only for players.");
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      if (!(sender instanceof Player)) {
+         sender.sendMessage(ChatColor.RED + "This command is only for players.");
          return CommandResult.FAILURE;
       }
 
-      Player var3 = (Player)var1;
-      var3.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "--------------------------------------------------");
+      Player player = (Player)sender;
+      player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "--------------------------------------------------");
 
-      for (String var5 : MythicLib.plugin.getVersion().getWrapper().getNBTItem(var3.getInventory().getItemInMainHand()).getTags()) {
-         var3.sendMessage("- " + var5);
+      for (String tag : MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand()).getTags()) {
+         player.sendMessage("- " + tag);
       }
 
       return CommandResult.SUCCESS;

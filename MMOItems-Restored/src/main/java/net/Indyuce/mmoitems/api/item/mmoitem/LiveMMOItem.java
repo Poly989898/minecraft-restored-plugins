@@ -12,26 +12,26 @@ import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 
 public class LiveMMOItem extends ReadMMOItem {
-   public LiveMMOItem(ItemStack var1) {
-      this(MythicLib.plugin.getVersion().getWrapper().getNBTItem(var1));
+   public LiveMMOItem(ItemStack item) {
+      this(MythicLib.plugin.getVersion().getWrapper().getNBTItem(item));
    }
 
-   public LiveMMOItem(NBTItem var1) {
-      super(var1);
+   public LiveMMOItem(NBTItem nbtItem) {
+      super(nbtItem);
 
-      for (ItemStat var3 : this.getType().getAvailableStats()) {
+      for (ItemStat availableStat : this.getType().getAvailableStats()) {
          try {
-            var3.whenLoaded(this);
-            if (!this.hasStatHistory(var3)) {
-               ItemTag var4 = ItemTag.getTagAtPath("HSTRY_" + var3.getId(), this.getNBT(), SupportedNBTTagValues.STRING);
-               if (var4 != null) {
-                  StatHistory var5 = StatHistory.fromNBTString(this, (String)var4.getValue());
-                  if (var5 != null) {
-                     this.setStatHistory(var3, var5);
+            availableStat.whenLoaded(this);
+            if (!this.hasStatHistory(availableStat)) {
+               ItemTag tagAtPath = ItemTag.getTagAtPath("HSTRY_" + availableStat.getId(), this.getNBT(), SupportedNBTTagValues.STRING);
+               if (tagAtPath != null) {
+                  StatHistory statHistory = StatHistory.fromNBTString(this, (String)tagAtPath.getValue());
+                  if (statHistory != null) {
+                     this.setStatHistory(availableStat, statHistory);
                   }
                }
             }
-         } catch (IllegalArgumentException var6) {
+         } catch (IllegalArgumentException exception) {
             MMOItems.plugin
                .getLogger()
                .log(
@@ -39,7 +39,7 @@ public class LiveMMOItem extends ReadMMOItem {
                   ChatColor.GRAY
                      + "Could not load stat '"
                      + ChatColor.GOLD
-                     + var3.getId()
+                     + availableStat.getId()
                      + ChatColor.GRAY
                      + "'item data from '"
                      + ChatColor.RED
@@ -47,7 +47,7 @@ public class LiveMMOItem extends ReadMMOItem {
                      + ChatColor.GRAY
                      + "': "
                      + ChatColor.YELLOW
-                     + var6.getMessage()
+                     + exception.getMessage()
                );
          }
       }

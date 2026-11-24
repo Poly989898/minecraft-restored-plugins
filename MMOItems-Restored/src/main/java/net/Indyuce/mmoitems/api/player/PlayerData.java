@@ -59,8 +59,8 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
    private final PlayerStats stats;
    private final Set<String> permissions = new HashSet<>();
 
-   public PlayerData(@NotNull MMOPlayerData var1) {
-      super(MMOItems.plugin, var1);
+   public PlayerData(@NotNull MMOPlayerData mmoPlayerData) {
+      super(MMOItems.plugin, mmoPlayerData);
       this.rpgPlayer = MMOItems.plugin.getMainRPG().getInfo(this);
       this.stats = new PlayerStats(this);
    }
@@ -90,17 +90,17 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
    }
 
    public boolean isEncumbered() {
-      NBTItem var1 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(this.getPlayer().getInventory().getItemInMainHand());
-      NBTItem var2 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(this.getPlayer().getInventory().getItemInOffHand());
-      boolean var3 = var1.getBoolean(ItemStats.TWO_HANDED.getNBTPath());
-      boolean var4 = var2.getBoolean(ItemStats.TWO_HANDED.getNBTPath());
-      boolean var5 = var1.getItem() != null && var1.getItem().getType() != Material.AIR && !var1.getBoolean(ItemStats.HANDWORN.getNBTPath());
-      boolean var6 = var2.getItem() != null && var2.getItem().getType() != Material.AIR && !var2.getBoolean(ItemStats.HANDWORN.getNBTPath());
-      return var3 && var6 || var5 && var4;
+      NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(this.getPlayer().getInventory().getItemInMainHand());
+      NBTItem nBTItem2 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(this.getPlayer().getInventory().getItemInOffHand());
+      boolean flag = nBTItem.getBoolean(ItemStats.TWO_HANDED.getNBTPath());
+      boolean flag2 = nBTItem2.getBoolean(ItemStats.TWO_HANDED.getNBTPath());
+      boolean flag3 = nBTItem.getItem() != null && nBTItem.getItem().getType() != Material.AIR && !nBTItem.getBoolean(ItemStats.HANDWORN.getNBTPath());
+      boolean flag4 = nBTItem2.getItem() != null && nBTItem2.getItem().getType() != Material.AIR && !nBTItem2.getBoolean(ItemStats.HANDWORN.getNBTPath());
+      return flag && flag4 || flag3 && flag2;
    }
 
-   public void setRPGPlayer(RPGPlayer var1) {
-      this.rpgPlayer = var1;
+   public void setRPGPlayer(RPGPlayer rpgPlayer) {
+      this.rpgPlayer = rpgPlayer;
    }
 
    public void updateInventory() {
@@ -112,10 +112,10 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
          this.itemParticles.clear();
          this.overridingItemParticles = null;
          if (MMOItems.plugin.hasPermissions()) {
-            Permission var1 = MMOItems.plugin.getVault().getPermissions();
+            Permission permissions = MMOItems.plugin.getVault().getPermissions();
             this.permissions.forEach(var2x -> {
-               if (var1.has(this.getPlayer(), var2x)) {
-                  var1.playerRemove(this.getPlayer(), var2x);
+               if (permissions.has(this.getPlayer(), var2x)) {
+                  permissions.playerRemove(this.getPlayer(), var2x);
                }
             });
          }
@@ -123,100 +123,100 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
          this.permissions.clear();
          this.encumbered = this.isEncumbered();
 
-         for (EquippedItem var2 : MMOItems.plugin.getInventory().getInventory(this.getPlayer())) {
-            NBTItem var3 = var2.getNBT();
-            if (var3.getItem() != null && var3.getItem().getType() != Material.AIR && var2.isPlacementLegal() && this.getRPG().canUse(var3, false, false)) {
-               this.inventory.getEquipped().add(var2);
+         for (EquippedItem equippedItem : MMOItems.plugin.getInventory().getInventory(this.getPlayer())) {
+            NBTItem nBT = equippedItem.getNBT();
+            if (nBT.getItem() != null && nBT.getItem().getType() != Material.AIR && equippedItem.isPlacementLegal() && this.getRPG().canUse(nBT, false, false)) {
+               this.inventory.getEquipped().add(equippedItem);
             }
          }
 
          Bukkit.getPluginManager().callEvent(new RefreshInventoryEvent(this.inventory.getEquipped(), this.getPlayer(), this));
 
-         for (EquippedItem var11 : this.inventory.getEquipped()) {
-            VolatileMMOItem var18 = var11.getCached();
-            ModifierSource var4 = var18.getType().getModifierSource();
-            EquipmentSlot var5 = var11.getSlot();
-            if (EquipmentSlot.MAIN_HAND.isCompatible(var4, var5)) {
-               if (var18.hasData(ItemStats.ABILITIES)) {
-                  for (AbilityData var7 : ((AbilityListData)var18.getData(ItemStats.ABILITIES)).getAbilities()) {
-                     this.getMMOPlayerData().getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", var7, var5, var4));
+         for (EquippedItem equippedItem : this.inventory.getEquipped()) {
+            VolatileMMOItem cached = equippedItem.getCached();
+            ModifierSource modifierSource = cached.getType().getModifierSource();
+            EquipmentSlot slot = equippedItem.getSlot();
+            if (EquipmentSlot.MAIN_HAND.isCompatible(modifierSource, slot)) {
+               if (cached.hasData(ItemStats.ABILITIES)) {
+                  for (AbilityData ability : ((AbilityListData)cached.getData(ItemStats.ABILITIES)).getAbilities()) {
+                     this.getMMOPlayerData().getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", ability, slot, modifierSource));
                   }
                }
 
-               if (var18.hasData(ItemStats.PERM_EFFECTS)) {
-                  ((PotionEffectListData)var18.getData(ItemStats.PERM_EFFECTS)).getEffects().forEach(var1x -> {
+               if (cached.hasData(ItemStats.PERM_EFFECTS)) {
+                  ((PotionEffectListData)cached.getData(ItemStats.PERM_EFFECTS)).getEffects().forEach(var1x -> {
                      if (this.getPermanentPotionEffectAmplifier(var1x.getType()) < var1x.getLevel() - 1) {
                         this.permanentEffects.put(var1x.getType(), var1x.toEffect());
                      }
                   });
                }
 
-               if (var18.hasData(ItemStats.ITEM_PARTICLES)) {
-                  ParticleData var28 = (ParticleData)var18.getData(ItemStats.ITEM_PARTICLES);
-                  if (var28.getType().hasPriority()) {
+               if (cached.hasData(ItemStats.ITEM_PARTICLES)) {
+                  ParticleData data = (ParticleData)cached.getData(ItemStats.ITEM_PARTICLES);
+                  if (data.getType().hasPriority()) {
                      if (this.overridingItemParticles == null) {
-                        this.overridingItemParticles = var28.start(this);
+                        this.overridingItemParticles = data.start(this);
                      }
                   } else {
-                     this.itemParticles.add(var28.start(this));
+                     this.itemParticles.add(data.start(this));
                   }
                }
 
-               if (MMOItems.plugin.hasPermissions() && var18.hasData(ItemStats.GRANTED_PERMISSIONS)) {
-                  Permission var29 = MMOItems.plugin.getVault().getPermissions();
-                  this.permissions.addAll(((StringListData)var18.getData(ItemStats.GRANTED_PERMISSIONS)).getList());
+               if (MMOItems.plugin.hasPermissions() && cached.hasData(ItemStats.GRANTED_PERMISSIONS)) {
+                  Permission permissions = MMOItems.plugin.getVault().getPermissions();
+                  this.permissions.addAll(((StringListData)cached.getData(ItemStats.GRANTED_PERMISSIONS)).getList());
                   this.permissions.forEach(var2x -> {
-                     if (!var29.has(this.getPlayer(), var2x)) {
-                        var29.playerAdd(this.getPlayer(), var2x);
+                     if (!permissions.has(this.getPlayer(), var2x)) {
+                        permissions.playerAdd(this.getPlayer(), var2x);
                      }
                   });
                }
             }
          }
 
-         HashMap<ItemSet, Integer> var10 = new HashMap<>();
+         HashMap<ItemSet, Integer> map = new HashMap<>();
 
-         for (EquippedItem var19 : this.inventory.getEquipped()) {
-            String var25 = var19.getCached().getNBT().getString("MMOITEMS_ITEM_SET");
-            ItemSet var27 = MMOItems.plugin.getSets().get(var25);
-            if (var27 != null) {
-               var10.put(var27, var10.getOrDefault(var27, 0) + 1);
+         for (EquippedItem equippedItem : this.inventory.getEquipped()) {
+            String mMOITEMSITEMSET = equippedItem.getCached().getNBT().getString("MMOITEMS_ITEM_SET");
+            ItemSet itemSet = MMOItems.plugin.getSets().get(mMOITEMSITEMSET);
+            if (itemSet != null) {
+               map.put(itemSet, map.getOrDefault(itemSet, 0) + 1);
             }
          }
 
          this.setBonuses = null;
 
-         for (Entry<ItemSet, Integer> var20 : var10.entrySet()) {
+         for (Entry<ItemSet, Integer> entry : map.entrySet()) {
             if (this.setBonuses == null) {
-               this.setBonuses = ((ItemSet)var20.getKey()).getBonuses((Integer)var20.getValue());
+               this.setBonuses = ((ItemSet)entry.getKey()).getBonuses((Integer)entry.getValue());
             } else {
-               this.setBonuses.merge(((ItemSet)var20.getKey()).getBonuses((Integer)var20.getValue()));
+               this.setBonuses.merge(((ItemSet)entry.getKey()).getBonuses((Integer)entry.getValue()));
             }
          }
 
          if (this.setBonuses != null) {
             if (MMOItems.plugin.hasPermissions()) {
-               Permission var14 = MMOItems.plugin.getVault().getPermissions();
+               Permission permissions = MMOItems.plugin.getVault().getPermissions();
                this.permissions.addAll(this.setBonuses.getPermissions());
 
-               for (String var26 : this.setBonuses.getPermissions()) {
-                  if (!var14.has(this.getPlayer(), var26)) {
-                     var14.playerAdd(this.getPlayer(), var26);
+               for (String permission : this.setBonuses.getPermissions()) {
+                  if (!permissions.has(this.getPlayer(), permission)) {
+                     permissions.playerAdd(this.getPlayer(), permission);
                   }
                }
             }
 
-            for (AbilityData var22 : this.setBonuses.getAbilities()) {
-               this.getMMOPlayerData().getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", var22, EquipmentSlot.OTHER, ModifierSource.OTHER));
+            for (AbilityData ability : this.setBonuses.getAbilities()) {
+               this.getMMOPlayerData().getPassiveSkillMap().addModifier(new PassiveSkill("MMOItemsItem", ability, EquipmentSlot.OTHER, ModifierSource.OTHER));
             }
 
-            for (ParticleData var23 : this.setBonuses.getParticles()) {
-               this.itemParticles.add(var23.start(this));
+            for (ParticleData particle : this.setBonuses.getParticles()) {
+               this.itemParticles.add(particle.start(this));
             }
 
-            for (PotionEffect var24 : this.setBonuses.getPotionEffects()) {
-               if (this.getPermanentPotionEffectAmplifier(var24.getType()) < var24.getAmplifier()) {
-                  this.permanentEffects.put(var24.getType(), var24);
+            for (PotionEffect potionEffect : this.setBonuses.getPotionEffects()) {
+               if (this.getPermanentPotionEffectAmplifier(potionEffect.getType()) < potionEffect.getAmplifier()) {
+                  this.permanentEffects.put(potionEffect.getType(), potionEffect);
                }
             }
          }
@@ -233,7 +233,7 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
    }
 
    public void timedRunnable() {
-      this.permanentEffects.values().forEach(var1 -> this.getPlayer().addPotionEffect(var1));
+      this.permanentEffects.values().forEach(potionEffect -> this.getPlayer().addPotionEffect(potionEffect));
       if (this.encumbered) {
          this.getPlayer().addPotionEffect(new PotionEffect(VPotionEffectType.SLOWNESS.get(), 40, 1, true, false));
       }
@@ -255,8 +255,8 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
       return this.craftingStatus;
    }
 
-   public int getPermanentPotionEffectAmplifier(PotionEffectType var1) {
-      return this.permanentEffects.containsKey(var1) ? this.permanentEffects.get(var1).getAmplifier() : -1;
+   public int getPermanentPotionEffectAmplifier(PotionEffectType potionEffectType) {
+      return this.permanentEffects.containsKey(potionEffectType) ? this.permanentEffects.get(potionEffectType).getAmplifier() : -1;
    }
 
    public Set<String> getPermissions() {
@@ -272,55 +272,55 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
    }
 
    @Deprecated
-   public void cast(@Nullable AttackMetadata var1, @Nullable LivingEntity var2, @NotNull AbilityData var3) {
-      PlayerMetadata var4 = this.getMMOPlayerData().getStatMap().cache(EquipmentSlot.MAIN_HAND);
-      var3.cast(new TriggerMetadata(var4, var2, var1));
+   public void cast(@Nullable AttackMetadata attackMetadata, @Nullable LivingEntity entity, @NotNull AbilityData abilityData) {
+      PlayerMetadata playerMetadata = this.getMMOPlayerData().getStatMap().cache(EquipmentSlot.MAIN_HAND);
+      abilityData.cast(new TriggerMetadata(playerMetadata, entity, attackMetadata));
    }
 
-   public boolean isOnCooldown(PlayerData.CooldownType var1) {
-      return this.getMMOPlayerData().getCooldownMap().isOnCooldown(var1.name());
+   public boolean isOnCooldown(PlayerData.CooldownType cooldownType) {
+      return this.getMMOPlayerData().getCooldownMap().isOnCooldown(cooldownType.name());
    }
 
-   public void applyCooldown(PlayerData.CooldownType var1, double var2) {
-      this.getMMOPlayerData().getCooldownMap().applyCooldown(var1.name(), var2);
-   }
-
-   @Deprecated
-   public boolean isOnCooldown(ItemReference var1) {
-      return this.getMMOPlayerData().getCooldownMap().isOnCooldown(var1);
+   public void applyCooldown(PlayerData.CooldownType cooldownType, double value) {
+      this.getMMOPlayerData().getCooldownMap().applyCooldown(cooldownType.name(), value);
    }
 
    @Deprecated
-   public void applyItemCooldown(ItemReference var1, double var2) {
-      this.getMMOPlayerData().getCooldownMap().applyCooldown(var1, var2);
+   public boolean isOnCooldown(ItemReference itemReference) {
+      return this.getMMOPlayerData().getCooldownMap().isOnCooldown(itemReference);
    }
 
    @Deprecated
-   public double getItemCooldown(ItemReference var1) {
-      return this.getMMOPlayerData().getCooldownMap().getInfo(var1).getRemaining() / 1000.0;
+   public void applyItemCooldown(ItemReference itemReference, double value) {
+      this.getMMOPlayerData().getCooldownMap().applyCooldown(itemReference, value);
+   }
+
+   @Deprecated
+   public double getItemCooldown(ItemReference itemReference) {
+      return this.getMMOPlayerData().getCooldownMap().getInfo(itemReference).getRemaining() / 1000.0;
    }
 
    @NotNull
-   public static PlayerData get(@NotNull MMOPlayerData var0) {
-      return get(var0.getPlayer());
+   public static PlayerData get(@NotNull MMOPlayerData mmoPlayerData) {
+      return get(mmoPlayerData.getPlayer());
    }
 
    @NotNull
-   public static PlayerData get(@NotNull OfflinePlayer var0) {
-      return get(var0.getUniqueId());
+   public static PlayerData get(@NotNull OfflinePlayer offlinePlayer) {
+      return get(offlinePlayer.getUniqueId());
    }
 
-   public static boolean has(Player var0) {
-      return has(var0.getUniqueId());
+   public static boolean has(Player player) {
+      return has(player.getUniqueId());
    }
 
-   public static boolean has(UUID var0) {
-      return MMOItems.plugin.getPlayerDataManager().isLoaded(var0);
+   public static boolean has(UUID uuid) {
+      return MMOItems.plugin.getPlayerDataManager().isLoaded(uuid);
    }
 
    @NotNull
-   public static PlayerData get(UUID var0) {
-      return (PlayerData)MMOItems.plugin.getPlayerDataManager().get(var0);
+   public static PlayerData get(UUID uuid) {
+      return (PlayerData)MMOItems.plugin.getPlayerDataManager().get(uuid);
    }
 
    @Deprecated

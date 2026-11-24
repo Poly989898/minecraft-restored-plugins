@@ -9,14 +9,14 @@ import org.bukkit.event.Listener;
 
 public class RFGKeepExternalSH implements Listener {
    @EventHandler
-   public void onReforge(MMOItemReforgeEvent var1) {
-      if (var1.getOptions().shouldKeepExternalSH()) {
-         for (StatHistory var3 : var1.getOldMMOItem().getStatHistories()) {
-            if (var3.getItemStat() != ItemStats.ENCHANTS) {
-               StatHistory var4 = var1.getNewMMOItem().computeStatHistory(var3.getItemStat());
+   public void onReforge(MMOItemReforgeEvent event) {
+      if (event.getOptions().shouldKeepExternalSH()) {
+         for (StatHistory statHistory : event.getOldMMOItem().getStatHistories()) {
+            if (statHistory.getItemStat() != ItemStats.ENCHANTS) {
+               StatHistory statHistory2 = event.getNewMMOItem().computeStatHistory(statHistory.getItemStat());
 
-               for (StatData var6 : var3.getExternalData()) {
-                  var4.registerExternalData(var6);
+               for (StatData statData : statHistory.getExternalData()) {
+                  statHistory2.registerExternalData(statData);
                }
             }
          }

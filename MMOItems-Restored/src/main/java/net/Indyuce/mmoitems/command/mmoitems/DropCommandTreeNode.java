@@ -17,116 +17,116 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 public class DropCommandTreeNode extends CommandTreeNode {
-   public DropCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "drop");
+   public DropCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "drop");
       this.addParameter(MMOItemsCommandTreeRoot.TYPE);
       this.addParameter(MMOItemsCommandTreeRoot.ID_2);
-      this.addParameter(new Parameter("<world>", (var0, var1x) -> Bukkit.getWorlds().forEach(var1xx -> var1x.add(var1xx.getName()))));
-      this.addParameter(new Parameter("<x>", (var0, var1x) -> var1x.add("<x>")));
-      this.addParameter(new Parameter("<y>", (var0, var1x) -> var1x.add("<y>")));
-      this.addParameter(new Parameter("<z>", (var0, var1x) -> var1x.add("<z>")));
-      this.addParameter(new Parameter("<drop-chance>", (var0, var1x) -> var1x.add("<drop-chance>")));
-      this.addParameter(new Parameter("<min-max>", (var0, var1x) -> var1x.add("1-3")));
-      this.addParameter(new Parameter("<unidentify-chance>", (var0, var1x) -> var1x.add("<unidentify-chance>")));
+      this.addParameter(new Parameter("<world>", (commandTreeExplorer, var1x) -> Bukkit.getWorlds().forEach(var1xx -> var1x.add(var1xx.getName()))));
+      this.addParameter(new Parameter("<x>", (commandTreeExplorer, var1x) -> var1x.add("<x>")));
+      this.addParameter(new Parameter("<y>", (commandTreeExplorer, var1x) -> var1x.add("<y>")));
+      this.addParameter(new Parameter("<z>", (commandTreeExplorer, var1x) -> var1x.add("<z>")));
+      this.addParameter(new Parameter("<drop-chance>", (commandTreeExplorer, var1x) -> var1x.add("<drop-chance>")));
+      this.addParameter(new Parameter("<min-max>", (commandTreeExplorer, var1x) -> var1x.add("1-3")));
+      this.addParameter(new Parameter("<unidentify-chance>", (commandTreeExplorer, var1x) -> var1x.add("<unidentify-chance>")));
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      if (var2.length != 10) {
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      if (texts.length != 10) {
          return CommandResult.THROW_USAGE;
       }
 
-      if (!Type.isValid(var2[1])) {
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + var2[1].toUpperCase().replace("-", "_") + ".");
-         var1.sendMessage(
+      if (!Type.isValid(texts[1])) {
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item type called " + texts[1].toUpperCase().replace("-", "_") + ".");
+         sender.sendMessage(
             MMOItems.plugin.getPrefix() + ChatColor.RED + "Type " + ChatColor.GREEN + "/mi list type " + ChatColor.RED + "to see all the available item types."
          );
          return CommandResult.FAILURE;
       }
 
-      Type var3 = Type.get(var2[1].toUpperCase());
-      String var4 = var2[2].toUpperCase().replace("-", "_");
-      FileConfiguration var5 = var3.getConfigFile().getConfig();
-      if (!var5.contains(var4)) {
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item called " + var4 + ".");
+      Type type = Type.get(texts[1].toUpperCase());
+      String text = texts[2].toUpperCase().replace("-", "_");
+      FileConfiguration config = type.getConfigFile().getConfig();
+      if (!config.contains(text)) {
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "There is no item called " + text + ".");
          return CommandResult.FAILURE;
       }
 
-      World var6 = Bukkit.getWorld(var2[3]);
-      if (var6 == null) {
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Couldn't find the world called " + var2[3] + ".");
+      World world = Bukkit.getWorld(texts[3]);
+      if (world == null) {
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Couldn't find the world called " + texts[3] + ".");
          return CommandResult.FAILURE;
       }
 
-      double var7;
+      double value;
       try {
-         var7 = Double.parseDouble(var2[4]);
-      } catch (Exception var27) {
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + var2[4] + " is not a valid number.");
+         value = Double.parseDouble(texts[4]);
+      } catch (Exception exception) {
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + texts[4] + " is not a valid number.");
          return CommandResult.FAILURE;
       }
 
-      double var9;
+      double value2;
       try {
-         var9 = Double.parseDouble(var2[5]);
-      } catch (Exception var26) {
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + var2[5] + " is not a valid number.");
+         value2 = Double.parseDouble(texts[5]);
+      } catch (Exception exception) {
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + texts[5] + " is not a valid number.");
          return CommandResult.FAILURE;
       }
 
-      double var11;
+      double value3;
       try {
-         var11 = Double.parseDouble(var2[6]);
-      } catch (Exception var25) {
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + var2[6] + " is not a valid number.");
+         value3 = Double.parseDouble(texts[6]);
+      } catch (Exception exception) {
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + texts[6] + " is not a valid number.");
          return CommandResult.FAILURE;
       }
 
-      double var13;
+      double value4;
       try {
-         var13 = Double.parseDouble(var2[7]);
-      } catch (Exception var24) {
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + var2[7] + " is not a valid number.");
+         value4 = Double.parseDouble(texts[7]);
+      } catch (Exception exception) {
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + texts[7] + " is not a valid number.");
          return CommandResult.FAILURE;
       }
 
-      double var15;
+      double value5;
       try {
-         var15 = Double.parseDouble(var2[9]);
-      } catch (Exception var23) {
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + var2[9] + " is not a valid number.");
+         value5 = Double.parseDouble(texts[9]);
+      } catch (Exception exception) {
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + texts[9] + " is not a valid number.");
          return CommandResult.FAILURE;
       }
 
-      String[] var19 = var2[8].split("-");
-      if (var19.length != 2) {
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "The drop quantity format is incorrect.");
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Format: [min]-[max]");
+      String[] texts2 = texts[8].split("-");
+      if (texts2.length != 2) {
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "The drop quantity format is incorrect.");
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "Format: [min]-[max]");
          return CommandResult.FAILURE;
       }
 
-      int var17;
+      int count;
       try {
-         var17 = Integer.parseInt(var19[0]);
-      } catch (Exception var22) {
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + var19[0] + " is not a valid number.");
+         count = Integer.parseInt(texts2[0]);
+      } catch (Exception exception) {
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + texts2[0] + " is not a valid number.");
          return CommandResult.FAILURE;
       }
 
-      int var18;
+      int count2;
       try {
-         var18 = Integer.parseInt(var19[1]);
-      } catch (Exception var21) {
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + var19[1] + " is not a valid number.");
+         count2 = Integer.parseInt(texts2[1]);
+      } catch (Exception exception) {
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + texts2[1] + " is not a valid number.");
          return CommandResult.FAILURE;
       }
 
-      ItemStack var20 = new MMOItemDropItem(var3, var4, var13 / 100.0, var15 / 100.0, var17, var18).getItem(null);
-      if (var20 != null && var20.getType() != Material.AIR) {
-         var6.dropItem(new Location(var6, var7, var9, var11), var20);
+      ItemStack item = new MMOItemDropItem(type, text, value4 / 100.0, value5 / 100.0, count, count2).getItem(null);
+      if (item != null && item.getType() != Material.AIR) {
+         world.dropItem(new Location(world, value, value2, value3), item);
          return CommandResult.SUCCESS;
       } else {
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occurred while attempting to generate the item called " + var4 + ".");
-         var1.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See console for more information!");
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "An error occurred while attempting to generate the item called " + text + ".");
+         sender.sendMessage(MMOItems.plugin.getPrefix() + ChatColor.RED + "See console for more information!");
          return CommandResult.FAILURE;
       }
    }

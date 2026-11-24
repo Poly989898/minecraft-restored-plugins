@@ -6,7 +6,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class BouncingCrackBlockBreakEvent extends BlockBreakEvent {
-   public BouncingCrackBlockBreakEvent(@NotNull Block var1, @NotNull Player var2) {
-      super(var1, var2);
+   public BouncingCrackBlockBreakEvent(@NotNull Block block, @NotNull Player player) {
+      super(block, player);
    }
 }

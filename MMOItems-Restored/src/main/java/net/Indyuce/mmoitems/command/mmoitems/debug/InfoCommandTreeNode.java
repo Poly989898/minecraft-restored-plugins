@@ -11,19 +11,19 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class InfoCommandTreeNode extends CommandTreeNode {
-   public InfoCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "info");
+   public InfoCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "info");
       this.addParameter(Parameter.PLAYER_OPTIONAL);
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      Player var3 = var2.length > 2 ? Bukkit.getPlayer(var2[2]) : (var1 instanceof Player ? (Player)var1 : null);
-      if (var3 == null) {
-         var1.sendMessage(ChatColor.RED + "Couldn't find target player.");
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      Player player = texts.length > 2 ? Bukkit.getPlayer(texts[2]) : (sender instanceof Player ? (Player)sender : null);
+      if (player == null) {
+         sender.sendMessage(ChatColor.RED + "Couldn't find target player.");
          return CommandResult.FAILURE;
       } else {
-         RPGPlayer var4 = PlayerData.get(var3).getRPG();
-         var1.sendMessage(
+         RPGPlayer rPG = PlayerData.get(player).getRPG();
+         sender.sendMessage(
             ChatColor.DARK_GRAY
                + ""
                + ChatColor.STRIKETHROUGH
@@ -35,12 +35,12 @@ public class InfoCommandTreeNode extends CommandTreeNode {
                + ChatColor.STRIKETHROUGH
                + "]-----------------"
          );
-         var1.sendMessage(ChatColor.WHITE + "Information about " + ChatColor.LIGHT_PURPLE + var3.getName());
-         var1.sendMessage("");
-         var1.sendMessage(ChatColor.WHITE + "Player Class: " + ChatColor.LIGHT_PURPLE + var4.getClassName());
-         var1.sendMessage(ChatColor.WHITE + "Player Level: " + ChatColor.LIGHT_PURPLE + var4.getLevel());
-         var1.sendMessage(ChatColor.WHITE + "Player Mana: " + ChatColor.LIGHT_PURPLE + var4.getMana());
-         var1.sendMessage(ChatColor.WHITE + "Player Stamina: " + ChatColor.LIGHT_PURPLE + var4.getStamina());
+         sender.sendMessage(ChatColor.WHITE + "Information about " + ChatColor.LIGHT_PURPLE + player.getName());
+         sender.sendMessage("");
+         sender.sendMessage(ChatColor.WHITE + "Player Class: " + ChatColor.LIGHT_PURPLE + rPG.getClassName());
+         sender.sendMessage(ChatColor.WHITE + "Player Level: " + ChatColor.LIGHT_PURPLE + rPG.getLevel());
+         sender.sendMessage(ChatColor.WHITE + "Player Mana: " + ChatColor.LIGHT_PURPLE + rPG.getMana());
+         sender.sendMessage(ChatColor.WHITE + "Player Stamina: " + ChatColor.LIGHT_PURPLE + rPG.getStamina());
          return CommandResult.SUCCESS;
       }
    }

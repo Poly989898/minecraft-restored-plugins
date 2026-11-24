@@ -19,13 +19,13 @@ public class VanillaPlayerIngredient extends PlayerIngredient {
       return this.sourceItem;
    }
 
-   public VanillaPlayerIngredient(NBTItem var1) {
-      super(var1);
-      this.sourceItem = var1.toItem();
-      this.material = var1.getItem().getType();
-      ItemMeta var2 = var1.getItem().getItemMeta();
-      if (var2 != null) {
-         this.displayName = var2.hasDisplayName() ? var2.getDisplayName() : null;
+   public VanillaPlayerIngredient(NBTItem nbtItem) {
+      super(nbtItem);
+      this.sourceItem = nbtItem.toItem();
+      this.material = nbtItem.getItem().getType();
+      ItemMeta itemMeta = nbtItem.getItem().getItemMeta();
+      if (itemMeta != null) {
+         this.displayName = itemMeta.hasDisplayName() ? itemMeta.getDisplayName() : null;
       } else {
          this.displayName = null;
       }

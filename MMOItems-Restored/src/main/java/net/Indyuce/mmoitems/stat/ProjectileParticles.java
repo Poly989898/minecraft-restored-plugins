@@ -37,24 +37,24 @@ public class ProjectileParticles extends ItemStat<ProjectileParticlesData, Proje
       );
    }
 
-   public ProjectileParticlesData whenInitialized(Object var1) {
-      Validate.isTrue(var1 instanceof ConfigurationSection, "Must specify a valid config section");
-      ConfigurationSection var2 = (ConfigurationSection)var1;
-      Validate.isTrue(var2.contains("particle"), "Could not find projectile particle");
-      Particle var3 = Particle.valueOf(var2.getString("particle").toUpperCase().replace("-", "_").replace(" ", ""));
-      return MMOUtils.isColorable(var3)
-         ? new ProjectileParticlesData(var3, var2.getInt("color.red"), var2.getInt("color.green"), var2.getInt("color.blue"))
-         : new ProjectileParticlesData(var3);
+   public ProjectileParticlesData whenInitialized(Object obj) {
+      Validate.isTrue(obj instanceof ConfigurationSection, "Must specify a valid config section");
+      ConfigurationSection section = (ConfigurationSection)obj;
+      Validate.isTrue(section.contains("particle"), "Could not find projectile particle");
+      Particle particle = Particle.valueOf(section.getString("particle").toUpperCase().replace("-", "_").replace(" ", ""));
+      return MMOUtils.isColorable(particle)
+         ? new ProjectileParticlesData(particle, section.getInt("color.red"), section.getInt("color.green"), section.getInt("color.blue"))
+         : new ProjectileParticlesData(particle);
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      if (var2.getAction() == InventoryAction.PICKUP_HALF) {
-         var1.getEditedSection().set("projectile-particles", null);
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed the projectile particle.");
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      if (event.getAction() == InventoryAction.PICKUP_HALF) {
+         editionInventory.getEditedSection().set("projectile-particles", null);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed the projectile particle.");
       } else {
-         new StatEdition(var1, this)
+         new StatEdition(editionInventory, this)
             .enable(
                "Write in the chat the particle you want along with the color if applicable.",
                ChatColor.AQUA + "Format: {Particle} {Color}",
@@ -69,33 +69,33 @@ public class ProjectileParticles extends ItemStat<ProjectileParticlesData, Proje
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<ProjectileParticlesData> var2) {
-      if (var2.isPresent()) {
-         ProjectileParticlesData var3 = (ProjectileParticlesData)var2.get();
-         Particle var4 = var3.getParticle();
-         var1.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + var4);
-         if (MMOUtils.isColorable(var4)) {
-            String var5 = var4 == Particle.NOTE ? String.valueOf(var3.getRed()) : var3.getRed() + " " + var3.getGreen() + " " + var3.getBlue();
-            var1.add(ChatColor.GRAY + "Color: " + ChatColor.GREEN + var5);
+   public void whenDisplayed(List<String> texts, Optional<ProjectileParticlesData> optional) {
+      if (optional.isPresent()) {
+         ProjectileParticlesData projectileParticlesData = (ProjectileParticlesData)optional.get();
+         Particle particle = projectileParticlesData.getParticle();
+         texts.add(ChatColor.GRAY + "Current Value: " + ChatColor.GREEN + particle);
+         if (MMOUtils.isColorable(particle)) {
+            String text = particle == Particle.NOTE ? String.valueOf(projectileParticlesData.getRed()) : projectileParticlesData.getRed() + " " + projectileParticlesData.getGreen() + " " + projectileParticlesData.getBlue();
+            texts.add(ChatColor.GRAY + "Color: " + ChatColor.GREEN + text);
          }
       } else {
-         var1.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+         texts.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
       }
 
-      var1.add("");
-      var1.add(ChatColor.YELLOW + "►" + " Left click to change this value.");
-      var1.add(ChatColor.YELLOW + "►" + " Right click to remove this value.");
+      texts.add("");
+      texts.add(ChatColor.YELLOW + "►" + " Left click to change this value.");
+      texts.add(ChatColor.YELLOW + "►" + " Right click to remove this value.");
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      String[] var4 = var2.replace(", ", " ").replace(",", " ").split(" ");
-      Particle var5 = Particle.valueOf(var4[0].toUpperCase().replace("-", "_").replace(" ", "_"));
-      if (MMOUtils.isColorable(var5)) {
-         Validate.isTrue(var4.length <= 4, "Too many arguments provided.");
-         if (var5.equals(Particle.NOTE)) {
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      String[] texts = text.replace(", ", " ").replace(",", " ").split(" ");
+      Particle particle = Particle.valueOf(texts[0].toUpperCase().replace("-", "_").replace(" ", "_"));
+      if (MMOUtils.isColorable(particle)) {
+         Validate.isTrue(texts.length <= 4, "Too many arguments provided.");
+         if (particle.equals(Particle.NOTE)) {
             Validate.isTrue(
-               var4.length == 2,
+               texts.length == 2,
                "You must provide a color for this particle.\n"
                   + MMOItems.plugin.getPrefix()
                   + "NOTE particle colors only take a single value between 1 and 24.\n"
@@ -103,96 +103,96 @@ public class ProjectileParticles extends ItemStat<ProjectileParticlesData, Proje
                   + ChatColor.AQUA
                   + "Format: {Particle} {Color}"
             );
-            int var6 = Math.min(24, Math.max(1, Integer.parseInt(var4[1])));
-            var1.getEditedSection().set("projectile-particles.particle", var5.name());
-            var1.getEditedSection().set("projectile-particles.color.red", var6);
-            var1.getEditedSection().set("projectile-particles.color.green", 0);
-            var1.getEditedSection().set("projectile-particles.color.blue", 0);
-            var1.registerTemplateEdition();
-            var1.getPlayer()
+            int count = Math.min(24, Math.max(1, Integer.parseInt(texts[1])));
+            editionInventory.getEditedSection().set("projectile-particles.particle", particle.name());
+            editionInventory.getEditedSection().set("projectile-particles.color.red", count);
+            editionInventory.getEditedSection().set("projectile-particles.color.green", 0);
+            editionInventory.getEditedSection().set("projectile-particles.color.blue", 0);
+            editionInventory.registerTemplateEdition();
+            editionInventory.getPlayer()
                .sendMessage(
                   MMOItems.plugin.getPrefix()
                      + "Particle successfully set to "
-                     + UtilityMethods.caseOnWords(var5.name().toLowerCase().replace("_", " "))
+                     + UtilityMethods.caseOnWords(particle.name().toLowerCase().replace("_", " "))
                      + " with color "
-                     + var6
+                     + count
                );
          } else {
             Validate.isTrue(
-               var4.length == 4, "You must provide a color for this particle.\n" + MMOItems.plugin.getPrefix() + ChatColor.AQUA + "Format: {Particle} {R G B}"
+               texts.length == 4, "You must provide a color for this particle.\n" + MMOItems.plugin.getPrefix() + ChatColor.AQUA + "Format: {Particle} {R G B}"
             );
-            int var9 = var4[1] != null ? Math.min(255, Math.max(0, Integer.parseInt(var4[1]))) : 0;
-            int var7 = var4[2] != null ? Math.min(255, Math.max(0, Integer.parseInt(var4[2]))) : 0;
-            int var8 = var4[3] != null ? Math.min(255, Math.max(0, Integer.parseInt(var4[3]))) : 0;
-            var1.getEditedSection().set("projectile-particles.particle", var5.name());
-            var1.getEditedSection().set("projectile-particles.color.red", var9);
-            var1.getEditedSection().set("projectile-particles.color.green", var7);
-            var1.getEditedSection().set("projectile-particles.color.blue", var8);
-            var1.registerTemplateEdition();
-            var1.getPlayer()
+            int count = texts[1] != null ? Math.min(255, Math.max(0, Integer.parseInt(texts[1]))) : 0;
+            int count2 = texts[2] != null ? Math.min(255, Math.max(0, Integer.parseInt(texts[2]))) : 0;
+            int count3 = texts[3] != null ? Math.min(255, Math.max(0, Integer.parseInt(texts[3]))) : 0;
+            editionInventory.getEditedSection().set("projectile-particles.particle", particle.name());
+            editionInventory.getEditedSection().set("projectile-particles.color.red", count);
+            editionInventory.getEditedSection().set("projectile-particles.color.green", count2);
+            editionInventory.getEditedSection().set("projectile-particles.color.blue", count3);
+            editionInventory.registerTemplateEdition();
+            editionInventory.getPlayer()
                .sendMessage(
                   MMOItems.plugin.getPrefix()
                      + "Particle successfully set to "
-                     + UtilityMethods.caseOnWords(var5.name().toLowerCase().replace("_", " "))
+                     + UtilityMethods.caseOnWords(particle.name().toLowerCase().replace("_", " "))
                      + " with RGB color "
-                     + var9
+                     + count
                      + " "
-                     + var7
+                     + count2
                      + " "
-                     + var8
+                     + count3
                );
          }
       } else {
-         Validate.isTrue(var4.length == 1, "That particle cannot be assigned a color");
-         var1.getEditedSection().set("projectile-particles.particle", var5.name());
-         var1.getEditedSection().set("projectile-particles.color.red", 0);
-         var1.getEditedSection().set("projectile-particles.color.green", 0);
-         var1.getEditedSection().set("projectile-particles.color.blue", 0);
-         var1.registerTemplateEdition();
-         var1.getPlayer()
+         Validate.isTrue(texts.length == 1, "That particle cannot be assigned a color");
+         editionInventory.getEditedSection().set("projectile-particles.particle", particle.name());
+         editionInventory.getEditedSection().set("projectile-particles.color.red", 0);
+         editionInventory.getEditedSection().set("projectile-particles.color.green", 0);
+         editionInventory.getEditedSection().set("projectile-particles.color.blue", 0);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer()
             .sendMessage(
-               MMOItems.plugin.getPrefix() + "Particle successfully set to " + UtilityMethods.caseOnWords(var5.name().toLowerCase().replace("_", " "))
+               MMOItems.plugin.getPrefix() + "Particle successfully set to " + UtilityMethods.caseOnWords(particle.name().toLowerCase().replace("_", " "))
             );
       }
    }
 
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull ProjectileParticlesData var2) {
-      var1.addItemTag(this.getAppliedNBT(var2));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull ProjectileParticlesData projectileParticlesData) {
+      itemStackBuilder.addItemTag(this.getAppliedNBT(projectileParticlesData));
    }
 
    @NotNull
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull ProjectileParticlesData var1) {
-      ArrayList var2 = new ArrayList();
-      var2.add(new ItemTag(this.getNBTPath(), var1.toString()));
-      return var2;
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull ProjectileParticlesData projectileParticlesData) {
+      ArrayList list = new ArrayList();
+      list.add(new ItemTag(this.getNBTPath(), projectileParticlesData.toString()));
+      return list;
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      ArrayList var2 = new ArrayList();
-      if (var1.getNBT().hasTag(this.getNBTPath())) {
-         var2.add(ItemTag.getTagAtPath(this.getNBTPath(), var1.getNBT(), SupportedNBTTagValues.STRING));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      ArrayList list = new ArrayList();
+      if (readMMOItem.getNBT().hasTag(this.getNBTPath())) {
+         list.add(ItemTag.getTagAtPath(this.getNBTPath(), readMMOItem.getNBT(), SupportedNBTTagValues.STRING));
       }
 
-      ProjectileParticlesData var3 = this.getLoadedNBT(var2);
-      if (var3 != null) {
-         var1.setData(this, var3);
+      ProjectileParticlesData loadedNBT = this.getLoadedNBT(list);
+      if (loadedNBT != null) {
+         readMMOItem.setData(this, loadedNBT);
       }
    }
 
-   public ProjectileParticlesData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
-      ItemTag var2 = ItemTag.getTagAtPath(this.getNBTPath(), var1);
-      if (var2 != null) {
+   public ProjectileParticlesData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
+      ItemTag tagAtPath = ItemTag.getTagAtPath(this.getNBTPath(), itemTags);
+      if (tagAtPath != null) {
          try {
-            JsonObject var3 = new JsonParser().parse((String)var2.getValue()).getAsJsonObject();
-            Particle var4 = Particle.valueOf(var3.get("Particle").getAsString());
-            if (MMOUtils.isColorable(var4)) {
-               return new ProjectileParticlesData(var4, var3.get("Red").getAsInt(), var3.get("Green").getAsInt(), var3.get("Blue").getAsInt());
+            JsonObject asJsonObject = new JsonParser().parse((String)tagAtPath.getValue()).getAsJsonObject();
+            Particle particle = Particle.valueOf(asJsonObject.get("Particle").getAsString());
+            if (MMOUtils.isColorable(particle)) {
+               return new ProjectileParticlesData(particle, asJsonObject.get("Red").getAsInt(), asJsonObject.get("Green").getAsInt(), asJsonObject.get("Blue").getAsInt());
             }
 
-            return new ProjectileParticlesData(var4);
-         } catch (JsonSyntaxException var5) {
-            var5.printStackTrace();
+            return new ProjectileParticlesData(particle);
+         } catch (JsonSyntaxException exception) {
+            exception.printStackTrace();
          }
       }
 

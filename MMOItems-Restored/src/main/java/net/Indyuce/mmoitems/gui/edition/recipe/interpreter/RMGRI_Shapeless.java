@@ -17,57 +17,57 @@ public class RMGRI_Shapeless implements RMG_RecipeInterpreter {
    final ConfigurationSection section;
 
    @NotNull
-   ProvidedUIFilter[] buildIngredientsFromList(@NotNull List<String> var1) {
-      ProvidedUIFilter[] var2 = new ProvidedUIFilter[9];
+   ProvidedUIFilter[] buildIngredientsFromList(@NotNull List<String> texts) {
+      ProvidedUIFilter[] providedUIFilters = new ProvidedUIFilter[9];
 
-      for (int var3 = 0; var3 < 9; var3++) {
-         String var4 = var1.size() > var3 ? (String)var1.get(var3) : null;
-         String var5 = RecipeEditorGUI.poofFromLegacy(var4);
-         ProvidedUIFilter var6 = ProvidedUIFilter.getFromString(var5, null);
-         if (var6 == null) {
-            var6 = RecipeEditorGUI.AIR.clone();
+      for (int i = 0; i < 9; i++) {
+         String text = texts.size() > i ? (String)texts.get(i) : null;
+         String text2 = RecipeEditorGUI.poofFromLegacy(text);
+         ProvidedUIFilter providedUIFilter = ProvidedUIFilter.getFromString(text2, null);
+         if (providedUIFilter == null) {
+            providedUIFilter = RecipeEditorGUI.AIR.clone();
          }
 
-         var2[var3] = var6;
+         providedUIFilters[i] = providedUIFilter;
       }
 
-      return var2;
+      return providedUIFilters;
    }
 
    @NotNull
-   ArrayList<String> toYML(@NotNull ProvidedUIFilter[] var1) {
-      ArrayList var2 = new ArrayList();
+   ArrayList<String> toYML(@NotNull ProvidedUIFilter[] providedUIFilters) {
+      ArrayList list = new ArrayList();
 
-      for (int var3 = 0; var3 < 9; var3++) {
-         ProvidedUIFilter var4 = var1.length > var3 ? var1[var3] : RecipeEditorGUI.AIR.clone();
-         var2.add(var4.toString());
+      for (int i = 0; i < 9; i++) {
+         ProvidedUIFilter providedUIFilter = providedUIFilters.length > i ? providedUIFilters[i] : RecipeEditorGUI.AIR.clone();
+         list.add(providedUIFilter.toString());
       }
 
-      return var2;
+      return list;
    }
 
-   public void setInput(int var1, @NotNull ProvidedUIFilter var2) {
-      if (var1 >= 0 && var1 <= 8) {
-         this.inputRecipe[var1] = var2;
-      }
-   }
-
-   @Nullable
-   @Override
-   public ProvidedUIFilter getInput(int var1) {
-      return var1 >= 0 && var1 <= 8 ? this.inputRecipe[var1] : null;
-   }
-
-   public void setOutput(int var1, @NotNull ProvidedUIFilter var2) {
-      if (var1 >= 0 && var1 <= 8) {
-         this.outputRecipe[var1] = var2;
+   public void setInput(int index, @NotNull ProvidedUIFilter providedUIFilter) {
+      if (index >= 0 && index <= 8) {
+         this.inputRecipe[index] = providedUIFilter;
       }
    }
 
    @Nullable
    @Override
-   public ProvidedUIFilter getOutput(int var1) {
-      return var1 >= 0 && var1 <= 8 ? this.outputRecipe[var1] : null;
+   public ProvidedUIFilter getInput(int index) {
+      return index >= 0 && index <= 8 ? this.inputRecipe[index] : null;
+   }
+
+   public void setOutput(int index, @NotNull ProvidedUIFilter providedUIFilter) {
+      if (index >= 0 && index <= 8) {
+         this.outputRecipe[index] = providedUIFilter;
+      }
+   }
+
+   @Nullable
+   @Override
+   public ProvidedUIFilter getOutput(int index) {
+      return index >= 0 && index <= 8 ? this.outputRecipe[index] : null;
    }
 
    @NotNull
@@ -75,31 +75,31 @@ public class RMGRI_Shapeless implements RMG_RecipeInterpreter {
       return this.section;
    }
 
-   public RMGRI_Shapeless(@NotNull ConfigurationSection var1) {
-      this.section = var1;
+   public RMGRI_Shapeless(@NotNull ConfigurationSection section) {
+      this.section = section;
       this.inputRecipe = this.buildIngredientsFromList(this.section.getStringList("input"));
       this.outputRecipe = this.buildIngredientsFromList(this.section.getStringList("output"));
    }
 
    @Override
-   public void editInput(@NotNull ProvidedUIFilter var1, int var2) {
-      this.setInput(var2, var1);
+   public void editInput(@NotNull ProvidedUIFilter providedUIFilter, int count) {
+      this.setInput(count, providedUIFilter);
       this.section.set("input", this.toYML(this.inputRecipe));
    }
 
    @Override
-   public void editOutput(@NotNull ProvidedUIFilter var1, int var2) {
-      this.setOutput(var2, var1);
+   public void editOutput(@NotNull ProvidedUIFilter providedUIFilter, int count) {
+      this.setOutput(count, providedUIFilter);
       this.section.set("output", this.toYML(this.outputRecipe));
    }
 
    @Override
-   public void deleteInput(int var1) {
-      this.editInput(RecipeEditorGUI.AIR.clone(), var1);
+   public void deleteInput(int count) {
+      this.editInput(RecipeEditorGUI.AIR.clone(), count);
    }
 
    @Override
-   public void deleteOutput(int var1) {
-      this.editOutput(RecipeEditorGUI.AIR.clone(), var1);
+   public void deleteOutput(int count) {
+      this.editOutput(RecipeEditorGUI.AIR.clone(), count);
    }
 }

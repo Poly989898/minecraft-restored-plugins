@@ -4,8 +4,8 @@ package net.Indyuce.mmoitems.stat.component;
 public abstract class StatComponent {
    private final String path;
 
-   public StatComponent(String var1) {
-      this.path = var1;
+   public StatComponent(String text) {
+      this.path = text;
    }
 
    public String getPath() {

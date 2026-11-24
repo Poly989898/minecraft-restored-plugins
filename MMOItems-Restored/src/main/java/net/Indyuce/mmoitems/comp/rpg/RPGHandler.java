@@ -5,9 +5,9 @@ import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.comp.mmocore.MMOCoreHook;
 
 public interface RPGHandler {
-   RPGPlayer getInfo(PlayerData var1);
+   RPGPlayer getInfo(PlayerData playerData);
 
-   void refreshStats(PlayerData var1);
+   void refreshStats(PlayerData playerData);
 
    enum PluginEnum {
       MMOCORE("MMOCore", MMOCoreHook.class),
@@ -35,15 +35,15 @@ public interface RPGHandler {
       public RPGHandler load() {
          try {
             return this.pluginClass.getDeclaredConstructor().newInstance();
-         } catch (ReflectiveOperationException var1) {
-            PluginEnum.<RuntimeException>sneakyThrow(var1);
+         } catch (ReflectiveOperationException exception) {
+            PluginEnum.<RuntimeException>sneakyThrow(exception);
             return null;
          }
       }
 
       @SuppressWarnings("unchecked")
-      private static <E extends Throwable> void sneakyThrow(Throwable var0) throws E {
-         throw (E)var0;
+      private static <E extends Throwable> void sneakyThrow(Throwable exception) throws E {
+         throw (E)exception;
       }
 
       public String getName() {

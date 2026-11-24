@@ -18,8 +18,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class ArrowParticlesEdition extends EditionInventory {
-   public ArrowParticlesEdition(Player var1, MMOItemTemplate var2) {
-      super(var1, var2);
+   public ArrowParticlesEdition(Player player, MMOItemTemplate mmoItemTemplate) {
+      super(player, mmoItemTemplate);
    }
 
    @Override
@@ -29,153 +29,153 @@ public class ArrowParticlesEdition extends EditionInventory {
 
    @Override
    public void arrangeInventory() {
-      Particle var1 = null;
+      Particle particle = null;
 
       try {
-         var1 = Particle.valueOf(this.getEditedSection().getString("arrow-particles.particle"));
-      } catch (Exception var18) {
+         particle = Particle.valueOf(this.getEditedSection().getString("arrow-particles.particle"));
+      } catch (Exception exception) {
       }
 
-      ItemStack var2 = new ItemStack(Material.BLAZE_POWDER);
-      ItemMeta var3 = var2.getItemMeta();
-      var3.setDisplayName(ChatColor.GREEN + "Particle");
-      ArrayList var4 = new ArrayList();
-      var4.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "The particle which is displayed around the");
-      var4.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "arrow. Fades away when the arrow lands.");
-      var4.add("");
-      var4.add(
+      ItemStack item = new ItemStack(Material.BLAZE_POWDER);
+      ItemMeta itemMeta = item.getItemMeta();
+      itemMeta.setDisplayName(ChatColor.GREEN + "Particle");
+      ArrayList list = new ArrayList();
+      list.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "The particle which is displayed around the");
+      list.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "arrow. Fades away when the arrow lands.");
+      list.add("");
+      list.add(
          ChatColor.GRAY
             + "Current Value: "
             + (
-               var1 == null
+               particle == null
                   ? ChatColor.RED + "No particle selected."
-                  : ChatColor.GOLD + UtilityMethods.caseOnWords(var1.name().toLowerCase().replace("_", " "))
+                  : ChatColor.GOLD + UtilityMethods.caseOnWords(particle.name().toLowerCase().replace("_", " "))
             )
       );
-      var4.add("");
-      var4.add(ChatColor.YELLOW + "►" + " Click to change this value.");
-      var4.add(ChatColor.YELLOW + "►" + " Right click to reset.");
-      var3.setLore(var4);
-      var2.setItemMeta(var3);
-      ItemStack var5 = new ItemStack(Material.GRAY_DYE);
-      ItemMeta var6 = var5.getItemMeta();
-      var6.setDisplayName(ChatColor.GREEN + "Amount");
-      ArrayList var7 = new ArrayList();
-      var7.add("");
-      var7.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + this.getEditedSection().getInt("arrow-particles.amount"));
-      var7.add("");
-      var7.add(ChatColor.YELLOW + "►" + " Click to change this value.");
-      var7.add(ChatColor.YELLOW + "►" + " Right click to reset.");
-      var6.setLore(var7);
-      var5.setItemMeta(var6);
-      ItemStack var8 = new ItemStack(Material.GRAY_DYE);
-      ItemMeta var9 = var8.getItemMeta();
-      var9.setDisplayName(ChatColor.GREEN + "Offset");
-      ArrayList var10 = new ArrayList();
-      var10.add("");
-      var10.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + this.getEditedSection().getDouble("arrow-particles.offset"));
-      var10.add("");
-      var10.add(ChatColor.YELLOW + "►" + " Click to change this value.");
-      var10.add(ChatColor.YELLOW + "►" + " Right click to reset.");
-      var9.setLore(var10);
-      var8.setItemMeta(var9);
-      if (var1 != null) {
-         ConfigurationSection var11 = this.getEditedSection().getConfigurationSection("arrow-particles");
-         if (MMOUtils.isColorable(var1)) {
-            int var12 = var11.getInt("color.red");
-            int var13 = var11.getInt("color.green");
-            int var14 = var11.getInt("color.blue");
-            ItemStack var15 = new ItemStack(Material.GRAY_DYE);
-            ItemMeta var16 = var15.getItemMeta();
-            var16.setDisplayName(ChatColor.GREEN + "Particle Color");
-            ArrayList var17 = new ArrayList();
-            var17.add("");
-            var17.add(ChatColor.GRAY + "Current Value (R-G-B):");
-            var17.add(
+      list.add("");
+      list.add(ChatColor.YELLOW + "►" + " Click to change this value.");
+      list.add(ChatColor.YELLOW + "►" + " Right click to reset.");
+      itemMeta.setLore(list);
+      item.setItemMeta(itemMeta);
+      ItemStack item2 = new ItemStack(Material.GRAY_DYE);
+      ItemMeta itemMeta2 = item2.getItemMeta();
+      itemMeta2.setDisplayName(ChatColor.GREEN + "Amount");
+      ArrayList list2 = new ArrayList();
+      list2.add("");
+      list2.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + this.getEditedSection().getInt("arrow-particles.amount"));
+      list2.add("");
+      list2.add(ChatColor.YELLOW + "►" + " Click to change this value.");
+      list2.add(ChatColor.YELLOW + "►" + " Right click to reset.");
+      itemMeta2.setLore(list2);
+      item2.setItemMeta(itemMeta2);
+      ItemStack item3 = new ItemStack(Material.GRAY_DYE);
+      ItemMeta itemMeta3 = item3.getItemMeta();
+      itemMeta3.setDisplayName(ChatColor.GREEN + "Offset");
+      ArrayList list3 = new ArrayList();
+      list3.add("");
+      list3.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + this.getEditedSection().getDouble("arrow-particles.offset"));
+      list3.add("");
+      list3.add(ChatColor.YELLOW + "►" + " Click to change this value.");
+      list3.add(ChatColor.YELLOW + "►" + " Right click to reset.");
+      itemMeta3.setLore(list3);
+      item3.setItemMeta(itemMeta3);
+      if (particle != null) {
+         ConfigurationSection arrowParticles = this.getEditedSection().getConfigurationSection("arrow-particles");
+         if (MMOUtils.isColorable(particle)) {
+            int colorRed = arrowParticles.getInt("color.red");
+            int colorGreen = arrowParticles.getInt("color.green");
+            int colorBlue = arrowParticles.getInt("color.blue");
+            ItemStack item4 = new ItemStack(Material.GRAY_DYE);
+            ItemMeta itemMeta4 = item4.getItemMeta();
+            itemMeta4.setDisplayName(ChatColor.GREEN + "Particle Color");
+            ArrayList list4 = new ArrayList();
+            list4.add("");
+            list4.add(ChatColor.GRAY + "Current Value (R-G-B):");
+            list4.add(
                ""
                   + ChatColor.RED
                   + ChatColor.BOLD
-                  + var12
+                  + colorRed
                   + ChatColor.GRAY
                   + " - "
                   + ChatColor.GREEN
                   + ChatColor.BOLD
-                  + var13
+                  + colorGreen
                   + ChatColor.GRAY
                   + " - "
                   + ChatColor.BLUE
                   + ChatColor.BOLD
-                  + var14
+                  + colorBlue
             );
-            var17.add("");
-            var17.add(ChatColor.YELLOW + "►" + " Click to change this value.");
-            var17.add(ChatColor.YELLOW + "►" + " Right click to reset.");
-            var16.setLore(var17);
-            var15.setItemMeta(var16);
-            this.inventory.setItem(41, var15);
+            list4.add("");
+            list4.add(ChatColor.YELLOW + "►" + " Click to change this value.");
+            list4.add(ChatColor.YELLOW + "►" + " Right click to reset.");
+            itemMeta4.setLore(list4);
+            item4.setItemMeta(itemMeta4);
+            this.inventory.setItem(41, item4);
          } else {
-            ItemStack var19 = new ItemStack(Material.GRAY_DYE);
-            ItemMeta var20 = var19.getItemMeta();
-            var20.setDisplayName(ChatColor.GREEN + "Speed");
-            ArrayList var21 = new ArrayList();
-            var21.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "The speed at which your particle");
-            var21.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "flies off in random directions.");
-            var21.add("");
-            var21.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + var11.getDouble("speed"));
-            var21.add("");
-            var21.add(ChatColor.YELLOW + "►" + " Click to change this value.");
-            var21.add(ChatColor.YELLOW + "►" + " Right click to reset.");
-            var20.setLore(var21);
-            var19.setItemMeta(var20);
-            this.inventory.setItem(41, var19);
+            ItemStack item4 = new ItemStack(Material.GRAY_DYE);
+            ItemMeta itemMeta4 = item4.getItemMeta();
+            itemMeta4.setDisplayName(ChatColor.GREEN + "Speed");
+            ArrayList list4 = new ArrayList();
+            list4.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "The speed at which your particle");
+            list4.add(ChatColor.GRAY + "" + ChatColor.ITALIC + "flies off in random directions.");
+            list4.add("");
+            list4.add(ChatColor.GRAY + "Current Value: " + ChatColor.GOLD + arrowParticles.getDouble("speed"));
+            list4.add("");
+            list4.add(ChatColor.YELLOW + "►" + " Click to change this value.");
+            list4.add(ChatColor.YELLOW + "►" + " Right click to reset.");
+            itemMeta4.setLore(list4);
+            item4.setItemMeta(itemMeta4);
+            this.inventory.setItem(41, item4);
          }
       }
 
-      this.inventory.setItem(30, var2);
-      this.inventory.setItem(23, var5);
-      this.inventory.setItem(32, var8);
+      this.inventory.setItem(30, item);
+      this.inventory.setItem(23, item2);
+      this.inventory.setItem(32, item3);
    }
 
    @Override
-   public void whenClicked(InventoryClickEvent var1) {
-      ItemStack var2 = var1.getCurrentItem();
-      var1.setCancelled(true);
-      if (var1.getInventory() == var1.getClickedInventory() && MMOUtils.isMetaItem(var2, false)) {
-         if (var2.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Particle")) {
-            if (var1.getAction() == InventoryAction.PICKUP_ALL) {
+   public void whenClicked(InventoryClickEvent event) {
+      ItemStack currentItem = event.getCurrentItem();
+      event.setCancelled(true);
+      if (event.getInventory() == event.getClickedInventory() && MMOUtils.isMetaItem(currentItem, false)) {
+         if (currentItem.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Particle")) {
+            if (event.getAction() == InventoryAction.PICKUP_ALL) {
                new StatEdition(this, ItemStats.ARROW_PARTICLES, "particle").enable("Write in the chat the particle you want.");
             }
 
-            if (var1.getAction() == InventoryAction.PICKUP_HALF && this.getEditedSection().contains("arrow-particles.particle")) {
+            if (event.getAction() == InventoryAction.PICKUP_HALF && this.getEditedSection().contains("arrow-particles.particle")) {
                this.getEditedSection().set("arrow-particles", null);
                this.registerTemplateEdition();
                this.player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the particle.");
             }
          }
 
-         if (var2.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Particle Color")) {
-            if (var1.getAction() == InventoryAction.PICKUP_ALL) {
+         if (currentItem.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Particle Color")) {
+            if (event.getAction() == InventoryAction.PICKUP_ALL) {
                new StatEdition(this, ItemStats.ARROW_PARTICLES, "color")
                   .enable("Write in the chat the RGB color you want.", ChatColor.AQUA + "Format: [RED] [GREEN] [BLUE]");
             }
 
-            if (var1.getAction() == InventoryAction.PICKUP_HALF && this.getEditedSection().contains("arrow-particles.color")) {
+            if (event.getAction() == InventoryAction.PICKUP_HALF && this.getEditedSection().contains("arrow-particles.color")) {
                this.getEditedSection().set("arrow-particles.color", null);
                this.registerTemplateEdition();
                this.player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the particle color.");
             }
          }
 
-         for (String var6 : new String[]{"amount", "offset", "speed"}) {
-            if (var2.getItemMeta().getDisplayName().equals(ChatColor.GREEN + UtilityMethods.caseOnWords(var6))) {
-               if (var1.getAction() == InventoryAction.PICKUP_ALL) {
-                  new StatEdition(this, ItemStats.ARROW_PARTICLES, var6).enable("Write in the chat the " + var6 + " you want.");
+         for (String text : new String[]{"amount", "offset", "speed"}) {
+            if (currentItem.getItemMeta().getDisplayName().equals(ChatColor.GREEN + UtilityMethods.caseOnWords(text))) {
+               if (event.getAction() == InventoryAction.PICKUP_ALL) {
+                  new StatEdition(this, ItemStats.ARROW_PARTICLES, text).enable("Write in the chat the " + text + " you want.");
                }
 
-               if (var1.getAction() == InventoryAction.PICKUP_HALF && this.getEditedSection().contains("arrow-particles." + var6)) {
-                  this.getEditedSection().set("arrow-particles." + var6, null);
+               if (event.getAction() == InventoryAction.PICKUP_HALF && this.getEditedSection().contains("arrow-particles." + text)) {
+                  this.getEditedSection().set("arrow-particles." + text, null);
                   this.registerTemplateEdition();
-                  this.player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the " + var6 + ".");
+                  this.player.sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the " + text + ".");
                }
             }
          }

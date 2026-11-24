@@ -13,23 +13,23 @@ public class MMOItemDropItem extends DropItem {
    private final String id;
    private final double unidentification;
 
-   public MMOItemDropItem(Type var1, String var2, double var3, double var5, RandomAmount var7) {
-      this(var1, var2, var3, var5, var7.getMin(), var7.getMax());
+   public MMOItemDropItem(Type type, String text, double value, double value2, RandomAmount randomAmount) {
+      this(type, text, value, value2, randomAmount.getMin(), randomAmount.getMax());
    }
 
-   public MMOItemDropItem(Type var1, String var2, double var3, double var5, int var7, int var8) {
-      super(var3, var7, var8);
-      this.type = var1;
-      this.id = var2;
-      this.unidentification = var5;
+   public MMOItemDropItem(Type type, String text, double value, double value2, int count, int count2) {
+      super(value, count, count2);
+      this.type = type;
+      this.id = text;
+      this.unidentification = value2;
    }
 
-   public MMOItemDropItem(Type var1, String var2, String var3) {
-      super(var3);
-      this.type = var1;
-      this.id = var2;
-      String[] var4 = var3.split(",");
-      this.unidentification = Double.parseDouble(var4[2]) / 100.0;
+   public MMOItemDropItem(Type type, String text, String text2) {
+      super(text2);
+      this.type = type;
+      this.id = text;
+      String[] texts = text2.split(",");
+      this.unidentification = Double.parseDouble(texts[2]) / 100.0;
    }
 
    public Type getType() {
@@ -45,19 +45,19 @@ public class MMOItemDropItem extends DropItem {
    }
 
    @Override
-   public ItemStack getItem(PlayerData var1, int var2) {
+   public ItemStack getItem(PlayerData playerData, int count) {
       if (!MMOItems.plugin.getTemplates().hasTemplate(this.type, this.id)) {
          return null;
       }
 
-      ItemStack var3 = var1 == null ? MMOItems.plugin.getItem(this.type, this.id) : MMOItems.plugin.getItem(this.type, this.id, var1);
-      if (var3 != null && var3.getType() != Material.AIR) {
+      ItemStack item = playerData == null ? MMOItems.plugin.getItem(this.type, this.id) : MMOItems.plugin.getItem(this.type, this.id, playerData);
+      if (item != null && item.getType() != Material.AIR) {
          if (this.rollIdentification()) {
-            var3 = this.type.getUnidentifiedTemplate().newBuilder(NBTItem.get(var3)).build();
+            item = this.type.getUnidentifiedTemplate().newBuilder(NBTItem.get(item)).build();
          }
 
-         var3.setAmount(var2);
-         return var3;
+         item.setAmount(count);
+         return item;
       } else {
          return null;
       }

@@ -33,37 +33,37 @@ public class MMOItemBuilder extends Buildable<MMOItem> {
    private double capacity;
    private final Map<UUID, NameModifier> nameModifiers = new HashMap<>();
 
-   public MMOItemBuilder(MMOItemTemplate var1, int var2, @Nullable ItemTier var3) {
-      this(var1, var2, var3, false);
+   public MMOItemBuilder(MMOItemTemplate mmoItemTemplate, int count, @Nullable ItemTier itemTier) {
+      this(mmoItemTemplate, count, itemTier, false);
    }
 
-   public MMOItemBuilder(@NotNull MMOItemTemplate var1, int var2, @Nullable ItemTier var3, boolean var4) {
-      this.template = var1;
-      this.level = var2;
-      this.tier = var3;
-      var3 = var3 != null
-         ? var3
-         : (var1.getBaseItemData().containsKey(ItemStats.TIER) ? MMOItems.plugin.getTiers().get(var1.getBaseItemData().get(ItemStats.TIER).toString()) : null);
-      this.capacity = (var1.hasModifierCapacity()
-            ? var1.getModifierCapacity()
-            : (var3 != null && var3.hasCapacity() ? var3.getModifierCapacity() : MMOItems.plugin.getLanguage().defaultItemCapacity))
-         .calculate(var2);
-      this.mmoitem = new MMOItem(var1.getType(), var1.getId());
-      var1.getBaseItemData().forEach((var1x, var2x) -> this.applyData(var1x, var2x.randomize(this)));
-      if (var3 != null) {
-         this.mmoitem.setData(ItemStats.TIER, new StringData(var3.getId()));
+   public MMOItemBuilder(@NotNull MMOItemTemplate mmoItemTemplate, int count, @Nullable ItemTier itemTier, boolean flag) {
+      this.template = mmoItemTemplate;
+      this.level = count;
+      this.tier = itemTier;
+      itemTier = itemTier != null
+         ? itemTier
+         : (mmoItemTemplate.getBaseItemData().containsKey(ItemStats.TIER) ? MMOItems.plugin.getTiers().get(mmoItemTemplate.getBaseItemData().get(ItemStats.TIER).toString()) : null);
+      this.capacity = (mmoItemTemplate.hasModifierCapacity()
+            ? mmoItemTemplate.getModifierCapacity()
+            : (itemTier != null && itemTier.hasCapacity() ? itemTier.getModifierCapacity() : MMOItems.plugin.getLanguage().defaultItemCapacity))
+         .calculate(count);
+      this.mmoitem = new MMOItem(mmoItemTemplate.getType(), mmoItemTemplate.getId());
+      mmoItemTemplate.getBaseItemData().forEach((var1x, var2x) -> this.applyData(var1x, var2x.randomize(this)));
+      if (itemTier != null) {
+         this.mmoitem.setData(ItemStats.TIER, new StringData(itemTier.getId()));
       }
 
-      if (var2 > 0) {
-         this.mmoitem.setData(ItemStats.ITEM_LEVEL, new DoubleData(var2));
+      if (count > 0) {
+         this.mmoitem.setData(ItemStats.ITEM_LEVEL, new DoubleData(count));
       }
 
-      if (var3 != null && var3.getTooltip() != null && !this.mmoitem.hasData(ItemStats.TOOLTIP)) {
-         this.mmoitem.setData(ItemStats.TOOLTIP, new StringData(var3.getTooltip().getId()));
+      if (itemTier != null && itemTier.getTooltip() != null && !this.mmoitem.hasData(ItemStats.TOOLTIP)) {
+         this.mmoitem.setData(ItemStats.TOOLTIP, new StringData(itemTier.getTooltip().getId()));
       }
 
-      if (!var4 && var1.hasModifierGroup()) {
-         var1.getModifierGroup().collect(this);
+      if (!flag && mmoItemTemplate.hasModifierGroup()) {
+         mmoItemTemplate.getModifierGroup().collect(this);
       }
    }
 
@@ -85,75 +85,75 @@ public class MMOItemBuilder extends Buildable<MMOItem> {
       return this.capacity;
    }
 
-   public void reduceCapacity(double var1) {
-      this.capacity -= var1;
+   public void reduceCapacity(double value) {
+      this.capacity -= value;
    }
 
    protected MMOItem whenBuilt() {
       if (!this.nameModifiers.isEmpty()) {
-         StatHistory var1 = this.mmoitem.computeStatHistory(ItemStats.NAME);
-         this.nameModifiers.forEach((var1x, var2) -> {
-            NameData var3 = new NameData(null);
-            if (var2.getType() == NameModifier.ModifierType.PREFIX) {
-               var3.addPrefix(var2.getFormat());
-            } else if (var2.getType() == NameModifier.ModifierType.SUFFIX) {
-               var3.addSuffix(var2.getFormat());
+         StatHistory statHistory = this.mmoitem.computeStatHistory(ItemStats.NAME);
+         this.nameModifiers.forEach((var1x, nameModifier) -> {
+            NameData nameData = new NameData(null);
+            if (nameModifier.getType() == NameModifier.ModifierType.PREFIX) {
+               nameData.addPrefix(nameModifier.getFormat());
+            } else if (nameModifier.getType() == NameModifier.ModifierType.SUFFIX) {
+               nameData.addSuffix(nameModifier.getFormat());
             }
 
-            var1.registerModifierBonus(var1x, var3);
+            statHistory.registerModifierBonus(var1x, nameData);
          });
-         this.mmoitem.setData(ItemStats.NAME, var1.recalculate(this.mmoitem.getUpgradeLevel()));
+         this.mmoitem.setData(ItemStats.NAME, statHistory.recalculate(this.mmoitem.getUpgradeLevel()));
       }
 
       return this.mmoitem;
    }
 
-   public void applyData(@NotNull ItemStat var1, @NotNull StatData var2) {
-      StatData var3 = this.mmoitem.getData(var1);
-      if (var3 != null && var3 instanceof Mergeable) {
-         ((Mergeable)var3).mergeWith((Mergeable)var2);
+   public void applyData(@NotNull ItemStat itemStat, @NotNull StatData statData) {
+      StatData data = this.mmoitem.getData(itemStat);
+      if (data != null && data instanceof Mergeable) {
+         ((Mergeable)data).mergeWith((Mergeable)statData);
       } else {
-         this.mmoitem.setData(var1, var2);
+         this.mmoitem.setData(itemStat, statData);
       }
    }
 
-   public void addModifierData(@NotNull ItemStat var1, @NotNull StatData var2, @NotNull UUID var3) {
-      if (var1.getClearStatData() instanceof Mergeable) {
-         this.mmoitem.computeStatHistory(var1).registerModifierBonus(var3, var2);
+   public void addModifierData(@NotNull ItemStat itemStat, @NotNull StatData statData, @NotNull UUID uuid) {
+      if (itemStat.getClearStatData() instanceof Mergeable) {
+         this.mmoitem.computeStatHistory(itemStat).registerModifierBonus(uuid, statData);
       } else {
-         this.mmoitem.setData(var1, var2);
+         this.mmoitem.setData(itemStat, statData);
       }
    }
 
-   public void addModifier(@NotNull NameModifier var1, @NotNull UUID var2) {
-      Iterator var3 = this.nameModifiers.values().iterator();
+   public void addModifier(@NotNull NameModifier nameModifier, @NotNull UUID uuid) {
+      Iterator iterator = this.nameModifiers.values().iterator();
 
-      while (var3.hasNext()) {
-         NameModifier var4 = (NameModifier)var3.next();
-         if (var4.getType() == var1.getType()) {
-            if (var4.getPriority() > var1.getPriority()) {
+      while (iterator.hasNext()) {
+         NameModifier nameModifier2 = (NameModifier)iterator.next();
+         if (nameModifier2.getType() == nameModifier.getType()) {
+            if (nameModifier2.getPriority() > nameModifier.getPriority()) {
                return;
             }
 
-            if (var4.getPriority() < var1.getPriority()) {
-               var3.remove();
+            if (nameModifier2.getPriority() < nameModifier.getPriority()) {
+               iterator.remove();
             }
          }
       }
 
-      this.nameModifiers.put(var2, var1);
+      this.nameModifiers.put(uuid, nameModifier);
    }
 
    @Deprecated
    @NotNull
-   public static Collection<ModifierNode> rollModifiers(@NotNull MMOItemTemplate var0) {
-      if (!var0.hasOption(MMOItemTemplate.TemplateOption.ROLL_MODIFIER_CHECK_ORDER)) {
-         return var0.getModifiers().values();
+   public static Collection<ModifierNode> rollModifiers(@NotNull MMOItemTemplate mmoItemTemplate) {
+      if (!mmoItemTemplate.hasOption(MMOItemTemplate.TemplateOption.ROLL_MODIFIER_CHECK_ORDER)) {
+         return mmoItemTemplate.getModifiers().values();
       }
 
-      ArrayList var1 = new ArrayList<>(var0.getModifiers().values());
-      Collections.shuffle(var1);
-      return var1;
+      ArrayList list = new ArrayList<>(mmoItemTemplate.getModifiers().values());
+      Collections.shuffle(list);
+      return list;
    }
 
    @NotNull

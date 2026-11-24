@@ -9,16 +9,16 @@ import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
 public class VolatileMMOItem extends ReadMMOItem {
-   public VolatileMMOItem(NBTItem var1) {
-      super(var1);
+   public VolatileMMOItem(NBTItem nbtItem) {
+      super(nbtItem);
    }
 
    @Override
-   public boolean hasData(@NotNull ItemStat var1) {
-      if (!super.hasData(var1)) {
+   public boolean hasData(@NotNull ItemStat itemStat) {
+      if (!super.hasData(itemStat)) {
          try {
-            var1.whenLoaded(this);
-         } catch (RuntimeException var3) {
+            itemStat.whenLoaded(this);
+         } catch (RuntimeException exception) {
             MMOItems.plugin
                .getLogger()
                .log(
@@ -26,7 +26,7 @@ public class VolatileMMOItem extends ReadMMOItem {
                   ChatColor.GRAY
                      + "Could not load stat '"
                      + ChatColor.GOLD
-                     + var1.getId()
+                     + itemStat.getId()
                      + ChatColor.GRAY
                      + "'item data from '"
                      + ChatColor.RED
@@ -34,12 +34,12 @@ public class VolatileMMOItem extends ReadMMOItem {
                      + ChatColor.GRAY
                      + "': "
                      + ChatColor.YELLOW
-                     + var3.getMessage()
+                     + exception.getMessage()
                );
          }
       }
 
-      return super.hasData(var1);
+      return super.hasData(itemStat);
    }
 
    @NotNull

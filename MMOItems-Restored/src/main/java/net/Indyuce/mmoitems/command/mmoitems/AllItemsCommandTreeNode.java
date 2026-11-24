@@ -10,25 +10,25 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class AllItemsCommandTreeNode extends CommandTreeNode {
-   public AllItemsCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "allitems");
+   public AllItemsCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "allitems");
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      var1.sendMessage(ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "-----------------------------------------------------");
-      var1.sendMessage(ChatColor.GREEN + "List of all MMOItems:");
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      sender.sendMessage(ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "-----------------------------------------------------");
+      sender.sendMessage(ChatColor.GREEN + "List of all MMOItems:");
 
-      for (Type var4 : MMOItems.plugin.getTypes().getAll()) {
-         FileConfiguration var5 = var4.getConfigFile().getConfig();
+      for (Type type : MMOItems.plugin.getTypes().getAll()) {
+         FileConfiguration config = type.getConfigFile().getConfig();
 
-         for (String var7 : var5.getKeys(false)) {
-            var1.sendMessage(
+         for (String key : config.getKeys(false)) {
+            sender.sendMessage(
                "* "
                   + ChatColor.GREEN
-                  + var7
+                  + key
                   + (
-                     var5.getConfigurationSection(var7).contains("name")
-                        ? " " + ChatColor.WHITE + "(" + MythicLib.plugin.parseColors(var5.getString(var7 + ".name")) + ChatColor.WHITE + ")"
+                     config.getConfigurationSection(key).contains("name")
+                        ? " " + ChatColor.WHITE + "(" + MythicLib.plugin.parseColors(config.getString(key + ".name")) + ChatColor.WHITE + ")"
                         : ""
                   )
             );

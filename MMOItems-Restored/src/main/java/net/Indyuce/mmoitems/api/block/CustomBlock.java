@@ -22,15 +22,15 @@ public class CustomBlock {
    private final boolean requirePowerToBreak;
    private static final Random RANDOM = new Random();
 
-   public CustomBlock(MushroomState var1, MMOItem var2) {
-      this.mmoitem = var2;
-      this.id = var2.hasData(ItemStats.BLOCK_ID) ? (int)((DoubleData)var2.getData(ItemStats.BLOCK_ID)).getValue() : 0;
-      this.state = var1;
-      this.minExp = var2.hasData(ItemStats.MIN_XP) ? (int)((DoubleData)var2.getData(ItemStats.MIN_XP)).getValue() : 0;
-      this.maxExp = var2.hasData(ItemStats.MAX_XP) ? (int)((DoubleData)var2.getData(ItemStats.MAX_XP)).getValue() : 0;
-      this.requiredPower = var2.hasData(ItemStats.REQUIRED_POWER) ? (int)((DoubleData)var2.getData(ItemStats.REQUIRED_POWER)).getValue() : 0;
-      this.requirePowerToBreak = var2.hasData(ItemStats.REQUIRE_POWER_TO_BREAK) && ((BooleanData)var2.getData(ItemStats.REQUIRE_POWER_TO_BREAK)).isEnabled();
-      this.template = var2.hasData(ItemStats.GEN_TEMPLATE) ? MMOItems.plugin.getWorldGen().getOrThrow(var2.getData(ItemStats.GEN_TEMPLATE).toString()) : null;
+   public CustomBlock(MushroomState mushroomState, MMOItem mmoItem) {
+      this.mmoitem = mmoItem;
+      this.id = mmoItem.hasData(ItemStats.BLOCK_ID) ? (int)((DoubleData)mmoItem.getData(ItemStats.BLOCK_ID)).getValue() : 0;
+      this.state = mushroomState;
+      this.minExp = mmoItem.hasData(ItemStats.MIN_XP) ? (int)((DoubleData)mmoItem.getData(ItemStats.MIN_XP)).getValue() : 0;
+      this.maxExp = mmoItem.hasData(ItemStats.MAX_XP) ? (int)((DoubleData)mmoItem.getData(ItemStats.MAX_XP)).getValue() : 0;
+      this.requiredPower = mmoItem.hasData(ItemStats.REQUIRED_POWER) ? (int)((DoubleData)mmoItem.getData(ItemStats.REQUIRED_POWER)).getValue() : 0;
+      this.requirePowerToBreak = mmoItem.hasData(ItemStats.REQUIRE_POWER_TO_BREAK) && ((BooleanData)mmoItem.getData(ItemStats.REQUIRE_POWER_TO_BREAK)).isEnabled();
+      this.template = mmoItem.hasData(ItemStats.GEN_TEMPLATE) ? MMOItems.plugin.getWorldGen().getOrThrow(mmoItem.getData(ItemStats.GEN_TEMPLATE).toString()) : null;
    }
 
    public int getId() {

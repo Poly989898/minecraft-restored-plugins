@@ -15,76 +15,76 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class RequiredLevelStat extends DoubleStat implements ItemRestriction, GemStoneStat {
    @Deprecated
-   public RequiredLevelStat(boolean var1, String var2, Material var3, String var4, String[] var5) {
-      super(var2, var3, "Required " + var4, var5, new String[]{"!block", "all"});
+   public RequiredLevelStat(boolean flag, String text, Material material, String text2, String[] texts) {
+      super(text, material, "Required " + text2, texts, new String[]{"!block", "all"});
    }
 
-   public RequiredLevelStat(String var1, Material var2, String var3, String[] var4) {
-      super("REQUIRED_" + var1, var2, "Required " + var3, var4, new String[]{"!block", "all"});
-   }
-
-   @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2) {
-      int var3 = (int)var2.getValue();
-      String var4 = this.getGeneralStatFormat().replace("{value}", String.valueOf(var3));
-      var1.getLore().insert(this.getPath(), var4);
-      var1.addItemTag(new ItemTag(this.getNBTPath(), var3));
+   public RequiredLevelStat(String text, Material material, String text2, String[] texts) {
+      super("REQUIRED_" + text, material, "Required " + text2, texts, new String[]{"!block", "all"});
    }
 
    @Override
-   public void whenPreviewed(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2, @NotNull NumericStatFormula var3) {
-      double var4 = var3.calculate(0.0, NumericStatFormula.FormulaInputType.LOWER_BOUND);
-      double var6 = var3.calculate(0.0, NumericStatFormula.FormulaInputType.UPPER_BOUND);
-      if (!(var6 < 0.0) || this.handleNegativeStats()) {
-         if (var4 < 0.0 && !this.handleNegativeStats()) {
-            var4 = 0.0;
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData) {
+      int count = (int)doubleData.getValue();
+      String text = this.getGeneralStatFormat().replace("{value}", String.valueOf(count));
+      itemStackBuilder.getLore().insert(this.getPath(), text);
+      itemStackBuilder.addItemTag(new ItemTag(this.getNBTPath(), count));
+   }
+
+   @Override
+   public void whenPreviewed(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData, @NotNull NumericStatFormula numericStatFormula) {
+      double value = numericStatFormula.calculate(0.0, NumericStatFormula.FormulaInputType.LOWER_BOUND);
+      double value2 = numericStatFormula.calculate(0.0, NumericStatFormula.FormulaInputType.UPPER_BOUND);
+      if (!(value2 < 0.0) || this.handleNegativeStats()) {
+         if (value < 0.0 && !this.handleNegativeStats()) {
+            value = 0.0;
          }
 
-         if (var4 < var3.getBase() - var3.getMaxSpread()) {
-            var4 = var3.getBase() - var3.getMaxSpread();
+         if (value < numericStatFormula.getBase() - numericStatFormula.getMaxSpread()) {
+            value = numericStatFormula.getBase() - numericStatFormula.getMaxSpread();
          }
 
-         if (var6 > var3.getBase() + var3.getMaxSpread()) {
-            var6 = var3.getBase() + var3.getMaxSpread();
+         if (value2 > numericStatFormula.getBase() + numericStatFormula.getMaxSpread()) {
+            value2 = numericStatFormula.getBase() + numericStatFormula.getMaxSpread();
          }
 
-         var1.addItemTag(this.getAppliedNBT(var2));
-         if (var4 != 0.0 || var6 != 0.0) {
-            String var8 = DoubleStat.formatPath(this.getPath(), this.getGeneralStatFormat(), false, false, Math.floor(var4), Math.floor(var6));
-            var1.getLore().insert(this.getPath(), var8);
+         itemStackBuilder.addItemTag(this.getAppliedNBT(doubleData));
+         if (value != 0.0 || value2 != 0.0) {
+            String text = DoubleStat.formatPath(this.getPath(), this.getGeneralStatFormat(), false, false, Math.floor(value), Math.floor(value2));
+            itemStackBuilder.getLore().insert(this.getPath(), text);
          }
       }
    }
 
    @NotNull
    @Override
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData var1) {
-      ArrayList var2 = new ArrayList();
-      var2.add(new ItemTag(this.getNBTPath(), var1.getValue()));
-      return var2;
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData doubleData) {
+      ArrayList list = new ArrayList();
+      list.add(new ItemTag(this.getNBTPath(), doubleData.getValue()));
+      return list;
    }
 
-   public RandomRequiredLevelData whenInitialized(Object var1) {
-      return new RandomRequiredLevelData(var1);
+   public RandomRequiredLevelData whenInitialized(Object obj) {
+      return new RandomRequiredLevelData(obj);
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      ArrayList var2 = new ArrayList();
-      if (var1.getNBT().hasTag(this.getNBTPath())) {
-         var2.add(ItemTag.getTagAtPath(this.getNBTPath(), var1.getNBT(), SupportedNBTTagValues.DOUBLE));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      ArrayList list = new ArrayList();
+      if (readMMOItem.getNBT().hasTag(this.getNBTPath())) {
+         list.add(ItemTag.getTagAtPath(this.getNBTPath(), readMMOItem.getNBT(), SupportedNBTTagValues.DOUBLE));
       }
 
-      RequiredLevelData var3 = this.getLoadedNBT(var2);
-      if (var3 != null) {
-         var1.setData(this, var3);
+      RequiredLevelData loadedNBT = this.getLoadedNBT(list);
+      if (loadedNBT != null) {
+         readMMOItem.setData(this, loadedNBT);
       }
    }
 
    @Nullable
-   public RequiredLevelData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
-      ItemTag var2 = ItemTag.getTagAtPath(this.getNBTPath(), var1);
-      return var2 != null ? new RequiredLevelData((Double)var2.getValue()) : null;
+   public RequiredLevelData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
+      ItemTag tagAtPath = ItemTag.getTagAtPath(this.getNBTPath(), itemTags);
+      return tagAtPath != null ? new RequiredLevelData((Double)tagAtPath.getValue()) : null;
    }
 
    public RequiredLevelData getClearStatData() {

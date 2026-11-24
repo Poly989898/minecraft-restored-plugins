@@ -41,70 +41,70 @@ public class SkullTextureStat extends ItemStat<SkullTextureData, SkullTextureDat
       );
    }
 
-   public SkullTextureData whenInitialized(Object var1) {
-      Validate.isTrue(var1 instanceof ConfigurationSection, "Must specify a config section");
-      ConfigurationSection var2 = (ConfigurationSection)var1;
-      String var3 = var2.getString("value");
-      Validate.notNull(var3, "Could not load skull texture value");
-      String var4 = var2.getString("uuid");
-      Validate.notNull(var4, "Could not find skull texture UUID: re-enter your skull texture value and one will be selected randomly.");
-      Object var5 = MythicLib.plugin.getVersion().getWrapper().newProfile(UUID.fromString(var4), var3);
-      return new SkullTextureData(var5);
+   public SkullTextureData whenInitialized(Object obj) {
+      Validate.isTrue(obj instanceof ConfigurationSection, "Must specify a config section");
+      ConfigurationSection section = (ConfigurationSection)obj;
+      String text = section.getString("value");
+      Validate.notNull(text, "Could not load skull texture value");
+      String uuid = section.getString("uuid");
+      Validate.notNull(uuid, "Could not find skull texture UUID: re-enter your skull texture value and one will be selected randomly.");
+      Object profile = MythicLib.plugin.getVersion().getWrapper().newProfile(UUID.fromString(uuid), text);
+      return new SkullTextureData(profile);
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<SkullTextureData> var2) {
-      var1.add(ChatColor.GRAY + "Current Value: " + (var2.isPresent() ? ChatColor.GREEN + "Texture value provided" : ChatColor.RED + "None"));
-      var1.add("");
-      var1.add(ChatColor.YELLOW + "►" + " Left click to change this value.");
-      var1.add(ChatColor.YELLOW + "►" + " Right click to remove this value.");
+   public void whenDisplayed(List<String> texts, Optional<SkullTextureData> optional) {
+      texts.add(ChatColor.GRAY + "Current Value: " + (optional.isPresent() ? ChatColor.GREEN + "Texture value provided" : ChatColor.RED + "None"));
+      texts.add("");
+      texts.add(ChatColor.YELLOW + "►" + " Left click to change this value.");
+      texts.add(ChatColor.YELLOW + "►" + " Right click to remove this value.");
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      var1.getEditedSection().set("skull-texture.value", var2);
-      var1.getEditedSection().set("skull-texture.uuid", UUID.randomUUID().toString());
-      var1.registerTemplateEdition();
-      var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + this.getName() + " successfully changed to " + var2 + ".");
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      editionInventory.getEditedSection().set("skull-texture.value", text);
+      editionInventory.getEditedSection().set("skull-texture.uuid", UUID.randomUUID().toString());
+      editionInventory.registerTemplateEdition();
+      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + this.getName() + " successfully changed to " + text + ".");
    }
 
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull SkullTextureData var2) {
-      if (var1.getItemStack().getType() == Material.PLAYER_HEAD) {
-         if (var2.getGameProfile() != null) {
-            MythicLib.plugin.getVersion().getWrapper().setProfile((SkullMeta)var1.getMeta(), var2.getGameProfile());
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull SkullTextureData skullTextureData) {
+      if (itemStackBuilder.getItemStack().getType() == Material.PLAYER_HEAD) {
+         if (skullTextureData.getGameProfile() != null) {
+            MythicLib.plugin.getVersion().getWrapper().setProfile((SkullMeta)itemStackBuilder.getMeta(), skullTextureData.getGameProfile());
          }
       }
    }
 
    @NotNull
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull SkullTextureData var1) {
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull SkullTextureData skullTextureData) {
       return new ArrayList<>();
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      if (var2.getAction() == InventoryAction.PICKUP_HALF) {
-         var1.getEditedSection().set(this.getPath(), null);
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + this.getName() + ".");
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      if (event.getAction() == InventoryAction.PICKUP_HALF) {
+         editionInventory.getEditedSection().set(this.getPath(), null);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + this.getName() + ".");
       } else {
-         new StatEdition(var1, this).enable("Write in the chat the text you want.");
+         new StatEdition(editionInventory, this).enable("Write in the chat the text you want.");
       }
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
       try {
-         ItemMeta var2 = var1.getNBT().getItem().getItemMeta();
-         Validate.isTrue(var2 instanceof SkullMeta, "Item is not a skull");
-         Object var3 = MythicLib.plugin.getVersion().getWrapper().getProfile((SkullMeta)var2);
-         var1.setData(ItemStats.SKULL_TEXTURE, new SkullTextureData(var3));
-      } catch (RuntimeException var4) {
+         ItemMeta itemMeta = readMMOItem.getNBT().getItem().getItemMeta();
+         Validate.isTrue(itemMeta instanceof SkullMeta, "Item is not a skull");
+         Object profile = MythicLib.plugin.getVersion().getWrapper().getProfile((SkullMeta)itemMeta);
+         readMMOItem.setData(ItemStats.SKULL_TEXTURE, new SkullTextureData(profile));
+      } catch (RuntimeException exception) {
       }
    }
 
    @Nullable
-   public SkullTextureData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
+   public SkullTextureData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
       return null;
    }
 

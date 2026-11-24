@@ -20,16 +20,16 @@ public class EnchantListData implements StatData, Mergeable<EnchantListData> {
       return this.enchants.keySet();
    }
 
-   public int getLevel(@NotNull Enchantment var1) {
-      Integer var2 = this.enchants.get(var1);
-      return var2 == null ? 0 : var2;
+   public int getLevel(@NotNull Enchantment enchantment) {
+      Integer value = this.enchants.get(enchantment);
+      return value == null ? 0 : value;
    }
 
-   public void addEnchant(Enchantment var1, int var2) {
-      if (var2 <= 0) {
-         this.enchants.remove(var1);
+   public void addEnchant(Enchantment enchantment, int count) {
+      if (count <= 0) {
+         this.enchants.remove(enchantment);
       } else {
-         this.enchants.put(var1, var2);
+         this.enchants.put(enchantment, count);
       }
    }
 
@@ -38,17 +38,17 @@ public class EnchantListData implements StatData, Mergeable<EnchantListData> {
    }
 
    @Override
-   public boolean equals(Object var1) {
-      if (!(var1 instanceof EnchantListData)) {
+   public boolean equals(Object obj) {
+      if (!(obj instanceof EnchantListData)) {
          return false;
       }
 
-      if (((EnchantListData)var1).enchants.size() != this.enchants.size()) {
+      if (((EnchantListData)obj).enchants.size() != this.enchants.size()) {
          return false;
       }
 
-      for (Enchantment var3 : this.getEnchants()) {
-         if (this.getLevel(var3) != ((EnchantListData)var1).getLevel(var3)) {
+      for (Enchantment enchant : this.getEnchants()) {
+         if (this.getLevel(enchant) != ((EnchantListData)obj).getLevel(enchant)) {
             return false;
          }
       }
@@ -56,43 +56,43 @@ public class EnchantListData implements StatData, Mergeable<EnchantListData> {
       return true;
    }
 
-   public void mergeWith(@NotNull EnchantListData var1) {
-      for (Enchantment var3 : var1.getEnchants()) {
-         this.addEnchant(var3, Math.max(this.enchants.getOrDefault(var3, 0), var1.getLevel(var3)));
+   public void mergeWith(@NotNull EnchantListData enchantListData) {
+      for (Enchantment enchant : enchantListData.getEnchants()) {
+         this.addEnchant(enchant, Math.max(this.enchants.getOrDefault(enchant, 0), enchantListData.getLevel(enchant)));
       }
    }
 
    @NotNull
    public EnchantListData clone() {
-      EnchantListData var1 = new EnchantListData();
+      EnchantListData enchantListData = new EnchantListData();
 
-      for (Enchantment var3 : this.enchants.keySet()) {
-         var1.addEnchant(var3, this.enchants.getOrDefault(var3, 0));
+      for (Enchantment key : this.enchants.keySet()) {
+         enchantListData.addEnchant(key, this.enchants.getOrDefault(key, 0));
       }
 
-      return var1;
+      return enchantListData;
    }
 
    @Override
    public String toString() {
-      StringBuilder var1 = new StringBuilder("EnchantList{");
-      AtomicBoolean var2 = new AtomicBoolean();
-      this.enchants.forEach((var2x, var3) -> {
-         if (var2.get()) {
-            var1.append(",");
+      StringBuilder builder = new StringBuilder("EnchantList{");
+      AtomicBoolean atomicBoolean = new AtomicBoolean();
+      this.enchants.forEach((var2x, value) -> {
+         if (atomicBoolean.get()) {
+            builder.append(",");
          }
 
-         var1.append(var2x).append("=").append(var3);
-         var2.set(true);
+         builder.append(var2x).append("=").append(value);
+         atomicBoolean.set(true);
       });
-      var1.append("}");
-      return var1.toString();
+      builder.append("}");
+      return builder.toString();
    }
 
    @Override
    public boolean isEmpty() {
-      for (int var2 : this.enchants.values()) {
-         if (var2 > 0) {
+      for (int count : this.enchants.values()) {
+         if (count > 0) {
             return false;
          }
       }
@@ -100,29 +100,29 @@ public class EnchantListData implements StatData, Mergeable<EnchantListData> {
       return true;
    }
 
-   public void identifyTrueOriginalEnchantments(@NotNull MMOItem var1) {
-      if (var1.hasData(ItemStats.DISABLE_ENCHANTING) && var1.hasData(ItemStats.DISABLE_REPAIRING)) {
+   public void identifyTrueOriginalEnchantments(@NotNull MMOItem mmoItem) {
+      if (mmoItem.hasData(ItemStats.DISABLE_ENCHANTING) && mmoItem.hasData(ItemStats.DISABLE_REPAIRING)) {
          this.clear();
       } else {
-         EnchantListData var2 = (EnchantListData)var1.computeData(ItemStats.ENCHANTS);
-         if (var2.getEnchants().size() == 0) {
-            var1.mergeData(ItemStats.ENCHANTS, this, null);
+         EnchantListData data = (EnchantListData)mmoItem.computeData(ItemStats.ENCHANTS);
+         if (data.getEnchants().size() == 0) {
+            mmoItem.mergeData(ItemStats.ENCHANTS, this, null);
          } else {
-            EnchantListData var3 = new EnchantListData();
-            var1.hasData(ItemStats.MATERIAL);
-            MaterialData var4 = (MaterialData)var1.getData(ItemStats.MATERIAL);
-            Material var5 = var4.getMaterial();
+            EnchantListData enchantListData = new EnchantListData();
+            mmoItem.hasData(ItemStats.MATERIAL);
+            MaterialData data2 = (MaterialData)mmoItem.getData(ItemStats.MATERIAL);
+            Material material = data2.getMaterial();
 
-            for (Enchantment var7 : this.getEnchants()) {
-               int var8 = this.getLevel(var7);
-               int var9 = var2.getLevel(var7);
-               if (var9 <= var7.getMaxLevel() && var7.getItemTarget().includes(var5) && var9 < var8) {
-                  var3.addEnchant(var7, var8);
+            for (Enchantment enchant : this.getEnchants()) {
+               int level = this.getLevel(enchant);
+               int level2 = data.getLevel(enchant);
+               if (level2 <= enchant.getMaxLevel() && enchant.getItemTarget().includes(material) && level2 < level) {
+                  enchantListData.addEnchant(enchant, level);
                }
             }
 
-            if (!var3.isEmpty()) {
-               var1.mergeData(ItemStats.ENCHANTS, var3, null);
+            if (!enchantListData.isEmpty()) {
+               mmoItem.mergeData(ItemStats.ENCHANTS, enchantListData, null);
             }
          }
       }

@@ -28,49 +28,49 @@ public class CompatibleIds extends ItemStat<StringListData, StringListData> {
       super("COMPATIBLE_IDS", Material.COMMAND_BLOCK, "Compatible IDs", new String[]{"The item ids this skin is", "compatible with."}, new String[]{"skin"});
    }
 
-   public StringListData whenInitialized(Object var1) {
-      Validate.isTrue(var1 instanceof List, "Must specify a string list");
-      return new StringListData((List<String>)var1);
+   public StringListData whenInitialized(Object obj) {
+      Validate.isTrue(obj instanceof List, "Must specify a string list");
+      return new StringListData((List<String>)obj);
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      if (var2.getAction() == InventoryAction.PICKUP_ALL) {
-         new StatEdition(var1, this).enable("Write in the chat the item id you want to add.");
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      if (event.getAction() == InventoryAction.PICKUP_ALL) {
+         new StatEdition(editionInventory, this).enable("Write in the chat the item id you want to add.");
       }
 
-      if (var2.getAction() == InventoryAction.PICKUP_HALF && var1.getEditedSection().contains(this.getPath())) {
-         List var3 = var1.getEditedSection().getStringList(this.getPath());
-         if (!var3.isEmpty()) {
-            String var4 = (String)var3.removeLast();
-            var1.getEditedSection().set(this.getPath(), var3);
-            var1.registerTemplateEdition();
-            var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + var4 + "'.");
+      if (event.getAction() == InventoryAction.PICKUP_HALF && editionInventory.getEditedSection().contains(this.getPath())) {
+         List list = editionInventory.getEditedSection().getStringList(this.getPath());
+         if (!list.isEmpty()) {
+            String text = (String)list.removeLast();
+            editionInventory.getEditedSection().set(this.getPath(), list);
+            editionInventory.registerTemplateEdition();
+            editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + text + "'.");
          }
       }
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      List var4 = var1.getEditedSection().contains(this.getPath()) ? var1.getEditedSection().getStringList(this.getPath()) : new ArrayList();
-      var4.add(var2.toUpperCase());
-      var1.getEditedSection().set(this.getPath(), var4);
-      var1.registerTemplateEdition();
-      var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "ID '" + var2.toUpperCase() + "' successfully added.");
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      List list = editionInventory.getEditedSection().contains(this.getPath()) ? editionInventory.getEditedSection().getStringList(this.getPath()) : new ArrayList();
+      list.add(text.toUpperCase());
+      editionInventory.getEditedSection().set(this.getPath(), list);
+      editionInventory.registerTemplateEdition();
+      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "ID '" + text.toUpperCase() + "' successfully added.");
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<StringListData> var2) {
-      if (var2.isPresent()) {
-         var1.add(ChatColor.GRAY + "Current Value:");
-         ((StringListData)var2.get()).getList().forEach(var1x -> var1.add(ChatColor.GRAY + "* " + var1x));
+   public void whenDisplayed(List<String> texts, Optional<StringListData> optional) {
+      if (optional.isPresent()) {
+         texts.add(ChatColor.GRAY + "Current Value:");
+         ((StringListData)optional.get()).getList().forEach(var1x -> texts.add(ChatColor.GRAY + "* " + var1x));
       } else {
-         var1.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "Compatible with any item.");
+         texts.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "Compatible with any item.");
       }
 
-      var1.add("");
-      var1.add(ChatColor.YELLOW + "►" + " Click to add a new id.");
-      var1.add(ChatColor.YELLOW + "►" + " Right click to remove the last id.");
+      texts.add("");
+      texts.add(ChatColor.YELLOW + "►" + " Click to add a new id.");
+      texts.add(ChatColor.YELLOW + "►" + " Right click to remove the last id.");
    }
 
    @NotNull
@@ -78,49 +78,49 @@ public class CompatibleIds extends ItemStat<StringListData, StringListData> {
       return new StringListData();
    }
 
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull StringListData var2) {
-      ArrayList var3 = new ArrayList<>(var2.getList());
-      var1.getLore().insert(this.getPath(), var3);
-      var1.addItemTag(this.getAppliedNBT(var2));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull StringListData stringListData) {
+      ArrayList list = new ArrayList<>(stringListData.getList());
+      itemStackBuilder.getLore().insert(this.getPath(), list);
+      itemStackBuilder.addItemTag(this.getAppliedNBT(stringListData));
    }
 
    @NotNull
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull StringListData var1) {
-      JsonArray var2 = new JsonArray();
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull StringListData stringListData) {
+      JsonArray jsonArray = new JsonArray();
 
-      for (String var4 : var1.getList()) {
-         var2.add(var4);
+      for (String text : stringListData.getList()) {
+         jsonArray.add(text);
       }
 
-      ArrayList var5 = new ArrayList();
-      var5.add(new ItemTag(this.getNBTPath(), var2.toString()));
-      return var5;
+      ArrayList list = new ArrayList();
+      list.add(new ItemTag(this.getNBTPath(), jsonArray.toString()));
+      return list;
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      ArrayList var2 = new ArrayList();
-      if (var1.getNBT().hasTag(this.getNBTPath())) {
-         var2.add(ItemTag.getTagAtPath(this.getNBTPath(), var1.getNBT(), SupportedNBTTagValues.STRING));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      ArrayList list = new ArrayList();
+      if (readMMOItem.getNBT().hasTag(this.getNBTPath())) {
+         list.add(ItemTag.getTagAtPath(this.getNBTPath(), readMMOItem.getNBT(), SupportedNBTTagValues.STRING));
       }
 
-      StringListData var3 = this.getLoadedNBT(var2);
-      if (var3 != null) {
-         var1.setData(this, var3);
+      StringListData loadedNBT = this.getLoadedNBT(list);
+      if (loadedNBT != null) {
+         readMMOItem.setData(this, loadedNBT);
       }
    }
 
    @Nullable
-   public StringListData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
-      ItemTag var2 = ItemTag.getTagAtPath(this.getNBTPath(), var1);
-      if (var2 == null) {
+   public StringListData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
+      ItemTag tagAtPath = ItemTag.getTagAtPath(this.getNBTPath(), itemTags);
+      if (tagAtPath == null) {
          return null;
       }
 
       try {
-         JsonArray var3 = new JsonParser().parse((String)var2.getValue()).getAsJsonArray();
-         return new StringListData(var3);
-      } catch (JsonSyntaxException | IllegalStateException var4) {
+         JsonArray asJsonArray = new JsonParser().parse((String)tagAtPath.getValue()).getAsJsonArray();
+         return new StringListData(asJsonArray);
+      } catch (JsonSyntaxException | IllegalStateException exception) {
          return null;
       }
    }

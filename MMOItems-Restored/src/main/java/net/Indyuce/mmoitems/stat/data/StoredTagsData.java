@@ -18,44 +18,44 @@ public class StoredTagsData implements StatData, Mergeable<StoredTagsData> {
    private static final List<String> SAVED_MMOITEMS_TAGS = Arrays.asList("MMOITEMS_SKIN_ID", "MMOITEMS_SKIN_TYPE");
 
    @Deprecated
-   public StoredTagsData(ItemStack var1) {
-      this(NBTItem.get(var1));
+   public StoredTagsData(ItemStack item) {
+      this(NBTItem.get(item));
    }
 
-   public StoredTagsData(List<ItemTag> var1) {
-      this.tags.addAll(var1);
+   public StoredTagsData(List<ItemTag> itemTags) {
+      this.tags.addAll(itemTags);
    }
 
-   public StoredTagsData(NBTItem var1) {
-      for (String var3 : var1.getTags()) {
-         if ((!var3.startsWith("MMOITEMS_") || SAVED_MMOITEMS_TAGS.contains(var3)) && !IGNORED_TAGS.contains(var3) && !var3.startsWith("HSTRY_")) {
-            switch (this.getTagType(var1.getTypeId(var3))) {
+   public StoredTagsData(NBTItem nbtItem) {
+      for (String tag : nbtItem.getTags()) {
+         if ((!tag.startsWith("MMOITEMS_") || SAVED_MMOITEMS_TAGS.contains(tag)) && !IGNORED_TAGS.contains(tag) && !tag.startsWith("HSTRY_")) {
+            switch (this.getTagType(nbtItem.getTypeId(tag))) {
                case "double":
-                  this.tags.add(new ItemTag(var3, var1.getDouble(var3)));
+                  this.tags.add(new ItemTag(tag, nbtItem.getDouble(tag)));
                   break;
                case "int":
-                  this.tags.add(new ItemTag(var3, var1.getInteger(var3)));
+                  this.tags.add(new ItemTag(tag, nbtItem.getInteger(tag)));
                   break;
                case "byte":
-                  this.tags.add(new ItemTag(var3, var1.getBoolean(var3)));
+                  this.tags.add(new ItemTag(tag, nbtItem.getBoolean(tag)));
                   break;
                case "string":
-                  this.tags.add(new ItemTag(var3, var1.getString(var3)));
+                  this.tags.add(new ItemTag(tag, nbtItem.getString(tag)));
             }
          }
       }
    }
 
-   public void addTag(ItemTag var1) {
-      this.tags.add(var1);
+   public void addTag(ItemTag itemTag) {
+      this.tags.add(itemTag);
    }
 
    public List<ItemTag> getTags() {
       return this.tags;
    }
 
-   private String getTagType(int var1) {
-      switch (var1) {
+   private String getTagType(int count) {
+      switch (count) {
          case 0:
             return "end";
          case 1:
@@ -85,8 +85,8 @@ public class StoredTagsData implements StatData, Mergeable<StoredTagsData> {
       }
    }
 
-   public void mergeWith(StoredTagsData var1) {
-      this.tags.addAll(var1.tags);
+   public void mergeWith(StoredTagsData storedTagsData) {
+      this.tags.addAll(storedTagsData.tags);
    }
 
    public StoredTagsData clone() {
@@ -99,27 +99,27 @@ public class StoredTagsData implements StatData, Mergeable<StoredTagsData> {
    }
 
    @Override
-   public boolean equals(Object var1) {
-      if (!(var1 instanceof StoredTagsData)) {
+   public boolean equals(Object obj) {
+      if (!(obj instanceof StoredTagsData)) {
          return false;
       }
 
-      if (((StoredTagsData)var1).getTags().size() != this.getTags().size()) {
+      if (((StoredTagsData)obj).getTags().size() != this.getTags().size()) {
          return false;
       }
 
-      for (ItemTag var3 : ((StoredTagsData)var1).getTags()) {
-         if (var3 != null) {
-            boolean var4 = true;
+      for (ItemTag tag : ((StoredTagsData)obj).getTags()) {
+         if (tag != null) {
+            boolean flag = true;
 
-            for (ItemTag var6 : this.getTags()) {
-               if (var3.equals(var6)) {
-                  var4 = false;
+            for (ItemTag tag2 : this.getTags()) {
+               if (tag.equals(tag2)) {
+                  flag = false;
                   break;
                }
             }
 
-            if (var4) {
+            if (flag) {
                return false;
             }
          }

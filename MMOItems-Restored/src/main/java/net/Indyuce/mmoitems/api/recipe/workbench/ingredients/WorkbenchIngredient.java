@@ -7,21 +7,21 @@ import org.bukkit.inventory.RecipeChoice;
 public abstract class WorkbenchIngredient {
    private final int amount;
 
-   public WorkbenchIngredient(int var1) {
-      this.amount = var1;
+   public WorkbenchIngredient(int count) {
+      this.amount = count;
    }
 
    public int getAmount() {
       return this.amount;
    }
 
-   public boolean matches(ItemStack var1) {
-      return var1 != null && var1.getAmount() >= this.amount && this.corresponds(var1);
+   public boolean matches(ItemStack item) {
+      return item != null && item.getAmount() >= this.amount && this.corresponds(item);
    }
 
    public abstract RecipeChoice toBukkit();
 
    public abstract ItemStack generateItem();
 
-   protected abstract boolean corresponds(ItemStack var1);
+   protected abstract boolean corresponds(ItemStack item);
 }

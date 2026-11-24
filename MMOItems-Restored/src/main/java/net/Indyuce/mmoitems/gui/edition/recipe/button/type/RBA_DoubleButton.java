@@ -23,8 +23,8 @@ public abstract class RBA_DoubleButton extends RecipeButtonAction {
       FriendlyFeedbackProvider.quickForPlayer(FFPMMOItems.get(), "Write in the chat an integer number, ex $e8$b.", new String[0])
    };
 
-   public RBA_DoubleButton(@NotNull RecipeEditorGUI var1) {
-      super(var1);
+   public RBA_DoubleButton(@NotNull RecipeEditorGUI recipeEditorGUI) {
+      super(recipeEditorGUI);
    }
 
    public double getValue() {
@@ -41,27 +41,27 @@ public abstract class RBA_DoubleButton extends RecipeButtonAction {
    }
 
    @Override
-   public void primaryProcessInput(@NotNull String var1, Object... var2) {
-      Double var3;
+   public void primaryProcessInput(@NotNull String text, Object... objs) {
+      Double value;
       if (this.requireInteger()) {
-         Integer var4 = SilentNumbers.IntegerParse(var1);
-         if (var4 == null) {
-            throw new IllegalArgumentException("Expected integer number instead of $u" + var1);
+         Integer value2 = SilentNumbers.IntegerParse(text);
+         if (value2 == null) {
+            throw new IllegalArgumentException("Expected integer number instead of $u" + text);
          }
 
-         var3 = (double)var4.intValue();
+         value = (double)value2.intValue();
       } else {
-         var3 = SilentNumbers.DoubleParse(var1);
-         if (var3 == null) {
-            throw new IllegalArgumentException("Expected a number instead of $u" + var1);
+         value = SilentNumbers.DoubleParse(text);
+         if (value == null) {
+            throw new IllegalArgumentException("Expected a number instead of $u" + text);
          }
       }
 
-      if (this.getRange() != null && !this.getRange().inRange(var3)) {
-         throw new IllegalArgumentException("Number $r" + var3 + "$b is out of range. Expected " + this.getRange().toStringColored());
+      if (this.getRange() != null && !this.getRange().inRange(value)) {
+         throw new IllegalArgumentException("Number $r" + value + "$b is out of range. Expected " + this.getRange().toStringColored());
       }
 
-      this.getInv().getNameSection().set(this.getDoubleConfigPath(), var3);
+      this.getInv().getNameSection().set(this.getDoubleConfigPath(), value);
    }
 
    @Nullable
@@ -78,7 +78,7 @@ public abstract class RBA_DoubleButton extends RecipeButtonAction {
    }
 
    @Override
-   public void secondaryProcessInput(@NotNull String var1, Object... var2) {
+   public void secondaryProcessInput(@NotNull String text, Object... objs) {
    }
 
    public abstract double getDefaultValue();

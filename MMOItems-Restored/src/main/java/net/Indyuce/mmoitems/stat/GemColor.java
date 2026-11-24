@@ -20,7 +20,7 @@ public class GemColor extends StringStat implements GemStoneStat {
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull StringData var2) {
-      var1.addItemTag(new ItemTag(this.getNBTPath(), var2.toString()));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull StringData stringData) {
+      itemStackBuilder.addItemTag(new ItemTag(this.getNBTPath(), stringData.toString()));
    }
 }

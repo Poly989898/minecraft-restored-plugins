@@ -22,8 +22,8 @@ public class RBA_HideFromBook extends RBA_BooleanButton {
       .lore(SilentNumbers.chop("Even if the crafting book is enabled, this recipe wont be automatically unlocked by players.", 65, "§7"))
       .build();
 
-   public RBA_HideFromBook(@NotNull RecipeEditorGUI var1) {
-      super(var1);
+   public RBA_HideFromBook(@NotNull RecipeEditorGUI recipeEditorGUI) {
+      super(recipeEditorGUI);
    }
 
    @NotNull
@@ -34,10 +34,10 @@ public class RBA_HideFromBook extends RBA_BooleanButton {
 
    @Override
    public boolean runSecondary() {
-      ItemStack var1 = new ItemStack(Material.KNOWLEDGE_BOOK);
-      ItemMeta var2 = var1.getItemMeta();
-      if (var2 instanceof KnowledgeBookMeta) {
-         ((KnowledgeBookMeta)var2)
+      ItemStack item = new ItemStack(Material.KNOWLEDGE_BOOK);
+      ItemMeta itemMeta = item.getItemMeta();
+      if (itemMeta instanceof KnowledgeBookMeta) {
+         ((KnowledgeBookMeta)itemMeta)
             .addRecipe(
                new NamespacedKey[]{
                   MMOItems.plugin
@@ -52,8 +52,8 @@ public class RBA_HideFromBook extends RBA_BooleanButton {
             );
       }
 
-      var1.setItemMeta(var2);
-      this.getInv().getPlayer().getInventory().addItem(new ItemStack[]{var1});
+      item.setItemMeta(itemMeta);
+      this.getInv().getPlayer().getInventory().addItem(new ItemStack[]{item});
       this.getInv().getPlayer().playSound(this.getInv().getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 2.0F);
       return true;
    }
@@ -67,13 +67,13 @@ public class RBA_HideFromBook extends RBA_BooleanButton {
    @NotNull
    @Override
    public ItemStack getButton() {
-      String var1 = this.isEnabled() ? "§cNO§8, it's hidden." : "§aYES§8, it's shown.";
+      String text = this.isEnabled() ? "§cNO§8, it's hidden." : "§aYES§8, it's shown.";
       return RecipeEditorGUI.addLore(
          this.getBooleanButton().clone(),
          SilentNumbers.toArrayList(
             new String[]{
                "",
-               "§7Currently in Book? " + var1,
+               "§7Currently in Book? " + text,
                "",
                ChatColor.YELLOW + "►" + " Right click to generate recipe unlock book.",
                ChatColor.YELLOW + "►" + " Left click to toggle this option."

@@ -28,11 +28,11 @@ public class NumericStatFormula implements RandomStatData<DoubleData>, Updatable
    private static final double DEFAULT_MAX_SPREAD = 0.3;
    public static boolean RELATIVE_SPREAD = false;
 
-   public NumericStatFormula(Object var1) {
-      Validate.notNull(var1, "Config must not be null");
-      if (var1 instanceof String) {
-         if (var1.toString().contains("->")) {
-            String[] var2 = var1.toString().replace(" ", "").split(Pattern.quote("->"));
+   public NumericStatFormula(Object obj) {
+      Validate.notNull(obj, "Config must not be null");
+      if (obj instanceof String) {
+         if (obj.toString().contains("->")) {
+            String[] texts = obj.toString().replace(" ", "").split(Pattern.quote("->"));
             this.base = 0.0;
             this.scale = 0.0;
             this.spread = 0.0;
@@ -40,22 +40,22 @@ public class NumericStatFormula implements RandomStatData<DoubleData>, Updatable
             this.uniform = true;
             this.hasMin = true;
             this.hasMax = true;
-            this.min = Double.parseDouble(var2[0]);
-            this.max = Double.parseDouble(var2[1]);
+            this.min = Double.parseDouble(texts[0]);
+            this.max = Double.parseDouble(texts[1]);
          } else {
-            String[] var3 = var1.toString().split(" ");
-            this.base = Double.parseDouble(var3[0]);
-            this.scale = var3.length > 1 ? Double.parseDouble(var3[1]) : 0.0;
-            this.spread = var3.length > 2 ? Double.parseDouble(var3[2]) : 0.0;
-            this.maxSpread = var3.length > 3 ? Double.parseDouble(var3[3]) : 0.0;
-            this.hasMin = var3.length > 4;
-            this.hasMax = var3.length > 5;
-            this.min = this.hasMin ? Double.parseDouble(var3[4]) : 0.0;
-            this.max = this.hasMax ? Double.parseDouble(var3[5]) : 0.0;
+            String[] texts = obj.toString().split(" ");
+            this.base = Double.parseDouble(texts[0]);
+            this.scale = texts.length > 1 ? Double.parseDouble(texts[1]) : 0.0;
+            this.spread = texts.length > 2 ? Double.parseDouble(texts[2]) : 0.0;
+            this.maxSpread = texts.length > 3 ? Double.parseDouble(texts[3]) : 0.0;
+            this.hasMin = texts.length > 4;
+            this.hasMax = texts.length > 5;
+            this.min = this.hasMin ? Double.parseDouble(texts[4]) : 0.0;
+            this.max = this.hasMax ? Double.parseDouble(texts[5]) : 0.0;
             this.uniform = false;
          }
-      } else if (var1 instanceof Number) {
-         this.base = Double.parseDouble(var1.toString());
+      } else if (obj instanceof Number) {
+         this.base = Double.parseDouble(obj.toString());
          this.scale = 0.0;
          this.spread = 0.0;
          this.maxSpread = 0.0;
@@ -65,44 +65,44 @@ public class NumericStatFormula implements RandomStatData<DoubleData>, Updatable
          this.min = 0.0;
          this.max = 0.0;
       } else {
-         if (!(var1 instanceof ConfigurationSection)) {
+         if (!(obj instanceof ConfigurationSection)) {
             throw new IllegalArgumentException("Must specify a config section, a string or a number");
          }
 
-         ConfigurationSection var4 = (ConfigurationSection)var1;
-         this.base = var4.getDouble("base");
-         this.scale = var4.getDouble("scale");
-         this.spread = var4.getDouble("spread");
-         this.maxSpread = var4.getDouble("max-spread", 0.3);
-         this.hasMin = var4.contains("min");
-         this.hasMax = var4.contains("max");
-         this.uniform = !var4.contains("spread") && !var4.contains("scale") && !var4.contains("base") && this.hasMin && this.hasMax;
-         this.min = this.hasMin ? var4.getDouble("min") : 0.0;
-         this.max = this.hasMax ? var4.getDouble("max") : 0.0;
+         ConfigurationSection section = (ConfigurationSection)obj;
+         this.base = section.getDouble("base");
+         this.scale = section.getDouble("scale");
+         this.spread = section.getDouble("spread");
+         this.maxSpread = section.getDouble("max-spread", 0.3);
+         this.hasMin = section.contains("min");
+         this.hasMax = section.contains("max");
+         this.uniform = !section.contains("spread") && !section.contains("scale") && !section.contains("base") && this.hasMin && this.hasMax;
+         this.min = this.hasMin ? section.getDouble("min") : 0.0;
+         this.max = this.hasMax ? section.getDouble("max") : 0.0;
       }
 
       Validate.isTrue(this.spread >= 0.0, "Spread must be positive");
       Validate.isTrue(this.maxSpread >= 0.0, "Max spread must be positive");
    }
 
-   public NumericStatFormula(double var1, double var3, double var5, double var7) {
-      this(var1, var3, var5, var7, false, false, 0.0, false, 0.0);
+   public NumericStatFormula(double value, double value2, double value3, double value4) {
+      this(value, value2, value3, value4, false, false, 0.0, false, 0.0);
    }
 
-   public NumericStatFormula(double var1, double var3, double var5, double var7, double var9) {
-      this(var1, var3, var5, 100.0, false, true, var7, true, var9);
+   public NumericStatFormula(double value, double value2, double value3, double value4, double value5) {
+      this(value, value2, value3, 100.0, false, true, value4, true, value5);
    }
 
-   public NumericStatFormula(double var1, double var3, double var5, double var7, boolean var9, boolean var10, double var11, boolean var13, double var14) {
-      this.base = var1;
-      this.scale = var3;
-      this.spread = var5;
-      this.maxSpread = var7;
-      this.uniform = var9;
-      this.hasMin = var10;
-      this.hasMax = var13;
-      this.min = var11;
-      this.max = var14;
+   public NumericStatFormula(double value, double value2, double value3, double value4, boolean flag, boolean flag2, double value5, boolean flag3, double value6) {
+      this.base = value;
+      this.scale = value2;
+      this.spread = value3;
+      this.maxSpread = value4;
+      this.uniform = flag;
+      this.hasMin = flag2;
+      this.hasMax = flag3;
+      this.min = value5;
+      this.max = value6;
    }
 
    public double getBase() {
@@ -141,75 +141,75 @@ public class NumericStatFormula implements RandomStatData<DoubleData>, Updatable
       return this.max;
    }
 
-   public double calculate(double var1) {
-      return this.calculate(var1, NumericStatFormula.FormulaInputType.RANDOM);
+   public double calculate(double value) {
+      return this.calculate(value, NumericStatFormula.FormulaInputType.RANDOM);
    }
 
-   public double calculate(double var1, @NotNull NumericStatFormula.FormulaInputType var3) {
+   public double calculate(double value, @NotNull NumericStatFormula.FormulaInputType formulaInputType) {
       return this.calculate(
-         var1,
-         var3 == NumericStatFormula.FormulaInputType.RANDOM
+         value,
+         formulaInputType == NumericStatFormula.FormulaInputType.RANDOM
             ? (this.uniform ? RANDOM.nextDouble() : RANDOM.nextGaussian())
             : (
-               var3 == NumericStatFormula.FormulaInputType.UPPER_BOUND
+               formulaInputType == NumericStatFormula.FormulaInputType.UPPER_BOUND
                   ? (this.uniform ? 1.0 : 2.5)
-                  : (var3 == NumericStatFormula.FormulaInputType.LOWER_BOUND ? (this.uniform ? 0.0 : -2.5) : Double.NaN)
+                  : (formulaInputType == NumericStatFormula.FormulaInputType.LOWER_BOUND ? (this.uniform ? 0.0 : -2.5) : Double.NaN)
             )
       );
    }
 
-   public double calculate(double var1, double var3) {
+   public double calculate(double value, double value2) {
       if (this.uniform) {
-         return var1 * this.scale + this.min + (this.max - this.min) * var3;
+         return value * this.scale + this.min + (this.max - this.min) * value2;
       }
 
-      double var5 = this.base + this.scale * var1;
-      double var7 = Math.min(Math.max(var3 * this.spread, -this.maxSpread), this.maxSpread);
-      double var9 = RELATIVE_SPREAD ? var5 * (1.0 + var7) : var5 + var7;
+      double value3 = this.base + this.scale * value;
+      double value4 = Math.min(Math.max(value2 * this.spread, -this.maxSpread), this.maxSpread);
+      double value5 = RELATIVE_SPREAD ? value3 * (1.0 + value4) : value3 + value4;
       if (this.hasMin) {
-         var9 = Math.max(this.min, var9);
+         value5 = Math.max(this.min, value5);
       }
 
       if (this.hasMax) {
-         var9 = Math.min(this.max, var9);
+         value5 = Math.min(this.max, value5);
       }
 
-      return var9;
+      return value5;
    }
 
-   public DoubleData randomize(MMOItemBuilder var1) {
-      return new DoubleData(this.calculate(var1.getLevel()));
+   public DoubleData randomize(MMOItemBuilder mmoItemBuilder) {
+      return new DoubleData(this.calculate(mmoItemBuilder.getLevel()));
    }
 
-   public void fillConfigurationSection(@NotNull ConfigurationSection var1, @NotNull String var2, @NotNull NumericStatFormula.FormulaSaveOption var3) {
-      if (var2 == null) {
+   public void fillConfigurationSection(@NotNull ConfigurationSection section, @NotNull String text, @NotNull NumericStatFormula.FormulaSaveOption formulaSaveOption) {
+      if (text == null) {
          throw new NullPointerException("Path is empty");
       }
 
       if (this.scale == 0.0 && this.spread == 0.0 && this.maxSpread == 0.0 && !this.uniform) {
-         var1.set(var2, this.base == 0.0 && var3 == NumericStatFormula.FormulaSaveOption.DELETE_IF_ZERO ? null : this.base);
+         section.set(text, this.base == 0.0 && formulaSaveOption == NumericStatFormula.FormulaSaveOption.DELETE_IF_ZERO ? null : this.base);
       } else {
-         var1.createSection(var2);
-         var1 = var1.getConfigurationSection(var2);
+         section.createSection(text);
+         section = section.getConfigurationSection(text);
          if (!this.uniform) {
-            var1.set("base", this.base);
-            var1.set("scale", this.scale);
-            var1.set("spread", this.spread);
-            var1.set("max-spread", this.maxSpread);
+            section.set("base", this.base);
+            section.set("scale", this.scale);
+            section.set("spread", this.spread);
+            section.set("max-spread", this.maxSpread);
          }
 
          if (this.hasMin) {
-            var1.set("min", this.min);
+            section.set("min", this.min);
          }
 
          if (this.hasMax) {
-            var1.set("max", this.max);
+            section.set("max", this.max);
          }
       }
    }
 
-   public void fillConfigurationSection(ConfigurationSection var1, String var2) {
-      this.fillConfigurationSection(var1, var2, NumericStatFormula.FormulaSaveOption.DELETE_IF_ZERO);
+   public void fillConfigurationSection(ConfigurationSection section, String text) {
+      this.fillConfigurationSection(section, text, NumericStatFormula.FormulaSaveOption.DELETE_IF_ZERO);
    }
 
    @Override
@@ -237,13 +237,13 @@ public class NumericStatFormula implements RandomStatData<DoubleData>, Updatable
    }
 
    @NotNull
-   public DoubleData reroll(@NotNull ItemStat var1, @NotNull DoubleData var2, int var3) {
-      double var4 = this.getBase() + this.getScale() * var3;
-      double var6 = var2.getValue();
-      double var8 = var6 - var4;
-      double var10 = RELATIVE_SPREAD ? Math.abs(var8 / (this.getSpread() * var4)) : Math.abs(var8 / this.getSpread());
-      double var12 = this.getMaxSpread() / this.getSpread();
-      return !(var10 > var12) && !(var10 > 3.5) ? var2.clone() : new DoubleData(this.calculate(var3));
+   public DoubleData reroll(@NotNull ItemStat itemStat, @NotNull DoubleData doubleData, int count) {
+      double value = this.getBase() + this.getScale() * count;
+      double value2 = doubleData.getValue();
+      double value3 = value2 - value;
+      double value4 = RELATIVE_SPREAD ? Math.abs(value3 / (this.getSpread() * value)) : Math.abs(value3 / this.getSpread());
+      double value5 = this.getMaxSpread() / this.getSpread();
+      return !(value4 > value5) && !(value4 > 3.5) ? doubleData.clone() : new DoubleData(this.calculate(count));
    }
 
    public enum FormulaInputType {

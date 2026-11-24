@@ -40,13 +40,13 @@ public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      if (var2.getAction() == InventoryAction.PICKUP_ALL) {
-         new RecipeTypeListGUI(var1.getPlayer(), var1.getEdited()).open(var1);
-      } else if (var2.getAction() == InventoryAction.PICKUP_HALF && var1.getEditedSection().contains("crafting")) {
-         var1.getEditedSection().set("crafting", null);
-         var1.registerTemplateEdition();
-         var1.getPlayer()
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      if (event.getAction() == InventoryAction.PICKUP_ALL) {
+         new RecipeTypeListGUI(editionInventory.getPlayer(), editionInventory.getEdited()).open(editionInventory);
+      } else if (event.getAction() == InventoryAction.PICKUP_HALF && editionInventory.getEditedSection().contains("crafting")) {
+         editionInventory.getEditedSection().set("crafting", null);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer()
             .sendMessage(
                MMOItems.plugin.getPrefix()
                   + "Crafting recipes successfully removed. Make sure you reload active recipes using "
@@ -59,9 +59,9 @@ public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<RandomStatData<StatData>> var2) {
-      var1.add(ChatColor.YELLOW + "►" + " Click to access the crafting edition menu.");
-      var1.add(ChatColor.YELLOW + "►" + " Right click to remove all crafting recipes.");
+   public void whenDisplayed(List<String> texts, Optional<RandomStatData<StatData>> optional) {
+      texts.add(ChatColor.YELLOW + "►" + " Click to access the crafting edition menu.");
+      texts.add(ChatColor.YELLOW + "►" + " Right click to remove all crafting recipes.");
    }
 
    @NotNull
@@ -71,105 +71,105 @@ public class Crafting extends ItemStat<RandomStatData<StatData>, StatData> {
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      int var4 = (Integer)var3[0];
-      switch (var4) {
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      int count = (Integer)objs[0];
+      switch (count) {
          case 0:
          case 1:
-            int var5 = var2.indexOf(32);
-            QuickNumberRange var6 = null;
-            if (var5 > 0) {
-               String var7 = var2.substring(var5 + 1);
-               if (SilentNumbers.DoubleTryParse(var7)) {
-                  var7 = var7 + "..";
+            int count2 = text.indexOf(32);
+            QuickNumberRange quickNumberRange = null;
+            if (count2 > 0) {
+               String text2 = text.substring(count2 + 1);
+               if (SilentNumbers.DoubleTryParse(text2)) {
+                  text2 = text2 + "..";
                }
 
-               var6 = QuickNumberRange.getFromString(var7);
+               quickNumberRange = QuickNumberRange.getFromString(text2);
             }
 
-            if (var5 <= 0 || var6 != null) {
-               if (var6 == null) {
-                  var6 = new QuickNumberRange(1.0, null);
+            if (count2 <= 0 || quickNumberRange != null) {
+               if (quickNumberRange == null) {
+                  quickNumberRange = new QuickNumberRange(1.0, null);
                } else {
-                  var2 = var2.substring(0, var5);
+                  text = text.substring(0, count2);
                }
 
-               if (var2.contains(".")) {
-                  String[] var11 = var2.split("\\.");
-                  var2 = "m " + var11[0] + " " + var11[1] + " " + var6;
+               if (text.contains(".")) {
+                  String[] texts = text.split("\\.");
+                  text = "m " + texts[0] + " " + texts[1] + " " + quickNumberRange;
                } else {
-                  var2 = "v " + var2 + " - " + var6;
+                  text = "v " + text + " - " + quickNumberRange;
                }
             }
 
-            RMG_RecipeInterpreter var12 = (RMG_RecipeInterpreter)var3[1];
-            int var8 = (Integer)var3[2];
-            ProvidedUIFilter var9 = UIFilterManager.getUIFilter(var2, var1.getFFP());
-            if (var9 == null) {
+            RMG_RecipeInterpreter rmG_RecipeInterpreter = (RMG_RecipeInterpreter)objs[1];
+            int count3 = (Integer)objs[2];
+            ProvidedUIFilter uIFilter = UIFilterManager.getUIFilter(text, editionInventory.getFFP());
+            if (uIFilter == null) {
                throw new IllegalArgumentException("");
             }
 
-            if (!var9.isValid(var1.getFFP())) {
+            if (!uIFilter.isValid(editionInventory.getFFP())) {
                throw new IllegalArgumentException("");
             }
 
-            ConfigurationSection var10 = RecipeEditorGUI.getSection(var1.getEditedSection(), "crafting");
-            var10 = RecipeEditorGUI.getSection(var10, ((RecipeEditorGUI)var1).getRecipeRegistry().getRecipeConfigPath());
-            var10 = RecipeEditorGUI.getSection(var10, ((RecipeEditorGUI)var1).getRecipeName());
-            if (var4 == 0) {
-               var12.editInput(var9, var8);
+            ConfigurationSection section = RecipeEditorGUI.getSection(editionInventory.getEditedSection(), "crafting");
+            section = RecipeEditorGUI.getSection(section, ((RecipeEditorGUI)editionInventory).getRecipeRegistry().getRecipeConfigPath());
+            section = RecipeEditorGUI.getSection(section, ((RecipeEditorGUI)editionInventory).getRecipeName());
+            if (count == 0) {
+               rmG_RecipeInterpreter.editInput(uIFilter, count3);
             } else {
-               var12.editOutput(var9, var8);
+               rmG_RecipeInterpreter.editOutput(uIFilter, count3);
             }
 
-            var1.registerTemplateEdition();
+            editionInventory.registerTemplateEdition();
             break;
          case 2:
          case 3:
-            if (var3.length < 2) {
+            if (objs.length < 2) {
                return;
             }
 
-            if (!(var3[1] instanceof RecipeButtonAction)) {
+            if (!(objs[1] instanceof RecipeButtonAction)) {
                return;
             }
 
-            if (var4 == 2) {
-               ((RecipeButtonAction)var3[1]).primaryProcessInput(var2, var3);
+            if (count == 2) {
+               ((RecipeButtonAction)objs[1]).primaryProcessInput(text, objs);
             } else {
-               ((RecipeButtonAction)var3[1]).secondaryProcessInput(var2, var3);
+               ((RecipeButtonAction)objs[1]).secondaryProcessInput(text, objs);
             }
 
-            var1.registerTemplateEdition();
+            editionInventory.registerTemplateEdition();
             break;
          default:
-            var1.registerTemplateEdition();
+            editionInventory.registerTemplateEdition();
       }
    }
 
    @Nullable
    @Override
-   public RandomStatData whenInitialized(Object var1) {
+   public RandomStatData whenInitialized(Object obj) {
       return null;
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull StatData var2) {
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull StatData statData) {
    }
 
    @NotNull
    @Override
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData var1) {
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull StatData statData) {
       return new ArrayList<>();
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
    }
 
    @Nullable
    @Override
-   public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
+   public StatData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
       return null;
    }
 }

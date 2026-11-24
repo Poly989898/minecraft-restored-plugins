@@ -21,44 +21,44 @@ import org.jetbrains.annotations.NotNull;
 public class CircularLuteAttack implements LuteAttackHandler {
    @Override
    public void handle(
-      final PlayerMetadata var1,
-      final double var2,
-      NBTItem var4,
-      final double var5,
-      @NotNull final Vector var7,
-      @NotNull final SoundReader var8,
-      @NotNull final ProjectileParticlesData var9
+      final PlayerMetadata playerMetadata,
+      final double value,
+      NBTItem nbtItem,
+      final double value2,
+      @NotNull final Vector vector,
+      @NotNull final SoundReader soundReader,
+      @NotNull final ProjectileParticlesData projectileParticlesData
    ) {
       (new BukkitRunnable() {
-         final Vector vec = var1.getPlayer().getEyeLocation().getDirection().multiply(0.4);
-         final Location loc = var1.getPlayer().getEyeLocation();
+         final Vector vec = playerMetadata.getPlayer().getEyeLocation().getDirection().multiply(0.4);
+         final Location loc = playerMetadata.getPlayer().getEyeLocation();
          int ti = 0;
 
          public void run() {
-            if (this.ti++ > var5) {
+            if (this.ti++ > value2) {
                this.cancel();
             }
 
             List<Entity> var1x = MMOUtils.getNearbyChunkEntities(this.loc);
 
             for (int var2x = 0; var2x < 3; var2x++) {
-               this.loc.add(this.vec.add(var7));
+               this.loc.add(this.vec.add(vector));
                if (this.loc.getBlock().getType().isSolid()) {
                   this.cancel();
                   break;
                }
 
-               double var3 = this.ti / 3.0;
-               Vector var5x = MMOUtils.rotateFunc(new Vector(Math.cos(var3), Math.sin(var3), 0.0).multiply(0.3), this.loc);
-               var9.shootParticle(this.loc.clone().add(var5x));
-               var9.shootParticle(this.loc.clone().add(var5x.multiply(-1)));
+               double value3 = this.ti / 3.0;
+               Vector var5x = MMOUtils.rotateFunc(new Vector(Math.cos(value3), Math.sin(value3), 0.0).multiply(0.3), this.loc);
+               projectileParticlesData.shootParticle(this.loc.clone().add(var5x));
+               projectileParticlesData.shootParticle(this.loc.clone().add(var5x.multiply(-1)));
                if (var2x == 0) {
-                  var8.play(this.loc, 2.0F, (float)(0.5 + this.ti / var5));
+                  soundReader.play(this.loc, 2.0F, (float)(0.5 + this.ti / value2));
                }
 
                for (Entity var7x : var1x) {
-                  if (UtilityMethods.canTarget(var1.getPlayer(), this.loc, var7x, InteractionType.OFFENSE_ACTION)) {
-                     var1.attack((LivingEntity)var7x, var2, new DamageType[]{DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE});
+                  if (UtilityMethods.canTarget(playerMetadata.getPlayer(), this.loc, var7x, InteractionType.OFFENSE_ACTION)) {
+                     playerMetadata.attack((LivingEntity)var7x, value, new DamageType[]{DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE});
                      this.cancel();
                      return;
                   }

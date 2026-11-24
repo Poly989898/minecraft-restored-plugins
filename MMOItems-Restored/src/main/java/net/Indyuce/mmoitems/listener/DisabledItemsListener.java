@@ -25,79 +25,79 @@ import org.bukkit.inventory.ItemStack;
 public class DisabledItemsListener implements Listener {
    private final MMOItems plugin;
 
-   public DisabledItemsListener(MMOItems var1) {
-      this.plugin = var1;
+   public DisabledItemsListener(MMOItems mmoItems) {
+      this.plugin = mmoItems;
    }
 
    @EventHandler(priority = EventPriority.LOWEST)
-   public void rightClickEffects(PlayerInteractEvent var1) {
-      if (var1.hasItem()) {
-         NBTItem var2 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var1.getItem());
-         if (MMOUtils.hasBeenRemoved(var2)) {
-            var1.setCancelled(true);
+   public void rightClickEffects(PlayerInteractEvent event) {
+      if (event.hasItem()) {
+         NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
+         if (MMOUtils.hasBeenRemoved(nBTItem)) {
+            event.setCancelled(true);
          }
       }
    }
 
    @EventHandler(priority = EventPriority.LOWEST)
-   public void meleeAttacks(PlayerAttackEvent var1) {
-      if (var1.getAttack() instanceof MeleeAttackMetadata) {
-         ItemStack var2 = var1.getPlayer().getInventory().getItem(((MeleeAttackMetadata)var1.getAttack()).getHand().toBukkit());
-         NBTItem var3 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var2);
-         if (MMOUtils.hasBeenRemoved(var3)) {
-            var1.setCancelled(true);
+   public void meleeAttacks(PlayerAttackEvent event) {
+      if (event.getAttack() instanceof MeleeAttackMetadata) {
+         ItemStack item = event.getPlayer().getInventory().getItem(((MeleeAttackMetadata)event.getAttack()).getHand().toBukkit());
+         NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item);
+         if (MMOUtils.hasBeenRemoved(nBTItem)) {
+            event.setCancelled(true);
          }
       }
    }
 
    @EventHandler(priority = EventPriority.LOWEST)
-   public void specialToolAbilities(BlockBreakEvent var1) {
-      Player var2 = var1.getPlayer();
-      if (var2.getGameMode() != GameMode.CREATIVE) {
-         NBTItem var3 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var2.getInventory().getItemInMainHand());
-         if (MMOUtils.hasBeenRemoved(var3)) {
-            var1.setCancelled(true);
+   public void specialToolAbilities(BlockBreakEvent event) {
+      Player player = event.getPlayer();
+      if (player.getGameMode() != GameMode.CREATIVE) {
+         NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
+         if (MMOUtils.hasBeenRemoved(nBTItem)) {
+            event.setCancelled(true);
          }
       }
    }
 
    @EventHandler(priority = EventPriority.LOWEST)
-   public void rightClickWeaponInteractions(PlayerInteractEntityEvent var1) {
-      Player var2 = var1.getPlayer();
-      if (var1.getRightClicked() instanceof LivingEntity) {
-         NBTItem var3 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var2.getInventory().getItemInMainHand());
-         if (MMOUtils.hasBeenRemoved(var3)) {
-            var1.setCancelled(true);
+   public void rightClickWeaponInteractions(PlayerInteractEntityEvent event) {
+      Player player = event.getPlayer();
+      if (event.getRightClicked() instanceof LivingEntity) {
+         NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
+         if (MMOUtils.hasBeenRemoved(nBTItem)) {
+            event.setCancelled(true);
          }
       }
    }
 
    @EventHandler(priority = EventPriority.LOWEST)
-   public void gemStonesAndItemStacks(InventoryClickEvent var1) {
-      Player var2 = (Player)var1.getWhoClicked();
-      if (var1.getAction() == InventoryAction.SWAP_WITH_CURSOR) {
-         NBTItem var3 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var1.getCursor());
-         if (MMOUtils.hasBeenRemoved(var3)) {
-            var1.setCancelled(true);
+   public void gemStonesAndItemStacks(InventoryClickEvent event) {
+      Player whoClicked = (Player)event.getWhoClicked();
+      if (event.getAction() == InventoryAction.SWAP_WITH_CURSOR) {
+         NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCursor());
+         if (MMOUtils.hasBeenRemoved(nBTItem)) {
+            event.setCancelled(true);
          }
       }
    }
 
    @EventHandler(priority = EventPriority.LOWEST)
-   public void handleCustomBows(EntityShootBowEvent var1) {
-      if (var1.getProjectile() instanceof Arrow && var1.getEntity() instanceof Player) {
-         NBTItem var2 = NBTItem.get(var1.getBow());
-         if (MMOUtils.hasBeenRemoved(var2)) {
-            var1.setCancelled(true);
+   public void handleCustomBows(EntityShootBowEvent event) {
+      if (event.getProjectile() instanceof Arrow && event.getEntity() instanceof Player) {
+         NBTItem nbtItem = NBTItem.get(event.getBow());
+         if (MMOUtils.hasBeenRemoved(nbtItem)) {
+            event.setCancelled(true);
          }
       }
    }
 
    @EventHandler(priority = EventPriority.LOWEST)
-   public void handleVanillaEatenConsumables(PlayerItemConsumeEvent var1) {
-      NBTItem var2 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var1.getItem());
-      if (MMOUtils.hasBeenRemoved(var2)) {
-         var1.setCancelled(true);
+   public void handleVanillaEatenConsumables(PlayerItemConsumeEvent event) {
+      NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
+      if (MMOUtils.hasBeenRemoved(nBTItem)) {
+         event.setCancelled(true);
       }
    }
 }

@@ -11,10 +11,10 @@ public class ApplySoulboundEvent extends PlayerDataEvent {
    private final VolatileMMOItem consumable;
    private final NBTItem target;
 
-   public ApplySoulboundEvent(PlayerData var1, VolatileMMOItem var2, NBTItem var3) {
-      super(var1);
-      this.consumable = var2;
-      this.target = var3;
+   public ApplySoulboundEvent(PlayerData playerData, VolatileMMOItem volatileMMOItem, NBTItem nbtItem) {
+      super(playerData);
+      this.consumable = volatileMMOItem;
+      this.target = nbtItem;
    }
 
    public VolatileMMOItem getConsumable() {

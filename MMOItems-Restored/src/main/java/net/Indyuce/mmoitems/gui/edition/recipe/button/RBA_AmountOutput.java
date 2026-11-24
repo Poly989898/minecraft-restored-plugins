@@ -28,28 +28,28 @@ public class RBA_AmountOutput extends RecipeButtonAction {
    final ItemStack button;
    public static final String AMOUNT_INGREDIENTS = "amount";
 
-   public RBA_AmountOutput(@NotNull RecipeEditorGUI var1, @NotNull ItemStack var2) {
-      super(var1);
+   public RBA_AmountOutput(@NotNull RecipeEditorGUI recipeEditorGUI, @NotNull ItemStack item) {
+      super(recipeEditorGUI);
       this.button = RecipeEditorGUI.rename(
-         ItemFactory.of(var2.getType()).lore(SilentNumbers.chop("The amount of items produced every time the player crafts.", 65, "§7")).build(),
+         ItemFactory.of(item.getType()).lore(SilentNumbers.chop("The amount of items produced every time the player crafts.", 65, "§7")).build(),
          "§cChoose Output Amount"
       );
-      ItemMeta var3 = Objects.requireNonNull(this.button.getItemMeta());
-      ItemMeta var4 = Objects.requireNonNull(var2.getItemMeta());
-      if (MythicLib.plugin.getVersion().isStrictlyHigher(new int[]{1, 13}) && var4.hasCustomModelData()) {
-         var3.setCustomModelData(var4.getCustomModelData());
+      ItemMeta itemMeta = Objects.requireNonNull(this.button.getItemMeta());
+      ItemMeta itemMeta2 = Objects.requireNonNull(item.getItemMeta());
+      if (MythicLib.plugin.getVersion().isStrictlyHigher(new int[]{1, 13}) && itemMeta2.hasCustomModelData()) {
+         itemMeta.setCustomModelData(itemMeta2.getCustomModelData());
       }
 
-      if (var4 instanceof LeatherArmorMeta) {
-         ((LeatherArmorMeta)var3).setColor(((LeatherArmorMeta)var4).getColor());
+      if (itemMeta2 instanceof LeatherArmorMeta) {
+         ((LeatherArmorMeta)itemMeta).setColor(((LeatherArmorMeta)itemMeta2).getColor());
       }
 
-      if (var4 instanceof BannerMeta) {
-         ((BannerMeta)var3).setPatterns(((BannerMeta)var4).getPatterns());
+      if (itemMeta2 instanceof BannerMeta) {
+         ((BannerMeta)itemMeta).setPatterns(((BannerMeta)itemMeta2).getPatterns());
       }
 
-      var3.addItemFlags(new ItemFlag[]{ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_DYE, HidePotionEffects.ITEM_FLAG});
-      this.button.setItemMeta(var3);
+      itemMeta.addItemFlags(new ItemFlag[]{ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_DYE, HidePotionEffects.ITEM_FLAG});
+      this.button.setItemMeta(itemMeta);
    }
 
    @Override
@@ -59,21 +59,21 @@ public class RBA_AmountOutput extends RecipeButtonAction {
    }
 
    @Override
-   public void primaryProcessInput(@NotNull String var1, Object... var2) {
-      Integer var3 = SilentNumbers.IntegerParse(var1);
-      if (var3 == null) {
-         throw new IllegalArgumentException("Expected an integer number instead of $u" + var1);
+   public void primaryProcessInput(@NotNull String text, Object... objs) {
+      Integer value = SilentNumbers.IntegerParse(text);
+      if (value == null) {
+         throw new IllegalArgumentException("Expected an integer number instead of $u" + text);
       }
 
-      if (var3 > 64) {
-         throw new IllegalArgumentException("Max stack size is $e64$b, Minecraft doesnt support $u" + var1);
+      if (value > 64) {
+         throw new IllegalArgumentException("Max stack size is $e64$b, Minecraft doesnt support $u" + text);
       }
 
-      if (var3 <= 0) {
-         throw new IllegalArgumentException("Min output stack size is $e0$b, you specified $u" + var1);
+      if (value <= 0) {
+         throw new IllegalArgumentException("Min output stack size is $e0$b, you specified $u" + text);
       }
 
-      this.getInv().getNameSection().set("amount", var3);
+      this.getInv().getNameSection().set("amount", value);
    }
 
    @Override
@@ -89,16 +89,16 @@ public class RBA_AmountOutput extends RecipeButtonAction {
    }
 
    @Override
-   public void secondaryProcessInput(@NotNull String var1, Object... var2) {
+   public void secondaryProcessInput(@NotNull String text, Object... objs) {
    }
 
    @NotNull
    @Override
    public ItemStack getButton() {
-      ItemStack var1 = this.button.clone();
-      var1.setAmount(this.getOutputAmount());
+      ItemStack item = this.button.clone();
+      item.setAmount(this.getOutputAmount());
       return RecipeEditorGUI.addLore(
-         var1,
+         item,
          SilentNumbers.toArrayList(
             new String[]{"", ChatColor.YELLOW + "►" + " Right click to reset to 1.", ChatColor.YELLOW + "►" + " Left click to edit amount."}
          )

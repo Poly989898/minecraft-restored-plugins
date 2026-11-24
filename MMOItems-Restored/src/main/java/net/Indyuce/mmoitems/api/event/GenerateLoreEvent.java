@@ -14,11 +14,11 @@ public class GenerateLoreEvent extends Event {
    private final List<String> parsed;
    private final LoreBuilder builder;
 
-   public GenerateLoreEvent(MMOItem var1, LoreBuilder var2, List<String> var3, List<String> var4) {
-      this.item = var1;
-      this.lore = var3;
-      this.parsed = var4;
-      this.builder = var2;
+   public GenerateLoreEvent(MMOItem mmoItem, LoreBuilder loreBuilder, List<String> texts, List<String> texts2) {
+      this.item = mmoItem;
+      this.lore = texts;
+      this.parsed = texts2;
+      this.builder = loreBuilder;
    }
 
    public MMOItem getItem() {
@@ -37,9 +37,9 @@ public class GenerateLoreEvent extends Event {
       return this.parsed;
    }
 
-   public void setFinalLore(List<String> var1) {
+   public void setFinalLore(List<String> texts) {
       this.parsed.clear();
-      this.parsed.addAll(var1);
+      this.parsed.addAll(texts);
    }
 
    public HandlerList getHandlers() {

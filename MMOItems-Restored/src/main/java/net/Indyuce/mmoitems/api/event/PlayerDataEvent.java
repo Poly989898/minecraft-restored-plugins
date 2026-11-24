@@ -8,9 +8,9 @@ public abstract class PlayerDataEvent extends PlayerEvent implements Cancellable
    private final PlayerData playerData;
    private boolean cancelled;
 
-   public PlayerDataEvent(PlayerData var1) {
-      super(var1.getPlayer());
-      this.playerData = var1;
+   public PlayerDataEvent(PlayerData playerData) {
+      super(playerData.getPlayer());
+      this.playerData = playerData;
    }
 
    public PlayerData getPlayerData() {
@@ -21,7 +21,7 @@ public abstract class PlayerDataEvent extends PlayerEvent implements Cancellable
       return this.cancelled;
    }
 
-   public void setCancelled(boolean var1) {
-      this.cancelled = var1;
+   public void setCancelled(boolean flag) {
+      this.cancelled = flag;
    }
 }

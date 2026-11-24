@@ -21,8 +21,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class SoundsEdition extends EditionInventory {
    public static final Map<Integer, String> CORRESPONDING_SLOT = new HashMap<>();
 
-   public SoundsEdition(Player var1, MMOItemTemplate var2) {
-      super(var1, var2);
+   public SoundsEdition(Player player, MMOItemTemplate mmoItemTemplate) {
+      super(player, mmoItemTemplate);
    }
 
    @Override
@@ -32,48 +32,48 @@ public class SoundsEdition extends EditionInventory {
 
    @Override
    public void arrangeInventory() {
-      for (CustomSound var4 : CustomSound.values()) {
-         ItemStack var5 = var4.getItem().clone();
-         ItemMeta var6 = var5.getItemMeta();
-         var6.addItemFlags(ItemFlag.values());
-         var6.setDisplayName(ChatColor.GREEN + var4.getName());
-         ArrayList var7 = new ArrayList();
+      for (CustomSound customSound : CustomSound.values()) {
+         ItemStack item = customSound.getItem().clone();
+         ItemMeta itemMeta = item.getItemMeta();
+         itemMeta.addItemFlags(ItemFlag.values());
+         itemMeta.setDisplayName(ChatColor.GREEN + customSound.getName());
+         ArrayList list = new ArrayList();
 
-         for (String var11 : var4.getLore()) {
-            var7.add(ChatColor.GRAY + var11);
+         for (String text : customSound.getLore()) {
+            list.add(ChatColor.GRAY + text);
          }
 
-         var7.add("");
-         String var12 = var4.getName().replace(" ", "-").toLowerCase();
-         String var13 = this.getEditedSection().getString("sounds." + var12 + ".sound");
-         if (var13 != null) {
-            var7.add(ChatColor.GRAY + "Current Values:");
-            var7.add(
-               ChatColor.GRAY + " - Sound Name: '" + ChatColor.GREEN + this.getEditedSection().getString("sounds." + var12 + ".sound") + ChatColor.GRAY + "'"
+         list.add("");
+         String text = customSound.getName().replace(" ", "-").toLowerCase();
+         String text2 = this.getEditedSection().getString("sounds." + text + ".sound");
+         if (text2 != null) {
+            list.add(ChatColor.GRAY + "Current Values:");
+            list.add(
+               ChatColor.GRAY + " - Sound Name: '" + ChatColor.GREEN + this.getEditedSection().getString("sounds." + text + ".sound") + ChatColor.GRAY + "'"
             );
-            var7.add(ChatColor.GRAY + " - Volume: " + ChatColor.GREEN + this.getEditedSection().getDouble("sounds." + var12 + ".volume"));
-            var7.add(ChatColor.GRAY + " - Pitch: " + ChatColor.GREEN + this.getEditedSection().getDouble("sounds." + var12 + ".pitch"));
+            list.add(ChatColor.GRAY + " - Volume: " + ChatColor.GREEN + this.getEditedSection().getDouble("sounds." + text + ".volume"));
+            list.add(ChatColor.GRAY + " - Pitch: " + ChatColor.GREEN + this.getEditedSection().getDouble("sounds." + text + ".pitch"));
          } else {
-            var7.add(ChatColor.GRAY + "Current Values: " + ChatColor.RED + "None");
+            list.add(ChatColor.GRAY + "Current Values: " + ChatColor.RED + "None");
          }
 
-         var7.add("");
-         var7.add(ChatColor.YELLOW + "►" + " Click to change this value.");
-         var7.add(ChatColor.YELLOW + "►" + " Right click to remove this value.");
-         var6.setLore(var7);
-         var5.setItemMeta(var6);
-         this.inventory.setItem(var4.getSlot(), var5);
+         list.add("");
+         list.add(ChatColor.YELLOW + "►" + " Click to change this value.");
+         list.add(ChatColor.YELLOW + "►" + " Right click to remove this value.");
+         itemMeta.setLore(list);
+         item.setItemMeta(itemMeta);
+         this.inventory.setItem(customSound.getSlot(), item);
       }
    }
 
    @Override
-   public void whenClicked(InventoryClickEvent var1) {
-      ItemStack var2 = var1.getCurrentItem();
-      var1.setCancelled(true);
-      if (var1.getInventory() == var1.getClickedInventory() && MMOUtils.isMetaItem(var2, false)) {
-         if (CORRESPONDING_SLOT.containsKey(var1.getSlot())) {
-            if (var1.getAction() == InventoryAction.PICKUP_ALL) {
-               new StatEdition(this, ItemStats.CUSTOM_SOUNDS, CORRESPONDING_SLOT.get(var1.getSlot()))
+   public void whenClicked(InventoryClickEvent event) {
+      ItemStack currentItem = event.getCurrentItem();
+      event.setCancelled(true);
+      if (event.getInventory() == event.getClickedInventory() && MMOUtils.isMetaItem(currentItem, false)) {
+         if (CORRESPONDING_SLOT.containsKey(event.getSlot())) {
+            if (event.getAction() == InventoryAction.PICKUP_ALL) {
+               new StatEdition(this, ItemStats.CUSTOM_SOUNDS, CORRESPONDING_SLOT.get(event.getSlot()))
                   .enable(
                      "Write in the chat the custom sound you want to add.",
                      ChatColor.AQUA + "Format: [SOUND NAME] [VOLUME] [PITCH]",
@@ -81,12 +81,12 @@ public class SoundsEdition extends EditionInventory {
                   );
             }
 
-            if (var1.getAction() == InventoryAction.PICKUP_HALF) {
-               String var3 = CORRESPONDING_SLOT.get(var1.getSlot());
-               this.getEditedSection().set("sounds." + var3, null);
-               if (this.getEditedSection().contains("sounds." + var3)
-                  && this.getEditedSection().getConfigurationSection("sounds." + var3).getKeys(false).isEmpty()) {
-                  this.getEditedSection().set("sounds." + var3, null);
+            if (event.getAction() == InventoryAction.PICKUP_HALF) {
+               String text = CORRESPONDING_SLOT.get(event.getSlot());
+               this.getEditedSection().set("sounds." + text, null);
+               if (this.getEditedSection().contains("sounds." + text)
+                  && this.getEditedSection().getConfigurationSection("sounds." + text).getKeys(false).isEmpty()) {
+                  this.getEditedSection().set("sounds." + text, null);
                   if (this.getEditedSection().getConfigurationSection("sounds").getKeys(false).isEmpty()) {
                      this.getEditedSection().set("sounds", null);
                   }
@@ -97,7 +97,7 @@ public class SoundsEdition extends EditionInventory {
                   .sendMessage(
                      MMOItems.plugin.getPrefix()
                         + ChatColor.RED
-                        + UtilityMethods.caseOnWords(var3.replace("-", " "))
+                        + UtilityMethods.caseOnWords(text.replace("-", " "))
                         + " Sound"
                         + ChatColor.GRAY
                         + " successfully removed."
@@ -108,8 +108,8 @@ public class SoundsEdition extends EditionInventory {
    }
 
    static {
-      for (CustomSound var3 : CustomSound.values()) {
-         CORRESPONDING_SLOT.put(var3.getSlot(), var3.name().replace("_", "-").toLowerCase());
+      for (CustomSound customSound : CustomSound.values()) {
+         CORRESPONDING_SLOT.put(customSound.getSlot(), customSound.name().replace("_", "-").toLowerCase());
       }
    }
 }

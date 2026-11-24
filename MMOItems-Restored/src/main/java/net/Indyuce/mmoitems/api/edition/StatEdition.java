@@ -13,10 +13,10 @@ public class StatEdition implements Edition {
    private final ItemStat stat;
    private final Object[] info;
 
-   public StatEdition(EditionInventory var1, ItemStat var2, Object... var3) {
-      this.inv = var1;
-      this.stat = var2;
-      this.info = var3;
+   public StatEdition(EditionInventory editionInventory, ItemStat itemStat, Object... objs) {
+      this.inv = editionInventory;
+      this.stat = itemStat;
+      this.info = objs;
    }
 
    @Override
@@ -33,12 +33,12 @@ public class StatEdition implements Edition {
    }
 
    @Override
-   public void enable(String... var1) {
+   public void enable(String... texts) {
       this.inv.getPlayer().closeInventory();
       this.inv.getPlayer().sendMessage(ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "-----------------------------------------------------");
 
-      for (String var5 : var1) {
-         this.inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.translateAlternateColorCodes('&', var5));
+      for (String text : texts) {
+         this.inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.translateAlternateColorCodes('&', text));
       }
 
       this.inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Type 'cancel' to abort editing.");
@@ -47,13 +47,13 @@ public class StatEdition implements Edition {
    }
 
    @Override
-   public boolean processInput(String var1) {
+   public boolean processInput(String text) {
       try {
-         this.stat.whenInput(this.inv, var1, this.info);
+         this.stat.whenInput(this.inv, text, this.info);
          return true;
-      } catch (RuntimeException var3) {
-         if (!var3.getMessage().isEmpty()) {
-            this.inv.getFFP().log(FriendlyFeedbackCategory.ERROR, var3.getMessage(), new String[0]);
+      } catch (RuntimeException exception) {
+         if (!exception.getMessage().isEmpty()) {
+            this.inv.getFFP().log(FriendlyFeedbackCategory.ERROR, exception.getMessage(), new String[0]);
          }
 
          this.inv.getFFP().sendTo(FriendlyFeedbackCategory.ERROR, this.inv.getPlayer());

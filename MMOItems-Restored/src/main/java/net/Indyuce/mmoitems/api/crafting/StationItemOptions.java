@@ -10,10 +10,10 @@ public class StationItemOptions {
    private final ItemStack noRecipe;
    private final ItemStack noQueueItem;
 
-   public StationItemOptions(ConfigurationSection var1) {
-      this.fill = new ConfigItem(var1.getConfigurationSection("fill")).getItem();
-      this.noRecipe = new ConfigItem(var1.getConfigurationSection("no-recipe")).getItem();
-      this.noQueueItem = new ConfigItem(var1.getConfigurationSection("no-queue-item")).getItem();
+   public StationItemOptions(ConfigurationSection section) {
+      this.fill = new ConfigItem(section.getConfigurationSection("fill")).getItem();
+      this.noRecipe = new ConfigItem(section.getConfigurationSection("no-recipe")).getItem();
+      this.noQueueItem = new ConfigItem(section.getConfigurationSection("no-queue-item")).getItem();
    }
 
    public ItemStack getFill() {

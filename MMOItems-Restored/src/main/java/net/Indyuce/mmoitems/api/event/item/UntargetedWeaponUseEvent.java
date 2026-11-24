@@ -12,9 +12,9 @@ public class UntargetedWeaponUseEvent extends PlayerDataEvent implements Cancell
    private boolean cancelled;
    private static final HandlerList handlers = new HandlerList();
 
-   public UntargetedWeaponUseEvent(@NotNull PlayerData var1, @NotNull Weapon var2) {
-      super(var1);
-      this.weapon = var2;
+   public UntargetedWeaponUseEvent(@NotNull PlayerData playerData, @NotNull Weapon weapon) {
+      super(playerData);
+      this.weapon = weapon;
    }
 
    @NotNull
@@ -28,8 +28,8 @@ public class UntargetedWeaponUseEvent extends PlayerDataEvent implements Cancell
    }
 
    @Override
-   public void setCancelled(boolean var1) {
-      this.cancelled = var1;
+   public void setCancelled(boolean flag) {
+      this.cancelled = flag;
    }
 
    @NotNull

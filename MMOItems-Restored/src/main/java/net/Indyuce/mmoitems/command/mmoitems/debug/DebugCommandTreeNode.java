@@ -5,8 +5,8 @@ import io.lumine.mythic.lib.command.api.CommandTreeNode.CommandResult;
 import org.bukkit.command.CommandSender;
 
 public class DebugCommandTreeNode extends CommandTreeNode {
-   public DebugCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "debug");
+   public DebugCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "debug");
       this.addChild(new CheckStatCommandTreeNode(this));
       this.addChild(new CheckAttributeCommandTreeNode(this));
       this.addChild(new CheckTagCommandTreeNode(this));
@@ -17,7 +17,7 @@ public class DebugCommandTreeNode extends CommandTreeNode {
       this.addChild(new TestCommandTreeNode(this));
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
+   public CommandResult execute(CommandSender sender, String[] texts) {
       return CommandResult.THROW_USAGE;
    }
 }

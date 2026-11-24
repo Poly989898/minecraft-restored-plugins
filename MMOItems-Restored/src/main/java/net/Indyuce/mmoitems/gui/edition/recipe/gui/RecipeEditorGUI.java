@@ -83,14 +83,14 @@ public abstract class RecipeEditorGUI extends EditionInventory {
    public static final String OUTPUT_INGREDIENTS = "output";
    public static final ProvidedUIFilter AIR = new ProvidedUIFilter(new VanillaUIFilter(), "AIR", "0");
 
-   public RecipeEditorGUI(@NotNull Player var1, @NotNull MMOItemTemplate var2, @NotNull String var3, @NotNull RecipeRegistry var4) {
-      super(var1, var2);
-      this.recipeName = var3;
-      this.recipeRegistry = var4;
+   public RecipeEditorGUI(@NotNull Player player, @NotNull MMOItemTemplate mmoItemTemplate, @NotNull String text, @NotNull RecipeRegistry recipeRegistry) {
+      super(player, mmoItemTemplate);
+      this.recipeName = text;
+      this.recipeRegistry = recipeRegistry;
       this.moveInput();
       this.craftingSection = getSection(this.getEditedSection(), "crafting");
       this.typeSection = getSection(this.craftingSection, this.getRecipeRegistry().getRecipeConfigPath());
-      this.nameSection = getSection(this.typeSection, var3);
+      this.nameSection = getSection(this.typeSection, text);
       this.addButton(this.amountButton = new RBA_AmountOutput(this, this.getCachedItem().clone()));
    }
 
@@ -140,30 +140,30 @@ public abstract class RecipeEditorGUI extends EditionInventory {
             this.inventory.setItem(this.getButtonsRow() * 9, this.nextButtonPage);
          }
 
-         for (int var1 = 7 * this.buttonsPage; var1 < 7 * (this.buttonsPage + 1); var1++) {
-            int var2 = this.buttonRowPageClamp(var1);
-            if (var1 >= this.buttons.size()) {
-               this.inventory.setItem(var2, this.noButton);
+         for (int i = 7 * this.buttonsPage; i < 7 * (this.buttonsPage + 1); i++) {
+            int count = this.buttonRowPageClamp(i);
+            if (i >= this.buttons.size()) {
+               this.inventory.setItem(count, this.noButton);
             } else {
-               RecipeButtonAction var3 = this.buttons.get(var1);
-               this.inventory.setItem(var2, var3.getButton());
-               this.buttonsMap.put(var2, var3);
+               RecipeButtonAction recipeButtonAction = this.buttons.get(i);
+               this.inventory.setItem(count, recipeButtonAction.getButton());
+               this.buttonsMap.put(count, recipeButtonAction);
             }
          }
       }
    }
 
-   public int buttonRowPageClamp(int var1) {
-      int var2 = SilentNumbers.floor(var1 / 7.0);
-      var1 -= var2 * 7;
-      int var3 = this.getButtonsRow() * 9;
-      int var4 = var1 + 1;
-      return var3 + var4;
+   public int buttonRowPageClamp(int count) {
+      int count2 = SilentNumbers.floor(count / 7.0);
+      count -= count2 * 7;
+      int count3 = this.getButtonsRow() * 9;
+      int count4 = count + 1;
+      return count3 + count4;
    }
 
    public abstract int getButtonsRow();
 
-   abstract int getInputSlot(int var1);
+   abstract int getInputSlot(int count);
 
    @Override
    public void arrangeInventory() {
@@ -174,66 +174,66 @@ public abstract class RecipeEditorGUI extends EditionInventory {
    public abstract void putRecipe();
 
    @NotNull
-   public ItemStack getDisplay(boolean var1, int var2) {
-      ProvidedUIFilter var3 = var1 ? this.getInterpreter().getInput(var2) : this.getInterpreter().getOutput(var2);
-      if (var3 != null && !var3.isAir()) {
-         return var3.getDisplayStack(null);
+   public ItemStack getDisplay(boolean flag, int count) {
+      ProvidedUIFilter providedUIFilter = flag ? this.getInterpreter().getInput(count) : this.getInterpreter().getOutput(count);
+      if (providedUIFilter != null && !providedUIFilter.isAir()) {
+         return providedUIFilter.getDisplayStack(null);
       } else {
          return this.isShowingInput() ? this.emptySlot : this.airSlot;
       }
    }
 
-   public void addButton(@NotNull RecipeButtonAction var1) {
-      this.buttons.add(var1);
+   public void addButton(@NotNull RecipeButtonAction recipeButtonAction) {
+      this.buttons.add(recipeButtonAction);
    }
 
    @NotNull
    public abstract RMG_RecipeInterpreter getInterpreter();
 
    @Override
-   public void whenClicked(InventoryClickEvent var1) {
-      if (VersionUtils.getView(var1).getTopInventory() == var1.getClickedInventory()) {
-         var1.setCancelled(true);
-         int var2 = this.getInputSlot(var1.getRawSlot());
-         if (var1.getAction() == InventoryAction.PICKUP_ALL) {
-            if (var2 >= 0) {
+   public void whenClicked(InventoryClickEvent event) {
+      if (VersionUtils.getView(event).getTopInventory() == event.getClickedInventory()) {
+         event.setCancelled(true);
+         int inputSlot = this.getInputSlot(event.getRawSlot());
+         if (event.getAction() == InventoryAction.PICKUP_ALL) {
+            if (inputSlot >= 0) {
                if (this.isShowingInput()) {
-                  new StatEdition(this, ItemStats.CRAFTING, 0, this.getInterpreter(), var2).enable(this.recipeLog);
+                  new StatEdition(this, ItemStats.CRAFTING, 0, this.getInterpreter(), inputSlot).enable(this.recipeLog);
                } else {
-                  new StatEdition(this, ItemStats.CRAFTING, 1, this.getInterpreter(), var2).enable(this.recipeLog);
+                  new StatEdition(this, ItemStats.CRAFTING, 1, this.getInterpreter(), inputSlot).enable(this.recipeLog);
                }
             } else {
-               RecipeButtonAction var3 = this.buttonsMap.get(var1.getRawSlot());
-               if (var3 != null) {
-                  var3.runPrimary();
+               RecipeButtonAction recipeButtonAction = this.buttonsMap.get(event.getRawSlot());
+               if (recipeButtonAction != null) {
+                  recipeButtonAction.runPrimary();
                }
             }
-         } else if (var1.getAction() == InventoryAction.PICKUP_HALF) {
-            if (var2 >= 0) {
+         } else if (event.getAction() == InventoryAction.PICKUP_HALF) {
+            if (inputSlot >= 0) {
                if (this.isShowingInput()) {
-                  this.getInterpreter().deleteInput(var2);
+                  this.getInterpreter().deleteInput(inputSlot);
                } else {
-                  this.getInterpreter().deleteOutput(this.getInputSlot(var1.getRawSlot()));
+                  this.getInterpreter().deleteOutput(this.getInputSlot(event.getRawSlot()));
                }
 
                this.registerTemplateEdition();
                this.refreshInventory();
             } else {
-               RecipeButtonAction var4 = this.buttonsMap.get(var1.getRawSlot());
-               if (var4 != null) {
-                  var4.runSecondary();
+               RecipeButtonAction recipeButtonAction = this.buttonsMap.get(event.getRawSlot());
+               if (recipeButtonAction != null) {
+                  recipeButtonAction.runSecondary();
                }
             }
          }
       }
    }
 
-   public static void switchInputFor(@NotNull UUID var0) {
-      showingInput.put(var0, !isShowingInputFor(var0));
+   public static void switchInputFor(@NotNull UUID uuid) {
+      showingInput.put(uuid, !isShowingInputFor(uuid));
    }
 
-   public static boolean isShowingInputFor(@NotNull UUID var0) {
-      return showingInput.getOrDefault(var0, true);
+   public static boolean isShowingInputFor(@NotNull UUID uuid) {
+      return showingInput.getOrDefault(uuid, true);
    }
 
    public boolean isShowingInput() {
@@ -245,194 +245,194 @@ public abstract class RecipeEditorGUI extends EditionInventory {
    }
 
    @NotNull
-   public static ItemStack rename(@NotNull ItemStack var0, @NotNull String var1) {
-      ItemMeta var2 = var0.getItemMeta();
-      var2.setDisplayName(MythicLib.plugin.parseColors(var1));
-      var0.setItemMeta(var2);
-      return var0;
+   public static ItemStack rename(@NotNull ItemStack item, @NotNull String text) {
+      ItemMeta itemMeta = item.getItemMeta();
+      itemMeta.setDisplayName(MythicLib.plugin.parseColors(text));
+      item.setItemMeta(itemMeta);
+      return item;
    }
 
    @NotNull
-   public static ItemStack addLore(@NotNull ItemStack var0, @NotNull ArrayList<String> var1) {
-      if (!var0.hasItemMeta()) {
-         return var0;
+   public static ItemStack addLore(@NotNull ItemStack item, @NotNull ArrayList<String> texts) {
+      if (!item.hasItemMeta()) {
+         return item;
       }
 
-      ItemMeta var2 = var0.getItemMeta();
-      if (var2 == null) {
-         return var0;
+      ItemMeta itemMeta = item.getItemMeta();
+      if (itemMeta == null) {
+         return item;
       }
 
-      List var3 = var2.getLore();
-      if (var3 == null) {
-         var3 = new ArrayList();
+      List lore = itemMeta.getLore();
+      if (lore == null) {
+         lore = new ArrayList();
       }
 
-      var3.addAll(var1);
-      AdventureUtils.setLore(var2, var3);
-      var0.setItemMeta(var2);
-      return var0;
+      lore.addAll(texts);
+      AdventureUtils.setLore(itemMeta, lore);
+      item.setItemMeta(itemMeta);
+      return item;
    }
 
    @NotNull
-   public static ConfigurationSection getSection(@NotNull ConfigurationSection var0, @NotNull String var1) {
-      ConfigurationSection var2 = var0.getConfigurationSection(var1);
-      if (var2 == null) {
-         var2 = var0.createSection(var1);
+   public static ConfigurationSection getSection(@NotNull ConfigurationSection section, @NotNull String text) {
+      ConfigurationSection section2 = section.getConfigurationSection(text);
+      if (section2 == null) {
+         section2 = section.createSection(text);
       }
 
-      return var2;
+      return section2;
    }
 
    public void moveInput() {
-      ConfigurationSection var1 = getSection(this.getEditedSection(), "crafting");
-      ConfigurationSection var2 = getSection(var1, this.getRecipeRegistry().getRecipeConfigPath());
-      moveInput(var2, this.recipeName);
+      ConfigurationSection section = getSection(this.getEditedSection(), "crafting");
+      ConfigurationSection section2 = getSection(section, this.getRecipeRegistry().getRecipeConfigPath());
+      moveInput(section2, this.recipeName);
    }
 
-   public static void tripleDebug(@NotNull ConfigurationSection var0) {
-      MMOItems.print(null, "§d-§7 Section §5" + var0.getCurrentPath(), null);
+   public static void tripleDebug(@NotNull ConfigurationSection section) {
+      MMOItems.print(null, "§d-§7 Section §5" + section.getCurrentPath(), null);
 
-      for (String var2 : var0.getKeys(false)) {
-         MMOItems.print(null, "§d +§7 " + var2, null);
-         MMOItems.print(null, "§d-§e-§7 As List §5" + var0.getCurrentPath() + "." + var2 + "§7 {§d" + var0.getStringList(var2).size() + "§7}", null);
+      for (String key : section.getKeys(false)) {
+         MMOItems.print(null, "§d +§7 " + key, null);
+         MMOItems.print(null, "§d-§e-§7 As List §5" + section.getCurrentPath() + "." + key + "§7 {§d" + section.getStringList(key).size() + "§7}", null);
 
-         for (String var4 : var0.getStringList(var2)) {
-            MMOItems.print(null, "§d +§e-§7" + var4, null);
+         for (String text : section.getStringList(key)) {
+            MMOItems.print(null, "§d +§e-§7" + text, null);
          }
 
-         ConfigurationSection var11 = getSection(var0, var2);
-         MMOItems.print(null, "§8--§d-§7 Section §5" + var11.getCurrentPath(), null);
+         ConfigurationSection section2 = getSection(section, key);
+         MMOItems.print(null, "§8--§d-§7 Section §5" + section2.getCurrentPath(), null);
 
-         for (String var5 : var11.getKeys(false)) {
-            MMOItems.print(null, "§8--§d +§7 " + var5, null);
-            MMOItems.print(null, "§8--§d-§e-§7 As List §5" + var11.getCurrentPath() + "." + var5 + "§7 {§d" + var11.getStringList(var5).size() + "§7}", null);
+         for (String key2 : section2.getKeys(false)) {
+            MMOItems.print(null, "§8--§d +§7 " + key2, null);
+            MMOItems.print(null, "§8--§d-§e-§7 As List §5" + section2.getCurrentPath() + "." + key2 + "§7 {§d" + section2.getStringList(key2).size() + "§7}", null);
 
-            for (String var7 : var11.getStringList(var5)) {
-               MMOItems.print(null, "§8--§d +§e-§7" + var7, null);
+            for (String text : section2.getStringList(key2)) {
+               MMOItems.print(null, "§8--§d +§e-§7" + text, null);
             }
 
-            ConfigurationSection var13 = getSection(var11, var5);
-            MMOItems.print(null, "§0--§8--§d-§7 Section §5" + var13.getCurrentPath(), null);
+            ConfigurationSection section3 = getSection(section2, key2);
+            MMOItems.print(null, "§0--§8--§d-§7 Section §5" + section3.getCurrentPath(), null);
 
-            for (String var8 : var13.getKeys(false)) {
-               MMOItems.print(null, "§0--§8--§d +§7 " + var8, null);
+            for (String key3 : section3.getKeys(false)) {
+               MMOItems.print(null, "§0--§8--§d +§7 " + key3, null);
                MMOItems.print(
-                  null, "§0--§8--§d-§e-§7 As List §5" + var13.getCurrentPath() + "." + var8 + "§7 {§d" + var13.getStringList(var8).size() + "§7}", null
+                  null, "§0--§8--§d-§e-§7 As List §5" + section3.getCurrentPath() + "." + key3 + "§7 {§d" + section3.getStringList(key3).size() + "§7}", null
                );
 
-               for (String var10 : var13.getStringList(var8)) {
-                  MMOItems.print(null, "§0--§8--§d +§e-§7" + var10, null);
+               for (String text : section3.getStringList(key3)) {
+                  MMOItems.print(null, "§0--§8--§d +§e-§7" + text, null);
                }
             }
          }
       }
    }
 
-   public static ConfigurationSection moveInput(@NotNull ConfigurationSection var0, @NotNull String var1) {
-      ConfigurationSection var2;
-      if (var0.isConfigurationSection(var1)) {
-         var2 = getSection(var0, var1);
-         String var3 = var2.getString("input1");
-         String var4 = var2.getString("input2");
-         if (var3 != null && var4 != null) {
-            var2.set("input1", null);
-            var2.set("input2", null);
-            var2.set("input", poofFromLegacy(var3) + "|" + poofFromLegacy(var4));
-            var2.set("output", "v AIR 0|v AIR 0");
+   public static ConfigurationSection moveInput(@NotNull ConfigurationSection section, @NotNull String text) {
+      ConfigurationSection section2;
+      if (section.isConfigurationSection(text)) {
+         section2 = getSection(section, text);
+         String input1 = section2.getString("input1");
+         String input2 = section2.getString("input2");
+         if (input1 != null && input2 != null) {
+            section2.set("input1", null);
+            section2.set("input2", null);
+            section2.set("input", poofFromLegacy(input1) + "|" + poofFromLegacy(input2));
+            section2.set("output", "v AIR 0|v AIR 0");
          }
       } else {
-         List var5 = var0.getStringList(var1);
-         var0.set(var1, null);
-         var2 = getSection(var0, var1);
-         var2.set("input", var5);
+         List list = section.getStringList(text);
+         section.set(text, null);
+         section2 = getSection(section, text);
+         section2.set("input", list);
       }
 
-      return var2;
+      return section2;
    }
 
    @NotNull
-   public static String poofFromLegacy(@Nullable String var0) {
-      if (var0 == null || "[]".equals(var0)) {
+   public static String poofFromLegacy(@Nullable String text) {
+      if (text == null || "[]".equals(text)) {
          return "v AIR - 1..";
       }
 
-      if (var0.contains(" ")) {
-         return var0;
+      if (text.contains(" ")) {
+         return text;
       }
 
-      int var1 = var0.indexOf(58);
-      QuickNumberRange var2 = new QuickNumberRange(1.0, null);
-      if (var1 > 0) {
-         String var3 = var0.substring(var1 + 1);
-         var0 = var0.substring(0, var1);
-         Integer var4 = SilentNumbers.IntegerParse(var3);
-         if (var4 == null) {
-            var4 = 1;
+      int count = text.indexOf(58);
+      QuickNumberRange quickNumberRange = new QuickNumberRange(1.0, null);
+      if (count > 0) {
+         String text2 = text.substring(count + 1);
+         text = text.substring(0, count);
+         Integer value = SilentNumbers.IntegerParse(text2);
+         if (value == null) {
+            value = 1;
          }
 
-         var2 = new QuickNumberRange((double)var4.intValue(), null);
+         quickNumberRange = new QuickNumberRange((double)value.intValue(), null);
       }
 
-      if (var0.contains(".")) {
-         String[] var5 = var0.split("\\.");
-         return "m " + var5[0] + " " + var5[1] + " " + var2;
+      if (text.contains(".")) {
+         String[] texts = text.split("\\.");
+         return "m " + texts[0] + " " + texts[1] + " " + quickNumberRange;
       } else {
-         return "v " + var0 + " - " + var2;
+         return "v " + text + " - " + quickNumberRange;
       }
    }
 
    @NotNull
-   public static ProvidedUIFilter readIngredientFrom(@NotNull String var0, @NotNull FriendlyFeedbackProvider var1) {
-      Material var2 = null;
+   public static ProvidedUIFilter readIngredientFrom(@NotNull String text, @NotNull FriendlyFeedbackProvider friendlyFeedbackProvider) {
+      Material material = null;
 
       try {
-         var2 = Material.valueOf(var0.toUpperCase().replace(" ", "_").replace("-", "_"));
-      } catch (IllegalArgumentException var7) {
+         material = Material.valueOf(text.toUpperCase().replace(" ", "_").replace("-", "_"));
+      } catch (IllegalArgumentException exception) {
       }
 
-      if (var2 != null) {
-         if (var2.isAir()) {
-            ProvidedUIFilter var10 = new ProvidedUIFilter(VanillaUIFilter.get(), "AIR", "0");
-            var10.setAmountRange(new QuickNumberRange(null, null));
-            return var10;
+      if (material != null) {
+         if (material.isAir()) {
+            ProvidedUIFilter providedUIFilter = new ProvidedUIFilter(VanillaUIFilter.get(), "AIR", "0");
+            providedUIFilter.setAmountRange(new QuickNumberRange(null, null));
+            return providedUIFilter;
          }
 
-         if (!var2.isItem()) {
-            throw new IllegalArgumentException("Invalid Ingredient $u" + var0 + "$b ($fNot an Item$b).");
+         if (!material.isItem()) {
+            throw new IllegalArgumentException("Invalid Ingredient $u" + text + "$b ($fNot an Item$b).");
          }
 
-         ProvidedUIFilter var9 = UIFilterManager.getUIFilter("v", var2.toString(), "", "1..", var1);
-         if (var9 != null) {
-            return var9;
+         ProvidedUIFilter uIFilter = UIFilterManager.getUIFilter("v", material.toString(), "", "1..", friendlyFeedbackProvider);
+         if (uIFilter != null) {
+            return uIFilter;
          }
 
-         var1.sendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
-         var1.sendTo(FriendlyFeedbackCategory.FAILURE, MMOItems.getConsole());
-         throw new IllegalArgumentException("Invalid Ingredient $u" + var0);
+         friendlyFeedbackProvider.sendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
+         friendlyFeedbackProvider.sendTo(FriendlyFeedbackCategory.FAILURE, MMOItems.getConsole());
+         throw new IllegalArgumentException("Invalid Ingredient $u" + text);
       } else {
-         if (var0.contains(".") && !var0.contains(" ")) {
-            String[] var3 = var0.split("\\.");
-            if (var3.length == 2) {
-               String var4 = var3[0];
-               String var5 = var3[1];
-               ProvidedUIFilter var6 = UIFilterManager.getUIFilter("m", var4, var5, "1..", var1);
-               if (var6 != null) {
-                  return var6;
+         if (text.contains(".") && !text.contains(" ")) {
+            String[] texts = text.split("\\.");
+            if (texts.length == 2) {
+               String text2 = texts[0];
+               String text3 = texts[1];
+               ProvidedUIFilter uIFilter = UIFilterManager.getUIFilter("m", text2, text3, "1..", friendlyFeedbackProvider);
+               if (uIFilter != null) {
+                  return uIFilter;
                }
 
-               var1.sendAllTo((org.bukkit.command.CommandSender) MMOItems.getConsole());
-               throw new IllegalArgumentException("Invalid Ingredient $u" + var0);
+               friendlyFeedbackProvider.sendAllTo((org.bukkit.command.CommandSender) MMOItems.getConsole());
+               throw new IllegalArgumentException("Invalid Ingredient $u" + text);
             }
          }
 
-         ProvidedUIFilter var8 = UIFilterManager.getUIFilter(var0, var1);
-         if (var8 != null) {
-            return var8;
+         ProvidedUIFilter uIFilter = UIFilterManager.getUIFilter(text, friendlyFeedbackProvider);
+         if (uIFilter != null) {
+            return uIFilter;
          }
 
-         var1.sendAllTo((org.bukkit.command.CommandSender) MMOItems.getConsole());
-         throw new IllegalArgumentException("Invalid Ingredient $u" + var0);
+         friendlyFeedbackProvider.sendAllTo((org.bukkit.command.CommandSender) MMOItems.getConsole());
+         throw new IllegalArgumentException("Invalid Ingredient $u" + text);
       }
    }
 }

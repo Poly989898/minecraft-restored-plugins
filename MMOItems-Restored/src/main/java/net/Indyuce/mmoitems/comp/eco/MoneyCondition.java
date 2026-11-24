@@ -9,26 +9,26 @@ import org.apache.commons.lang.Validate;
 public class MoneyCondition extends Condition {
    private final double amount;
 
-   public MoneyCondition(MMOLineConfig var1) {
+   public MoneyCondition(MMOLineConfig mmoLineConfig) {
       super("money");
       Validate.isTrue(MMOItems.plugin.hasEconomy(), "No economy plugin found");
-      var1.validateKeys(new String[]{"amount"});
-      this.amount = var1.getDouble("amount");
+      mmoLineConfig.validateKeys(new String[]{"amount"});
+      this.amount = mmoLineConfig.getDouble("amount");
    }
 
    @Override
-   public boolean isMet(PlayerData var1) {
-      return MMOItems.plugin.getVault().getEconomy().has(var1.getPlayer(), this.amount);
+   public boolean isMet(PlayerData playerData) {
+      return MMOItems.plugin.getVault().getEconomy().has(playerData.getPlayer(), this.amount);
    }
 
    @Override
-   public String formatDisplay(String var1) {
-      return var1.replace("#money#", String.valueOf(this.amount));
+   public String formatDisplay(String text) {
+      return text.replace("#money#", String.valueOf(this.amount));
    }
 
    @Override
-   public void whenCrafting(PlayerData var1) {
-      MMOItems.plugin.getVault().getEconomy().withdrawPlayer(var1.getPlayer(), this.amount);
+   public void whenCrafting(PlayerData playerData) {
+      MMOItems.plugin.getVault().getEconomy().withdrawPlayer(playerData.getPlayer(), this.amount);
    }
 
    public double getAmount() {

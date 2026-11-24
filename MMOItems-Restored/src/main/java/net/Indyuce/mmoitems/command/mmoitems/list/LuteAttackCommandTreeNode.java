@@ -7,12 +7,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class LuteAttackCommandTreeNode extends CommandTreeNode {
-   public LuteAttackCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "lute");
+   public LuteAttackCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "lute");
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      var1.sendMessage(
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      sender.sendMessage(
          ChatColor.DARK_GRAY
             + ""
             + ChatColor.STRIKETHROUGH
@@ -25,8 +25,8 @@ public class LuteAttackCommandTreeNode extends CommandTreeNode {
             + "]-----------------"
       );
 
-      for (LuteAttackEffectStat.LuteAttackEffect var6 : LuteAttackEffectStat.LuteAttackEffect.values()) {
-         var1.sendMessage("* " + ChatColor.LIGHT_PURPLE + var6.name());
+      for (LuteAttackEffectStat.LuteAttackEffect luteAttackEffect : LuteAttackEffectStat.LuteAttackEffect.values()) {
+         sender.sendMessage("* " + ChatColor.LIGHT_PURPLE + luteAttackEffect.name());
       }
 
       return CommandResult.SUCCESS;

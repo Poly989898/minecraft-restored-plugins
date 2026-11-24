@@ -36,66 +36,66 @@ public class CustomSounds extends ItemStat<SoundListData, SoundListData> impleme
       super("SOUNDS", Material.JUKEBOX, "Custom Sounds", new String[]{"The custom sounds your item will use."}, new String[0]);
    }
 
-   public SoundListData whenInitialized(Object var1) {
-      Validate.isTrue(var1 instanceof ConfigurationSection, "Must specify a config section");
-      ConfigurationSection var2 = (ConfigurationSection)var1;
-      SoundListData var3 = new SoundListData();
+   public SoundListData whenInitialized(Object obj) {
+      Validate.isTrue(obj instanceof ConfigurationSection, "Must specify a config section");
+      ConfigurationSection section = (ConfigurationSection)obj;
+      SoundListData soundListData = new SoundListData();
 
-      for (CustomSound var7 : CustomSound.values()) {
-         String var8 = var7.name().replace("_", "-").toLowerCase();
-         if (var2.contains(var8)) {
-            var3.set(var7, new SoundData(var2.get(var8)));
+      for (CustomSound customSound : CustomSound.values()) {
+         String text = customSound.name().replace("_", "-").toLowerCase();
+         if (section.contains(text)) {
+            soundListData.set(customSound, new SoundData(section.get(text)));
          }
       }
 
-      return var3;
+      return soundListData;
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      if (var2.getAction() == InventoryAction.PICKUP_ALL) {
-         new SoundsEdition(var1.getPlayer(), var1.getEdited()).open(var1);
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      if (event.getAction() == InventoryAction.PICKUP_ALL) {
+         new SoundsEdition(editionInventory.getPlayer(), editionInventory.getEdited()).open(editionInventory);
       }
 
-      if (var2.getAction() == InventoryAction.PICKUP_HALF && var1.getEditedSection().contains("sounds")) {
-         var1.getEditedSection().set("sounds", null);
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Custom Sounds successfully removed.");
+      if (event.getAction() == InventoryAction.PICKUP_HALF && editionInventory.getEditedSection().contains("sounds")) {
+         editionInventory.getEditedSection().set("sounds", null);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Custom Sounds successfully removed.");
       }
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      String var4 = (String)var3[0];
-      String[] var5 = var2.split(" ");
-      Validate.isTrue(var5.length == 3, var2 + " is not a valid [SOUND NAME] [VOLUME] [PITCH].");
-      String var6 = var5[0].replace("-", "_");
-      double var7 = MMOUtils.parseDouble(var5[1]);
-      double var9 = MMOUtils.parseDouble(var5[2]);
-      var1.getEditedSection().set("sounds." + var4 + ".sound", var6);
-      var1.getEditedSection().set("sounds." + var4 + ".volume", var7);
-      var1.getEditedSection().set("sounds." + var4 + ".pitch", var9);
-      var1.registerTemplateEdition();
-      var1.getPlayer()
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      String text2 = (String)objs[0];
+      String[] texts = text.split(" ");
+      Validate.isTrue(texts.length == 3, text + " is not a valid [SOUND NAME] [VOLUME] [PITCH].");
+      String text3 = texts[0].replace("-", "_");
+      double value = MMOUtils.parseDouble(texts[1]);
+      double value2 = MMOUtils.parseDouble(texts[2]);
+      editionInventory.getEditedSection().set("sounds." + text2 + ".sound", text3);
+      editionInventory.getEditedSection().set("sounds." + text2 + ".volume", value);
+      editionInventory.getEditedSection().set("sounds." + text2 + ".pitch", value2);
+      editionInventory.registerTemplateEdition();
+      editionInventory.getPlayer()
          .sendMessage(
             MMOItems.plugin.getPrefix()
                + ChatColor.RED
-               + UtilityMethods.caseOnWords(var4.replace(".", " "))
+               + UtilityMethods.caseOnWords(text2.replace(".", " "))
                + ChatColor.GRAY
                + " successfully changed to '"
-               + var6
+               + text3
                + "'."
          );
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<SoundListData> var2) {
-      if (var2.isPresent()) {
-         var1.add(ChatColor.GRAY + "Current Value:");
-         SoundListData var3 = (SoundListData)var2.get();
-         var3.mapData()
+   public void whenDisplayed(List<String> texts, Optional<SoundListData> optional) {
+      if (optional.isPresent()) {
+         texts.add(ChatColor.GRAY + "Current Value:");
+         SoundListData soundListData = (SoundListData)optional.get();
+         soundListData.mapData()
             .forEach(
-               (var1x, var2x) -> var1.add(
+               (var1x, var2x) -> texts.add(
                   ChatColor.GRAY
                      + "* "
                      + ChatColor.GREEN
@@ -109,12 +109,12 @@ public class CustomSounds extends ItemStat<SoundListData, SoundListData> impleme
                )
             );
       } else {
-         var1.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+         texts.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
       }
 
-      var1.add("");
-      var1.add(ChatColor.YELLOW + "►" + " Click to access the sounds edition menu.");
-      var1.add(ChatColor.YELLOW + "►" + " Right click to remove all custom sounds.");
+      texts.add("");
+      texts.add(ChatColor.YELLOW + "►" + " Click to access the sounds edition menu.");
+      texts.add(ChatColor.YELLOW + "►" + " Right click to remove all custom sounds.");
    }
 
    @NotNull
@@ -122,94 +122,94 @@ public class CustomSounds extends ItemStat<SoundListData, SoundListData> impleme
       return new SoundListData();
    }
 
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull SoundListData var2) {
-      var1.addItemTag(this.getAppliedNBT(var2));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull SoundListData soundListData) {
+      itemStackBuilder.addItemTag(this.getAppliedNBT(soundListData));
    }
 
    @NotNull
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull SoundListData var1) {
-      ArrayList var2 = new ArrayList();
-      SoundListData var3 = var1;
-      var3.getCustomSounds().forEach(var2x -> {
-         SoundData var3x = var3.get(var2x);
-         var2.add(new ItemTag("MMOITEMS_SOUND_" + var2x.name(), var3x.getSound()));
-         var2.add(new ItemTag("MMOITEMS_SOUND_" + var2x.name() + "_VOL", var3x.getVolume()));
-         var2.add(new ItemTag("MMOITEMS_SOUND_" + var2x.name() + "_PIT", var3x.getPitch()));
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull SoundListData soundListData) {
+      ArrayList list = new ArrayList();
+      SoundListData soundListData2 = soundListData;
+      soundListData2.getCustomSounds().forEach(var2x -> {
+         SoundData var3x = soundListData2.get(var2x);
+         list.add(new ItemTag("MMOITEMS_SOUND_" + var2x.name(), var3x.getSound()));
+         list.add(new ItemTag("MMOITEMS_SOUND_" + var2x.name() + "_VOL", var3x.getVolume()));
+         list.add(new ItemTag("MMOITEMS_SOUND_" + var2x.name() + "_PIT", var3x.getPitch()));
       });
-      return var2;
+      return list;
    }
 
    @Nullable
-   public SoundListData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
-      SoundListData var2 = new SoundListData();
+   public SoundListData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
+      SoundListData soundListData = new SoundListData();
 
-      for (CustomSound var6 : CustomSound.values()) {
-         ItemTag var7 = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + var6.name(), var1);
-         ItemTag var8 = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + var6.name() + "_VOL", var1);
-         ItemTag var9 = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + var6.name() + "_PIT", var1);
-         if (var7 != null && var8 != null && var9 != null) {
-            String var10 = (String)var7.getValue();
-            Double var11 = (Double)var8.getValue();
-            Double var12 = (Double)var9.getValue();
-            if (!var10.isEmpty()) {
-               var2.set(var6, new SoundData(var10, var11, var12));
+      for (CustomSound customSound : CustomSound.values()) {
+         ItemTag tagAtPath = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + customSound.name(), itemTags);
+         ItemTag tagAtPath2 = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + customSound.name() + "_VOL", itemTags);
+         ItemTag tagAtPath3 = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + customSound.name() + "_PIT", itemTags);
+         if (tagAtPath != null && tagAtPath2 != null && tagAtPath3 != null) {
+            String text = (String)tagAtPath.getValue();
+            Double value = (Double)tagAtPath2.getValue();
+            Double value2 = (Double)tagAtPath3.getValue();
+            if (!text.isEmpty()) {
+               soundListData.set(customSound, new SoundData(text, value, value2));
             }
          }
       }
 
-      return var2.getCustomSounds().size() > 0 ? var2 : null;
+      return soundListData.getCustomSounds().size() > 0 ? soundListData : null;
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      ArrayList var2 = new ArrayList();
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      ArrayList list = new ArrayList();
 
-      for (CustomSound var6 : CustomSound.values()) {
-         ItemTag var7 = null;
-         ItemTag var8 = null;
-         ItemTag var9 = null;
-         if (var1.getNBT().hasTag("MMOITEMS_SOUND_" + var6.name())) {
-            var7 = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + var6.name(), var1.getNBT(), SupportedNBTTagValues.STRING);
+      for (CustomSound customSound : CustomSound.values()) {
+         ItemTag itemTag = null;
+         ItemTag itemTag2 = null;
+         ItemTag itemTag3 = null;
+         if (readMMOItem.getNBT().hasTag("MMOITEMS_SOUND_" + customSound.name())) {
+            itemTag = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + customSound.name(), readMMOItem.getNBT(), SupportedNBTTagValues.STRING);
          }
 
-         if (var1.getNBT().hasTag("MMOITEMS_SOUND_" + var6.name() + "_VOL")) {
-            var8 = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + var6.name() + "_VOL", var1.getNBT(), SupportedNBTTagValues.DOUBLE);
+         if (readMMOItem.getNBT().hasTag("MMOITEMS_SOUND_" + customSound.name() + "_VOL")) {
+            itemTag2 = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + customSound.name() + "_VOL", readMMOItem.getNBT(), SupportedNBTTagValues.DOUBLE);
          }
 
-         if (var1.getNBT().hasTag("MMOITEMS_SOUND_" + var6.name() + "_PIT")) {
-            var9 = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + var6.name() + "_PIT", var1.getNBT(), SupportedNBTTagValues.DOUBLE);
+         if (readMMOItem.getNBT().hasTag("MMOITEMS_SOUND_" + customSound.name() + "_PIT")) {
+            itemTag3 = ItemTag.getTagAtPath("MMOITEMS_SOUND_" + customSound.name() + "_PIT", readMMOItem.getNBT(), SupportedNBTTagValues.DOUBLE);
          }
 
-         if (var7 != null && var8 != null && var9 != null) {
-            var2.add(var7);
-            var2.add(var8);
-            var2.add(var9);
+         if (itemTag != null && itemTag2 != null && itemTag3 != null) {
+            list.add(itemTag);
+            list.add(itemTag2);
+            list.add(itemTag3);
          }
       }
 
-      SoundListData var10 = this.getLoadedNBT(var2);
-      if (var10 != null) {
-         var1.setData(ItemStats.CUSTOM_SOUNDS, var10);
+      SoundListData loadedNBT = this.getLoadedNBT(list);
+      if (loadedNBT != null) {
+         readMMOItem.setData(ItemStats.CUSTOM_SOUNDS, loadedNBT);
       }
    }
 
    @Override
-   public void onConsume(@NotNull VolatileMMOItem var1, @NotNull Player var2, boolean var3) {
-      if (!var1.hasData(ItemStats.CUSTOM_SOUNDS)) {
-         this.playDefaultSound(var2);
+   public void onConsume(@NotNull VolatileMMOItem volatileMMOItem, @NotNull Player player, boolean flag) {
+      if (!volatileMMOItem.hasData(ItemStats.CUSTOM_SOUNDS)) {
+         this.playDefaultSound(player);
       } else {
-         SoundListData var4 = (SoundListData)var1.getData(ItemStats.CUSTOM_SOUNDS);
-         SoundData var5 = var4.get(CustomSound.ON_CONSUME);
-         if (var5 == null) {
-            this.playDefaultSound(var2);
+         SoundListData data = (SoundListData)volatileMMOItem.getData(ItemStats.CUSTOM_SOUNDS);
+         SoundData soundData = data.get(CustomSound.ON_CONSUME);
+         if (soundData == null) {
+            this.playDefaultSound(player);
          } else {
-            String var6 = var5.getSound().toLowerCase().replace("_", ".");
-            var2.getWorld().playSound(var2.getLocation(), var6, (float)var5.getVolume(), (float)var5.getPitch());
+            String text = soundData.getSound().toLowerCase().replace("_", ".");
+            player.getWorld().playSound(player.getLocation(), text, (float)soundData.getVolume(), (float)soundData.getPitch());
          }
       }
    }
 
-   void playDefaultSound(@NotNull Player var1) {
-      var1.getWorld().playSound(var1.getLocation(), Sound.ENTITY_GENERIC_EAT, 1.0F, 1.0F);
+   void playDefaultSound(@NotNull Player player) {
+      player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 1.0F, 1.0F);
    }
 }

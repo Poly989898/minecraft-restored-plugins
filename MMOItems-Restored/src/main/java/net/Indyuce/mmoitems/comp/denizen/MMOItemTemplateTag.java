@@ -21,9 +21,9 @@ public class MMOItemTemplateTag extends SimpleTag {
    private static final Random random = new Random();
    public static ObjectTagProcessor<MMOItemTemplateTag> tagProcessor = new ObjectTagProcessor();
 
-   public MMOItemTemplateTag(Type var1, String var2) {
-      this.type = var1;
-      this.id = var2;
+   public MMOItemTemplateTag(Type type, String text) {
+      this.type = type;
+      this.id = text;
    }
 
    public MMOItemTemplate getTemplate() {
@@ -46,82 +46,82 @@ public class MMOItemTemplateTag extends SimpleTag {
       return this.identify();
    }
 
-   public ObjectTag getObjectAttribute(Attribute var1) {
-      return tagProcessor.getObjectAttribute(this, var1);
+   public ObjectTag getObjectAttribute(Attribute attribute) {
+      return tagProcessor.getObjectAttribute(this, attribute);
    }
 
    public static void registerTags() {
-      tagProcessor.registerTag("item_type", (var0, var1) -> new ElementTag(var1.type.getName()), new String[0]);
-      tagProcessor.registerTag("item_id", (var0, var1) -> new ElementTag(var1.id), new String[0]);
+      tagProcessor.registerTag("item_type", (attribute, mmoItemTemplateTag) -> new ElementTag(mmoItemTemplateTag.type.getName()), new String[0]);
+      tagProcessor.registerTag("item_id", (attribute, mmoItemTemplateTag) -> new ElementTag(mmoItemTemplateTag.id), new String[0]);
       tagProcessor.registerTag(
          "generate",
-         (var0, var1) -> {
-            if (!var0.hasContext(1)) {
-               return new ItemTag(var1.getTemplate().newBuilder().build().newBuilder().build());
+         (attribute, mmoItemTemplateTag) -> {
+            if (!attribute.hasContext(1)) {
+               return new ItemTag(mmoItemTemplateTag.getTemplate().newBuilder().build().newBuilder().build());
             }
 
-            MapTag var2 = (MapTag)var0.contextAsType(1, MapTag.class);
-            if (var2 == null) {
-               var0.echoError("Invalid MapTag input");
+            MapTag mapTag = (MapTag)attribute.contextAsType(1, MapTag.class);
+            if (mapTag == null) {
+               attribute.echoError("Invalid MapTag input");
                return null;
             }
 
-            ObjectTag var3 = var2.getObject("player");
-            if (var3 != null && !(var3 instanceof PlayerTag)) {
-               var0.echoError("Bad player input type");
+            ObjectTag player = mapTag.getObject("player");
+            if (player != null && !(player instanceof PlayerTag)) {
+               attribute.echoError("Bad player input type");
                return null;
             }
 
-            ObjectTag var4 = var2.getObject("level");
-            int var5 = -1;
-            if (var4 != null) {
+            ObjectTag level = mapTag.getObject("level");
+            int count = -1;
+            if (level != null) {
                try {
-                  var5 = Integer.parseInt(var4.toString());
-               } catch (IllegalArgumentException var13) {
-                  var0.echoError("Bad level input: " + var4 + " is not a valid integer");
+                  count = Integer.parseInt(level.toString());
+               } catch (IllegalArgumentException exception) {
+                  attribute.echoError("Bad level input: " + level + " is not a valid integer");
                   return null;
                }
             }
 
-            ObjectTag var6 = var2.getObject("match-level");
-            boolean var7 = var6 != null && Boolean.parseBoolean(var6.toString());
-            ObjectTag var8 = var2.getObject("tier");
-            ItemTier var9 = null;
-            if (var8 != null) {
+            ObjectTag matchLevel = mapTag.getObject("match-level");
+            boolean flag = matchLevel != null && Boolean.parseBoolean(matchLevel.toString());
+            ObjectTag tier = mapTag.getObject("tier");
+            ItemTier itemTier = null;
+            if (tier != null) {
                try {
-                  var9 = MMOItems.plugin.getTiers().getOrThrow(var8.toString().toUpperCase().replace("-", "_"));
-               } catch (IllegalArgumentException var12) {
-                  var0.echoError(var12.getMessage());
+                  itemTier = MMOItems.plugin.getTiers().getOrThrow(tier.toString().toUpperCase().replace("-", "_"));
+               } catch (IllegalArgumentException exception) {
+                  attribute.echoError(exception.getMessage());
                }
             }
 
-            int var10 = var5 >= 0
-               ? var5
+            int count2 = count >= 0
+               ? count
                : (
-                  var7 && var3 != null
-                     ? MMOItems.plugin.getTemplates().rollLevel(PlayerData.get(((PlayerTag)var3).getPlayerEntity()).getRPG().getLevel())
+                  flag && player != null
+                     ? MMOItems.plugin.getTemplates().rollLevel(PlayerData.get(((PlayerTag)player).getPlayerEntity()).getRPG().getLevel())
                      : 1 + random.nextInt(100)
                );
-            ItemTier var11 = var9 != null ? var9 : MMOItems.plugin.getTemplates().rollTier();
-            return new ItemTag(var1.getTemplate().newBuilder(var10, var11).build().newBuilder().build());
+            ItemTier itemTier2 = itemTier != null ? itemTier : MMOItems.plugin.getTemplates().rollTier();
+            return new ItemTag(mmoItemTemplateTag.getTemplate().newBuilder(count2, itemTier2).build().newBuilder().build());
          },
          new String[0]
       );
    }
 
-   public static MMOItemTemplateTag valueOf(String var0, TagContext var1) {
-      if (var0 == null) {
+   public static MMOItemTemplateTag valueOf(String text, TagContext tagContext) {
+      if (text == null) {
          return null;
       }
 
       try {
-         String[] var2 = var0.substring("mmoitem_template@".length()).split("\\.");
-         String var3 = var2[0];
-         String var4 = var2[1];
-         Type var5 = MMOItems.plugin.getTypes().getOrThrow(var3);
-         MMOItems.plugin.getTemplates().getTemplateOrThrow(var5, var4);
-         return new MMOItemTemplateTag(var5, var4);
-      } catch (Exception var6) {
+         String[] texts = text.substring("mmoitem_template@".length()).split("\\.");
+         String text2 = texts[0];
+         String text3 = texts[1];
+         Type type = MMOItems.plugin.getTypes().getOrThrow(text2);
+         MMOItems.plugin.getTemplates().getTemplateOrThrow(type, text3);
+         return new MMOItemTemplateTag(type, text3);
+      } catch (Exception exception) {
          return null;
       }
    }

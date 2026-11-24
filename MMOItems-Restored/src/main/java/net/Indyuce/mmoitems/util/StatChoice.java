@@ -7,13 +7,13 @@ public class StatChoice {
    private final String id;
    private final String hint;
 
-   public StatChoice(String var1) {
-      this(var1, null);
+   public StatChoice(String text) {
+      this(text, null);
    }
 
-   public StatChoice(String var1, @Nullable String var2) {
-      this.id = var1;
-      this.hint = var2;
+   public StatChoice(String text, @Nullable String text2) {
+      this.id = text;
+      this.hint = text2;
    }
 
    public String getId() {
@@ -31,12 +31,12 @@ public class StatChoice {
    }
 
    @Override
-   public boolean equals(Object var1) {
-      if (this == var1) {
+   public boolean equals(Object obj) {
+      if (this == obj) {
          return true;
-      } else if (var1 != null && this.getClass() == var1.getClass()) {
-         StatChoice var2 = (StatChoice)var1;
-         return this.id.equals(var2.id);
+      } else if (obj != null && this.getClass() == obj.getClass()) {
+         StatChoice statChoice = (StatChoice)obj;
+         return this.id.equals(statChoice.id);
       } else {
          return false;
       }

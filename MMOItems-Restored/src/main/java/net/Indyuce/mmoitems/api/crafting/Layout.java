@@ -14,16 +14,16 @@ public class Layout {
    private final int queuePreviousSlot;
    private final int queueNextSlot;
 
-   public Layout(String var1, FileConfiguration var2) {
-      this.id = var1;
-      this.size = var2.getInt("slots");
-      ConfigurationSection var3 = var2.getConfigurationSection("layout");
-      this.recipeSlots = var3.getIntegerList("recipe-slots");
-      this.queueSlots = var3.getIntegerList("queue-slots");
-      this.recipePreviousSlot = var3.getInt("recipe-previous-slot", 18);
-      this.recipeNextSlot = var3.getInt("recipe-next-slot", 26);
-      this.queuePreviousSlot = var3.getInt("queue-previous-slot", 37);
-      this.queueNextSlot = var3.getInt("queue-next-slot", 43);
+   public Layout(String text, FileConfiguration config) {
+      this.id = text;
+      this.size = config.getInt("slots");
+      ConfigurationSection layout = config.getConfigurationSection("layout");
+      this.recipeSlots = layout.getIntegerList("recipe-slots");
+      this.queueSlots = layout.getIntegerList("queue-slots");
+      this.recipePreviousSlot = layout.getInt("recipe-previous-slot", 18);
+      this.recipeNextSlot = layout.getInt("recipe-next-slot", 26);
+      this.queuePreviousSlot = layout.getInt("queue-previous-slot", 37);
+      this.queueNextSlot = layout.getInt("queue-next-slot", 43);
    }
 
    public String getId() {

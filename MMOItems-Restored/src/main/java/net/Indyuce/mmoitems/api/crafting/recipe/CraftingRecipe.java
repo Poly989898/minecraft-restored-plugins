@@ -38,69 +38,69 @@ public class CraftingRecipe extends Recipe {
    @Nullable
    ConfigMMOItem identifiedMMO;
 
-   public CraftingRecipe(@NotNull ConfigurationSection var1) {
-      super(var1);
-      this.craftingTime = var1.getDouble("crafting-time");
-      String var2 = var1.getString("output.item", "N/A");
-      String var3 = var1.getString("output.type", "N/A").toUpperCase().replace("-", "_").replace(" ", "_");
-      String var4 = var1.getString("output.id", "N/A").toUpperCase().replace("-", "_").replace(" ", "_");
-      FriendlyFeedbackProvider var5 = new FriendlyFeedbackProvider(FFPMMOItems.get());
-      if (!"N/A".equals(var3) && !"N/A".equals(var4)) {
-         ProvidedUIFilter var7 = UIFilterManager.getUIFilter("m", var3, var4, var1.getString("output.amount", "1"), var5);
-         if (var7 == null) {
+   public CraftingRecipe(@NotNull ConfigurationSection section) {
+      super(section);
+      this.craftingTime = section.getDouble("crafting-time");
+      String outputItem = section.getString("output.item", "N/A");
+      String text = section.getString("output.type", "N/A").toUpperCase().replace("-", "_").replace(" ", "_");
+      String text2 = section.getString("output.id", "N/A").toUpperCase().replace("-", "_").replace(" ", "_");
+      FriendlyFeedbackProvider friendlyFeedbackProvider = new FriendlyFeedbackProvider(FFPMMOItems.get());
+      if (!"N/A".equals(text) && !"N/A".equals(text2)) {
+         ProvidedUIFilter uIFilter = UIFilterManager.getUIFilter("m", text, text2, section.getString("output.amount", "1"), friendlyFeedbackProvider);
+         if (uIFilter == null) {
             throw new IllegalArgumentException(
                SilentNumbers.collapseList(
                   SilentNumbers.transcribeList(
-                     var5.getFeedbackOf(FriendlyFeedbackCategory.ERROR),
-                     var0 -> var0 instanceof FriendlyFeedbackMessage ? ((FriendlyFeedbackMessage)var0).forConsole(FFPMMOItems.get()) : ""
+                     friendlyFeedbackProvider.getFeedbackOf(FriendlyFeedbackCategory.ERROR),
+                     obj -> obj instanceof FriendlyFeedbackMessage ? ((FriendlyFeedbackMessage)obj).forConsole(FFPMMOItems.get()) : ""
                   ),
                   ""
                )
             );
          }
 
-         this.output = var7;
+         this.output = uIFilter;
       } else {
-         if ("N/A".equals(var2)) {
+         if ("N/A".equals(outputItem)) {
             throw new IllegalArgumentException(
                FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Config must contain a valid Type and ID, or a valid UIFilter. ", new String[0])
             );
          }
 
-         ProvidedUIFilter var6 = UIFilterManager.getUIFilter(var2, var5);
-         if (var6 == null) {
+         ProvidedUIFilter uIFilter = UIFilterManager.getUIFilter(outputItem, friendlyFeedbackProvider);
+         if (uIFilter == null) {
             throw new IllegalArgumentException(
                SilentNumbers.collapseList(
                   SilentNumbers.transcribeList(
-                     var5.getFeedbackOf(FriendlyFeedbackCategory.ERROR),
-                     var0 -> var0 instanceof FriendlyFeedbackMessage ? ((FriendlyFeedbackMessage)var0).forConsole(FFPMMOItems.get()) : ""
+                     friendlyFeedbackProvider.getFeedbackOf(FriendlyFeedbackCategory.ERROR),
+                     obj -> obj instanceof FriendlyFeedbackMessage ? ((FriendlyFeedbackMessage)obj).forConsole(FFPMMOItems.get()) : ""
                   ),
                   ""
                )
             );
          }
 
-         this.output = var6;
+         this.output = uIFilter;
       }
 
-      if (!this.output.isValid(var5)) {
+      if (!this.output.isValid(friendlyFeedbackProvider)) {
          throw new IllegalArgumentException(
             SilentNumbers.collapseList(
                SilentNumbers.transcribeList(
-                  var5.getFeedbackOf(FriendlyFeedbackCategory.ERROR),
-                  var0 -> var0 instanceof FriendlyFeedbackMessage ? ((FriendlyFeedbackMessage)var0).forConsole(FFPMMOItems.get()) : ""
+                  friendlyFeedbackProvider.getFeedbackOf(FriendlyFeedbackCategory.ERROR),
+                  obj -> obj instanceof FriendlyFeedbackMessage ? ((FriendlyFeedbackMessage)obj).forConsole(FFPMMOItems.get()) : ""
                ),
                ""
             )
          );
       }
 
-      if (this.output.getItemStack(var5) == null) {
+      if (this.output.getItemStack(friendlyFeedbackProvider) == null) {
          throw new IllegalArgumentException(
             SilentNumbers.collapseList(
                SilentNumbers.transcribeList(
-                  var5.getFeedbackOf(FriendlyFeedbackCategory.ERROR),
-                  var0 -> var0 instanceof FriendlyFeedbackMessage ? ((FriendlyFeedbackMessage)var0).forConsole(FFPMMOItems.get()) : ""
+                  friendlyFeedbackProvider.getFeedbackOf(FriendlyFeedbackCategory.ERROR),
+                  obj -> obj instanceof FriendlyFeedbackMessage ? ((FriendlyFeedbackMessage)obj).forConsole(FFPMMOItems.get()) : ""
                ),
                ""
             )
@@ -108,8 +108,8 @@ public class CraftingRecipe extends Recipe {
       }
 
       if (this.output.getParent() instanceof MMOItemUIFilter) {
-         MMOItemTemplate var8 = MMOItems.plugin.getTemplates().getTemplate(MMOItems.plugin.getTypes().get(this.output.getArgument()), this.output.getData());
-         if (var8 == null) {
+         MMOItemTemplate template = MMOItems.plugin.getTemplates().getTemplate(MMOItems.plugin.getTypes().get(this.output.getArgument()), this.output.getData());
+         if (template == null) {
             throw new IllegalArgumentException(
                FriendlyFeedbackProvider.quickForConsole(
                   FFPMMOItems.get(),
@@ -119,7 +119,7 @@ public class CraftingRecipe extends Recipe {
             );
          }
 
-         this.identifiedMMO = new ConfigMMOItem(var8, this.output.getAmount(1));
+         this.identifiedMMO = new ConfigMMOItem(template, this.output.getAmount(1));
       }
    }
 
@@ -137,8 +137,8 @@ public class CraftingRecipe extends Recipe {
    }
 
    @NotNull
-   public ItemStack getOutputItemStack(@Nullable RPGPlayer var1) {
-      return this.identifiedMMO != null && var1 != null ? this.identifiedMMO.generate(var1) : this.output.getItemStack(null);
+   public ItemStack getOutputItemStack(@Nullable RPGPlayer rpgPlayer) {
+      return this.identifiedMMO != null && rpgPlayer != null ? this.identifiedMMO.generate(rpgPlayer) : this.output.getItemStack(null);
    }
 
    @NotNull
@@ -147,15 +147,15 @@ public class CraftingRecipe extends Recipe {
          return this.identifiedMMO.getPreview();
       }
 
-      ItemStack var1 = this.output.getParent().getDisplayStack(this.output.getArgument(), this.output.getData(), null);
-      var1.setAmount(this.output.getAmount(1));
-      ItemMeta var2 = var1.getItemMeta();
-      if (var2 != null) {
-         var2.setDisplayName(SilentNumbers.getItemName(var1, false) + "§ʫ");
-         var1.setItemMeta(var2);
+      ItemStack displayStack = this.output.getParent().getDisplayStack(this.output.getArgument(), this.output.getData(), null);
+      displayStack.setAmount(this.output.getAmount(1));
+      ItemMeta itemMeta = displayStack.getItemMeta();
+      if (itemMeta != null) {
+         itemMeta.setDisplayName(SilentNumbers.getItemName(displayStack, false) + "§ʫ");
+         displayStack.setItemMeta(itemMeta);
       }
 
-      return var1;
+      return displayStack;
    }
 
    public int getOutputAmount() {
@@ -163,59 +163,59 @@ public class CraftingRecipe extends Recipe {
    }
 
    @Override
-   public boolean whenUsed(PlayerData var1, IngredientInventory var2, CheckedRecipe var3, CraftingStation var4) {
-      if (!var1.isOnline()) {
+   public boolean whenUsed(PlayerData playerData, IngredientInventory ingredientInventory, CheckedRecipe checkedRecipe, CraftingStation craftingStation) {
+      if (!playerData.isOnline()) {
          return false;
       }
 
       if (this.isInstant()) {
-         ItemStack var7 = this.hasOption(Recipe.RecipeOption.OUTPUT_ITEM) ? this.getOutputItemStack(var1.getRPG()) : null;
-         PlayerUseCraftingStationEvent var6 = new PlayerUseCraftingStationEvent(var1, var4, var3, var7);
-         Bukkit.getPluginManager().callEvent(var6);
-         if (var6.isCancelled()) {
+         ItemStack item = this.hasOption(Recipe.RecipeOption.OUTPUT_ITEM) ? this.getOutputItemStack(playerData.getRPG()) : null;
+         PlayerUseCraftingStationEvent event = new PlayerUseCraftingStationEvent(playerData, craftingStation, checkedRecipe, item);
+         Bukkit.getPluginManager().callEvent(event);
+         if (event.isCancelled()) {
             return false;
          }
 
-         var3.getRecipe().whenClaimed().forEach(var1x -> var1x.whenCrafting(var1));
-         if (var7 != null) {
-            new SmartGive(var1.getPlayer()).give(new ItemStack[]{var7});
+         checkedRecipe.getRecipe().whenClaimed().forEach(var1x -> var1x.whenCrafting(playerData));
+         if (item != null) {
+            new SmartGive(playerData.getPlayer()).give(new ItemStack[]{item});
          }
 
          if (!this.hasOption(Recipe.RecipeOption.SILENT_CRAFT)) {
-            var1.getPlayer().playSound(var1.getPlayer().getLocation(), var4.getSound(), 1.0F, 1.0F);
+            playerData.getPlayer().playSound(playerData.getPlayer().getLocation(), craftingStation.getSound(), 1.0F, 1.0F);
          }
 
          return true;
       } else {
-         PlayerUseCraftingStationEvent var5 = new PlayerUseCraftingStationEvent(var1, var4, var3);
-         Bukkit.getPluginManager().callEvent(var5);
-         if (var5.isCancelled()) {
+         PlayerUseCraftingStationEvent event = new PlayerUseCraftingStationEvent(playerData, craftingStation, checkedRecipe);
+         Bukkit.getPluginManager().callEvent(event);
+         if (event.isCancelled()) {
             return false;
          }
 
          if (!this.hasOption(Recipe.RecipeOption.SILENT_CRAFT)) {
-            var1.getPlayer().playSound(var1.getPlayer().getLocation(), var4.getSound(), 1.0F, 1.0F);
+            playerData.getPlayer().playSound(playerData.getPlayer().getLocation(), craftingStation.getSound(), 1.0F, 1.0F);
          }
 
-         var1.getCrafting().getQueue(var4).add(this);
+         playerData.getCrafting().getQueue(craftingStation).add(this);
          return true;
       }
    }
 
    @Override
-   public boolean canUse(PlayerData var1, IngredientInventory var2, CheckedRecipe var3, CraftingStation var4) {
+   public boolean canUse(PlayerData playerData, IngredientInventory ingredientInventory, CheckedRecipe checkedRecipe, CraftingStation craftingStation) {
       if (this.isInstant()) {
          return true;
       }
 
-      CraftingStatus.CraftingQueue var5 = var1.getCrafting().getQueue(var4);
-      if (var5.isFull(var4)) {
-         if (!var1.isOnline()) {
+      CraftingStatus.CraftingQueue queue = playerData.getCrafting().getQueue(craftingStation);
+      if (queue.isFull(craftingStation)) {
+         if (!playerData.isOnline()) {
             return false;
          }
 
-         Message.CRAFTING_QUEUE_FULL.format(ChatColor.RED).send(var1.getPlayer());
-         var1.getPlayer().playSound(var1.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.0F);
+         Message.CRAFTING_QUEUE_FULL.format(ChatColor.RED).send(playerData.getPlayer());
+         playerData.getPlayer().playSound(playerData.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.0F);
          return false;
       } else {
          return true;
@@ -223,12 +223,12 @@ public class CraftingRecipe extends Recipe {
    }
 
    @Override
-   public ItemStack display(CheckedRecipe var1) {
-      return ConfigItems.CRAFTING_RECIPE_DISPLAY.newBuilder(var1).build();
+   public ItemStack display(CheckedRecipe checkedRecipe) {
+      return ConfigItems.CRAFTING_RECIPE_DISPLAY.newBuilder(checkedRecipe).build();
    }
 
    @Override
-   public CheckedRecipe evaluateRecipe(PlayerData var1, IngredientInventory var2) {
-      return new CheckedRecipe(this, var1, var2);
+   public CheckedRecipe evaluateRecipe(PlayerData playerData, IngredientInventory ingredientInventory) {
+      return new CheckedRecipe(this, playerData, ingredientInventory);
    }
 }

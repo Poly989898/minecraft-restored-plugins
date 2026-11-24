@@ -13,10 +13,10 @@ public class VaultSupport {
    private final Permission permissions;
 
    public VaultSupport() {
-      RegisteredServiceProvider var1 = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
-      this.economy = var1 != null ? (Economy)var1.getProvider() : null;
-      RegisteredServiceProvider var2 = Bukkit.getServer().getServicesManager().getRegistration(Permission.class);
-      this.permissions = var2 != null ? (Permission)var2.getProvider() : null;
+      RegisteredServiceProvider registration = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
+      this.economy = registration != null ? (Economy)registration.getProvider() : null;
+      RegisteredServiceProvider registration2 = Bukkit.getServer().getServicesManager().getRegistration(Permission.class);
+      this.permissions = registration2 != null ? (Permission)registration2.getProvider() : null;
       if (this.economy == null) {
          MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not load Economy Support (Vault)");
       } else {

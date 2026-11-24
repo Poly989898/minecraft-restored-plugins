@@ -32,57 +32,57 @@ public class MaximumDurability extends DoubleStat implements ItemRestriction, Ge
    }
 
    @Override
-   public void whenPreviewed(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2, @NotNull NumericStatFormula var3) {
-      this.whenApplied(var1, var2);
+   public void whenPreviewed(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData, @NotNull NumericStatFormula numericStatFormula) {
+      this.whenApplied(itemStackBuilder, doubleData);
    }
 
    @Override
-   public void loadConfiguration(@NotNull ConfigurationSection var1, @NotNull Object var2) {
-      this.generalStatFormat = var1.getString("item-damage");
+   public void loadConfiguration(@NotNull ConfigurationSection section, @NotNull Object obj) {
+      this.generalStatFormat = section.getString("item-damage");
       if (this.generalStatFormat == null) {
-         this.generalStatFormat = var1.getString("durability");
+         this.generalStatFormat = section.getString("durability");
       }
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2) {
-      int var3 = (int)var2.getValue();
-      int var4 = var1.getMMOItem().hasData(ItemStats.CUSTOM_DURABILITY)
-         ? (int)((DoubleData)var1.getMMOItem().getData(ItemStats.CUSTOM_DURABILITY)).getValue()
-         : var3;
-      var1.addItemTag(new ItemTag(this.getNBTPath(), var3));
-      String var5 = this.getGeneralStatFormat().replace("{max}", String.valueOf(var3)).replace("{current}", String.valueOf(var4));
-      var1.getLore().insert("durability", var5);
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData) {
+      int count = (int)doubleData.getValue();
+      int count2 = itemStackBuilder.getMMOItem().hasData(ItemStats.CUSTOM_DURABILITY)
+         ? (int)((DoubleData)itemStackBuilder.getMMOItem().getData(ItemStats.CUSTOM_DURABILITY)).getValue()
+         : count;
+      itemStackBuilder.addItemTag(new ItemTag(this.getNBTPath(), count));
+      String text = this.getGeneralStatFormat().replace("{max}", String.valueOf(count)).replace("{current}", String.valueOf(count2));
+      itemStackBuilder.getLore().insert("durability", text);
    }
 
    @Override
-   public void preprocess(@NotNull MMOItem var1) {
-      if (!var1.hasData(ItemStats.MAX_DURABILITY)) {
-         short var2 = 400;
-         if (var1.hasData(ItemStats.MATERIAL)) {
-            MaterialData var3 = (MaterialData)var1.getData(ItemStats.MATERIAL);
-            Material var4 = var3.getMaterial();
-            var2 = var4.getMaxDurability();
+   public void preprocess(@NotNull MMOItem item) {
+      if (!item.hasData(ItemStats.MAX_DURABILITY)) {
+         short value = 400;
+         if (item.hasData(ItemStats.MATERIAL)) {
+            MaterialData data = (MaterialData)item.getData(ItemStats.MATERIAL);
+            Material material = data.getMaterial();
+            value = material.getMaxDurability();
          }
 
-         if (var2 < 8) {
-            var2 = 400;
+         if (value < 8) {
+            value = 400;
          }
 
-         var1.setData(ItemStats.MAX_DURABILITY, new DoubleData(var2));
+         item.setData(ItemStats.MAX_DURABILITY, new DoubleData(value));
       }
    }
 
    @Override
-   public boolean canUse(RPGPlayer var1, NBTItem var2, boolean var3) {
-      if (!var2.hasTag("MMOITEMS_DURABILITY")) {
+   public boolean canUse(RPGPlayer rpgPlayer, NBTItem nbtItem, boolean flag) {
+      if (!nbtItem.hasTag("MMOITEMS_DURABILITY")) {
          return true;
       }
 
-      if (var2.getDouble(ItemStats.CUSTOM_DURABILITY.getNBTPath()) <= 0.0) {
-         if (var3) {
-            Message.ZERO_DURABILITY.format(ChatColor.RED).send(var1.getPlayer());
-            var1.getPlayer().playSound(var1.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);
+      if (nbtItem.getDouble(ItemStats.CUSTOM_DURABILITY.getNBTPath()) <= 0.0) {
+         if (flag) {
+            Message.ZERO_DURABILITY.format(ChatColor.RED).send(rpgPlayer.getPlayer());
+            rpgPlayer.getPlayer().playSound(rpgPlayer.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);
          }
 
          return false;

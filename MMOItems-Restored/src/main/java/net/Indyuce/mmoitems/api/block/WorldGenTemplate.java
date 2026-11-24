@@ -27,28 +27,28 @@ public class WorldGenTemplate {
    private final List<String> biomeBlacklist = new ArrayList<>();
    private final boolean slimeChunk;
 
-   public WorldGenTemplate(ConfigurationSection var1) {
-      Validate.notNull(var1, "Could not read gen template config");
-      this.id = var1.getName().toLowerCase().replace(" ", "-").replace("_", "-");
-      var1.getStringList("replace").forEach(var1x -> this.replaceable.add(Material.valueOf(var1x.toUpperCase().replace("-", "_").replace(" ", "_"))));
-      var1.getStringList("bordering").forEach(var1x -> this.bordering.add(Material.valueOf(var1x.toUpperCase().replace("-", "_").replace(" ", "_"))));
-      var1.getStringList("not-bordering").forEach(var1x -> this.notBordering.add(Material.valueOf(var1x.toUpperCase().replace("-", "_").replace(" ", "_"))));
+   public WorldGenTemplate(ConfigurationSection section) {
+      Validate.notNull(section, "Could not read gen template config");
+      this.id = section.getName().toLowerCase().replace(" ", "-").replace("_", "-");
+      section.getStringList("replace").forEach(var1x -> this.replaceable.add(Material.valueOf(var1x.toUpperCase().replace("-", "_").replace(" ", "_"))));
+      section.getStringList("bordering").forEach(var1x -> this.bordering.add(Material.valueOf(var1x.toUpperCase().replace("-", "_").replace(" ", "_"))));
+      section.getStringList("not-bordering").forEach(var1x -> this.notBordering.add(Material.valueOf(var1x.toUpperCase().replace("-", "_").replace(" ", "_"))));
 
-      for (String var3 : var1.getStringList("worlds")) {
-         (var3.startsWith("!") ? this.worldBlacklist : this.worldWhitelist).add(var3.toLowerCase().replace("_", "-"));
+      for (String text : section.getStringList("worlds")) {
+         (text.startsWith("!") ? this.worldBlacklist : this.worldWhitelist).add(text.toLowerCase().replace("_", "-"));
       }
 
-      for (String var6 : var1.getStringList("biomes")) {
-         (var6.startsWith("!") ? this.biomeBlacklist : this.biomeWhitelist).add(var6.toUpperCase().replace("-", "_").replace(" ", "_"));
+      for (String text : section.getStringList("biomes")) {
+         (text.startsWith("!") ? this.biomeBlacklist : this.biomeWhitelist).add(text.toUpperCase().replace("-", "_").replace(" ", "_"));
       }
 
-      this.chunkChance = var1.getDouble("chunk-chance");
-      this.slimeChunk = var1.getBoolean("slime-chunk", false);
-      String[] var5 = var1.getString("depth").split("=");
-      this.minDepth = Integer.parseInt(var5[0]);
-      this.maxDepth = Integer.parseInt(var5[1]);
-      this.veinSize = var1.getInt("vein-size");
-      this.veinCount = var1.getInt("vein-count");
+      this.chunkChance = section.getDouble("chunk-chance");
+      this.slimeChunk = section.getBoolean("slime-chunk", false);
+      String[] texts = section.getString("depth").split("=");
+      this.minDepth = Integer.parseInt(texts[0]);
+      this.maxDepth = Integer.parseInt(texts[1]);
+      this.veinSize = section.getInt("vein-size");
+      this.veinCount = section.getInt("vein-count");
       Validate.isTrue(this.veinSize > 0 && this.veinCount > 0, "Vein size and count must be at least 1");
    }
 
@@ -76,46 +76,46 @@ public class WorldGenTemplate {
       return this.maxDepth;
    }
 
-   public boolean canGenerateInWorld(String var1) {
-      String var2 = var1.toLowerCase().replace("_", "-");
-      return !this.worldWhitelist.isEmpty() && !this.worldWhitelist.contains(var2)
+   public boolean canGenerateInWorld(String text) {
+      String text2 = text.toLowerCase().replace("_", "-");
+      return !this.worldWhitelist.isEmpty() && !this.worldWhitelist.contains(text2)
          ? false
-         : this.worldBlacklist.isEmpty() || !this.worldBlacklist.contains(var2);
+         : this.worldBlacklist.isEmpty() || !this.worldBlacklist.contains(text2);
    }
 
-   public boolean canGenerate(Location var1) {
-      Biome var2 = var1.getWorld().getBiome(var1.getBlockX(), var1.getBlockY(), var1.getBlockZ());
-      if ((this.biomeWhitelist.isEmpty() || this.biomeWhitelist.contains(var2.name()))
-         && (this.biomeBlacklist.isEmpty() || !this.biomeBlacklist.contains(var2.name()))) {
-         if (this.slimeChunk && !var1.getChunk().isSlimeChunk()) {
+   public boolean canGenerate(Location location) {
+      Biome biome = location.getWorld().getBiome(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+      if ((this.biomeWhitelist.isEmpty() || this.biomeWhitelist.contains(biome.name()))
+         && (this.biomeBlacklist.isEmpty() || !this.biomeBlacklist.contains(biome.name()))) {
+         if (this.slimeChunk && !location.getChunk().isSlimeChunk()) {
             return false;
-         } else if (!this.bordering.isEmpty() && !this.checkIfBorderingBlocks(var1)) {
+         } else if (!this.bordering.isEmpty() && !this.checkIfBorderingBlocks(location)) {
             return false;
          } else {
-            return !this.notBordering.isEmpty() ? this.checkIfNotBorderingBlocks(var1) : true;
+            return !this.notBordering.isEmpty() ? this.checkIfNotBorderingBlocks(location) : true;
          }
       } else {
          return false;
       }
    }
 
-   public boolean canReplace(Material var1) {
-      return this.replaceable.isEmpty() || this.replaceable.contains(var1);
+   public boolean canReplace(Material material) {
+      return this.replaceable.isEmpty() || this.replaceable.contains(material);
    }
 
-   public boolean canBorder(Material var1) {
-      return this.bordering.isEmpty() || this.bordering.contains(var1);
+   public boolean canBorder(Material material) {
+      return this.bordering.isEmpty() || this.bordering.contains(material);
    }
 
-   public boolean checkIfBorderingBlocks(Location var1) {
-      return Arrays.stream(BlockFace.values()).map(var1.getBlock()::getRelative).<Material>map(Block::getType).allMatch(this::canBorder);
+   public boolean checkIfBorderingBlocks(Location location) {
+      return Arrays.stream(BlockFace.values()).map(location.getBlock()::getRelative).<Material>map(Block::getType).allMatch(this::canBorder);
    }
 
-   public boolean canNotBorder(Material var1) {
-      return !this.notBordering.isEmpty() && this.notBordering.contains(var1);
+   public boolean canNotBorder(Material material) {
+      return !this.notBordering.isEmpty() && this.notBordering.contains(material);
    }
 
-   public boolean checkIfNotBorderingBlocks(Location var1) {
-      return Arrays.stream(BlockFace.values()).map(var1.getBlock()::getRelative).<Material>map(Block::getType).allMatch(this::canNotBorder);
+   public boolean checkIfNotBorderingBlocks(Location location) {
+      return Arrays.stream(BlockFace.values()).map(location.getBlock()::getRelative).<Material>map(Block::getType).allMatch(this::canNotBorder);
    }
 }

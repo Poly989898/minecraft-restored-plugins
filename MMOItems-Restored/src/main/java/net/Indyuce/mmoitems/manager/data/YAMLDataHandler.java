@@ -15,22 +15,22 @@ public class YAMLDataHandler extends YAMLSynchronizedDataHandler<PlayerData, Def
       super(MMOItems.plugin);
    }
 
-   public void saveInSection(PlayerData var1, ConfigurationSection var2) {
-      var2.createSection("crafting-queue");
-      var2.set("permissions-from-items", new ArrayList<>(var1.getPermissions()));
-      var1.getCrafting().save(var2.getConfigurationSection("crafting-queue"));
+   public void saveInSection(PlayerData playerData, ConfigurationSection section) {
+      section.createSection("crafting-queue");
+      section.set("permissions-from-items", new ArrayList<>(playerData.getPermissions()));
+      playerData.getCrafting().save(section.getConfigurationSection("crafting-queue"));
    }
 
-   public void loadFromSection(PlayerData var1, ConfigurationSection var2) {
-      if (var2.contains("crafting-queue")) {
-         var1.getCrafting().load(var1, var2.getConfigurationSection("crafting-queue"));
+   public void loadFromSection(PlayerData playerData, ConfigurationSection section) {
+      if (section.contains("crafting-queue")) {
+         playerData.getCrafting().load(playerData, section.getConfigurationSection("crafting-queue"));
       }
 
-      if (MMOItems.plugin.hasPermissions() && var2.contains("permissions-from-items")) {
-         Permission var3 = MMOItems.plugin.getVault().getPermissions();
-         var2.getStringList("permissions-from-items").forEach(var2x -> {
-            if (var3.has(var1.getPlayer(), var2x)) {
-               var3.playerRemove(var1.getPlayer(), var2x);
+      if (MMOItems.plugin.hasPermissions() && section.contains("permissions-from-items")) {
+         Permission permissions = MMOItems.plugin.getVault().getPermissions();
+         section.getStringList("permissions-from-items").forEach(var2x -> {
+            if (permissions.has(playerData.getPlayer(), var2x)) {
+               permissions.playerRemove(playerData.getPlayer(), var2x);
             }
          });
       }
@@ -39,8 +39,8 @@ public class YAMLDataHandler extends YAMLSynchronizedDataHandler<PlayerData, Def
    public void setup() {
    }
 
-   public DefaultOfflineDataHolder getOffline(@NotNull UUID var1) {
-      return new DefaultOfflineDataHolder(var1);
+   public DefaultOfflineDataHolder getOffline(@NotNull UUID uuid) {
+      return new DefaultOfflineDataHolder(uuid);
    }
 
    public void close() {

@@ -49,46 +49,46 @@ import org.bukkit.inventory.ItemStack;
 
 public class ItemUse implements Listener {
    @EventHandler
-   public void rightClickEffects(PlayerInteractEvent var1) {
-      if (var1.hasItem()) {
-         NBTItem var2 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var1.getItem());
-         Type var3 = Type.get(var2);
-         if (var3 != null) {
-            Player var4 = var1.getPlayer();
-            UseItem var5 = var3.toUseItem(var4, var2);
-            if (!(var5 instanceof Consumable) || !((Consumable)var5).hasVanillaEating()) {
-               if (!var5.checkItemRequirements()) {
-                  var1.setUseItemInHand(Result.DENY);
+   public void rightClickEffects(PlayerInteractEvent event) {
+      if (event.hasItem()) {
+         NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
+         Type type = Type.get(nBTItem);
+         if (type != null) {
+            Player player = event.getPlayer();
+            UseItem useItem = type.toUseItem(player, nBTItem);
+            if (!(useItem instanceof Consumable) || !((Consumable)useItem).hasVanillaEating()) {
+               if (!useItem.checkItemRequirements()) {
+                  event.setUseItemInHand(Result.DENY);
                } else {
-                  boolean var6 = var1.getAction() == Action.RIGHT_CLICK_AIR || var1.getAction() == Action.RIGHT_CLICK_BLOCK;
-                  if (var6) {
-                     if (var5.getPlayerData().getMMOPlayerData().getCooldownMap().isOnCooldown(var5.getMMOItem())) {
-                        double var9 = var5.getPlayerData().getMMOPlayerData().getCooldownMap().getCooldown(var5.getMMOItem());
+                  boolean flag = event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK;
+                  if (flag) {
+                     if (useItem.getPlayerData().getMMOPlayerData().getCooldownMap().isOnCooldown(useItem.getMMOItem())) {
+                        double cooldown = useItem.getPlayerData().getMMOPlayerData().getCooldownMap().getCooldown(useItem.getMMOItem());
                         Message.ITEM_ON_COOLDOWN
-                           .format(ChatColor.RED, "#left#", MythicLib.plugin.getMMOConfig().decimal.format(var9), "#s#", var9 >= 2.0 ? "s" : "")
-                           .send(var4);
-                        var1.setUseItemInHand(Result.DENY);
+                           .format(ChatColor.RED, "#left#", MythicLib.plugin.getMMOConfig().decimal.format(cooldown), "#s#", cooldown >= 2.0 ? "s" : "")
+                           .send(player);
+                        event.setUseItemInHand(Result.DENY);
                         return;
                      }
 
-                     if (var5 instanceof Consumable) {
-                        var1.setUseItemInHand(Result.DENY);
-                        Consumable.ConsumableConsumeResult var7 = ((Consumable)var5).useOnPlayer(var1.getHand(), false);
-                        if (var7 == Consumable.ConsumableConsumeResult.CANCEL) {
+                     if (useItem instanceof Consumable) {
+                        event.setUseItemInHand(Result.DENY);
+                        Consumable.ConsumableConsumeResult consumableConsumeResult = ((Consumable)useItem).useOnPlayer(event.getHand(), false);
+                        if (consumableConsumeResult == Consumable.ConsumableConsumeResult.CANCEL) {
                            return;
                         }
 
-                        if (var7 == Consumable.ConsumableConsumeResult.CONSUME) {
-                           var1.getItem().setAmount(var1.getItem().getAmount() - 1);
+                        if (consumableConsumeResult == Consumable.ConsumableConsumeResult.CONSUME) {
+                           event.getItem().setAmount(event.getItem().getAmount() - 1);
                         }
                      }
 
-                     var5.getPlayerData().getMMOPlayerData().getCooldownMap().applyCooldown(var5.getMMOItem(), var5.getNBTItem().getStat("ITEM_COOLDOWN"));
-                     var5.executeCommands();
+                     useItem.getPlayerData().getMMOPlayerData().getCooldownMap().applyCooldown(useItem.getMMOItem(), useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
+                     useItem.executeCommands();
                   }
 
-                  if (var5 instanceof Weapon) {
-                     ((Weapon)var5).handleUntargetedAttack(var6, EquipmentSlot.fromBukkit(var1.getHand()));
+                  if (useItem instanceof Weapon) {
+                     ((Weapon)useItem).handleUntargetedAttack(flag, EquipmentSlot.fromBukkit(event.getHand()));
                   }
                }
             }
@@ -97,23 +97,23 @@ public class ItemUse implements Listener {
    }
 
    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-   public void meleeAttacks(PlayerAttackEvent var1) {
-      if (var1.getAttack() instanceof MeleeAttackMetadata) {
-         Player var2 = var1.getPlayer();
-         ItemStack var3 = var2.getInventory().getItem(((MeleeAttackMetadata)var1.getAttack()).getHand().toBukkit());
-         NBTItem var4 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var3);
-         Type var5 = Type.get(var4);
-         if (var5 != null && var5 != Type.BLOCK) {
-            if (!var5.hasMeleeAttacks()) {
-               var1.setCancelled(true);
+   public void meleeAttacks(PlayerAttackEvent event) {
+      if (event.getAttack() instanceof MeleeAttackMetadata) {
+         Player player = event.getPlayer();
+         ItemStack item = player.getInventory().getItem(((MeleeAttackMetadata)event.getAttack()).getHand().toBukkit());
+         NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item);
+         Type type = Type.get(nBTItem);
+         if (type != null && type != Type.BLOCK) {
+            if (!type.hasMeleeAttacks()) {
+               event.setCancelled(true);
             } else {
-               PlayerData var6 = PlayerData.get(var2);
-               Weapon var7 = new Weapon(var6, var4);
-               if (!var7.checkItemRequirements()) {
-                  var1.setCancelled(true);
+               PlayerData playerData = PlayerData.get(player);
+               Weapon weapon = new Weapon(playerData, nBTItem);
+               if (!weapon.checkItemRequirements()) {
+                  event.setCancelled(true);
                } else {
-                  if (!var7.handleTargetedAttack(var1.getAttack(), var1.getAttacker(), var1.getEntity())) {
-                     var1.setCancelled(true);
+                  if (!weapon.handleTargetedAttack(event.getAttack(), event.getAttacker(), event.getEntity())) {
+                     event.setCancelled(true);
                   }
                }
             }
@@ -122,19 +122,19 @@ public class ItemUse implements Listener {
    }
 
    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-   public void specialToolAbilities(BlockBreakEvent var1) {
-      if (!UtilityMethods.isFake(var1)) {
-         Player var2 = var1.getPlayer();
-         Block var3 = var1.getBlock();
-         if (var2.getGameMode() != GameMode.CREATIVE) {
-            NBTItem var4 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var2.getInventory().getItemInMainHand());
-            if (var4.hasType()) {
-               Tool var5 = new Tool(PlayerData.get(var2), var4);
-               if (!var5.checkItemRequirements()) {
-                  var1.setCancelled(true);
+   public void specialToolAbilities(BlockBreakEvent event) {
+      if (!UtilityMethods.isFake(event)) {
+         Player player = event.getPlayer();
+         Block block = event.getBlock();
+         if (player.getGameMode() != GameMode.CREATIVE) {
+            NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
+            if (nBTItem.hasType()) {
+               Tool tool = new Tool(PlayerData.get(player), nBTItem);
+               if (!tool.checkItemRequirements()) {
+                  event.setCancelled(true);
                } else {
-                  if (var5.miningEffects(var3)) {
-                     var1.setCancelled(true);
+                  if (tool.miningEffects(block)) {
+                     event.setCancelled(true);
                   }
                }
             }
@@ -143,22 +143,22 @@ public class ItemUse implements Listener {
    }
 
    @EventHandler
-   public void rightClickWeaponInteractions(PlayerInteractEntityEvent var1) {
-      Player var2 = var1.getPlayer();
-      if (var1.getRightClicked() instanceof LivingEntity) {
-         NBTItem var3 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var2.getInventory().getItem(var1.getHand()));
-         Type var4 = Type.get(var3);
-         if (var4 != null) {
-            LivingEntity var5 = (LivingEntity)var1.getRightClicked();
-            if (UtilityMethods.canTarget(var2, var5, InteractionType.OFFENSE_ACTION)) {
-               UseItem var6 = var4.toUseItem(var2, var3);
-               if (var6.checkItemRequirements()) {
-                  SkillHandler var7 = var6.getMMOItem().getType().onEntityInteract();
-                  if (var7 != null) {
-                     SpecialWeaponAttackEvent var8 = new SpecialWeaponAttackEvent(var6.getPlayerData(), (Weapon)var6, var5);
-                     Bukkit.getPluginManager().callEvent(var8);
-                     if (!var8.isCancelled()) {
-                        new SimpleSkill(var7).cast(new TriggerMetadata(var6.getPlayerData().getMMOPlayerData(), TriggerType.API, var5));
+   public void rightClickWeaponInteractions(PlayerInteractEntityEvent event) {
+      Player player = event.getPlayer();
+      if (event.getRightClicked() instanceof LivingEntity) {
+         NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItem(event.getHand()));
+         Type type = Type.get(nBTItem);
+         if (type != null) {
+            LivingEntity rightClicked = (LivingEntity)event.getRightClicked();
+            if (UtilityMethods.canTarget(player, rightClicked, InteractionType.OFFENSE_ACTION)) {
+               UseItem useItem = type.toUseItem(player, nBTItem);
+               if (useItem.checkItemRequirements()) {
+                  SkillHandler skillHandler = useItem.getMMOItem().getType().onEntityInteract();
+                  if (skillHandler != null) {
+                     SpecialWeaponAttackEvent event2 = new SpecialWeaponAttackEvent(useItem.getPlayerData(), (Weapon)useItem, rightClicked);
+                     Bukkit.getPluginManager().callEvent(event2);
+                     if (!event2.isCancelled()) {
+                        new SimpleSkill(skillHandler).cast(new TriggerMetadata(useItem.getPlayerData().getMMOPlayerData(), TriggerType.API, rightClicked));
                      }
                   }
                }
@@ -168,60 +168,60 @@ public class ItemUse implements Listener {
    }
 
    @EventHandler
-   public void gemStonesAndItemStacks(InventoryClickEvent var1) {
-      Player var2 = (Player)var1.getWhoClicked();
-      if (var1.getAction() == InventoryAction.SWAP_WITH_CURSOR) {
-         NBTItem var3 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var1.getCursor());
-         Type var4 = Type.get(var3);
-         if (var4 != null) {
-            UseItem var5 = var4.toUseItem(var2, var3);
-            if (var5.checkItemRequirements()) {
-               if (var5 instanceof ItemSkin) {
-                  NBTItem var6 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var1.getCurrentItem());
-                  if (!var6.hasType()) {
+   public void gemStonesAndItemStacks(InventoryClickEvent event) {
+      Player whoClicked = (Player)event.getWhoClicked();
+      if (event.getAction() == InventoryAction.SWAP_WITH_CURSOR) {
+         NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCursor());
+         Type type = Type.get(nBTItem);
+         if (type != null) {
+            UseItem useItem = type.toUseItem(whoClicked, nBTItem);
+            if (useItem.checkItemRequirements()) {
+               if (useItem instanceof ItemSkin) {
+                  NBTItem nBTItem2 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
+                  if (!nBTItem2.hasType()) {
                      return;
                   }
 
-                  ItemSkin.ApplyResult var7 = ((ItemSkin)var5).applyOntoItem(var6, Type.get(var6.getType()));
-                  if (var7.getType() == ItemSkin.ResultType.NONE) {
+                  ItemSkin.ApplyResult applyResult = ((ItemSkin)useItem).applyOntoItem(nBTItem2, Type.get(nBTItem2.getType()));
+                  if (applyResult.getType() == ItemSkin.ResultType.NONE) {
                      return;
                   }
 
-                  var1.setCancelled(true);
-                  var3.getItem().setAmount(var3.getItem().getAmount() - 1);
-                  if (var7.getType() == ItemSkin.ResultType.FAILURE) {
+                  event.setCancelled(true);
+                  nBTItem.getItem().setAmount(nBTItem.getItem().getAmount() - 1);
+                  if (applyResult.getType() == ItemSkin.ResultType.FAILURE) {
                      return;
                   }
 
-                  var1.setCurrentItem(var7.getResult());
+                  event.setCurrentItem(applyResult.getResult());
                }
 
-               if (var5 instanceof GemStone) {
-                  NBTItem var8 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var1.getCurrentItem());
-                  if (!var8.hasType()) {
+               if (useItem instanceof GemStone) {
+                  NBTItem nBTItem2 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem());
+                  if (!nBTItem2.hasType()) {
                      return;
                   }
 
-                  GemStone.ApplyResult var9 = ((GemStone)var5).applyOntoItem(var8, Type.get(var8.getType()));
-                  if (var9.getType() == GemStone.ResultType.NONE) {
+                  GemStone.ApplyResult applyResult = ((GemStone)useItem).applyOntoItem(nBTItem2, Type.get(nBTItem2.getType()));
+                  if (applyResult.getType() == GemStone.ResultType.NONE) {
                      return;
                   }
 
-                  var1.setCancelled(true);
-                  var3.getItem().setAmount(var3.getItem().getAmount() - 1);
-                  if (var9.getType() == GemStone.ResultType.FAILURE) {
+                  event.setCancelled(true);
+                  nBTItem.getItem().setAmount(nBTItem.getItem().getAmount() - 1);
+                  if (applyResult.getType() == GemStone.ResultType.FAILURE) {
                      return;
                   }
 
-                  var1.setCurrentItem(var9.getResult());
+                  event.setCurrentItem(applyResult.getResult());
                }
 
-               if (var5 instanceof Consumable
-                  && var1.getCurrentItem() != null
-                  && var1.getCurrentItem().getType() != Material.AIR
-                  && ((Consumable)var5).useOnItem(var1, MythicLib.plugin.getVersion().getWrapper().getNBTItem(var1.getCurrentItem()))) {
-                  var1.setCancelled(true);
-                  var1.getCursor().setAmount(var1.getCursor().getAmount() - 1);
+               if (useItem instanceof Consumable
+                  && event.getCurrentItem() != null
+                  && event.getCurrentItem().getType() != Material.AIR
+                  && ((Consumable)useItem).useOnItem(event, MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getCurrentItem()))) {
+                  event.setCancelled(true);
+                  event.getCursor().setAmount(event.getCursor().getAmount() - 1);
                }
             }
          }
@@ -229,75 +229,75 @@ public class ItemUse implements Listener {
    }
 
    @EventHandler
-   public void handleCustomBows(EntityShootBowEvent var1) {
-      if (var1.getProjectile() instanceof AbstractArrow && var1.getEntity() instanceof Player) {
-         NBTItem var2 = NBTItem.get(var1.getBow());
-         Type var3 = Type.get(var2.getType());
-         if (var3 != null) {
-            PlayerData var4 = PlayerData.get((Player)var1.getEntity());
-            Weapon var5 = new Weapon(var4, var2);
-            if (!var5.checkItemRequirements() || !var5.checkAndApplyWeaponCosts()) {
-               var1.setCancelled(true);
+   public void handleCustomBows(EntityShootBowEvent event) {
+      if (event.getProjectile() instanceof AbstractArrow && event.getEntity() instanceof Player) {
+         NBTItem nbtItem = NBTItem.get(event.getBow());
+         Type type = Type.get(nbtItem.getType());
+         if (type != null) {
+            PlayerData playerData = PlayerData.get((Player)event.getEntity());
+            Weapon weapon = new Weapon(playerData, nbtItem);
+            if (!weapon.checkItemRequirements() || !weapon.checkAndApplyWeaponCosts()) {
+               event.setCancelled(true);
                return;
             }
 
-            ItemStack var6 = var4.getPlayer().getInventory().getItemInMainHand();
-            EquipmentSlot var7 = var6.isSimilar(var1.getBow()) ? EquipmentSlot.MAIN_HAND : EquipmentSlot.OFF_HAND;
-            ProjectileMetadata var8 = ProjectileMetadata.create(var4.getMMOPlayerData(), var7, ProjectileType.ARROW, var1.getProjectile());
-            var8.setSourceItem(var2);
-            var8.setCustomDamage(true);
-            var8.setDamageMultiplier(MMOUtils.getForce(var1));
-            if (var2.hasTag("MMOITEMS_ARROW_PARTICLES")) {
-               new ArrowParticles((AbstractArrow)var1.getProjectile(), var2);
+            ItemStack itemInMainHand = playerData.getPlayer().getInventory().getItemInMainHand();
+            EquipmentSlot equipmentSlot = itemInMainHand.isSimilar(event.getBow()) ? EquipmentSlot.MAIN_HAND : EquipmentSlot.OFF_HAND;
+            ProjectileMetadata projectileMetadata = ProjectileMetadata.create(playerData.getMMOPlayerData(), equipmentSlot, ProjectileType.ARROW, event.getProjectile());
+            projectileMetadata.setSourceItem(nbtItem);
+            projectileMetadata.setCustomDamage(true);
+            projectileMetadata.setDamageMultiplier(MMOUtils.getForce(event));
+            if (nbtItem.hasTag("MMOITEMS_ARROW_PARTICLES")) {
+               new ArrowParticles((AbstractArrow)event.getProjectile(), nbtItem);
             }
 
-            AbstractArrow var9 = (AbstractArrow)var1.getProjectile();
-            double var10 = var8.getShooter().getStat("ARROW_VELOCITY");
-            if (var10 > 0.0) {
-               var9.setVelocity(var9.getVelocity().multiply(var10));
+            AbstractArrow projectile = (AbstractArrow)event.getProjectile();
+            double stat = projectileMetadata.getShooter().getStat("ARROW_VELOCITY");
+            if (stat > 0.0) {
+               projectile.setVelocity(projectile.getVelocity().multiply(stat));
             }
          }
       }
    }
 
    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-   public void handleVanillaEatenConsumables(PlayerItemConsumeEvent var1) {
-      NBTItem var2 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var1.getItem());
-      Type var3 = Type.get(var2);
-      if (var3 != null) {
-         Player var4 = var1.getPlayer();
-         UseItem var5 = var3.toUseItem(var4, var2);
-         if (!var5.checkItemRequirements()) {
-            var1.setCancelled(true);
+   public void handleVanillaEatenConsumables(PlayerItemConsumeEvent event) {
+      NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(event.getItem());
+      Type type = Type.get(nBTItem);
+      if (type != null) {
+         Player player = event.getPlayer();
+         UseItem useItem = type.toUseItem(player, nBTItem);
+         if (!useItem.checkItemRequirements()) {
+            event.setCancelled(true);
          } else {
-            if (var5 instanceof Consumable) {
-               if (var5.getPlayerData().getMMOPlayerData().getCooldownMap().isOnCooldown(var5.getMMOItem())) {
-                  double var8 = var5.getPlayerData().getMMOPlayerData().getCooldownMap().getCooldown(var5.getMMOItem());
+            if (useItem instanceof Consumable) {
+               if (useItem.getPlayerData().getMMOPlayerData().getCooldownMap().isOnCooldown(useItem.getMMOItem())) {
+                  double cooldown = useItem.getPlayerData().getMMOPlayerData().getCooldownMap().getCooldown(useItem.getMMOItem());
                   Message.ITEM_ON_COOLDOWN
-                     .format(ChatColor.RED, "#left#", MythicLib.plugin.getMMOConfig().decimal.format(var8), "#s#", var8 >= 2.0 ? "s" : "")
-                     .send(var4);
-                  var1.setCancelled(true);
+                     .format(ChatColor.RED, "#left#", MythicLib.plugin.getMMOConfig().decimal.format(cooldown), "#s#", cooldown >= 2.0 ? "s" : "")
+                     .send(player);
+                  event.setCancelled(true);
                   return;
                }
 
-               Consumable.ConsumableConsumeResult var6 = ((Consumable)var5)
+               Consumable.ConsumableConsumeResult consumableConsumeResult = ((Consumable)useItem)
                   .useOnPlayer(
-                     var1.getItem().equals(var4.getInventory().getItemInMainHand())
+                     event.getItem().equals(player.getInventory().getItemInMainHand())
                         ? org.bukkit.inventory.EquipmentSlot.HAND
                         : org.bukkit.inventory.EquipmentSlot.OFF_HAND,
                      true
                   );
-               if (var6 == Consumable.ConsumableConsumeResult.CANCEL) {
-                  var1.setCancelled(true);
+               if (consumableConsumeResult == Consumable.ConsumableConsumeResult.CANCEL) {
+                  event.setCancelled(true);
                   return;
                }
 
-               if (var6 == Consumable.ConsumableConsumeResult.NOT_CONSUME) {
-                  var1.setCancelled(true);
+               if (consumableConsumeResult == Consumable.ConsumableConsumeResult.NOT_CONSUME) {
+                  event.setCancelled(true);
                }
 
-               var5.getPlayerData().getMMOPlayerData().getCooldownMap().applyCooldown(var5.getMMOItem(), var5.getNBTItem().getStat("ITEM_COOLDOWN"));
-               var5.executeCommands();
+               useItem.getPlayerData().getMMOPlayerData().getCooldownMap().applyCooldown(useItem.getMMOItem(), useItem.getNBTItem().getStat("ITEM_COOLDOWN"));
+               useItem.executeCommands();
             }
          }
       }

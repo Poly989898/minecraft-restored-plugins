@@ -11,9 +11,9 @@ public class ArrowParticles extends BukkitRunnable {
    private final AbstractArrow arrow;
    private final ParticleInformation particleInfo;
 
-   public ArrowParticles(AbstractArrow var1, NBTItem var2) {
-      this.arrow = var1;
-      this.particleInfo = new ParticleInformation(JsonParser.parseString(var2.getString("MMOITEMS_ARROW_PARTICLES")).getAsJsonObject());
+   public ArrowParticles(AbstractArrow abstractArrow, NBTItem nbtItem) {
+      this.arrow = abstractArrow;
+      this.particleInfo = new ParticleInformation(JsonParser.parseString(nbtItem.getString("MMOITEMS_ARROW_PARTICLES")).getAsJsonObject());
       this.runTaskTimer(MMOItems.plugin, 0L, 1L);
    }
 

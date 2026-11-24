@@ -23,11 +23,11 @@ public enum ElementStatType {
       return this.name().toLowerCase().replace("_", "-");
    }
 
-   public String getConcatenatedTagPath(Element var1) {
-      return var1.getId() + "_" + this.name();
+   public String getConcatenatedTagPath(Element element) {
+      return element.getId() + "_" + this.name();
    }
 
-   public String getConcatenatedConfigPath(Element var1) {
-      return var1.getId().toLowerCase().replace("_", "-") + "." + this.name().toLowerCase().replace("_", "-");
+   public String getConcatenatedConfigPath(Element element) {
+      return element.getId().toLowerCase().replace("_", "-") + "." + this.name().toLowerCase().replace("_", "-");
    }
 }

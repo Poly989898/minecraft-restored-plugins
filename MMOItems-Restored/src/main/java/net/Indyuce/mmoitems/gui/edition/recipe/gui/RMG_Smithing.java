@@ -19,12 +19,12 @@ public class RMG_Smithing extends RecipeEditorGUI {
    @NotNull
    final RMGRI_Smithing interpreter;
 
-   public RMG_Smithing(@NotNull Player var1, @NotNull MMOItemTemplate var2, @NotNull String var3, @NotNull RecipeRegistry var4) {
-      super(var1, var2, var3, var4);
-      ConfigurationSection var5 = RecipeEditorGUI.getSection(this.getEditedSection(), "crafting");
-      ConfigurationSection var6 = RecipeEditorGUI.getSection(var5, this.getRecipeRegistry().getRecipeConfigPath());
-      ConfigurationSection var7 = RecipeEditorGUI.getSection(var6, this.getRecipeName());
-      this.interpreter = new RMGRI_Smithing(var7);
+   public RMG_Smithing(@NotNull Player player, @NotNull MMOItemTemplate mmoItemTemplate, @NotNull String text, @NotNull RecipeRegistry recipeRegistry) {
+      super(player, mmoItemTemplate, text, recipeRegistry);
+      ConfigurationSection section = RecipeEditorGUI.getSection(this.getEditedSection(), "crafting");
+      ConfigurationSection section2 = RecipeEditorGUI.getSection(section, this.getRecipeRegistry().getRecipeConfigPath());
+      ConfigurationSection section3 = RecipeEditorGUI.getSection(section2, this.getRecipeName());
+      this.interpreter = new RMGRI_Smithing(section3);
       this.inputLinks.put(39, 0);
       this.inputLinks.put(41, 1);
       this.addButton(new RBA_InputOutput(this));
@@ -35,15 +35,15 @@ public class RMG_Smithing extends RecipeEditorGUI {
 
    @Override
    public void putRecipe() {
-      for (Integer var2 : this.inputLinks.keySet()) {
-         this.inventory.setItem(var2, this.getDisplay(this.isShowingInput(), this.inputLinks.get(var2)));
+      for (Integer key : this.inputLinks.keySet()) {
+         this.inventory.setItem(key, this.getDisplay(this.isShowingInput(), this.inputLinks.get(key)));
       }
    }
 
    @Override
-   int getInputSlot(int var1) {
-      Integer var2 = this.inputLinks.get(var1);
-      return var2 != null ? var2 : -1;
+   int getInputSlot(int index) {
+      Integer value = this.inputLinks.get(index);
+      return value != null ? value : -1;
    }
 
    @Override

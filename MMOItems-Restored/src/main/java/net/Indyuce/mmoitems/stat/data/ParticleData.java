@@ -27,39 +27,39 @@ public class ParticleData implements StatData, RandomStatData<ParticleData> {
    private final Map<String, Double> modifiers = new HashMap<>();
    private final Color color;
 
-   public ParticleData(JsonObject var1) {
-      this.particle = Particle.valueOf(var1.get("Particle").getAsString());
-      this.type = ParticleType.valueOf(var1.get("Type").getAsString());
-      if (var1.has("Color")) {
-         JsonObject var2 = var1.getAsJsonObject("Color");
-         this.color = Color.fromRGB(var2.get("Red").getAsInt(), var2.get("Green").getAsInt(), var2.get("Blue").getAsInt());
+   public ParticleData(JsonObject jsonObject) {
+      this.particle = Particle.valueOf(jsonObject.get("Particle").getAsString());
+      this.type = ParticleType.valueOf(jsonObject.get("Type").getAsString());
+      if (jsonObject.has("Color")) {
+         JsonObject asJsonObject = jsonObject.getAsJsonObject("Color");
+         this.color = Color.fromRGB(asJsonObject.get("Red").getAsInt(), asJsonObject.get("Green").getAsInt(), asJsonObject.get("Blue").getAsInt());
       } else {
          this.color = Color.fromRGB(255, 0, 0);
       }
 
-      var1.getAsJsonObject("Modifiers").entrySet().forEach(var1x -> this.setModifier((String)var1x.getKey(), ((JsonElement)var1x.getValue()).getAsDouble()));
+      jsonObject.getAsJsonObject("Modifiers").entrySet().forEach(var1x -> this.setModifier((String)var1x.getKey(), ((JsonElement)var1x.getValue()).getAsDouble()));
    }
 
-   public ParticleData(ConfigurationSection var1) {
-      Validate.isTrue(var1.contains("type") && var1.contains("particle"), "Particle is missing type or selected particle.");
-      String var2 = var1.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
-      this.type = ParticleType.valueOf(var2);
-      var2 = var1.getString("particle").toUpperCase().replace("-", "_").replace(" ", "_");
-      this.particle = Particle.valueOf(var2);
-      this.color = var1.contains("color")
-         ? Color.fromRGB(var1.getInt("color.red"), var1.getInt("color.green"), var1.getInt("color.blue"))
+   public ParticleData(ConfigurationSection section) {
+      Validate.isTrue(section.contains("type") && section.contains("particle"), "Particle is missing type or selected particle.");
+      String text = section.getString("type").toUpperCase().replace("-", "_").replace(" ", "_");
+      this.type = ParticleType.valueOf(text);
+      text = section.getString("particle").toUpperCase().replace("-", "_").replace(" ", "_");
+      this.particle = Particle.valueOf(text);
+      this.color = section.contains("color")
+         ? Color.fromRGB(section.getInt("color.red"), section.getInt("color.green"), section.getInt("color.blue"))
          : Color.fromRGB(255, 0, 0);
 
-      for (String var4 : var1.getKeys(false)) {
-         if (!var4.equalsIgnoreCase("particle") && !var4.equalsIgnoreCase("type") && !var4.equalsIgnoreCase("color")) {
-            this.setModifier(var4, var1.getDouble(var4));
+      for (String key : section.getKeys(false)) {
+         if (!key.equalsIgnoreCase("particle") && !key.equalsIgnoreCase("type") && !key.equalsIgnoreCase("color")) {
+            this.setModifier(key, section.getDouble(key));
          }
       }
    }
 
-   public ParticleData(ParticleType var1, Particle var2) {
-      this.type = var1;
-      this.particle = var2;
+   public ParticleData(ParticleType particleType, Particle particle) {
+      this.type = particleType;
+      this.particle = particle;
       this.color = Color.fromRGB(255, 0, 0);
    }
 
@@ -75,57 +75,57 @@ public class ParticleData implements StatData, RandomStatData<ParticleData> {
       return this.color;
    }
 
-   public double getModifier(String var1) {
-      return this.modifiers.containsKey(var1) ? this.modifiers.get(var1) : this.type.getModifier(var1);
+   public double getModifier(String text) {
+      return this.modifiers.containsKey(text) ? this.modifiers.get(text) : this.type.getModifier(text);
    }
 
    public Set<String> getModifiers() {
       return this.modifiers.keySet();
    }
 
-   public void setModifier(String var1, double var2) {
-      this.modifiers.put(var1, var2);
+   public void setModifier(String text, double value) {
+      this.modifiers.put(text, value);
    }
 
-   public void display(Location var1, float var2) {
-      this.display(var1, 1, 0.0F, 0.0F, 0.0F, var2);
+   public void display(Location location, float value) {
+      this.display(location, 1, 0.0F, 0.0F, 0.0F, value);
    }
 
-   public void display(Location var1, int var2, float var3, float var4, float var5, float var6) {
+   public void display(Location location, int count, float value, float value2, float value3, float value4) {
       if (this.particle == VParticle.REDSTONE.get()) {
-         var1.getWorld().spawnParticle(this.particle, var1, var2, var3, var4, var5, new DustOptions(this.color, 1.0F));
+         location.getWorld().spawnParticle(this.particle, location, count, value, value2, value3, new DustOptions(this.color, 1.0F));
       } else if (this.particle != VParticle.ENTITY_EFFECT.get() && this.particle != VParticle.ENTITY_EFFECT_AMBIENT.get()) {
-         var1.getWorld().spawnParticle(this.particle, var1, var2, var3, var4, var5, var6);
+         location.getWorld().spawnParticle(this.particle, location, count, value, value2, value3, value4);
       } else {
-         for (int var7 = 0; var7 < var2; var7++) {
-            var1.getWorld()
-               .spawnParticle(this.particle, var1, 0, this.color.getRed() / 255.0F, this.color.getGreen() / 255.0F, this.color.getBlue() / 255.0F, 1.0);
+         for (int i = 0; i < count; i++) {
+            location.getWorld()
+               .spawnParticle(this.particle, location, 0, this.color.getRed() / 255.0F, this.color.getGreen() / 255.0F, this.color.getBlue() / 255.0F, 1.0);
          }
       }
    }
 
-   public ParticleRunnable start(PlayerData var1) {
-      ParticleRunnable var2 = this.type.newRunnable(this, var1);
-      var2.runTaskTimer(MMOItems.plugin, 0L, this.type.getTime());
-      return var2;
+   public ParticleRunnable start(PlayerData playerData) {
+      ParticleRunnable runnable = this.type.newRunnable(this, playerData);
+      runnable.runTaskTimer(MMOItems.plugin, 0L, this.type.getTime());
+      return runnable;
    }
 
    public JsonObject toJson() {
-      JsonObject var1 = new JsonObject();
-      var1.addProperty("Particle", this.getParticle().name());
-      var1.addProperty("Type", this.getType().name());
+      JsonObject jsonObject = new JsonObject();
+      jsonObject.addProperty("Particle", this.getParticle().name());
+      jsonObject.addProperty("Type", this.getType().name());
       if (MMOUtils.isColorable(this.particle)) {
-         JsonObject var2 = new JsonObject();
-         var2.addProperty("Red", this.getColor().getRed());
-         var2.addProperty("Green", this.getColor().getGreen());
-         var2.addProperty("Blue", this.getColor().getBlue());
-         var1.add("Color", var2);
+         JsonObject jsonObject2 = new JsonObject();
+         jsonObject2.addProperty("Red", this.getColor().getRed());
+         jsonObject2.addProperty("Green", this.getColor().getGreen());
+         jsonObject2.addProperty("Blue", this.getColor().getBlue());
+         jsonObject.add("Color", jsonObject2);
       }
 
-      JsonObject var3 = new JsonObject();
-      this.getModifiers().forEach(var2x -> var3.addProperty(var2x, this.getModifier(var2x)));
-      var1.add("Modifiers", var3);
-      return var1;
+      JsonObject jsonObject2 = new JsonObject();
+      this.getModifiers().forEach(var2x -> jsonObject2.addProperty(var2x, this.getModifier(var2x)));
+      jsonObject.add("Modifiers", jsonObject2);
+      return jsonObject;
    }
 
    @Override
@@ -133,10 +133,10 @@ public class ParticleData implements StatData, RandomStatData<ParticleData> {
       return false;
    }
 
-   public ParticleData randomize(MMOItemBuilder var1) {
+   public ParticleData randomize(MMOItemBuilder mmoItemBuilder) {
       return this;
    }
 
-   public void spawn(Location var1, Particle var2, int var3, double var4, double var6, double var8, double var10) {
+   public void spawn(Location location, Particle particle, int count, double value, double value2, double value3, double value4) {
    }
 }

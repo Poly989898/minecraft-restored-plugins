@@ -20,14 +20,14 @@ public interface RecipeRegistry {
    @NotNull
    ItemStack getDisplayListItem();
 
-   void openForPlayer(@NotNull EditionInventory var1, @NotNull String var2, Object... var3);
+   void openForPlayer(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs);
 
    @NotNull
    MythicRecipeBlueprint sendToMythicLib(
-      @NotNull MMOItemTemplate var1,
-      @NotNull ConfigurationSection var2,
-      @NotNull String var3,
-      @NotNull Ref<NamespacedKey> var4,
-      @NotNull FriendlyFeedbackProvider var5
+      @NotNull MMOItemTemplate mmoItemTemplate,
+      @NotNull ConfigurationSection section,
+      @NotNull String text,
+      @NotNull Ref<NamespacedKey> ref,
+      @NotNull FriendlyFeedbackProvider friendlyFeedbackProvider
    ) throws IllegalArgumentException;
 }

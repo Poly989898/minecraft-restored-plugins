@@ -41,9 +41,9 @@ public class MMOItem implements ItemReference {
    @NotNull
    private final Map<ItemStat<?, ?>, StatHistory> mergeableStatHistory = new HashMap<>();
 
-   public MMOItem(Type var1, String var2) {
-      this.type = var1;
-      this.id = var2;
+   public MMOItem(Type type, String text) {
+      this.type = type;
+      this.id = text;
    }
 
    @Override
@@ -56,45 +56,45 @@ public class MMOItem implements ItemReference {
       return this.id;
    }
 
-   public void mergeData(@NotNull ItemStat var1, @NotNull StatData var2, @Nullable UUID var3) {
-      if (var2 instanceof Mergeable) {
-         StatHistory var4 = this.computeStatHistory(var1);
-         if (var3 != null) {
-            var4.registerGemstoneData(var3, var2);
+   public void mergeData(@NotNull ItemStat itemStat, @NotNull StatData statData, @Nullable UUID uuid) {
+      if (statData instanceof Mergeable) {
+         StatHistory statHistory = this.computeStatHistory(itemStat);
+         if (uuid != null) {
+            statHistory.registerGemstoneData(uuid, statData);
          } else {
-            var4.registerExternalData(var2);
+            statHistory.registerExternalData(statData);
          }
 
-         this.setData(var1, var4.recalculate(this.getUpgradeLevel()));
+         this.setData(itemStat, statHistory.recalculate(this.getUpgradeLevel()));
       } else {
-         this.setData(var1, var2);
+         this.setData(itemStat, statData);
       }
    }
 
-   public void setData(@NotNull ItemStat var1, @NotNull StatData var2) {
-      this.stats.put(var1, var2);
+   public void setData(@NotNull ItemStat itemStat, @NotNull StatData statData) {
+      this.stats.put(itemStat, statData);
    }
 
-   public void replaceData(@NotNull ItemStat var1, @NotNull StatData var2) {
-      this.stats.replace(var1, var2);
+   public void replaceData(@NotNull ItemStat itemStat, @NotNull StatData statData) {
+      this.stats.replace(itemStat, statData);
    }
 
-   public void removeData(@NotNull ItemStat var1) {
-      this.stats.remove(var1);
+   public void removeData(@NotNull ItemStat itemStat) {
+      this.stats.remove(itemStat);
    }
 
    @Nullable
-   public StatData getData(@NotNull ItemStat var1) {
-      return this.stats.get(var1);
+   public StatData getData(@NotNull ItemStat itemStat) {
+      return this.stats.get(itemStat);
    }
 
    @NotNull
-   public StatData computeData(@NotNull ItemStat<?, ?> var1) {
-      return this.stats.computeIfAbsent(var1, ItemStat::getClearStatData);
+   public StatData computeData(@NotNull ItemStat<?, ?> itemStat) {
+      return this.stats.computeIfAbsent(itemStat, ItemStat::getClearStatData);
    }
 
-   public boolean hasData(@NotNull ItemStat var1) {
-      return this.stats.get(var1) != null;
+   public boolean hasData(@NotNull ItemStat itemStat) {
+      return this.stats.get(itemStat) != null;
    }
 
    @NotNull
@@ -108,27 +108,27 @@ public class MMOItem implements ItemReference {
    }
 
    public MMOItem clone() {
-      MMOItem var1 = new MMOItem(this.type, this.id);
-      var1.stats.putAll(this.stats);
-      this.mergeableStatHistory.forEach((var1x, var2) -> var1.mergeableStatHistory.put((ItemStat<?, ?>)var1x, var2.clone().setParent(var1)));
-      return var1;
+      MMOItem mmoItem = new MMOItem(this.type, this.id);
+      mmoItem.stats.putAll(this.stats);
+      this.mergeableStatHistory.forEach((var1x, statHistory) -> mmoItem.mergeableStatHistory.put((ItemStat<?, ?>)var1x, statHistory.clone().setParent(mmoItem)));
+      return mmoItem;
    }
 
-   public boolean hasStatHistory(@NotNull ItemStat<?, ?> var1) {
-      return var1 instanceof Mergeable && this.mergeableStatHistory.containsKey(var1);
+   public boolean hasStatHistory(@NotNull ItemStat<?, ?> itemStat) {
+      return itemStat instanceof Mergeable && this.mergeableStatHistory.containsKey(itemStat);
    }
 
    @Nullable
-   public StatHistory getStatHistory(@NotNull ItemStat<?, ?> var1) {
-      return var1.equals(ItemStats.ENCHANTS) ? this.computeStatHistory(var1) : this.mergeableStatHistory.get(var1);
+   public StatHistory getStatHistory(@NotNull ItemStat<?, ?> itemStat) {
+      return itemStat.equals(ItemStats.ENCHANTS) ? this.computeStatHistory(itemStat) : this.mergeableStatHistory.get(itemStat);
    }
 
    @NotNull
-   public StatHistory computeStatHistory(@NotNull ItemStat<?, ?> var1) {
-      return this.mergeableStatHistory.computeIfAbsent(var1, var1x -> {
-         StatData var2 = this.computeData((ItemStat<?, ?>)var1x);
-         Validate.isTrue(var2 instanceof Mergeable, "Stat " + var1x.getId() + " is not mergeable");
-         return new StatHistory(this, var1x, var2);
+   public StatHistory computeStatHistory(@NotNull ItemStat<?, ?> itemStat) {
+      return this.mergeableStatHistory.computeIfAbsent(itemStat, var1x -> {
+         StatData data = this.computeData((ItemStat<?, ?>)var1x);
+         Validate.isTrue(data instanceof Mergeable, "Stat " + var1x.getId() + " is not mergeable");
+         return new StatHistory(this, var1x, data);
       });
    }
 
@@ -137,50 +137,50 @@ public class MMOItem implements ItemReference {
       return new ArrayList<>(this.mergeableStatHistory.values());
    }
 
-   public void setStatHistory(@NotNull ItemStat var1, @NotNull StatHistory var2) {
-      this.mergeableStatHistory.put(var1, var2);
+   public void setStatHistory(@NotNull ItemStat itemStat, @NotNull StatHistory statHistory) {
+      this.mergeableStatHistory.put(itemStat, statHistory);
    }
 
    @Nullable
    public ItemTier getTier() {
-      StatData var1 = this.stats.get(ItemStats.TIER);
-      return var1 != null ? MMOItems.plugin.getTiers().get(var1.toString()) : null;
+      StatData statData = this.stats.get(ItemStats.TIER);
+      return statData != null ? MMOItems.plugin.getTiers().get(statData.toString()) : null;
    }
 
    @Nullable
    public TooltipTexture getTooltip() {
-      StatData var1 = this.stats.get(ItemStats.TOOLTIP);
-      return var1 != null ? MMOItems.plugin.getLore().getTooltip(var1.toString()) : null;
+      StatData statData = this.stats.get(ItemStats.TOOLTIP);
+      return statData != null ? MMOItems.plugin.getLore().getTooltip(statData.toString()) : null;
    }
 
    @Deprecated
    public int getDamage() {
-      int var1 = this.hasData(ItemStats.MAX_DURABILITY) ? SilentNumbers.round(((DoubleData)this.getData(ItemStats.MAX_DURABILITY)).getValue()) : -1;
-      if (var1 > 0) {
-         NBTItem var2 = this.newBuilder().buildNBT();
-         int var3 = this.hasData(ItemStats.CUSTOM_DURABILITY) ? SilentNumbers.round(((DoubleData)this.getData(ItemStats.CUSTOM_DURABILITY)).getValue()) : var1;
-         return var1 - var3;
+      int count = this.hasData(ItemStats.MAX_DURABILITY) ? SilentNumbers.round(((DoubleData)this.getData(ItemStats.MAX_DURABILITY)).getValue()) : -1;
+      if (count > 0) {
+         NBTItem nBT = this.newBuilder().buildNBT();
+         int count2 = this.hasData(ItemStats.CUSTOM_DURABILITY) ? SilentNumbers.round(((DoubleData)this.getData(ItemStats.CUSTOM_DURABILITY)).getValue()) : count;
+         return count - count2;
       } else {
          return this.hasData(ItemStats.ITEM_DAMAGE) ? SilentNumbers.round(((DoubleData)this.getData(ItemStats.ITEM_DAMAGE)).getValue()) : 0;
       }
    }
 
    @Deprecated
-   public void setDamage(int var1) {
+   public void setDamage(int count) {
       if (!this.hasData(ItemStats.UNBREAKABLE)) {
-         int var2 = this.hasData(ItemStats.MAX_DURABILITY) ? SilentNumbers.round(((DoubleData)this.getData(ItemStats.MAX_DURABILITY)).getValue()) : -1;
-         if (var2 > 0) {
-            NBTItem var3 = this.newBuilder().buildNBT();
-            this.setData(ItemStats.CUSTOM_DURABILITY, new DoubleData(var2 - var1));
-            Material var4 = this.hasData(ItemStats.MATERIAL) ? ((MaterialData)this.getData(ItemStats.MATERIAL)).getMaterial() : Material.GOLD_INGOT;
-            double var5 = (double)var1 * var4.getMaxDurability() / var2;
-            if (var5 == 0.0) {
+         int count2 = this.hasData(ItemStats.MAX_DURABILITY) ? SilentNumbers.round(((DoubleData)this.getData(ItemStats.MAX_DURABILITY)).getValue()) : -1;
+         if (count2 > 0) {
+            NBTItem nBT = this.newBuilder().buildNBT();
+            this.setData(ItemStats.CUSTOM_DURABILITY, new DoubleData(count2 - count));
+            Material material = this.hasData(ItemStats.MATERIAL) ? ((MaterialData)this.getData(ItemStats.MATERIAL)).getMaterial() : Material.GOLD_INGOT;
+            double value = (double)count * material.getMaxDurability() / count2;
+            if (value == 0.0) {
                return;
             }
 
-            this.setData(ItemStats.ITEM_DAMAGE, new DoubleData(var5));
+            this.setData(ItemStats.ITEM_DAMAGE, new DoubleData(value));
          } else {
-            this.setData(ItemStats.ITEM_DAMAGE, new DoubleData(var1));
+            this.setData(ItemStats.ITEM_DAMAGE, new DoubleData(count));
          }
       }
    }
@@ -204,14 +204,14 @@ public class MMOItem implements ItemReference {
    @NotNull
    public UpgradeTemplate getUpgradeTemplate() {
       Validate.isTrue(this.hasUpgradeTemplate(), "Item has no upgrade information");
-      UpgradeData var1 = (UpgradeData)this.getData(ItemStats.UPGRADE);
-      return var1.getTemplate();
+      UpgradeData data = (UpgradeData)this.getData(ItemStats.UPGRADE);
+      return data.getTemplate();
    }
 
    @NotNull
    public List<GemstoneData> getGemstones() {
-      StatData var1 = this.getData(ItemStats.GEM_SOCKETS);
-      return var1 == null ? new ArrayList<>() : ((GemSocketsData)var1).getGems();
+      StatData data = this.getData(ItemStats.GEM_SOCKETS);
+      return data == null ? new ArrayList<>() : ((GemSocketsData)data).getGems();
    }
 
    @Deprecated
@@ -221,75 +221,75 @@ public class MMOItem implements ItemReference {
 
    @NotNull
    public List<Pair<GemstoneData, MMOItem>> extractGemstones() {
-      GemSocketsData var1 = (GemSocketsData)this.getData(ItemStats.GEM_SOCKETS);
-      if (var1 == null) {
+      GemSocketsData data = (GemSocketsData)this.getData(ItemStats.GEM_SOCKETS);
+      if (data == null) {
          return new ArrayList<>();
       }
 
-      ArrayList<Pair<GemstoneData, MMOItem>> var2 = new ArrayList<>();
+      ArrayList<Pair<GemstoneData, MMOItem>> pairs = new ArrayList<>();
 
-      for (GemstoneData var4 : var1.getGemstones()) {
-         MMOItem var5 = MMOItems.plugin.getMMOItem(MMOItems.plugin.getTypes().get(var4.getMMOItemType()), var4.getMMOItemID());
-         if (var5 != null) {
-            var2.add(Pair.of(var4, var5));
+      for (GemstoneData gemstone : data.getGemstones()) {
+         MMOItem mMOItem = MMOItems.plugin.getMMOItem(MMOItems.plugin.getTypes().get(gemstone.getMMOItemType()), gemstone.getMMOItemID());
+         if (mMOItem != null) {
+            pairs.add(Pair.of(gemstone, mMOItem));
          }
       }
 
       if (MMOItemReforger.gemstonesRevIDWhenUnsocket) {
-         return var2;
+         return pairs;
       }
 
-      for (StatHistory var9 : this.mergeableStatHistory.values()) {
-         for (Pair<GemstoneData, MMOItem> var6 : var2) {
-            StatData var7 = var9.getGemstoneData(((GemstoneData)var6.getKey()).getHistoricUUID());
-            if (var7 != null) {
-               ((MMOItem)var6.getValue()).setData(var9.getItemStat(), var7);
+      for (StatHistory statHistory : this.mergeableStatHistory.values()) {
+         for (Pair<GemstoneData, MMOItem> pair : pairs) {
+            StatData gemstoneData = statHistory.getGemstoneData(((GemstoneData)pair.getKey()).getHistoricUUID());
+            if (gemstoneData != null) {
+               ((MMOItem)pair.getValue()).setData(statHistory.getItemStat(), gemstoneData);
             }
          }
       }
 
-      return var2;
+      return pairs;
    }
 
    @Nullable
-   public MMOItem extractGemstone(@NotNull GemstoneData var1) {
-      MMOItem var2 = MMOItems.plugin.getMMOItem(MMOItems.plugin.getTypes().get(var1.getMMOItemType()), var1.getMMOItemID());
-      if (var2 == null) {
+   public MMOItem extractGemstone(@NotNull GemstoneData gemstoneData) {
+      MMOItem mMOItem = MMOItems.plugin.getMMOItem(MMOItems.plugin.getTypes().get(gemstoneData.getMMOItemType()), gemstoneData.getMMOItemID());
+      if (mMOItem == null) {
          return null;
       }
 
       if (MMOItemReforger.gemstonesRevIDWhenUnsocket) {
-         return var2;
+         return mMOItem;
       }
 
-      for (StatHistory var4 : this.mergeableStatHistory.values()) {
-         StatData var5 = var4.getGemstoneData(var1.getHistoricUUID());
-         if (var5 != null) {
-            var2.setData(var4.getItemStat(), var5);
+      for (StatHistory statHistory : this.mergeableStatHistory.values()) {
+         StatData gemstoneData2 = statHistory.getGemstoneData(gemstoneData.getHistoricUUID());
+         if (gemstoneData2 != null) {
+            mMOItem.setData(statHistory.getItemStat(), gemstoneData2);
          }
       }
 
-      return var2;
+      return mMOItem;
    }
 
-   public void removeGemStone(@NotNull UUID var1, @Nullable String var2) {
+   public void removeGemStone(@NotNull UUID uuid, @Nullable String text) {
       if (this.hasData(ItemStats.GEM_SOCKETS)) {
-         StatHistory var3 = this.computeStatHistory(ItemStats.GEM_SOCKETS);
-         if (!((GemSocketsData)var3.getOriginalData()).removeGem(var1, var2)) {
-            for (UUID var5 : var3.getAllGemstones()) {
-               if (((GemSocketsData)var3.getGemstoneData(var5)).removeGem(var1, var2)) {
+         StatHistory statHistory = this.computeStatHistory(ItemStats.GEM_SOCKETS);
+         if (!((GemSocketsData)statHistory.getOriginalData()).removeGem(uuid, text)) {
+            for (UUID allGemstone : statHistory.getAllGemstones()) {
+               if (((GemSocketsData)statHistory.getGemstoneData(allGemstone)).removeGem(uuid, text)) {
                   return;
                }
             }
 
-            for (StatData var8 : var3.getExternalData()) {
-               if (((GemSocketsData)var8).removeGem(var1, var2)) {
+            for (StatData statData : statHistory.getExternalData()) {
+               if (((GemSocketsData)statData).removeGem(uuid, text)) {
                   return;
                }
             }
 
-            for (UUID var9 : var3.getAllModifiers()) {
-               if (((GemSocketsData)var3.getModifiersBonus(var9)).removeGem(var1, var2)) {
+            for (UUID allModifier : statHistory.getAllModifiers()) {
+               if (((GemSocketsData)statHistory.getModifiersBonus(allModifier)).removeGem(uuid, text)) {
                   return;
                }
             }

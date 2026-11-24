@@ -26,43 +26,43 @@ public class TierManager implements Reloadable {
    @Override
    public void reload() {
       this.tiers.clear();
-      FriendlyFeedbackProvider var1 = new FriendlyFeedbackProvider(FFPMMOItems.get());
-      var1.activatePrefix(true, "Tiers");
-      ConfigFile var2 = new ConfigFile("item-tiers");
+      FriendlyFeedbackProvider friendlyFeedbackProvider = new FriendlyFeedbackProvider(FFPMMOItems.get());
+      friendlyFeedbackProvider.activatePrefix(true, "Tiers");
+      ConfigFile configFile = new ConfigFile("item-tiers");
 
-      for (String var4 : var2.getConfig().getKeys(false)) {
-         ConfigurationSection var5 = RecipeEditorGUI.getSection(var2.getConfig(), var4);
+      for (String key : configFile.getConfig().getKeys(false)) {
+         ConfigurationSection section = RecipeEditorGUI.getSection(configFile.getConfig(), key);
 
          try {
-            this.register(new ItemTier(var5));
-         } catch (IllegalArgumentException var7) {
-            var1.log(FriendlyFeedbackCategory.ERROR, "Cannot register tier '$u{0}$b';$f {1}", new String[]{var4, var7.getMessage()});
+            this.register(new ItemTier(section));
+         } catch (IllegalArgumentException exception) {
+            friendlyFeedbackProvider.log(FriendlyFeedbackCategory.ERROR, "Cannot register tier '$u{0}$b';$f {1}", new String[]{key, exception.getMessage()});
          }
       }
 
-      var1.sendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
-      var1.sendTo(FriendlyFeedbackCategory.FAILURE, MMOItems.getConsole());
+      friendlyFeedbackProvider.sendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
+      friendlyFeedbackProvider.sendTo(FriendlyFeedbackCategory.FAILURE, MMOItems.getConsole());
    }
 
-   public void register(@NotNull ItemTier var1) {
-      this.tiers.put(var1.getId(), var1);
+   public void register(@NotNull ItemTier itemTier) {
+      this.tiers.put(itemTier.getId(), itemTier);
    }
 
-   public boolean has(@Nullable String var1) {
-      return var1 == null ? false : this.tiers.containsKey(var1);
+   public boolean has(@Nullable String text) {
+      return text == null ? false : this.tiers.containsKey(text);
    }
 
    @NotNull
-   public ItemTier getOrThrow(@Nullable String var1) {
+   public ItemTier getOrThrow(@Nullable String text) {
       Validate.isTrue(
-         this.tiers.containsKey(var1), FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Could not find tier with ID '$r{0}$b'", new String[]{var1})
+         this.tiers.containsKey(text), FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Could not find tier with ID '$r{0}$b'", new String[]{text})
       );
-      return this.tiers.get(var1);
+      return this.tiers.get(text);
    }
 
    @Nullable
-   public ItemTier get(@Nullable String var1) {
-      return var1 == null ? null : this.tiers.get(var1);
+   public ItemTier get(@Nullable String text) {
+      return text == null ? null : this.tiers.get(text);
    }
 
    @NotNull
@@ -72,7 +72,7 @@ public class TierManager implements Reloadable {
 
    @Deprecated
    @Nullable
-   public ItemTier findTier(@NotNull MMOItem var1) {
-      return var1.getTier();
+   public ItemTier findTier(@NotNull MMOItem mmoItem) {
+      return mmoItem.getTier();
    }
 }

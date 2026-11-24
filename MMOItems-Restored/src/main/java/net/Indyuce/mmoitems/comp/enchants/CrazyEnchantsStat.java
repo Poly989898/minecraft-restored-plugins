@@ -27,52 +27,52 @@ public class CrazyEnchantsStat extends ItemStat<RandomStatData<CrazyEnchantsData
       super("CRAZY_ENCHANTS", Material.BOOK, "Advanced Enchants", new String[0], new String[0]);
    }
 
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull CrazyEnchantsData var2) {
-      Map<CEnchantment, Integer> var3 = var2.getEnchants();
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull CrazyEnchantsData crazyEnchantsData) {
+      Map<CEnchantment, Integer> enchants = crazyEnchantsData.getEnchants();
 
-      for (Entry<CEnchantment, Integer> var5 : var3.entrySet()) {
-         CEnchantment var6 = (CEnchantment)var5.getKey();
-         int var7 = (Integer)var5.getValue();
-         var1.getLore().insert(0, Methods.color(var6.getColor() + var6.getCustomName() + " " + CrazyEnchantments.getInstance().convertLevelString(var7)));
+      for (Entry<CEnchantment, Integer> entry : enchants.entrySet()) {
+         CEnchantment key = (CEnchantment)entry.getKey();
+         int count = (Integer)entry.getValue();
+         itemStackBuilder.getLore().insert(0, Methods.color(key.getColor() + key.getCustomName() + " " + CrazyEnchantments.getInstance().convertLevelString(count)));
       }
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      Map var2 = CrazyEnchantments.getInstance().getEnchantments(var1.getNBT().getItem());
-      if (var2.size() > 0) {
-         var1.setData(this, new CrazyEnchantsData(var2));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      Map enchantments = CrazyEnchantments.getInstance().getEnchantments(readMMOItem.getNBT().getItem());
+      if (enchantments.size() > 0) {
+         readMMOItem.setData(this, new CrazyEnchantsData(enchantments));
       }
    }
 
    @Nullable
    @Override
-   public RandomStatData<CrazyEnchantsData> whenInitialized(Object var1) {
+   public RandomStatData<CrazyEnchantsData> whenInitialized(Object obj) {
       throw new NotImplementedException();
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
       throw new NotImplementedException();
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
       throw new NotImplementedException();
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<RandomStatData<CrazyEnchantsData>> var2) {
+   public void whenDisplayed(List<String> texts, Optional<RandomStatData<CrazyEnchantsData>> optional) {
       throw new NotImplementedException();
    }
 
    @Nullable
-   public CrazyEnchantsData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
+   public CrazyEnchantsData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
       return null;
    }
 
    @NotNull
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull CrazyEnchantsData var1) {
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull CrazyEnchantsData crazyEnchantsData) {
       return new ArrayList<>();
    }
 

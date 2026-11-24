@@ -44,54 +44,54 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
    protected static final int LORE_LINE_WIDTH = 50;
    protected String generalStatFormat;
 
-   public ItemStat(@NotNull String var1, @NotNull Material var2, @NotNull String var3, @Nullable String[] var4, @Nullable String[] var5, Material... var6) {
-      this.id = var1;
-      this.material = var2;
-      this.lore = var4 == null ? new String[0] : var4;
-      this.compatibleTypes = var5 == null ? new ArrayList<>() : Arrays.asList(var5);
-      this.name = var3;
-      this.compatibleMaterials = Arrays.asList(var6);
-      this.configPath = var1.toLowerCase().replace("_", "-");
-      this.nbtPath = "MMOITEMS_" + var1;
+   public ItemStat(@NotNull String text, @NotNull Material material, @NotNull String text2, @Nullable String[] texts, @Nullable String[] texts2, Material... materials) {
+      this.id = text;
+      this.material = material;
+      this.lore = texts == null ? new String[0] : texts;
+      this.compatibleTypes = texts2 == null ? new ArrayList<>() : Arrays.asList(texts2);
+      this.name = text2;
+      this.compatibleMaterials = Arrays.asList(materials);
+      this.configPath = text.toLowerCase().replace("_", "-");
+      this.nbtPath = "MMOITEMS_" + text;
       if (this.getClass().isAnnotationPresent(VersionDependant.class)) {
-         VersionDependant var7 = this.getClass().getAnnotation(VersionDependant.class);
-         if (MythicLib.plugin.getVersion().isUnder(var7.version())) {
+         VersionDependant annotation = this.getClass().getAnnotation(VersionDependant.class);
+         if (MythicLib.plugin.getVersion().isUnder(annotation.version())) {
             this.disable();
          }
       }
 
       if (this.getClass().isAnnotationPresent(net.Indyuce.mmoitems.util.VersionDependant.class)) {
-         net.Indyuce.mmoitems.util.VersionDependant var8 = this.getClass().getAnnotation(net.Indyuce.mmoitems.util.VersionDependant.class);
-         if (MythicLib.plugin.getVersion().isUnder(var8.version())) {
+         net.Indyuce.mmoitems.util.VersionDependant annotation = this.getClass().getAnnotation(net.Indyuce.mmoitems.util.VersionDependant.class);
+         if (MythicLib.plugin.getVersion().isUnder(annotation.version())) {
             this.disable();
          }
       }
    }
 
-   public abstract R whenInitialized(Object var1);
+   public abstract R whenInitialized(Object obj);
 
-   public abstract void whenApplied(@NotNull ItemStackBuilder var1, @NotNull S var2);
+   public abstract void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull S value);
 
    @NotNull
-   public abstract ArrayList<ItemTag> getAppliedNBT(@NotNull S var1);
+   public abstract ArrayList<ItemTag> getAppliedNBT(@NotNull S value);
 
-   public abstract void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2);
+   public abstract void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event);
 
-   public abstract void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3);
+   public abstract void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs);
 
-   public abstract void whenLoaded(@NotNull ReadMMOItem var1);
+   public abstract void whenLoaded(@NotNull ReadMMOItem readMMOItem);
 
    @Nullable
-   public abstract S getLoadedNBT(@NotNull ArrayList<ItemTag> var1);
+   public abstract S getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags);
 
-   public abstract void whenDisplayed(List<String> var1, Optional<R> var2);
+   public abstract void whenDisplayed(List<String> texts, Optional<R> optional);
 
-   public void loadConfiguration(@NotNull ConfigurationSection var1, @NotNull Object var2) {
-      this.loadConfiguration(var2);
+   public void loadConfiguration(@NotNull ConfigurationSection section, @NotNull Object obj) {
+      this.loadConfiguration(obj);
    }
 
-   public void loadConfiguration(@NotNull Object var1) {
-      this.generalStatFormat = var1.toString();
+   public void loadConfiguration(@NotNull Object obj) {
+      this.generalStatFormat = obj.toString();
    }
 
    public String getLegacyTranslationPath() {
@@ -107,8 +107,8 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
       return this.category;
    }
 
-   public void setCategory(@Nullable StatCategory var1) {
-      this.category = var1;
+   public void setCategory(@Nullable StatCategory statCategory) {
+      this.category = statCategory;
    }
 
    @NotNull
@@ -126,8 +126,8 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
       return this.aliases;
    }
 
-   public void setAliases(String... var1) {
-      this.aliases = var1;
+   public void setAliases(String... texts) {
+      this.aliases = texts;
    }
 
    @Deprecated
@@ -163,29 +163,29 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
       return this.compatibleTypes;
    }
 
-   public boolean isCompatible(@NotNull Type var1) {
+   public boolean isCompatible(@NotNull Type type) {
       if (this.compatibleTypes.isEmpty()) {
          return true;
       }
 
-      if (var1.getModifierSource().isWeapon() && this.compatibleTypes.contains("weapon")) {
+      if (type.getModifierSource().isWeapon() && this.compatibleTypes.contains("weapon")) {
          return true;
       }
 
-      if (var1.getModifierSource().isEquipment() && this.compatibleTypes.contains("equipment")) {
+      if (type.getModifierSource().isEquipment() && this.compatibleTypes.contains("equipment")) {
          return true;
       }
 
-      if (var1.getModifierSource().isHandheld() && this.compatibleTypes.contains("handheld")) {
+      if (type.getModifierSource().isHandheld() && this.compatibleTypes.contains("handheld")) {
          return true;
       }
 
-      String var2 = var1.getSupertype().getId().toLowerCase();
-      return !this.compatibleTypes.contains("!" + var2) && (this.compatibleTypes.contains("all") || this.compatibleTypes.contains(var2));
+      String text = type.getSupertype().getId().toLowerCase();
+      return !this.compatibleTypes.contains("!" + text) && (this.compatibleTypes.contains("all") || this.compatibleTypes.contains(text));
    }
 
-   public boolean hasValidMaterial(ItemStack var1) {
-      return this.compatibleMaterials.isEmpty() || this.compatibleMaterials.contains(var1.getType());
+   public boolean hasValidMaterial(ItemStack item) {
+      return this.compatibleMaterials.isEmpty() || this.compatibleMaterials.contains(item.getType());
    }
 
    public void disable() {
@@ -193,23 +193,23 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
    }
 
    @Deprecated
-   public String formatNumericStat(double var1, String... var3) {
-      String var4 = this.getGeneralStatFormat().replace("<plus>", var1 > 0.0 ? "+" : "");
+   public String formatNumericStat(double value, String... texts) {
+      String text = this.getGeneralStatFormat().replace("<plus>", value > 0.0 ? "+" : "");
 
-      for (byte var5 = 0; var5 < var3.length; var5 += 2) {
-         var4 = var4.replace(var3[var5], var3[var5 + 1]);
+      for (byte b = 0; b < texts.length; b += 2) {
+         text = text.replace(texts[b], texts[b + 1]);
       }
 
-      return var4;
+      return text;
    }
 
    @Override
-   public boolean equals(Object var1) {
-      if (this == var1) {
+   public boolean equals(Object obj) {
+      if (this == obj) {
          return true;
-      } else if (var1 != null && this.getClass() == var1.getClass()) {
-         ItemStat var2 = (ItemStat)var1;
-         return this.id.equals(var2.id);
+      } else if (obj != null && this.getClass() == obj.getClass()) {
+         ItemStat itemStat = (ItemStat)obj;
+         return this.id.equals(itemStat.id);
       } else {
          return false;
       }
@@ -221,8 +221,8 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
    }
 
    @Deprecated
-   public static String translate(String var0) {
-      return MMOItems.plugin.getLanguage().getStatFormat(var0);
+   public static String translate(String text) {
+      return MMOItems.plugin.getLanguage().getStatFormat(text);
    }
 
    @NotNull

@@ -27,127 +27,127 @@ public class NBTTags extends StringListStat {
    }
 
    @Override
-   public StringListData whenInitialized(Object var1) {
-      Validate.isTrue(var1 instanceof List, "Must specify a string list");
-      return new StringListData((List<String>)var1);
+   public StringListData whenInitialized(Object obj) {
+      Validate.isTrue(obj instanceof List, "Must specify a string list");
+      return new StringListData((List<String>)obj);
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      if (var2.getAction() == InventoryAction.PICKUP_ALL) {
-         new StatEdition(var1, ItemStats.NBT_TAGS).enable("Write in the chat the NBT tag you want to add.", ChatColor.AQUA + "Format: {Tag Name} {Tag Value}");
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      if (event.getAction() == InventoryAction.PICKUP_ALL) {
+         new StatEdition(editionInventory, ItemStats.NBT_TAGS).enable("Write in the chat the NBT tag you want to add.", ChatColor.AQUA + "Format: {Tag Name} {Tag Value}");
       }
 
-      if (var2.getAction() == InventoryAction.PICKUP_HALF && var1.getEditedSection().contains("custom-nbt")) {
-         List var3 = var1.getEditedSection().getStringList("custom-nbt");
-         if (var3.size() < 1) {
+      if (event.getAction() == InventoryAction.PICKUP_HALF && editionInventory.getEditedSection().contains("custom-nbt")) {
+         List customNbt = editionInventory.getEditedSection().getStringList("custom-nbt");
+         if (customNbt.size() < 1) {
             return;
          }
 
-         String var4 = (String)var3.get(var3.size() - 1);
-         var3.remove(var4);
-         var1.getEditedSection().set("custom-nbt", var3);
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + var4 + "'.");
+         String text = (String)customNbt.get(customNbt.size() - 1);
+         customNbt.remove(text);
+         editionInventory.getEditedSection().set("custom-nbt", customNbt);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + text + "'.");
       }
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      Validate.isTrue(var2.split(" ").length > 1, "Use this format: {Tag Name} {Tag Value}");
-      List var4 = var1.getEditedSection().contains("custom-nbt") ? var1.getEditedSection().getStringList("custom-nbt") : new ArrayList();
-      var4.add(var2);
-      var1.getEditedSection().set("custom-nbt", var4);
-      var1.registerTemplateEdition();
-      var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "StringListStat successfully added.");
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      Validate.isTrue(text.split(" ").length > 1, "Use this format: {Tag Name} {Tag Value}");
+      List list = editionInventory.getEditedSection().contains("custom-nbt") ? editionInventory.getEditedSection().getStringList("custom-nbt") : new ArrayList();
+      list.add(text);
+      editionInventory.getEditedSection().set("custom-nbt", list);
+      editionInventory.registerTemplateEdition();
+      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "StringListStat successfully added.");
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<StringListData> var2) {
-      if (var2.isPresent()) {
-         var1.add(ChatColor.GRAY + "Current Value:");
-         StringListData var3 = (StringListData)var2.get();
-         var3.getList().forEach(var1x -> var1.add(ChatColor.GRAY + var1x));
+   public void whenDisplayed(List<String> texts, Optional<StringListData> optional) {
+      if (optional.isPresent()) {
+         texts.add(ChatColor.GRAY + "Current Value:");
+         StringListData stringListData = (StringListData)optional.get();
+         stringListData.getList().forEach(var1x -> texts.add(ChatColor.GRAY + var1x));
       } else {
-         var1.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+         texts.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
       }
 
-      var1.add("");
-      var1.add(ChatColor.YELLOW + "►" + " Click to add a tag.");
-      var1.add(ChatColor.YELLOW + "►" + " Right click to remove the last tag.");
+      texts.add("");
+      texts.add(ChatColor.YELLOW + "►" + " Click to add a tag.");
+      texts.add(ChatColor.YELLOW + "►" + " Right click to remove the last tag.");
    }
 
    @NotNull
    @Override
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull StringListData var1) {
-      JsonArray var2 = new JsonArray();
-      ArrayList var3 = new ArrayList();
-      HashMap<String, String> var4 = new HashMap<>();
-      HashMap<String, ItemTag> var5 = new HashMap<>();
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull StringListData stringListData) {
+      JsonArray jsonArray = new JsonArray();
+      ArrayList list = new ArrayList();
+      HashMap<String, String> map = new HashMap<>();
+      HashMap<String, ItemTag> map2 = new HashMap<>();
 
-      for (String var7 : var1.getList()) {
-         if (!var7.startsWith(extraneousTag)) {
-            var2.add(var7);
-            String var8 = var7.substring(0, var7.indexOf(32));
-            String var9 = var7.substring(var7.indexOf(32) + 1);
-            var4.put(var8, extraneousTag + var7);
-            var5.put(var8, new ItemTag(var8, this.calculateObjectType(var9)));
+      for (String text : stringListData.getList()) {
+         if (!text.startsWith(extraneousTag)) {
+            jsonArray.add(text);
+            String text2 = text.substring(0, text.indexOf(32));
+            String text3 = text.substring(text.indexOf(32) + 1);
+            map.put(text2, extraneousTag + text);
+            map2.put(text2, new ItemTag(text2, this.calculateObjectType(text3)));
          }
       }
 
-      for (String var13 : var1.getList()) {
-         if (var13.startsWith(extraneousTag)) {
-            String var15 = var13.substring(extraneousTag.length());
-            String var16 = var15.substring(0, var15.indexOf(32));
-            String var10 = var15.substring(var15.indexOf(32) + 1);
-            if (var4.containsKey(var16)) {
-               var4.put(var16, var13);
+      for (String text : stringListData.getList()) {
+         if (text.startsWith(extraneousTag)) {
+            String text2 = text.substring(extraneousTag.length());
+            String text3 = text2.substring(0, text2.indexOf(32));
+            String text4 = text2.substring(text2.indexOf(32) + 1);
+            if (map.containsKey(text3)) {
+               map.put(text3, text);
             } else {
-               if (var10.isEmpty()) {
-                  var5.remove(var16);
+               if (text4.isEmpty()) {
+                  map2.remove(text3);
                } else {
-                  var5.put(var16, new ItemTag(var16, this.calculateObjectType(var10)));
+                  map2.put(text3, new ItemTag(text3, this.calculateObjectType(text4)));
                }
 
-               var4.remove(var16);
+               map.remove(text3);
             }
          }
       }
 
-      for (String var14 : var5.keySet()) {
-         var3.add((ItemTag)var5.get(var14));
-         var2.add((String)var4.get(var14));
+      for (String key : map2.keySet()) {
+         list.add((ItemTag)map2.get(key));
+         jsonArray.add((String)map.get(key));
       }
 
-      var3.add(new ItemTag(this.getNBTPath(), var2.toString()));
-      return var3;
+      list.add(new ItemTag(this.getNBTPath(), jsonArray.toString()));
+      return list;
    }
 
-   public Object calculateObjectType(String var1) {
-      if (var1.equalsIgnoreCase("true")) {
+   public Object calculateObjectType(String text) {
+      if (text.equalsIgnoreCase("true")) {
          return true;
       }
 
-      if (var1.equalsIgnoreCase("false")) {
+      if (text.equalsIgnoreCase("false")) {
          return false;
       }
 
       try {
-         return Integer.parseInt(var1);
-      } catch (NumberFormatException var8) {
+         return Integer.parseInt(text);
+      } catch (NumberFormatException exception) {
          try {
-            return Double.parseDouble(var1);
-         } catch (NumberFormatException var7) {
-            if (var1.contains("[") && var1.contains("]")) {
-               ArrayList var2 = new ArrayList();
+            return Double.parseDouble(text);
+         } catch (NumberFormatException exception2) {
+            if (text.contains("[") && text.contains("]")) {
+               ArrayList list = new ArrayList();
 
-               for (String var6 : var1.replace("[", "").replace("]", "").split(",")) {
-                  var2.add(var6.replace("\"", ""));
+               for (String text2 : text.replace("[", "").replace("]", "").split(",")) {
+                  list.add(text2.replace("\"", ""));
                }
 
-               return var2;
+               return list;
             } else {
-               return var1;
+               return text;
             }
          }
       }

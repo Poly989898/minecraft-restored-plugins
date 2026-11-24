@@ -31,28 +31,28 @@ public class CanIdentify extends BooleanStat implements ConsumableItemInteractio
 
    @Override
    public boolean handleConsumableEffect(
-      @NotNull InventoryClickEvent var1, @NotNull PlayerData var2, @NotNull Consumable var3, @NotNull NBTItem var4, Type var5
+      @NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem nbtItem, Type type
    ) {
-      if (var5 != null) {
+      if (type != null) {
          return false;
       }
 
-      if (var3.getNBTItem().getBoolean("MMOITEMS_CAN_IDENTIFY") && var4.hasTag("MMOITEMS_UNIDENTIFIED_ITEM")) {
-         Player var6 = var2.getPlayer();
-         if (var4.getItem().getAmount() > 1) {
-            Message.CANNOT_IDENTIFY_STACKED_ITEMS.format(ChatColor.RED).send(var6);
+      if (consumable.getNBTItem().getBoolean("MMOITEMS_CAN_IDENTIFY") && nbtItem.hasTag("MMOITEMS_UNIDENTIFIED_ITEM")) {
+         Player player = playerData.getPlayer();
+         if (nbtItem.getItem().getAmount() > 1) {
+            Message.CANNOT_IDENTIFY_STACKED_ITEMS.format(ChatColor.RED).send(player);
             return false;
          }
 
-         IdentifyItemEvent var7 = new IdentifyItemEvent(var2, var3.getMMOItem(), var4);
-         Bukkit.getPluginManager().callEvent(var7);
-         if (var7.isCancelled()) {
+         IdentifyItemEvent event2 = new IdentifyItemEvent(playerData, consumable.getMMOItem(), nbtItem);
+         Bukkit.getPluginManager().callEvent(event2);
+         if (event2.isCancelled()) {
             return false;
          }
 
-         var1.setCurrentItem(new IdentifiedItem(var4).identify());
-         Message.SUCCESSFULLY_IDENTIFIED.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(var4.getItem())).send(var6);
-         var6.playSound(var6.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 2.0F);
+         event.setCurrentItem(new IdentifiedItem(nbtItem).identify());
+         Message.SUCCESSFULLY_IDENTIFIED.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(nbtItem.getItem())).send(player);
+         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 2.0F);
          return true;
       } else {
          return false;

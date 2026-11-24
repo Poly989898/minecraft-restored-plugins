@@ -41,26 +41,26 @@ public class ModifierNode implements PreloadedObject {
       if (var2x != null) {
          for (String var4x : var2x.getKeys(false)) {
             try {
-               ModifierNode var5 = fromConfig(var4x, var1x.get("modifiers." + var4x));
-               var5.getPostLoadAction().performAction();
-               this.children.add(var5);
-            } catch (RuntimeException var9) {
+               ModifierNode modifierNode = fromConfig(var4x, var1x.get("modifiers." + var4x));
+               modifierNode.getPostLoadAction().performAction();
+               this.children.add(modifierNode);
+            } catch (RuntimeException exception) {
                MMOItems.plugin
                   .getLogger()
-                  .log(Level.SEVERE, "Could not load parent modifier node '" + var4x + "' of modifier group '" + this.getId() + "': " + var9.getMessage());
+                  .log(Level.SEVERE, "Could not load parent modifier node '" + var4x + "' of modifier group '" + this.getId() + "': " + exception.getMessage());
             }
          }
       }
 
       Validate.notNull(this.data, "Internal error");
-      ConfigurationSection var10 = var1x.getConfigurationSection("stats");
-      if (var10 != null) {
-         for (String var12 : var10.getKeys(false)) {
+      ConfigurationSection stats = var1x.getConfigurationSection("stats");
+      if (stats != null) {
+         for (String key : stats.getKeys(false)) {
             try {
-               String var6x = UtilityMethods.enumName(var12);
+               String var6x = UtilityMethods.enumName(key);
                ItemStat var7x = MMOItems.plugin.getStats().get(var6x);
                Validate.notNull(var7x, "Could not find stat with ID '" + var6x + "'");
-               this.data.put(var7x, var7x.whenInitialized(var10.get(var12)));
+               this.data.put(var7x, var7x.whenInitialized(stats.get(key)));
             } catch (IllegalArgumentException var8x) {
                MMOItems.plugin
                   .getLogger()
@@ -70,53 +70,53 @@ public class ModifierNode implements PreloadedObject {
       }
    }
 
-   public ModifierNode(@NotNull String var1, @NotNull Object var2) {
-      this.id = var1;
-      if (var2 instanceof Number) {
+   public ModifierNode(@NotNull String text, @NotNull Object obj) {
+      this.id = text;
+      if (obj instanceof Number) {
          this.referenceNode = findReferenceNode(this.id);
          this.chance = this.referenceNode.chance;
-         this.weight = ((Number)var2).doubleValue();
+         this.weight = ((Number)obj).doubleValue();
          this.nameModifier = this.referenceNode.nameModifier;
-      } else if (var2 instanceof String) {
-         this.referenceNode = findReferenceNode(var2.toString());
+      } else if (obj instanceof String) {
+         this.referenceNode = findReferenceNode(obj.toString());
          this.chance = this.referenceNode.chance;
          this.weight = this.referenceNode.weight;
          this.nameModifier = this.referenceNode.nameModifier;
       } else {
-         if (!(var2 instanceof ConfigurationSection)) {
+         if (!(obj instanceof ConfigurationSection)) {
             throw new IllegalArgumentException("Must be either a string, number config section");
          }
 
-         ConfigurationSection var3 = (ConfigurationSection)var2;
-         ModifierNode var4 = null;
+         ConfigurationSection section = (ConfigurationSection)obj;
+         ModifierNode modifierNode = null;
 
          try {
-            var4 = findReferenceNode(this.id);
-         } catch (Throwable var6) {
+            modifierNode = findReferenceNode(this.id);
+         } catch (Throwable exception) {
          }
 
-         this.referenceNode = var4;
-         this.chance = var3.getDouble("chance", var4 != null ? var4.getChance() : 1.0);
-         this.weight = var3.getDouble("weight", var4 != null ? var4.getWeight() : 0.0);
-         this.nameModifier = var3.contains("suffix")
-            ? new NameModifier(NameModifier.ModifierType.SUFFIX, var3.get("suffix"))
-            : (var3.contains("prefix") ? new NameModifier(NameModifier.ModifierType.PREFIX, var3.get("prefix")) : (var4 != null ? var4.nameModifier : null));
+         this.referenceNode = modifierNode;
+         this.chance = section.getDouble("chance", modifierNode != null ? modifierNode.getChance() : 1.0);
+         this.weight = section.getDouble("weight", modifierNode != null ? modifierNode.getWeight() : 0.0);
+         this.nameModifier = section.contains("suffix")
+            ? new NameModifier(NameModifier.ModifierType.SUFFIX, section.get("suffix"))
+            : (section.contains("prefix") ? new NameModifier(NameModifier.ModifierType.PREFIX, section.get("prefix")) : (modifierNode != null ? modifierNode.nameModifier : null));
          Validate.isTrue(this.chance > 0.0, "Chance must be strictly positive");
       }
 
       if (this.referenceNode != null) {
          this.children = this.referenceNode.children;
-         ConfigurationSection var7 = var2 instanceof ConfigurationSection ? (ConfigurationSection)var2 : null;
-         this.min = var7 != null && var7.contains("min") ? var7.getInt("min") : this.referenceNode.min;
-         this.max = var7 != null && var7.contains("max") ? var7.getInt("max") : this.referenceNode.max;
+         ConfigurationSection section = obj instanceof ConfigurationSection ? (ConfigurationSection)obj : null;
+         this.min = section != null && section.contains("min") ? section.getInt("min") : this.referenceNode.min;
+         this.max = section != null && section.contains("max") ? section.getInt("max") : this.referenceNode.max;
          this.data = this.referenceNode.data;
       } else {
-         Validate.isTrue(var2 instanceof ConfigurationSection, "Must provide a config section when not using a reference node");
-         ConfigurationSection var8 = (ConfigurationSection)var2;
-         this.min = var8.getInt("min");
-         this.max = var8.getInt("max", -1);
+         Validate.isTrue(obj instanceof ConfigurationSection, "Must provide a config section when not using a reference node");
+         ConfigurationSection section = (ConfigurationSection)obj;
+         this.min = section.getInt("min");
+         this.max = section.getInt("max", -1);
          this.children = new ArrayList<>();
-         this.postLoadAction.cacheConfig(var8);
+         this.postLoadAction.cacheConfig(section);
          this.data = new HashMap<>();
       }
    }
@@ -165,81 +165,81 @@ public class ModifierNode implements PreloadedObject {
       return this.children;
    }
 
-   public boolean collect(@NotNull MMOItemBuilder var1) {
+   public boolean collect(@NotNull MMOItemBuilder mmoItemBuilder) {
       if (!this.rollChance()) {
          return false;
       }
 
-      if (this.weight > var1.getCapacity()) {
+      if (this.weight > mmoItemBuilder.getCapacity()) {
          return false;
       }
 
-      UUID var2 = UUID.randomUUID();
-      var1.reduceCapacity(this.weight);
+      UUID uuid = UUID.randomUUID();
+      mmoItemBuilder.reduceCapacity(this.weight);
       if (this.hasNameModifier()) {
-         var1.addModifier(this.getNameModifier(), var2);
+         mmoItemBuilder.addModifier(this.getNameModifier(), uuid);
       }
 
-      this.whenCollected(var1, var2);
+      this.whenCollected(mmoItemBuilder, uuid);
       return true;
    }
 
-   public void whenCollected(@NotNull MMOItemBuilder var1, @NotNull UUID var2) {
-      this.data.forEach((var2x, var3x) -> var1.addModifierData(var2x, var3x.randomize(var1), var2));
-      ArrayList var3 = new ArrayList<>(this.children);
-      if (var1.getTemplate().hasOption(MMOItemTemplate.TemplateOption.ROLL_MODIFIER_CHECK_ORDER)) {
-         Collections.shuffle(var3);
+   public void whenCollected(@NotNull MMOItemBuilder mmoItemBuilder, @NotNull UUID uuid) {
+      this.data.forEach((var2x, var3x) -> mmoItemBuilder.addModifierData(var2x, var3x.randomize(mmoItemBuilder), uuid));
+      ArrayList list = new ArrayList<>(this.children);
+      if (mmoItemBuilder.getTemplate().hasOption(MMOItemTemplate.TemplateOption.ROLL_MODIFIER_CHECK_ORDER)) {
+         Collections.shuffle(list);
       }
 
-      int var4 = this.max <= 0 ? var3.size() : Math.min(this.max, var3.size());
-      int var5 = 0;
+      int count = this.max <= 0 ? list.size() : Math.min(this.max, list.size());
+      int index = 0;
 
-      while (this.children.size() - var3.size() < var4 && var5 < var3.size()) {
-         ModifierNode var6 = (ModifierNode)var3.get(var5);
-         if (var6.collect(var1)) {
-            var3.remove(var5);
+      while (this.children.size() - list.size() < count && index < list.size()) {
+         ModifierNode modifierNode = (ModifierNode)list.get(index);
+         if (modifierNode.collect(mmoItemBuilder)) {
+            list.remove(index);
          } else {
-            var5++;
+            index++;
          }
       }
 
-      while (this.children.size() - var3.size() < this.min) {
-         ModifierNode var7 = (ModifierNode)var3.remove(this.rollModifier(var3));
-         var7.collect(var1);
+      while (this.children.size() - list.size() < this.min) {
+         ModifierNode modifierNode = (ModifierNode)list.remove(this.rollModifier(list));
+         modifierNode.collect(mmoItemBuilder);
       }
    }
 
    @NotNull
-   public static ModifierNode fromConfig(@NotNull String var0, @NotNull Object var1) {
-      if (var1 instanceof Number || var1 instanceof String) {
-         Validate.notNull(findReferenceNode(var0), "Could not find reference node called '" + var0 + "'");
+   public static ModifierNode fromConfig(@NotNull String text, @NotNull Object obj) {
+      if (obj instanceof Number || obj instanceof String) {
+         Validate.notNull(findReferenceNode(text), "Could not find reference node called '" + text + "'");
       }
 
-      return new ModifierNode(var0, var1);
+      return new ModifierNode(text, obj);
    }
 
    @NotNull
-   private static ModifierNode findReferenceNode(@NotNull String var0) {
-      ModifierNode var1 = MMOItems.plugin.getTemplates().getModifierNode(var0);
-      Validate.notNull(var1, "Could not find public modifier with ID '" + var0 + "'");
-      return var1;
+   private static ModifierNode findReferenceNode(@NotNull String text) {
+      ModifierNode modifierNode = MMOItems.plugin.getTemplates().getModifierNode(text);
+      Validate.notNull(modifierNode, "Could not find public modifier with ID '" + text + "'");
+      return modifierNode;
    }
 
    @NotNull
-   private int rollModifier(@NotNull List<ModifierNode> var1) {
-      double[] var2 = new double[var1.size()];
-      double var3 = 0.0;
+   private int rollModifier(@NotNull List<ModifierNode> modifierNodes) {
+      double[] values = new double[modifierNodes.size()];
+      double value = 0.0;
 
-      for (int var5 = 0; var5 < var1.size(); var5++) {
-         var3 += ((ModifierNode)var1.get(var5)).getChance();
-         var2[var5] = var3;
+      for (int i = 0; i < modifierNodes.size(); i++) {
+         value += ((ModifierNode)modifierNodes.get(i)).getChance();
+         values[i] = value;
       }
 
-      double var8 = RANDOM.nextDouble() * var3;
+      double value2 = RANDOM.nextDouble() * value;
 
-      for (int var7 = 0; var7 < var1.size(); var7++) {
-         if (var8 <= var2[var7]) {
-            return var7;
+      for (int i = 0; i < modifierNodes.size(); i++) {
+         if (value2 <= values[i]) {
+            return i;
          }
       }
 

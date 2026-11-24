@@ -21,23 +21,23 @@ public class AnvilGUI extends PlayerInputHandler implements Listener {
    private boolean open;
 
    @Deprecated
-   public AnvilGUI(Edition var1) {
-      super(var1);
-      ItemStack var2 = new ItemStack(Material.PAPER);
-      ItemMeta var3 = var2.getItemMeta();
-      var3.setDisplayName("Input text..");
-      var2.setItemMeta(var3);
+   public AnvilGUI(Edition edition) {
+      super(edition);
+      ItemStack item = new ItemStack(Material.PAPER);
+      ItemMeta itemMeta = item.getItemMeta();
+      itemMeta.setDisplayName("Input text..");
+      item.setItemMeta(itemMeta);
       MythicLib.plugin.getVersion().getWrapper().handleInventoryCloseEvent(this.getPlayer());
       MythicLib.plugin.getVersion().getWrapper().setActiveContainerDefault(this.getPlayer());
       Bukkit.getPluginManager().registerEvents(this, MMOItems.plugin);
-      Object var4 = MythicLib.plugin.getVersion().getWrapper().newContainerAnvil(this.getPlayer());
-      this.inventory = MythicLib.plugin.getVersion().getWrapper().toBukkitInventory(var4);
-      this.inventory.setItem(0, var2);
+      Object containerAnvil = MythicLib.plugin.getVersion().getWrapper().newContainerAnvil(this.getPlayer());
+      this.inventory = MythicLib.plugin.getVersion().getWrapper().toBukkitInventory(containerAnvil);
+      this.inventory.setItem(0, item);
       this.containerId = MythicLib.plugin.getVersion().getWrapper().getNextContainerId(this.getPlayer());
       MythicLib.plugin.getVersion().getWrapper().sendPacketOpenWindow(this.getPlayer(), this.containerId);
-      MythicLib.plugin.getVersion().getWrapper().setActiveContainer(this.getPlayer(), var4);
-      MythicLib.plugin.getVersion().getWrapper().setActiveContainerId(var4, this.containerId);
-      MythicLib.plugin.getVersion().getWrapper().addActiveContainerSlotListener(var4, this.getPlayer());
+      MythicLib.plugin.getVersion().getWrapper().setActiveContainer(this.getPlayer(), containerAnvil);
+      MythicLib.plugin.getVersion().getWrapper().setActiveContainerId(containerAnvil, this.containerId);
+      MythicLib.plugin.getVersion().getWrapper().addActiveContainerSlotListener(containerAnvil, this.getPlayer());
       this.open = true;
    }
 
@@ -57,21 +57,21 @@ public class AnvilGUI extends PlayerInputHandler implements Listener {
    }
 
    @EventHandler
-   public void a(InventoryClickEvent var1) {
-      if (var1.getInventory().equals(this.inventory)) {
-         var1.setCancelled(true);
-         if (var1.getRawSlot() == 2) {
-            ItemStack var2 = this.inventory.getItem(var1.getRawSlot());
-            if (var2 != null && var2.getType() != Material.AIR) {
-               this.registerInput(var2.hasItemMeta() ? var2.getItemMeta().getDisplayName() : var2.getType().toString());
+   public void a(InventoryClickEvent event) {
+      if (event.getInventory().equals(this.inventory)) {
+         event.setCancelled(true);
+         if (event.getRawSlot() == 2) {
+            ItemStack item = this.inventory.getItem(event.getRawSlot());
+            if (item != null && item.getType() != Material.AIR) {
+               this.registerInput(item.hasItemMeta() ? item.getItemMeta().getDisplayName() : item.getType().toString());
             }
          }
       }
    }
 
    @EventHandler
-   public void b(InventoryCloseEvent var1) {
-      if (this.open && var1.getInventory().equals(this.inventory)) {
+   public void b(InventoryCloseEvent event) {
+      if (this.open && event.getInventory().equals(this.inventory)) {
          this.close();
       }
    }

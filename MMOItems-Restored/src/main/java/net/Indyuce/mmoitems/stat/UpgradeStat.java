@@ -56,92 +56,92 @@ public class UpgradeStat extends ItemStat<UpgradeData, UpgradeData> implements C
       );
    }
 
-   public UpgradeData whenInitialized(Object var1) {
-      Validate.isTrue(var1 instanceof ConfigurationSection, "Must specify a config section");
-      return new UpgradeData((ConfigurationSection)var1);
+   public UpgradeData whenInitialized(Object obj) {
+      Validate.isTrue(obj instanceof ConfigurationSection, "Must specify a config section");
+      return new UpgradeData((ConfigurationSection)obj);
    }
 
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull UpgradeData var2) {
-      if (var2 instanceof UpgradeData) {
-         var1.addItemTag(this.getAppliedNBT(var2));
-         var1.getLore().registerPlaceholder("upgrade_level", String.valueOf(var2.getLevel()));
-         if (var2.getMaxUpgrades() > 0) {
-            var1.getLore().insert(this.getPath(), this.getGeneralStatFormat().replace("{value}", String.valueOf(var2.getMaxUpgrades())));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull UpgradeData upgradeData) {
+      if (upgradeData instanceof UpgradeData) {
+         itemStackBuilder.addItemTag(this.getAppliedNBT(upgradeData));
+         itemStackBuilder.getLore().registerPlaceholder("upgrade_level", String.valueOf(upgradeData.getLevel()));
+         if (upgradeData.getMaxUpgrades() > 0) {
+            itemStackBuilder.getLore().insert(this.getPath(), this.getGeneralStatFormat().replace("{value}", String.valueOf(upgradeData.getMaxUpgrades())));
          }
       }
    }
 
    @NotNull
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull UpgradeData var1) {
-      ArrayList var2 = new ArrayList();
-      var2.add(new ItemTag(this.getNBTPath(), var1.toString()));
-      return var2;
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull UpgradeData upgradeData) {
+      ArrayList list = new ArrayList();
+      list.add(new ItemTag(this.getNBTPath(), upgradeData.toString()));
+      return list;
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      if (var2.getAction() == InventoryAction.PICKUP_ALL) {
-         new UpgradingEdition(var1.getPlayer(), var1.getEdited()).open(var1);
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      if (event.getAction() == InventoryAction.PICKUP_ALL) {
+         new UpgradingEdition(editionInventory.getPlayer(), editionInventory.getEdited()).open(editionInventory);
       }
 
-      if (var2.getAction() == InventoryAction.PICKUP_HALF && var1.getEditedSection().contains("upgrade")) {
-         var1.getEditedSection().set("upgrade", null);
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the upgrading setup.");
+      if (event.getAction() == InventoryAction.PICKUP_HALF && editionInventory.getEditedSection().contains("upgrade")) {
+         editionInventory.getEditedSection().set("upgrade", null);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully reset the upgrading setup.");
       }
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      if (var3[0].equals("ref")) {
-         var1.getEditedSection().set("upgrade.reference", var2);
-         var1.registerTemplateEdition();
-         var1.getPlayer()
-            .sendMessage(MMOItems.plugin.getPrefix() + "Upgrading reference successfully changed to " + ChatColor.GOLD + var2 + ChatColor.GRAY + ".");
-      } else if (var3[0].equals("max")) {
-         int var7 = Integer.parseInt(var2);
-         var1.getEditedSection().set("upgrade.max", var7);
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Max upgrades successfully set to " + ChatColor.GOLD + var7 + ChatColor.GRAY + ".");
-      } else if (var3[0].equals("min")) {
-         int var6 = Integer.parseInt(var2);
-         var1.getEditedSection().set("upgrade.min", var6);
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Min level successfully set to " + ChatColor.GOLD + var6 + ChatColor.GRAY + ".");
-      } else if (var3[0].equals("rate")) {
-         double var4 = MMOUtils.parseDouble(var2);
-         var1.getEditedSection().set("upgrade.success", var4);
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Upgrading rate successfully set to " + ChatColor.GOLD + var4 + "%" + ChatColor.GRAY + ".");
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      if (objs[0].equals("ref")) {
+         editionInventory.getEditedSection().set("upgrade.reference", text);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer()
+            .sendMessage(MMOItems.plugin.getPrefix() + "Upgrading reference successfully changed to " + ChatColor.GOLD + text + ChatColor.GRAY + ".");
+      } else if (objs[0].equals("max")) {
+         int count = Integer.parseInt(text);
+         editionInventory.getEditedSection().set("upgrade.max", count);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Max upgrades successfully set to " + ChatColor.GOLD + count + ChatColor.GRAY + ".");
+      } else if (objs[0].equals("min")) {
+         int count = Integer.parseInt(text);
+         editionInventory.getEditedSection().set("upgrade.min", count);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Min level successfully set to " + ChatColor.GOLD + count + ChatColor.GRAY + ".");
+      } else if (objs[0].equals("rate")) {
+         double value = MMOUtils.parseDouble(text);
+         editionInventory.getEditedSection().set("upgrade.success", value);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Upgrading rate successfully set to " + ChatColor.GOLD + value + "%" + ChatColor.GRAY + ".");
       } else {
-         Validate.isTrue(MMOItems.plugin.getUpgrades().hasTemplate(var2), "Could not find any upgrade template with ID '" + var2 + "'.");
-         var1.getEditedSection().set("upgrade.template", var2);
-         var1.registerTemplateEdition();
-         var1.getPlayer()
-            .sendMessage(MMOItems.plugin.getPrefix() + "Upgrading template successfully changed to " + ChatColor.GOLD + var2 + ChatColor.GRAY + ".");
+         Validate.isTrue(MMOItems.plugin.getUpgrades().hasTemplate(text), "Could not find any upgrade template with ID '" + text + "'.");
+         editionInventory.getEditedSection().set("upgrade.template", text);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer()
+            .sendMessage(MMOItems.plugin.getPrefix() + "Upgrading template successfully changed to " + ChatColor.GOLD + text + ChatColor.GRAY + ".");
       }
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      ArrayList var2 = new ArrayList();
-      if (var1.getNBT().hasTag(this.getNBTPath())) {
-         var2.add(ItemTag.getTagAtPath(this.getNBTPath(), var1.getNBT(), SupportedNBTTagValues.STRING));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      ArrayList list = new ArrayList();
+      if (readMMOItem.getNBT().hasTag(this.getNBTPath())) {
+         list.add(ItemTag.getTagAtPath(this.getNBTPath(), readMMOItem.getNBT(), SupportedNBTTagValues.STRING));
       }
 
-      UpgradeData var3 = this.getLoadedNBT(var2);
-      if (var3 != null) {
-         var1.setData(this, var3);
+      UpgradeData loadedNBT = this.getLoadedNBT(list);
+      if (loadedNBT != null) {
+         readMMOItem.setData(this, loadedNBT);
       }
    }
 
    @Nullable
-   public UpgradeData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
-      ItemTag var2 = ItemTag.getTagAtPath(this.getNBTPath(), var1);
-      if (var2 != null) {
+   public UpgradeData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
+      ItemTag tagAtPath = ItemTag.getTagAtPath(this.getNBTPath(), itemTags);
+      if (tagAtPath != null) {
          try {
-            return new UpgradeData(new JsonParser().parse((String)var2.getValue()).getAsJsonObject());
-         } catch (JsonSyntaxException | IllegalStateException var4) {
+            return new UpgradeData(new JsonParser().parse((String)tagAtPath.getValue()).getAsJsonObject());
+         } catch (JsonSyntaxException | IllegalStateException exception) {
          }
       }
 
@@ -149,9 +149,9 @@ public class UpgradeStat extends ItemStat<UpgradeData, UpgradeData> implements C
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<UpgradeData> var2) {
-      var1.add(ChatColor.YELLOW + "►" + " Left click to setup upgrading.");
-      var1.add(ChatColor.YELLOW + "►" + " Right click to reset.");
+   public void whenDisplayed(List<String> texts, Optional<UpgradeData> optional) {
+      texts.add(ChatColor.YELLOW + "►" + " Left click to setup upgrading.");
+      texts.add(ChatColor.YELLOW + "►" + " Right click to reset.");
    }
 
    @NotNull
@@ -161,62 +161,62 @@ public class UpgradeStat extends ItemStat<UpgradeData, UpgradeData> implements C
 
    @Override
    public boolean handleConsumableEffect(
-      @NotNull InventoryClickEvent var1, @NotNull PlayerData var2, @NotNull Consumable var3, @NotNull NBTItem var4, Type var5
+      @NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem nbtItem, Type type
    ) {
-      VolatileMMOItem var6 = var3.getMMOItem();
-      Player var7 = var2.getPlayer();
-      if (var6.hasData(ItemStats.UPGRADE) && var4.hasTag(ItemStats.UPGRADE.getNBTPath())) {
-         if (var4.getItem().getAmount() > 1) {
-            Message.CANT_UPGRADED_STACK.format(ChatColor.RED).send(var7);
-            var7.playSound(var7.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 2.0F);
+      VolatileMMOItem mMOItem = consumable.getMMOItem();
+      Player player = playerData.getPlayer();
+      if (mMOItem.hasData(ItemStats.UPGRADE) && nbtItem.hasTag(ItemStats.UPGRADE.getNBTPath())) {
+         if (nbtItem.getItem().getAmount() > 1) {
+            Message.CANT_UPGRADED_STACK.format(ChatColor.RED).send(player);
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 2.0F);
             return false;
          }
 
-         LiveMMOItem var8 = new LiveMMOItem(var4);
-         UpgradeData var9 = (UpgradeData)var8.getData(ItemStats.UPGRADE);
-         if (var9.isWorkbench()) {
+         LiveMMOItem liveMMOItem = new LiveMMOItem(nbtItem);
+         UpgradeData data = (UpgradeData)liveMMOItem.getData(ItemStats.UPGRADE);
+         if (data.isWorkbench()) {
             return false;
          }
 
-         if (!var9.canLevelUp()) {
-            Message.MAX_UPGRADES_HIT.format(ChatColor.RED).send(var7);
-            var7.playSound(var7.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 2.0F);
+         if (!data.canLevelUp()) {
+            Message.MAX_UPGRADES_HIT.format(ChatColor.RED).send(player);
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 2.0F);
             return false;
          }
 
-         UpgradeData var10 = (UpgradeData)var6.getData(ItemStats.UPGRADE);
-         if (!MMOUtils.checkReference(var10.getReference(), var9.getReference())) {
-            Message.WRONG_UPGRADE_REFERENCE.format(ChatColor.RED).send(var7);
-            var7.playSound(var7.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 2.0F);
+         UpgradeData data2 = (UpgradeData)mMOItem.getData(ItemStats.UPGRADE);
+         if (!MMOUtils.checkReference(data2.getReference(), data.getReference())) {
+            Message.WRONG_UPGRADE_REFERENCE.format(ChatColor.RED).send(player);
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 2.0F);
             return false;
          }
 
-         UpgradeItemEvent var11 = new UpgradeItemEvent(var2, var6, var8, var10, var9);
-         Bukkit.getPluginManager().callEvent(var11);
-         if (var11.isCancelled()) {
+         UpgradeItemEvent event2 = new UpgradeItemEvent(playerData, mMOItem, liveMMOItem, data2, data);
+         Bukkit.getPluginManager().callEvent(event2);
+         if (event2.isCancelled()) {
             return false;
          }
 
-         var9.upgrade(var8);
-         NBTItem var12 = var8.newBuilder().buildNBT();
-         if (MMOItems.plugin.getLanguage().upgradeRequirementsCheck && !var2.getRPG().canUse(var12, false)) {
-            Message.UPGRADE_REQUIREMENT_SAFE_CHECK.format(ChatColor.RED).send(var7);
-            var7.playSound(var7.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 2.0F);
+         data.upgrade(liveMMOItem);
+         NBTItem nBT = liveMMOItem.newBuilder().buildNBT();
+         if (MMOItems.plugin.getLanguage().upgradeRequirementsCheck && !playerData.getRPG().canUse(nBT, false)) {
+            Message.UPGRADE_REQUIREMENT_SAFE_CHECK.format(ChatColor.RED).send(player);
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 2.0F);
             return false;
          }
 
-         if (RANDOM.nextDouble() > var10.getSuccess() * var9.getSuccess()) {
-            Message.UPGRADE_FAIL.format(ChatColor.RED).send(var7);
-            if (var9.destroysOnFail()) {
-               var1.getCurrentItem().setAmount(0);
+         if (RANDOM.nextDouble() > data2.getSuccess() * data.getSuccess()) {
+            Message.UPGRADE_FAIL.format(ChatColor.RED).send(player);
+            if (data.destroysOnFail()) {
+               event.getCurrentItem().setAmount(0);
             }
 
-            var7.playSound(var7.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0F, 2.0F);
+            player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0F, 2.0F);
             return true;
          } else {
-            Message.UPGRADE_SUCCESS.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(var1.getCurrentItem())).send(var7);
-            var1.getCurrentItem().setItemMeta(var12.toItem().getItemMeta());
-            var7.playSound(var7.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 2.0F);
+            Message.UPGRADE_SUCCESS.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(event.getCurrentItem())).send(player);
+            event.getCurrentItem().setItemMeta(nBT.toItem().getItemMeta());
+            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 2.0F);
             return true;
          }
       } else {

@@ -45,14 +45,14 @@ public class MMOItemReforger {
    public static boolean keepTiersWhenReroll = true;
    public static boolean gemstonesRevIDWhenUnsocket = false;
 
-   public MMOItemReforger(@NotNull ItemStack var1) {
-      this(NBTItem.get(var1));
+   public MMOItemReforger(@NotNull ItemStack item) {
+      this(NBTItem.get(item));
    }
 
-   public MMOItemReforger(@NotNull NBTItem var1) {
-      this.nbtItem = var1;
-      Validate.isTrue(var1.getItem().getItemMeta() != null, "ItemStack has no ItemMeta, cannot be reforged.");
-      this.template = var1.hasType() ? MMOItems.plugin.getTemplates().getTemplate(var1) : null;
+   public MMOItemReforger(@NotNull NBTItem nbtItem) {
+      this.nbtItem = nbtItem;
+      Validate.isTrue(nbtItem.getItem().getItemMeta() != null, "ItemStack has no ItemMeta, cannot be reforged.");
+      this.template = nbtItem.hasType() ? MMOItems.plugin.getTemplates().getTemplate(nbtItem) : null;
    }
 
    @NotNull
@@ -70,8 +70,8 @@ public class MMOItemReforger {
       return this.result;
    }
 
-   public void setResult(@Nullable ItemStack var1) {
-      this.result = var1;
+   public void setResult(@Nullable ItemStack item) {
+      this.result = item;
    }
 
    @Deprecated
@@ -86,13 +86,13 @@ public class MMOItemReforger {
    }
 
    @Deprecated
-   public void setPlayer(@Nullable Player var1) {
-      this.setPlayer(var1 == null ? null : PlayerData.get(var1).getRPG());
+   public void setPlayer(@Nullable Player player) {
+      this.setPlayer(player == null ? null : PlayerData.get(player).getRPG());
    }
 
    @Deprecated
-   public void setPlayer(@Nullable RPGPlayer var1) {
-      this.player = var1;
+   public void setPlayer(@Nullable RPGPlayer rpgPlayer) {
+      this.player = rpgPlayer;
    }
 
    @NotNull
@@ -110,8 +110,8 @@ public class MMOItemReforger {
       return this.freshMMOItem;
    }
 
-   public void setFreshMMOItem(@NotNull MMOItem var1) {
-      this.freshMMOItem = var1;
+   public void setFreshMMOItem(@NotNull MMOItem mmoItem) {
+      this.freshMMOItem = mmoItem;
    }
 
    @Deprecated
@@ -123,9 +123,9 @@ public class MMOItemReforger {
       return this.template != null;
    }
 
-   public void addReforgingOutput(@Nullable ItemStack var1) {
-      if (!SilentNumbers.isAir(var1) && var1.getType().isItem()) {
-         this.reforgingOutput.add(var1);
+   public void addReforgingOutput(@Nullable ItemStack item) {
+      if (!SilentNumbers.isAir(item) && item.getType().isItem()) {
+         this.reforgingOutput.add(item);
       }
    }
 
@@ -142,54 +142,54 @@ public class MMOItemReforger {
       return this.generationItemLevel;
    }
 
-   public boolean reforge(@NotNull ReforgeOptions var1) {
-      return this.reforge(var1, (RPGPlayer)null);
+   public boolean reforge(@NotNull ReforgeOptions reforgeOptions) {
+      return this.reforge(reforgeOptions, (RPGPlayer)null);
    }
 
-   public boolean reforge(@NotNull ReforgeOptions var1, @Nullable Player var2) {
-      return this.reforge(var1, var2 == null ? null : PlayerData.get(var2).getRPG());
+   public boolean reforge(@NotNull ReforgeOptions reforgeOptions, @Nullable Player player) {
+      return this.reforge(reforgeOptions, player == null ? null : PlayerData.get(player).getRPG());
    }
 
-   public boolean reforge(@NotNull ReforgeOptions var1, @Nullable RPGPlayer var2) {
+   public boolean reforge(@NotNull ReforgeOptions reforgeOptions, @Nullable RPGPlayer rpgPlayer) {
       if (!this.hasTemplate()) {
          return false;
       }
 
       this.oldMMOItem = new LiveMMOItem(this.getNBTItem());
-      if (var1.isBlacklisted(this.getOldMMOItem().getId())) {
+      if (reforgeOptions.isBlacklisted(this.getOldMMOItem().getId())) {
          return false;
       }
 
-      this.player = var2;
+      this.player = rpgPlayer;
       this.generationItemLevel = this.getOldMMOItem().hasData(ItemStats.ITEM_LEVEL)
          ? (int)((DoubleData)this.getOldMMOItem().getData(ItemStats.ITEM_LEVEL)).getValue()
          : 0;
-      ItemTier var3 = var1.shouldKeepTier() && this.getOldMMOItem().hasData(ItemStats.TIER)
+      ItemTier itemTier = reforgeOptions.shouldKeepTier() && this.getOldMMOItem().hasData(ItemStats.TIER)
          ? MMOItems.plugin.getTiers().get(this.getOldMMOItem().getData(ItemStats.TIER).toString())
          : null;
-      this.setFreshMMOItem(this.getTemplate().newBuilder(this.generationItemLevel, var3).build());
-      MMOItemReforgeEvent var4 = new MMOItemReforgeEvent(this, var1);
-      Bukkit.getPluginManager().callEvent(var4);
-      if (var4.isCancelled()) {
+      this.setFreshMMOItem(this.getTemplate().newBuilder(this.generationItemLevel, itemTier).build());
+      MMOItemReforgeEvent event = new MMOItemReforgeEvent(this, reforgeOptions);
+      Bukkit.getPluginManager().callEvent(event);
+      if (event.isCancelled()) {
          return false;
       }
 
-      for (StatHistory var6 : this.getFreshMMOItem().getStatHistories()) {
-         this.getFreshMMOItem().setData(var6.getItemStat(), var6.recalculate(this.getFreshMMOItem().getUpgradeLevel()));
+      for (StatHistory statHistory : this.getFreshMMOItem().getStatHistories()) {
+         this.getFreshMMOItem().setData(statHistory.getItemStat(), statHistory.recalculate(this.getFreshMMOItem().getUpgradeLevel()));
       }
 
       if (this.getFreshMMOItem().hasUpgradeTemplate()) {
-         for (ItemStat var10 : this.getFreshMMOItem().getUpgradeTemplate().getKeys()) {
-            StatHistory var7 = this.getFreshMMOItem().computeStatHistory(var10);
-            this.getFreshMMOItem().setData(var7.getItemStat(), var7.recalculate(this.getFreshMMOItem().getUpgradeLevel()));
+         for (ItemStat key : this.getFreshMMOItem().getUpgradeTemplate().getKeys()) {
+            StatHistory statHistory = this.getFreshMMOItem().computeStatHistory(key);
+            this.getFreshMMOItem().setData(statHistory.getItemStat(), statHistory.recalculate(this.getFreshMMOItem().getUpgradeLevel()));
          }
       }
 
       this.result = this.getFreshMMOItem().newBuilder().build();
-      MMOItemReforgeFinishEvent var9 = new MMOItemReforgeFinishEvent(this.result, this, var1);
-      Bukkit.getPluginManager().callEvent(var9);
-      this.setResult(var9.getFinishedItem());
-      return !var9.isCancelled();
+      MMOItemReforgeFinishEvent event2 = new MMOItemReforgeFinishEvent(this.result, this, reforgeOptions);
+      Bukkit.getPluginManager().callEvent(event2);
+      this.setResult(event2.getFinishedItem());
+      return !event2.isCancelled();
    }
 
    public static void reload() {
@@ -198,39 +198,39 @@ public class MMOItemReforger {
    }
 
    @Deprecated
-   public MMOItemReforger(@Nullable ItemStack var1, @NotNull NBTItem var2) {
-      this(var2);
+   public MMOItemReforger(@Nullable ItemStack item, @NotNull NBTItem nbtItem) {
+      this(nbtItem);
    }
 
    @Deprecated
-   public void update(@Nullable Player var1, @NotNull ReforgeOptions var2) {
-      this.reforge(var2, var1);
+   public void update(@Nullable Player player, @NotNull ReforgeOptions reforgeOptions) {
+      this.reforge(reforgeOptions, player);
    }
 
    @Deprecated
-   public void update(@Nullable RPGPlayer var1, @NotNull ReforgeOptions var2) {
-      this.reforge(var2, var1);
+   public void update(@Nullable RPGPlayer rpgPlayer, @NotNull ReforgeOptions reforgeOptions) {
+      this.reforge(reforgeOptions, rpgPlayer);
    }
 
    @Deprecated
-   void regenerate(@Nullable RPGPlayer var1) {
-      this.reforge(new ReforgeOptions(), var1);
+   void regenerate(@Nullable RPGPlayer rpgPlayer) {
+      this.reforge(new ReforgeOptions(), rpgPlayer);
    }
 
    @Deprecated
-   int regenerate(@Nullable RPGPlayer var1, @NotNull MMOItemTemplate var2) {
-      this.reforge(new ReforgeOptions(), var1);
+   int regenerate(@Nullable RPGPlayer rpgPlayer, @NotNull MMOItemTemplate mmoItemTemplate) {
+      this.reforge(new ReforgeOptions(), rpgPlayer);
       return 0;
    }
 
    @Deprecated
-   public void reforge(@Nullable Player var1, @NotNull ReforgeOptions var2) {
-      this.reforge(var2, var1);
+   public void reforge(@Nullable Player player, @NotNull ReforgeOptions reforgeOptions) {
+      this.reforge(reforgeOptions, player);
    }
 
    @Deprecated
-   public void reforge(@Nullable RPGPlayer var1, @NotNull ReforgeOptions var2) {
-      this.reforge(var2, var1);
+   public void reforge(@Nullable RPGPlayer rpgPlayer, @NotNull ReforgeOptions reforgeOptions) {
+      this.reforge(reforgeOptions, rpgPlayer);
    }
 
    @Deprecated

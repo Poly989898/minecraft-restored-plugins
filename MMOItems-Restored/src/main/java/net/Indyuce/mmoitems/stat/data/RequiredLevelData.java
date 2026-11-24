@@ -3,14 +3,14 @@ package net.Indyuce.mmoitems.stat.data;
 import net.Indyuce.mmoitems.MMOItems;
 
 public class RequiredLevelData extends DoubleData {
-   public RequiredLevelData(double var1) {
-      super(var1);
+   public RequiredLevelData(double value) {
+      super(value);
    }
 
    @Override
-   public void mergeWith(DoubleData var1) {
-      boolean var2 = MMOItems.plugin.getConfig().getBoolean("stat-merging.additive-levels", false);
-      this.setValue(var2 ? var1.getValue() + this.getValue() : Math.max(var1.getValue(), this.getValue()));
+   public void mergeWith(DoubleData doubleData) {
+      boolean flag = MMOItems.plugin.getConfig().getBoolean("stat-merging.additive-levels", false);
+      this.setValue(flag ? doubleData.getValue() + this.getValue() : Math.max(doubleData.getValue(), this.getValue()));
    }
 
    @Override

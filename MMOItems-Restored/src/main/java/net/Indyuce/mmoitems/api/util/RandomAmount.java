@@ -7,15 +7,15 @@ public class RandomAmount {
    private final int max;
    private static final Random RANDOM = new Random();
 
-   public RandomAmount(int var1, int var2) {
-      this.min = var1;
-      this.max = var2;
+   public RandomAmount(int count, int count2) {
+      this.min = count;
+      this.max = count2;
    }
 
-   public RandomAmount(String var1) {
-      String[] var2 = var1.split("-");
-      this.min = Integer.parseInt(var2[0]);
-      this.max = var2.length > 1 ? Integer.parseInt(var2[1]) : 0;
+   public RandomAmount(String text) {
+      String[] texts = text.split("-");
+      this.min = Integer.parseInt(texts[0]);
+      this.max = texts.length > 1 ? Integer.parseInt(texts[1]) : 0;
    }
 
    public int getMin() {

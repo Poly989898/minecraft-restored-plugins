@@ -20,13 +20,13 @@ public class MythicEnchantsSupport implements EnchantPlugin<MythicEnchant> {
    }
 
    @Nullable
-   public MythicEnchant transfer(@NotNull Enchantment var1) {
-      return (MythicEnchant)this.manager.getEnchantManager().toMythicEnchantment(var1).orElse(null);
+   public MythicEnchant transfer(@NotNull Enchantment enchantment) {
+      return (MythicEnchant)this.manager.getEnchantManager().toMythicEnchantment(enchantment).orElse(null);
    }
 
-   public void handleEnchant(@NotNull ItemStackBuilder var1, @NotNull MythicEnchant var2, int var3) {
-      if (!var1.getMeta().hasItemFlag(ItemFlag.HIDE_ENCHANTS)) {
-         var1.getLore().insert(0, LoreParser.formatEnchantment(var2, var3));
+   public void handleEnchant(@NotNull ItemStackBuilder itemStackBuilder, @NotNull MythicEnchant mythicEnchant, int count) {
+      if (!itemStackBuilder.getMeta().hasItemFlag(ItemFlag.HIDE_ENCHANTS)) {
+         itemStackBuilder.getLore().insert(0, LoreParser.formatEnchantment(mythicEnchant, count));
       }
    }
 }

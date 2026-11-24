@@ -11,22 +11,22 @@ public class ColorData implements StatData, RandomStatData<ColorData> {
    private final int green;
    private final int blue;
 
-   public ColorData(String var1) {
-      String[] var2 = var1.split(" ");
-      Validate.isTrue(var2.length > 2, "Must specify 3 numbers for red, green and blue");
-      this.red = Math.min(255, Math.max(0, Integer.parseInt(var2[0])));
-      this.green = Math.min(255, Math.max(0, Integer.parseInt(var2[1])));
-      this.blue = Math.min(255, Math.max(0, Integer.parseInt(var2[2])));
+   public ColorData(String text) {
+      String[] texts = text.split(" ");
+      Validate.isTrue(texts.length > 2, "Must specify 3 numbers for red, green and blue");
+      this.red = Math.min(255, Math.max(0, Integer.parseInt(texts[0])));
+      this.green = Math.min(255, Math.max(0, Integer.parseInt(texts[1])));
+      this.blue = Math.min(255, Math.max(0, Integer.parseInt(texts[2])));
    }
 
-   public ColorData(Color var1) {
-      this(var1.getRed(), var1.getGreen(), var1.getBlue());
+   public ColorData(Color color) {
+      this(color.getRed(), color.getGreen(), color.getBlue());
    }
 
-   public ColorData(int var1, int var2, int var3) {
-      this.red = var1;
-      this.green = var2;
-      this.blue = var3;
+   public ColorData(int count, int count2, int count3) {
+      this.red = count;
+      this.green = count2;
+      this.blue = count3;
    }
 
    public int getRed() {
@@ -55,7 +55,7 @@ public class ColorData implements StatData, RandomStatData<ColorData> {
       return "{Red=" + this.red + ",Green=" + this.green + ",Blue=" + this.blue + "}";
    }
 
-   public ColorData randomize(MMOItemBuilder var1) {
+   public ColorData randomize(MMOItemBuilder mmoItemBuilder) {
       return this;
    }
 }

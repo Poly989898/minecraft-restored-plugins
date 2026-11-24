@@ -7,26 +7,26 @@ public class SoundData {
    private final double volume;
    private final double pitch;
 
-   public SoundData(String var1, double var2, double var4) {
-      this.sound = var1;
-      this.volume = var2;
-      this.pitch = var4;
+   public SoundData(String text, double value, double value2) {
+      this.sound = text;
+      this.volume = value;
+      this.pitch = value2;
    }
 
-   public SoundData(Object var1) {
-      if (var1 instanceof String) {
-         this.sound = var1.toString();
+   public SoundData(Object obj) {
+      if (obj instanceof String) {
+         this.sound = obj.toString();
          this.volume = 1.0;
          this.pitch = 1.0;
       } else {
-         if (!(var1 instanceof ConfigurationSection)) {
+         if (!(obj instanceof ConfigurationSection)) {
             throw new IllegalArgumentException("You must provide a string or config section");
          }
 
-         ConfigurationSection var2 = (ConfigurationSection)var1;
-         this.sound = var2.getString("sound");
-         this.volume = var2.getDouble("volume");
-         this.pitch = var2.getDouble("pitch");
+         ConfigurationSection section = (ConfigurationSection)obj;
+         this.sound = section.getString("sound");
+         this.volume = section.getDouble("volume");
+         this.pitch = section.getDouble("pitch");
       }
    }
 

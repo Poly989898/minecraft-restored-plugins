@@ -20,39 +20,39 @@ import org.bukkit.inventory.ItemStack;
 
 public class OrnamentPlayerInventory implements PlayerInventory, Listener {
    @Override
-   public List<EquippedItem> getInventory(Player var1) {
-      ArrayList var2 = new ArrayList();
-      ItemStack[] var3 = var1.getInventory().getContents();
+   public List<EquippedItem> getInventory(Player player) {
+      ArrayList list = new ArrayList();
+      ItemStack[] contents = player.getInventory().getContents();
 
-      for (int var4 = 0; var4 < var3.length; var4++) {
-         ItemStack var5 = var3[var4];
-         if (var5 != null && var5.getType() != Material.AIR) {
-            NBTItem var6 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var5);
-            Type var7 = Type.get(var6.getType());
-            if (var7 != null && var7.getSupertype().equals(Type.ORNAMENT)) {
-               var2.add(new SlotEquippedItem(var1, var4, var6, EquipmentSlot.OTHER));
+      for (int i = 0; i < contents.length; i++) {
+         ItemStack item = contents[i];
+         if (item != null && item.getType() != Material.AIR) {
+            NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(item);
+            Type type = Type.get(nBTItem.getType());
+            if (type != null && type.getSupertype().equals(Type.ORNAMENT)) {
+               list.add(new SlotEquippedItem(player, i, nBTItem, EquipmentSlot.OTHER));
             }
          }
       }
 
-      return var2;
+      return list;
    }
 
    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-   public void updateOnItemPickup(EntityPickupItemEvent var1) {
-      if (var1.getEntityType() == EntityType.PLAYER) {
-         NBTItem var2 = NBTItem.get(var1.getItem().getItemStack());
-         if (var2.hasType() && Type.get(var2.getType()).getSupertype().equals(Type.ORNAMENT)) {
-            PlayerData.get((Player)var1.getEntity()).getInventory().scheduleUpdate();
+   public void updateOnItemPickup(EntityPickupItemEvent event) {
+      if (event.getEntityType() == EntityType.PLAYER) {
+         NBTItem nbtItem = NBTItem.get(event.getItem().getItemStack());
+         if (nbtItem.hasType() && Type.get(nbtItem.getType()).getSupertype().equals(Type.ORNAMENT)) {
+            PlayerData.get((Player)event.getEntity()).getInventory().scheduleUpdate();
          }
       }
    }
 
    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-   public void updateOnItemDrop(PlayerDropItemEvent var1) {
-      NBTItem var2 = NBTItem.get(var1.getItemDrop().getItemStack());
-      if (var2.hasType() && Type.get(var2.getType()).getSupertype().equals(Type.ORNAMENT)) {
-         PlayerData.get(var1.getPlayer()).updateInventory();
+   public void updateOnItemDrop(PlayerDropItemEvent event) {
+      NBTItem nbtItem = NBTItem.get(event.getItemDrop().getItemStack());
+      if (nbtItem.hasType() && Type.get(nbtItem.getType()).getSupertype().equals(Type.ORNAMENT)) {
+         PlayerData.get(event.getPlayer()).updateInventory();
       }
    }
 }

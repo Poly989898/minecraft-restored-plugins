@@ -36,38 +36,38 @@ public class RepairPower extends DoubleStat implements ConsumableItemInteraction
 
    @Override
    public boolean handleConsumableEffect(
-      @NotNull InventoryClickEvent var1, @NotNull PlayerData var2, @NotNull Consumable var3, @NotNull NBTItem var4, Type var5
+      @NotNull InventoryClickEvent event, @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem nbtItem, Type type
    ) {
-      int var6 = (int)var3.getNBTItem().getStat(ItemStats.REPAIR.getId());
-      return var6 <= 0 ? false : handleRepair(var2, var3, var4, var1x -> var6);
+      int stat = (int)consumable.getNBTItem().getStat(ItemStats.REPAIR.getId());
+      return stat <= 0 ? false : handleRepair(playerData, consumable, nbtItem, var1x -> stat);
    }
 
    public static boolean handleRepair(
-      @NotNull PlayerData var0, @NotNull Consumable var1, @NotNull NBTItem var2, @NotNull Function<DurabilityItem, Integer> var3
+      @NotNull PlayerData playerData, @NotNull Consumable consumable, @NotNull NBTItem nbtItem, @NotNull Function<DurabilityItem, Integer> function
    ) {
-      Player var4 = var0.getPlayer();
-      String var5 = var1.getNBTItem().getString("MMOITEMS_REPAIR_TYPE");
-      String var6 = var2.getString("MMOITEMS_REPAIR_TYPE");
-      if (!MMOUtils.checkReference(var5, var6)) {
-         Message.UNABLE_TO_REPAIR.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(var2.getItem())).send(var4);
-         var4.getPlayer().playSound(var4.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);
+      Player player = playerData.getPlayer();
+      String mMOITEMSREPAIRTYPE = consumable.getNBTItem().getString("MMOITEMS_REPAIR_TYPE");
+      String mMOITEMSREPAIRTYPE2 = nbtItem.getString("MMOITEMS_REPAIR_TYPE");
+      if (!MMOUtils.checkReference(mMOITEMSREPAIRTYPE, mMOITEMSREPAIRTYPE2)) {
+         Message.UNABLE_TO_REPAIR.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(nbtItem.getItem())).send(player);
+         player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);
          return false;
       }
 
-      boolean var7 = var2.hasTag("MMOITEMS_DURABILITY");
-      if (var7) {
-         DurabilityItem var8 = new DurabilityItem(var4, var2);
-         if (var8.getDurability() >= var8.getMaxDurability()) {
+      boolean hasTag = nbtItem.hasTag("MMOITEMS_DURABILITY");
+      if (hasTag) {
+         DurabilityItem durabilityItem = new DurabilityItem(player, nbtItem);
+         if (durabilityItem.getDurability() >= durabilityItem.getMaxDurability()) {
             return false;
          }
 
-         int var9 = (Integer)var3.apply(var8);
-         var2.getItem().setItemMeta(var8.addDurability(var9).toItem().getItemMeta());
-         Message.REPAIRED_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(var2.getItem()), "#amount#", String.valueOf(var9)).send(var4);
-         CustomSoundListener.playSound(var1.getItem(), CustomSound.ON_CONSUME, var4);
+         int count = (Integer)function.apply(durabilityItem);
+         nbtItem.getItem().setItemMeta(durabilityItem.addDurability(count).toItem().getItemMeta());
+         Message.REPAIRED_ITEM.format(ChatColor.YELLOW, "#item#", MMOUtils.getDisplayName(nbtItem.getItem()), "#amount#", String.valueOf(count)).send(player);
+         CustomSoundListener.playSound(consumable.getItem(), CustomSound.ON_CONSUME, player);
          return true;
       } else {
-         return RepairUtils.repairVanillaItem(var0, var2, var1, (Integer)var3.apply(null));
+         return RepairUtils.repairVanillaItem(playerData, nbtItem, consumable, (Integer)function.apply(null));
       }
    }
 }

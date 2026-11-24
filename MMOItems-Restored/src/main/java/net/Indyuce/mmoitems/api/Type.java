@@ -83,36 +83,36 @@ public class Type implements CooldownObject, PreloadedObject {
       this.onEntityInteract = var1x.contains("on-entity-interact") ? MythicLib.plugin.getSkills().loadSkillHandler(var1x.get("on-entity-interact")) : null;
    });
 
-   public Type(@NotNull String var1, @NotNull ModifierSource var2) {
-      this(var1, var2, var2.isWeapon() ? Weapon::new : UseItem::new);
+   public Type(@NotNull String text, @NotNull ModifierSource modifierSource) {
+      this(text, modifierSource, modifierSource.isWeapon() ? Weapon::new : UseItem::new);
    }
 
-   public Type(@NotNull String var1, @NotNull ModifierSource var2, @NotNull BiFunction<PlayerData, NBTItem, UseItem> var3) {
-      this.id = UtilityMethods.enumName(var1);
-      this.modifierSource = var2;
-      this.interactionProvider = var3;
+   public Type(@NotNull String text, @NotNull ModifierSource modifierSource, @NotNull BiFunction<PlayerData, NBTItem, UseItem> biFunction) {
+      this.id = UtilityMethods.enumName(text);
+      this.modifierSource = modifierSource;
+      this.interactionProvider = biFunction;
       this.parent = null;
    }
 
-   public Type(@NotNull TypeManager var1, @NotNull ConfigurationSection var2) {
-      this.id = UtilityMethods.enumName(var2.getName());
-      Validate.isTrue(var2.contains("parent"), "Custom types require a parent type");
-      this.parent = var1.getOrThrow(UtilityMethods.enumName(var2.getString("parent")));
-      this.modifierSource = var2.contains("modifier-source")
-         ? ModifierSource.valueOf(UtilityMethods.enumName(var2.getString("modifier-source")))
+   public Type(@NotNull TypeManager typeManager, @NotNull ConfigurationSection section) {
+      this.id = UtilityMethods.enumName(section.getName());
+      Validate.isTrue(section.contains("parent"), "Custom types require a parent type");
+      this.parent = typeManager.getOrThrow(UtilityMethods.enumName(section.getString("parent")));
+      this.modifierSource = section.contains("modifier-source")
+         ? ModifierSource.valueOf(UtilityMethods.enumName(section.getString("modifier-source")))
          : (this.parent != null ? this.parent.modifierSource : ModifierSource.OTHER);
       this.interactionProvider = this.parent.interactionProvider;
    }
 
-   public void load(@NotNull ConfigurationSection var1) {
-      this.postLoadAction.cacheConfig(var1);
-      this.name = var1.getString("name", this.name);
-      this.item = MMOUtils.readIcon(var1.getString("display", this.item == null ? Material.STONE.toString() : this.item.getType().toString()));
-      (this.unidentifiedTemplate = new UnidentifiedItem(this)).update(var1.getConfigurationSection("unident-item"));
-      this.loreFormat = var1.getString("LoreFormat", this.parent != null ? this.parent.loreFormat : null);
-      this.attackCooldownKey = var1.getString("attack-cooldown-key", "default");
-      this.meleeAttacks = !var1.getBoolean("disable-melee-attacks");
-      this.hideInGame = var1.getBoolean("hide-in-game");
+   public void load(@NotNull ConfigurationSection section) {
+      this.postLoadAction.cacheConfig(section);
+      this.name = section.getString("name", this.name);
+      this.item = MMOUtils.readIcon(section.getString("display", this.item == null ? Material.STONE.toString() : this.item.getType().toString()));
+      (this.unidentifiedTemplate = new UnidentifiedItem(this)).update(section.getConfigurationSection("unident-item"));
+      this.loreFormat = section.getString("LoreFormat", this.parent != null ? this.parent.loreFormat : null);
+      this.attackCooldownKey = section.getString("attack-cooldown-key", "default");
+      this.meleeAttacks = !section.getBoolean("disable-melee-attacks");
+      this.hideInGame = section.getBoolean("hide-in-game");
    }
 
    @NotNull
@@ -125,13 +125,13 @@ public class Type implements CooldownObject, PreloadedObject {
    }
 
    @NotNull
-   public UseItem toUseItem(@NotNull Player var1, @NotNull NBTItem var2) {
-      return this.toUseItem(PlayerData.get(var1), var2);
+   public UseItem toUseItem(@NotNull Player player, @NotNull NBTItem nbtItem) {
+      return this.toUseItem(PlayerData.get(player), nbtItem);
    }
 
    @NotNull
-   public UseItem toUseItem(@NotNull PlayerData var1, @NotNull NBTItem var2) {
-      return this.interactionProvider.apply(var1, var2);
+   public UseItem toUseItem(@NotNull PlayerData playerData, @NotNull NBTItem nbtItem) {
+      return this.interactionProvider.apply(playerData, nbtItem);
    }
 
    public String getId() {
@@ -194,17 +194,17 @@ public class Type implements CooldownObject, PreloadedObject {
 
    @NotNull
    public Type getSupertype() {
-      Type var1 = this;
+      Type type = this;
 
-      while (var1.parent != null) {
-         var1 = var1.parent;
+      while (type.parent != null) {
+         type = type.parent;
       }
 
-      return var1;
+      return type;
    }
 
-   public boolean corresponds(Type var1) {
-      return this.getSupertype().equals(var1);
+   public boolean corresponds(Type type) {
+      return this.getSupertype().equals(type);
    }
 
    public List<ItemStat> getAvailableStats() {
@@ -220,12 +220,12 @@ public class Type implements CooldownObject, PreloadedObject {
    }
 
    @Override
-   public boolean equals(Object var1) {
-      if (this == var1) {
+   public boolean equals(Object obj) {
+      if (this == obj) {
          return true;
-      } else if (var1 != null && this.getClass() == var1.getClass()) {
-         Type var2 = (Type)var1;
-         return this.id.equals(var2.id);
+      } else if (obj != null && this.getClass() == obj.getClass()) {
+         Type type = (Type)obj;
+         return this.id.equals(type.id);
       } else {
          return false;
       }
@@ -242,27 +242,27 @@ public class Type implements CooldownObject, PreloadedObject {
    }
 
    @Nullable
-   public static Type get(@Nullable ItemStack var0) {
-      return var0 == null ? null : get(NBTItem.get(var0).getType());
+   public static Type get(@Nullable ItemStack item) {
+      return item == null ? null : get(NBTItem.get(item).getType());
    }
 
    @Nullable
-   public static Type get(@Nullable String var0) {
-      return var0 == null ? null : MMOItems.plugin.getTypes().get(UtilityMethods.enumName(var0));
+   public static Type get(@Nullable String text) {
+      return text == null ? null : MMOItems.plugin.getTypes().get(UtilityMethods.enumName(text));
    }
 
    @Nullable
-   public static Type get(@NotNull NBTItem var0) {
-      return get(var0.getType());
+   public static Type get(@NotNull NBTItem nbtItem) {
+      return get(nbtItem.getType());
    }
 
-   public static boolean isValid(@Nullable String var0) {
-      return var0 != null && MMOItems.plugin.getTypes().has(var0.toUpperCase().replace("-", "_").replace(" ", "_"));
+   public static boolean isValid(@Nullable String text) {
+      return text != null && MMOItems.plugin.getTypes().has(text.toUpperCase().replace("-", "_").replace(" ", "_"));
    }
 
    @Deprecated
-   public boolean canHave(ItemStat var1) {
-      return var1.isCompatible(this);
+   public boolean canHave(ItemStat itemStat) {
+      return itemStat.isCompatible(this);
    }
 
    @Deprecated
@@ -276,13 +276,13 @@ public class Type implements CooldownObject, PreloadedObject {
    }
 
    @Deprecated
-   public Type(@NotNull String var1, boolean var2, @NotNull ModifierSource var3) {
-      this(var1, var3);
+   public Type(@NotNull String text, boolean flag, @NotNull ModifierSource modifierSource) {
+      this(text, modifierSource);
    }
 
    @Deprecated
-   public void postload(ConfigurationSection var1) {
-      this.postLoadAction.cacheConfig(var1);
+   public void postload(ConfigurationSection section) {
+      this.postLoadAction.cacheConfig(section);
       this.postLoadAction.performAction();
    }
 

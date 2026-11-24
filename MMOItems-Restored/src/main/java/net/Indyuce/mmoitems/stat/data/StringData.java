@@ -10,8 +10,8 @@ public class StringData implements StatData, RandomStatData<StringData> {
    @Nullable
    private String value;
 
-   public StringData(@Nullable String var1) {
-      this.value = var1;
+   public StringData(@Nullable String text) {
+      this.value = text;
    }
 
    @Nullable
@@ -19,8 +19,8 @@ public class StringData implements StatData, RandomStatData<StringData> {
       return this.value;
    }
 
-   public void setString(@Nullable String var1) {
-      this.value = var1;
+   public void setString(@Nullable String text) {
+      this.value = text;
    }
 
    @Override
@@ -28,7 +28,7 @@ public class StringData implements StatData, RandomStatData<StringData> {
       return String.valueOf(this.value);
    }
 
-   public StringData randomize(MMOItemBuilder var1) {
+   public StringData randomize(MMOItemBuilder mmoItemBuilder) {
       return this;
    }
 

@@ -26,31 +26,31 @@ public abstract class Recipe {
    private final Set<Trigger> onClaim = new LinkedHashSet<>();
    private final Set<Trigger> onCancel = new LinkedHashSet<>();
 
-   public Recipe(ConfigurationSection var1) {
-      this(var1.getName());
-      if (var1.contains("options")) {
-         for (Recipe.RecipeOption var5 : Recipe.RecipeOption.values()) {
-            if (var1.getConfigurationSection("options").contains(var5.getConfigPath())) {
-               this.options.put(var5, var1.getBoolean("options." + var5.getConfigPath()));
+   public Recipe(ConfigurationSection section) {
+      this(section.getName());
+      if (section.contains("options")) {
+         for (Recipe.RecipeOption recipeOption : Recipe.RecipeOption.values()) {
+            if (section.getConfigurationSection("options").contains(recipeOption.getConfigPath())) {
+               this.options.put(recipeOption, section.getBoolean("options." + recipeOption.getConfigPath()));
             }
          }
       }
 
-      for (String var10 : var1.getStringList("ingredients")) {
+      for (String text : section.getStringList("ingredients")) {
          try {
-            Ingredient var12 = MMOItems.plugin.getCrafting().getIngredient(new MMOLineConfig(var10));
-            this.ingredients.add(var12);
-         } catch (IllegalArgumentException var7) {
-            throw new IllegalArgumentException("Could not load ingredient '" + var10 + "': " + var7.getMessage());
+            Ingredient ingredient = MMOItems.plugin.getCrafting().getIngredient(new MMOLineConfig(text));
+            this.ingredients.add(ingredient);
+         } catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException("Could not load ingredient '" + text + "': " + exception.getMessage());
          }
       }
 
-      for (String var11 : var1.getStringList("conditions")) {
+      for (String text : section.getStringList("conditions")) {
          try {
-            Condition var13 = MMOItems.plugin.getCrafting().getCondition(new MMOLineConfig(var11));
-            this.conditions.add(var13);
-         } catch (IllegalArgumentException var6) {
-            throw new IllegalArgumentException("Could not load condition '" + var11 + "': " + var6.getMessage());
+            Condition condition = MMOItems.plugin.getCrafting().getCondition(new MMOLineConfig(text));
+            this.conditions.add(condition);
+         } catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException("Could not load condition '" + text + "': " + exception.getMessage());
          }
       }
 
@@ -58,26 +58,26 @@ public abstract class Recipe {
          throw new IllegalArgumentException("No conditions or ingredients set.");
       }
 
-      this.loadTriggerList(var1.getStringList("on-use"), "on-use", this.onUse);
-      this.loadTriggerList(var1.getStringList("triggers"), "on-claim", this.onClaim);
-      this.loadTriggerList(var1.getStringList("on-cancel"), "on-cancel", this.onCancel);
+      this.loadTriggerList(section.getStringList("on-use"), "on-use", this.onUse);
+      this.loadTriggerList(section.getStringList("triggers"), "on-claim", this.onClaim);
+      this.loadTriggerList(section.getStringList("on-cancel"), "on-cancel", this.onCancel);
    }
 
-   private void loadTriggerList(List<String> var1, String var2, Set<Trigger> var3) {
-      for (String var5 : var1) {
+   private void loadTriggerList(List<String> texts, String text, Set<Trigger> triggers) {
+      for (String text2 : texts) {
          try {
-            Trigger var6 = MMOItems.plugin.getCrafting().getTrigger(new MMOLineConfig(var5));
-            Validate.notNull(var6, "Could not match trigger");
-            var3.add(var6);
-         } catch (IllegalArgumentException var7) {
-            throw new IllegalArgumentException("Could not load " + var2 + " trigger '" + var5 + "': " + var7.getMessage());
+            Trigger trigger = MMOItems.plugin.getCrafting().getTrigger(new MMOLineConfig(text2));
+            Validate.notNull(trigger, "Could not match trigger");
+            triggers.add(trigger);
+         } catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException("Could not load " + text + " trigger '" + text2 + "': " + exception.getMessage());
          }
       }
    }
 
-   private Recipe(String var1) {
-      Validate.notNull(var1, "Recipe ID must not be null");
-      this.id = var1;
+   private Recipe(String text) {
+      Validate.notNull(text, "Recipe ID must not be null");
+      this.id = text;
    }
 
    public String getId() {
@@ -104,43 +104,43 @@ public abstract class Recipe {
       return this.onCancel;
    }
 
-   public Condition getCondition(String var1) {
-      for (Condition var3 : this.conditions) {
-         if (var3.getId().equals(var1)) {
-            return var3;
+   public Condition getCondition(String text) {
+      for (Condition condition : this.conditions) {
+         if (condition.getId().equals(text)) {
+            return condition;
          }
       }
 
       return null;
    }
 
-   public boolean hasOption(Recipe.RecipeOption var1) {
-      return this.options.getOrDefault(var1, var1.getDefault());
+   public boolean hasOption(Recipe.RecipeOption recipeOption) {
+      return this.options.getOrDefault(recipeOption, recipeOption.getDefault());
    }
 
-   public void addIngredient(Ingredient var1) {
-      this.ingredients.add(var1);
+   public void addIngredient(Ingredient ingredient) {
+      this.ingredients.add(ingredient);
    }
 
-   public void registerCondition(Condition var1) {
-      this.conditions.add(var1);
+   public void registerCondition(Condition condition) {
+      this.conditions.add(condition);
    }
 
-   public void setOption(Recipe.RecipeOption var1, boolean var2) {
-      this.options.put(var1, var2);
+   public void setOption(Recipe.RecipeOption recipeOption, boolean flag) {
+      this.options.put(recipeOption, flag);
    }
 
-   public abstract CheckedRecipe evaluateRecipe(PlayerData var1, IngredientInventory var2);
+   public abstract CheckedRecipe evaluateRecipe(PlayerData playerData, IngredientInventory ingredientInventory);
 
-   public abstract boolean whenUsed(PlayerData var1, IngredientInventory var2, CheckedRecipe var3, CraftingStation var4);
+   public abstract boolean whenUsed(PlayerData playerData, IngredientInventory ingredientInventory, CheckedRecipe checkedRecipe, CraftingStation craftingStation);
 
-   public abstract boolean canUse(PlayerData var1, IngredientInventory var2, CheckedRecipe var3, CraftingStation var4);
+   public abstract boolean canUse(PlayerData playerData, IngredientInventory ingredientInventory, CheckedRecipe checkedRecipe, CraftingStation craftingStation);
 
-   public abstract ItemStack display(CheckedRecipe var1);
+   public abstract ItemStack display(CheckedRecipe checkedRecipe);
 
    @Override
-   public boolean equals(Object var1) {
-      return var1 instanceof Recipe && ((Recipe)var1).id.equals(this.id);
+   public boolean equals(Object obj) {
+      return obj instanceof Recipe && ((Recipe)obj).id.equals(this.id);
    }
 
    public enum RecipeOption {

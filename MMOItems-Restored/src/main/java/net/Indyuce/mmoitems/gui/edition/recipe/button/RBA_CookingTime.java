@@ -19,8 +19,8 @@ public class RBA_CookingTime extends RBA_DoubleButton {
       .lore(SilentNumbers.chop("How long it takes this recipe to finish cooking", 65, "§7"))
       .build();
 
-   public RBA_CookingTime(@NotNull RecipeEditorGUI var1) {
-      super(var1);
+   public RBA_CookingTime(@NotNull RecipeEditorGUI recipeEditorGUI) {
+      super(recipeEditorGUI);
    }
 
    @NotNull

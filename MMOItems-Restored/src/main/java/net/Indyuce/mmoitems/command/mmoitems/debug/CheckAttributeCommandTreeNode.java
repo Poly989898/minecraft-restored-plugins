@@ -15,35 +15,35 @@ import org.bukkit.entity.Player;
 public class CheckAttributeCommandTreeNode extends CommandTreeNode {
    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.####");
 
-   public CheckAttributeCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "checkattribute");
-      this.addParameter(new Parameter("<attribute>", (var0, var1x) -> Arrays.asList(Attribute.values()).forEach(var1xx -> var1x.add(var1xx.name()))));
+   public CheckAttributeCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "checkattribute");
+      this.addParameter(new Parameter("<attribute>", (commandTreeExplorer, var1x) -> Arrays.asList(Attribute.values()).forEach(var1xx -> var1x.add(var1xx.name()))));
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      if (!(var1 instanceof Player)) {
-         var1.sendMessage(ChatColor.RED + "This command is only for players.");
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      if (!(sender instanceof Player)) {
+         sender.sendMessage(ChatColor.RED + "This command is only for players.");
          return CommandResult.FAILURE;
       }
 
-      if (var2.length < 3) {
+      if (texts.length < 3) {
          return CommandResult.THROW_USAGE;
       }
 
-      Player var3 = (Player)var1;
+      Player player = (Player)sender;
 
       try {
-         AttributeInstance var4 = var3.getAttribute(Attribute.valueOf(var2[2].toUpperCase().replace("-", "_")));
-         var1.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "--------------------------------------------------");
-         var1.sendMessage(ChatColor.AQUA + "Default Value = " + ChatColor.RESET + var4.getDefaultValue());
-         var1.sendMessage(ChatColor.AQUA + "Base Value = " + ChatColor.RESET + var4.getBaseValue());
-         var1.sendMessage(ChatColor.AQUA + "Value = " + ChatColor.RESET + var4.getValue());
+         AttributeInstance attributeInstance = player.getAttribute(Attribute.valueOf(texts[2].toUpperCase().replace("-", "_")));
+         sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "--------------------------------------------------");
+         sender.sendMessage(ChatColor.AQUA + "Default Value = " + ChatColor.RESET + attributeInstance.getDefaultValue());
+         sender.sendMessage(ChatColor.AQUA + "Base Value = " + ChatColor.RESET + attributeInstance.getBaseValue());
+         sender.sendMessage(ChatColor.AQUA + "Value = " + ChatColor.RESET + attributeInstance.getValue());
 
-         for (AttributeModifier var6 : var4.getModifiers()) {
-            var1.sendMessage(var6.getName() + " " + DECIMAL_FORMAT.format(var6.getAmount()) + " " + var6.getOperation() + " " + var6.getSlot());
+         for (AttributeModifier modifier : attributeInstance.getModifiers()) {
+            sender.sendMessage(modifier.getName() + " " + DECIMAL_FORMAT.format(modifier.getAmount()) + " " + modifier.getOperation() + " " + modifier.getSlot());
          }
-      } catch (IllegalArgumentException var7) {
-         var3.sendMessage("Couldn't find attribute.");
+      } catch (IllegalArgumentException exception) {
+         player.sendMessage("Couldn't find attribute.");
       }
 
       return CommandResult.SUCCESS;

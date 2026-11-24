@@ -20,44 +20,44 @@ import org.jetbrains.annotations.Nullable;
 @HasCategory(cat = "elemental")
 @Deprecated
 public class FakeElementalStat extends DoubleStat implements InternalStat {
-   public FakeElementalStat(Element var1, ElementStatType var2) {
-      super(var2.getConcatenatedTagPath(var1), Material.BARRIER, "Fictive Stat", new String[0]);
+   public FakeElementalStat(Element element, ElementStatType elementStatType) {
+      super(elementStatType.getConcatenatedTagPath(element), Material.BARRIER, "Fictive Stat", new String[0]);
    }
 
    @Override
-   public NumericStatFormula whenInitialized(Object var1) {
+   public NumericStatFormula whenInitialized(Object obj) {
       throw new RuntimeException("Fictive item stat");
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2) {
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData) {
       throw new RuntimeException("Fictive item stat");
    }
 
    @NotNull
    @Override
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData var1) {
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull DoubleData doubleData) {
       throw new RuntimeException("Fictive item stat");
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
       throw new RuntimeException("Fictive item stat");
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
       throw new RuntimeException("Fictive item stat");
    }
 
    @Nullable
    @Override
-   public DoubleData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
+   public DoubleData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
       throw new RuntimeException("Fictive item stat");
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<NumericStatFormula> var2) {
+   public void whenDisplayed(List<String> texts, Optional<NumericStatFormula> optional) {
       throw new RuntimeException("Fictive item stat");
    }
 }

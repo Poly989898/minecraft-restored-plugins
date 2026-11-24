@@ -46,15 +46,15 @@ public class PotionEffects extends ItemStat<RandomPotionEffectListData, PotionEf
       );
    }
 
-   public RandomPotionEffectListData whenInitialized(Object var1) {
-      Validate.isTrue(var1 instanceof ConfigurationSection, "Must specify a config section");
-      return new RandomPotionEffectListData((ConfigurationSection)var1);
+   public RandomPotionEffectListData whenInitialized(Object obj) {
+      Validate.isTrue(obj instanceof ConfigurationSection, "Must specify a config section");
+      return new RandomPotionEffectListData((ConfigurationSection)obj);
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      if (var2.getAction() == InventoryAction.PICKUP_ALL) {
-         new StatEdition(var1, ItemStats.POTION_EFFECTS)
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      if (event.getAction() == InventoryAction.PICKUP_ALL) {
+         new StatEdition(editionInventory, ItemStats.POTION_EFFECTS)
             .enable(
                "Write in the chat the potion effect you want to add.",
                ChatColor.AQUA + "Format: {Effect Name} {Duration} {Amplifier}",
@@ -62,94 +62,94 @@ public class PotionEffects extends ItemStat<RandomPotionEffectListData, PotionEf
             );
       }
 
-      if (var2.getAction() == InventoryAction.PICKUP_HALF && var1.getEditedSection().contains("potion-effect")) {
-         Set<String> var3 = var1.getEditedSection().getConfigurationSection("potion-effect").getKeys(false);
-         String var4 = new ArrayList<>(var3).get(var3.size() - 1);
-         var1.getEditedSection().set("potion-effect." + var4, null);
-         if (var3.size() <= 1) {
-            var1.getEditedSection().set("potion-effect", null);
+      if (event.getAction() == InventoryAction.PICKUP_HALF && editionInventory.getEditedSection().contains("potion-effect")) {
+         Set<String> keys = editionInventory.getEditedSection().getConfigurationSection("potion-effect").getKeys(false);
+         String text = new ArrayList<>(keys).get(keys.size() - 1);
+         editionInventory.getEditedSection().set("potion-effect." + text, null);
+         if (keys.size() <= 1) {
+            editionInventory.getEditedSection().set("potion-effect", null);
          }
 
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + ChatColor.GOLD + this.formatName(var4) + ChatColor.GRAY + ".");
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed " + ChatColor.GOLD + this.formatName(text) + ChatColor.GRAY + ".");
       }
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      if (var2.contains("|")) {
-         String[] var9 = var2.split("\\|");
-         PotionEffectType var10 = PotionEffectType.getByName(var9[0].replace("-", "_"));
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      if (text.contains("|")) {
+         String[] texts = text.split("\\|");
+         PotionEffectType potionEffectType = PotionEffectType.getByName(texts[0].replace("-", "_"));
          Validate.notNull(
-            var10,
-            var9[0]
+            potionEffectType,
+            texts[0]
                + " is not a valid potion effect. All potion effects can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html"
          );
-         NumericStatFormula var11 = new NumericStatFormula(var9[1]);
-         NumericStatFormula var7 = new NumericStatFormula(var9[2]);
-         var11.fillConfigurationSection(var1.getEditedSection(), "potion-effect." + var10.getName() + ".duration");
-         var7.fillConfigurationSection(var1.getEditedSection(), "potion-effect." + var10.getName() + ".amplifier");
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + this.formatName(var10) + ChatColor.GRAY + " successfully added.");
+         NumericStatFormula numericStatFormula = new NumericStatFormula(texts[1]);
+         NumericStatFormula numericStatFormula2 = new NumericStatFormula(texts[2]);
+         numericStatFormula.fillConfigurationSection(editionInventory.getEditedSection(), "potion-effect." + potionEffectType.getName() + ".duration");
+         numericStatFormula2.fillConfigurationSection(editionInventory.getEditedSection(), "potion-effect." + potionEffectType.getName() + ".amplifier");
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + this.formatName(potionEffectType) + ChatColor.GRAY + " successfully added.");
       } else {
-         String[] var4 = var2.split(" ");
+         String[] texts = text.split(" ");
          Validate.isTrue(
-            var4.length == 3, var2 + " is not a valid {Effect Name} {Duration} {Amplifier}. Example: 'FAST_DIGGING 30 3' stands for Haste 3 for 30 seconds."
+            texts.length == 3, text + " is not a valid {Effect Name} {Duration} {Amplifier}. Example: 'FAST_DIGGING 30 3' stands for Haste 3 for 30 seconds."
          );
-         PotionEffectType var5 = PotionEffectType.getByName(var4[0].replace("-", "_"));
+         PotionEffectType potionEffectType = PotionEffectType.getByName(texts[0].replace("-", "_"));
          Validate.notNull(
-            var5,
-            var4[0]
+            potionEffectType,
+            texts[0]
                + " is not a valid potion effect. All potion effects can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html"
          );
-         double var6 = MMOUtils.parseDouble(var4[1]);
-         int var8 = (int)MMOUtils.parseDouble(var4[2]);
-         var1.getEditedSection().set("potion-effect." + var5.getName() + ".duration", var6);
-         var1.getEditedSection().set("potion-effect." + var5.getName() + ".amplifier", var8);
-         var1.registerTemplateEdition();
-         var1.getPlayer()
-            .sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + this.formatName(var5) + " " + var8 + ChatColor.GRAY + " successfully added.");
+         double value = MMOUtils.parseDouble(texts[1]);
+         int count = (int)MMOUtils.parseDouble(texts[2]);
+         editionInventory.getEditedSection().set("potion-effect." + potionEffectType.getName() + ".duration", value);
+         editionInventory.getEditedSection().set("potion-effect." + potionEffectType.getName() + ".amplifier", count);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer()
+            .sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + this.formatName(potionEffectType) + " " + count + ChatColor.GRAY + " successfully added.");
       }
    }
 
-   private String formatName(PotionEffectType var1) {
-      return this.formatName(var1.getName());
+   private String formatName(PotionEffectType potionEffectType) {
+      return this.formatName(potionEffectType.getName());
    }
 
-   private String formatName(String var1) {
-      return UtilityMethods.caseOnWords(var1.replace("_", " ").toLowerCase());
+   private String formatName(String text) {
+      return UtilityMethods.caseOnWords(text.replace("_", " ").toLowerCase());
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<RandomPotionEffectListData> var2) {
-      if (var2.isPresent()) {
-         var1.add(ChatColor.GRAY + "Current Value:");
-         RandomPotionEffectListData var3 = (RandomPotionEffectListData)var2.get();
+   public void whenDisplayed(List<String> texts, Optional<RandomPotionEffectListData> optional) {
+      if (optional.isPresent()) {
+         texts.add(ChatColor.GRAY + "Current Value:");
+         RandomPotionEffectListData randomPotionEffectListData = (RandomPotionEffectListData)optional.get();
 
-         for (RandomPotionEffectData var5 : var3.getEffects()) {
-            var1.add(
+         for (RandomPotionEffectData effect : randomPotionEffectListData.getEffects()) {
+            texts.add(
                ChatColor.GRAY
                   + "* "
                   + ChatColor.GREEN
-                  + UtilityMethods.caseOnWords(var5.getType().getName().toLowerCase().replace("_", " "))
+                  + UtilityMethods.caseOnWords(effect.getType().getName().toLowerCase().replace("_", " "))
                   + " "
-                  + var5.getAmplifier().toString()
+                  + effect.getAmplifier().toString()
                   + " "
                   + ChatColor.GRAY
                   + "("
                   + ChatColor.GREEN
-                  + var5.getDuration().toString()
+                  + effect.getDuration().toString()
                   + ChatColor.GRAY
                   + "s)"
             );
          }
       } else {
-         var1.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+         texts.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
       }
 
-      var1.add("");
-      var1.add(ChatColor.YELLOW + "►" + " Click to add an effect.");
-      var1.add(ChatColor.YELLOW + "►" + " Right click to remove the last effect.");
+      texts.add("");
+      texts.add(ChatColor.YELLOW + "►" + " Click to add an effect.");
+      texts.add(ChatColor.YELLOW + "►" + " Right click to remove the last effect.");
    }
 
    @NotNull
@@ -157,34 +157,34 @@ public class PotionEffects extends ItemStat<RandomPotionEffectListData, PotionEf
       return new PotionEffectListData();
    }
 
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull PotionEffectListData var2) {
-      if (var1.getItemStack().getType().name().contains("POTION")) {
-         for (PotionEffectData var4 : var2.getEffects()) {
-            ((PotionMeta)var1.getMeta()).addCustomEffect(var4.toEffect(), false);
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull PotionEffectListData potionEffectListData) {
+      if (itemStackBuilder.getItemStack().getType().name().contains("POTION")) {
+         for (PotionEffectData effect : potionEffectListData.getEffects()) {
+            ((PotionMeta)itemStackBuilder.getMeta()).addCustomEffect(effect.toEffect(), false);
          }
       }
    }
 
    @NotNull
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull PotionEffectListData var1) {
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull PotionEffectListData potionEffectListData) {
       throw new NotImplementedException();
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      if (var1.getNBT().getItem().getItemMeta() instanceof PotionMeta) {
-         PotionEffectListData var2 = new PotionEffectListData();
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      if (readMMOItem.getNBT().getItem().getItemMeta() instanceof PotionMeta) {
+         PotionEffectListData potionEffectListData = new PotionEffectListData();
 
-         for (PotionEffect var4 : ((PotionMeta)var1.getNBT().getItem().getItemMeta()).getCustomEffects()) {
-            var2.add(new PotionEffectData(var4));
+         for (PotionEffect customEffect : ((PotionMeta)readMMOItem.getNBT().getItem().getItemMeta()).getCustomEffects()) {
+            potionEffectListData.add(new PotionEffectData(customEffect));
          }
 
-         var1.setData(this, var2);
+         readMMOItem.setData(this, potionEffectListData);
       }
    }
 
    @Nullable
-   public PotionEffectListData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
+   public PotionEffectListData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
       throw new NotImplementedException();
    }
 }

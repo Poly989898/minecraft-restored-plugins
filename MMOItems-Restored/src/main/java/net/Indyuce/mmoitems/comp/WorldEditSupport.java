@@ -22,48 +22,48 @@ public class WorldEditSupport {
          super(WorldEdit.getInstance());
       }
 
-      public BaseBlock parseFromInput(String var1, ParserContext var2) {
-         var1 = var1.toLowerCase();
-         if (!var1.startsWith("mmoitems-")) {
+      public BaseBlock parseFromInput(String text, ParserContext parserContext) {
+         text = text.toLowerCase();
+         if (!text.startsWith("mmoitems-")) {
             return null;
          }
 
-         int var4;
+         int count;
          try {
-            var4 = Integer.parseInt(var1.split("-")[1]);
-         } catch (NumberFormatException var8) {
+            count = Integer.parseInt(text.split("-")[1]);
+         } catch (NumberFormatException exception) {
             return null;
          }
 
-         CustomBlock var5 = MMOItems.plugin.getCustomBlocks().getBlock(var4);
-         if (var5 == null) {
+         CustomBlock block = MMOItems.plugin.getCustomBlocks().getBlock(count);
+         if (block == null) {
             return null;
          }
 
-         MushroomState var6 = var5.getState();
-         BlockType var3;
-         switch (var6.getType()) {
+         MushroomState state = block.getState();
+         BlockType blockType;
+         switch (state.getType()) {
             case MUSHROOM_STEM:
-               var3 = BlockTypes.MUSHROOM_STEM;
+               blockType = BlockTypes.MUSHROOM_STEM;
                break;
             case BROWN_MUSHROOM_BLOCK:
-               var3 = BlockTypes.BROWN_MUSHROOM_BLOCK;
+               blockType = BlockTypes.BROWN_MUSHROOM_BLOCK;
                break;
             case RED_MUSHROOM_BLOCK:
-               var3 = BlockTypes.RED_MUSHROOM_BLOCK;
+               blockType = BlockTypes.RED_MUSHROOM_BLOCK;
                break;
             default:
                return null;
          }
 
-         BlockState var7 = var3.getDefaultState()
-            .with((Property)var3.getPropertyMap().get("up"), var6.getSide("up"))
-            .with((Property)var3.getPropertyMap().get("down"), var6.getSide("down"))
-            .with((Property)var3.getPropertyMap().get("north"), var6.getSide("north"))
-            .with((Property)var3.getPropertyMap().get("south"), var6.getSide("south"))
-            .with((Property)var3.getPropertyMap().get("east"), var6.getSide("east"))
-            .with((Property)var3.getPropertyMap().get("west"), var6.getSide("west"));
-         return var7.toBaseBlock();
+         BlockState blockState = blockType.getDefaultState()
+            .with((Property)blockType.getPropertyMap().get("up"), state.getSide("up"))
+            .with((Property)blockType.getPropertyMap().get("down"), state.getSide("down"))
+            .with((Property)blockType.getPropertyMap().get("north"), state.getSide("north"))
+            .with((Property)blockType.getPropertyMap().get("south"), state.getSide("south"))
+            .with((Property)blockType.getPropertyMap().get("east"), state.getSide("east"))
+            .with((Property)blockType.getPropertyMap().get("west"), state.getSide("west"));
+         return blockState.toBaseBlock();
       }
    }
 }

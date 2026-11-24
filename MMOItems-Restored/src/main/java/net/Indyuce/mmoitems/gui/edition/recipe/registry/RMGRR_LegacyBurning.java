@@ -26,10 +26,10 @@ public class RMGRR_LegacyBurning implements RecipeRegistry {
    @NotNull
    private final ItemStack displayListItem;
 
-   public RMGRR_LegacyBurning(CraftingType var1) {
-      this.craftingType = var1;
+   public RMGRR_LegacyBurning(CraftingType craftingType) {
+      this.craftingType = craftingType;
       this.displayListItem = RecipeEditorGUI.rename(
-         var1.getItem(), FFPMMOItems.get().getExampleFormat() + capitalizeFirst(this.getRecipeConfigPath()) + " Recipe"
+         craftingType.getItem(), FFPMMOItems.get().getExampleFormat() + capitalizeFirst(this.getRecipeConfigPath()) + " Recipe"
       );
    }
 
@@ -39,8 +39,8 @@ public class RMGRR_LegacyBurning implements RecipeRegistry {
    }
 
    @NotNull
-   public static String capitalizeFirst(@NotNull String var0) {
-      return var0.substring(0, 1).toUpperCase() + var0.substring(1);
+   public static String capitalizeFirst(@NotNull String text) {
+      return text.substring(0, 1).toUpperCase() + text.substring(1);
    }
 
    @NotNull
@@ -62,35 +62,35 @@ public class RMGRR_LegacyBurning implements RecipeRegistry {
    }
 
    @Override
-   public void openForPlayer(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      new RMG_BurningLegacy(var1.getPlayer(), var1.getEdited(), var2, this).open(var1);
+   public void openForPlayer(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      new RMG_BurningLegacy(editionInventory.getPlayer(), editionInventory.getEdited(), text, this).open(editionInventory);
    }
 
    @NotNull
    @Override
    public MythicRecipeBlueprint sendToMythicLib(
-      @NotNull MMOItemTemplate var1,
-      @NotNull ConfigurationSection var2,
-      @NotNull String var3,
-      @NotNull Ref<NamespacedKey> var4,
-      @NotNull FriendlyFeedbackProvider var5
+      @NotNull MMOItemTemplate mmoItemTemplate,
+      @NotNull ConfigurationSection section,
+      @NotNull String text,
+      @NotNull Ref<NamespacedKey> ref,
+      @NotNull FriendlyFeedbackProvider friendlyFeedbackProvider
    ) {
-      Validate.isTrue(var4.getValue() != null);
-      ConfigurationSection var6 = RecipeEditorGUI.getSection(var2, var3);
-      String var7 = var6.getString("item");
-      if (var7 == null) {
+      Validate.isTrue(ref.getValue() != null);
+      ConfigurationSection section2 = RecipeEditorGUI.getSection(section, text);
+      String item = section2.getString("item");
+      if (item == null) {
          throw new IllegalArgumentException("Missing input ingredient");
       }
 
-      WorkbenchIngredient var8 = RecipeManager.getWorkbenchIngredient(var7);
-      int var9 = var6.getInt("amount", 1);
-      double var10 = var6.getDouble("exp", 0.35);
-      int var12 = var6.getInt("time", SilentNumbers.round(200.0));
-      boolean var13 = var6.getBoolean("hidden", false);
-      BurningRecipeInformation var14 = new BurningRecipeInformation(var8, (float)var10, var12);
+      WorkbenchIngredient workbenchIngredient = RecipeManager.getWorkbenchIngredient(item);
+      int amount = section2.getInt("amount", 1);
+      double exp = section2.getDouble("exp", 0.35);
+      int time = section2.getInt("time", SilentNumbers.round(200.0));
+      boolean hidden = section2.getBoolean("hidden", false);
+      BurningRecipeInformation burningRecipeInformation = new BurningRecipeInformation(workbenchIngredient, (float)exp, time);
       MMOItems.plugin
          .getRecipes()
-         .registerBurningRecipe(this.craftingType.getBurningType(), var1.newBuilder(0, null).build(), var14, var9, (NamespacedKey)var4.getValue(), var13);
+         .registerBurningRecipe(this.craftingType.getBurningType(), mmoItemTemplate.newBuilder(0, null).build(), burningRecipeInformation, amount, (NamespacedKey)ref.getValue(), hidden);
       throw new IllegalArgumentException("");
    }
 }

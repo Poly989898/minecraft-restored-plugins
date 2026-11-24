@@ -20,17 +20,17 @@ import org.jetbrains.annotations.NotNull;
 public class SlashLuteAttack implements LuteAttackHandler {
    @Override
    public void handle(
-      final PlayerMetadata var1,
-      double var2,
-      NBTItem var4,
-      final double var5,
-      @NotNull Vector var7,
-      @NotNull final SoundReader var8,
-      @NotNull final ProjectileParticlesData var9
+      final PlayerMetadata playerMetadata,
+      double value,
+      NBTItem nbtItem,
+      final double value2,
+      @NotNull Vector vector,
+      @NotNull final SoundReader soundReader,
+      @NotNull final ProjectileParticlesData projectileParticlesData
    ) {
       (new BukkitRunnable() {
-         final Vector vec = var1.getPlayer().getEyeLocation().getDirection();
-         final Location loc = var1.getPlayer().getLocation().add(0.0, 1.3, 0.0);
+         final Vector vec = playerMetadata.getPlayer().getEyeLocation().getDirection();
+         final Location loc = playerMetadata.getPlayer().getLocation().add(0.0, 1.3, 0.0);
          double ti = 1.0;
 
          public void run() {
@@ -38,25 +38,25 @@ public class SlashLuteAttack implements LuteAttackHandler {
                this.cancel();
             }
 
-            var8.play(this.loc, 2.0F, (float)(0.5 + this.ti / var5));
+            soundReader.play(this.loc, 2.0F, (float)(0.5 + this.ti / value2));
 
             for (byte var1x = -30; var1x < 30; var1x += 3) {
                if (LuteAttackHandler.RANDOM.nextBoolean()) {
                   this.loc.setDirection(this.vec);
                   this.loc.setYaw(this.loc.getYaw() + var1x);
-                  this.loc.setPitch(var1.getPlayer().getEyeLocation().getPitch());
-                  var9.shootParticle(this.loc.clone().add(this.loc.getDirection().multiply(1.5 * this.ti)));
+                  this.loc.setPitch(playerMetadata.getPlayer().getEyeLocation().getPitch());
+                  projectileParticlesData.shootParticle(this.loc.clone().add(this.loc.getDirection().multiply(1.5 * this.ti)));
                }
             }
          }
       }).runTaskTimer(MMOItems.plugin, 0L, 1L);
 
-      for (Entity var11 : MMOUtils.getNearbyChunkEntities(var1.getPlayer().getLocation())) {
-         if (var11.getLocation().distanceSquared(var1.getPlayer().getLocation()) < 40.0
-            && var1.getPlayer().getEyeLocation().getDirection().angle(var11.getLocation().toVector().subtract(var1.getPlayer().getLocation().toVector()))
+      for (Entity nearbyChunkEntity : MMOUtils.getNearbyChunkEntities(playerMetadata.getPlayer().getLocation())) {
+         if (nearbyChunkEntity.getLocation().distanceSquared(playerMetadata.getPlayer().getLocation()) < 40.0
+            && playerMetadata.getPlayer().getEyeLocation().getDirection().angle(nearbyChunkEntity.getLocation().toVector().subtract(playerMetadata.getPlayer().getLocation().toVector()))
                < Math.PI / 6
-            && UtilityMethods.canTarget(var1.getPlayer(), var11, InteractionType.OFFENSE_ACTION)) {
-            var1.attack((LivingEntity)var11, var2, new DamageType[]{DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE});
+            && UtilityMethods.canTarget(playerMetadata.getPlayer(), nearbyChunkEntity, InteractionType.OFFENSE_ACTION)) {
+            playerMetadata.attack((LivingEntity)nearbyChunkEntity, value, new DamageType[]{DamageType.WEAPON, DamageType.MAGIC, DamageType.PROJECTILE});
          }
       }
    }

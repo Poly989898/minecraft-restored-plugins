@@ -6,8 +6,8 @@ import org.bukkit.inventory.ItemStack;
 public abstract class PlayerIngredient {
    private final ItemStack item;
 
-   public PlayerIngredient(NBTItem var1) {
-      this.item = var1.getItem();
+   public PlayerIngredient(NBTItem nbtItem) {
+      this.item = nbtItem.getItem();
    }
 
    public ItemStack getItem() {

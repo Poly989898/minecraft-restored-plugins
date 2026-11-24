@@ -19,21 +19,21 @@ public class RegisteredSkill {
    @NotNull
    private final Map<String, Double> defaultParameterValues = new HashMap<>();
 
-   public RegisteredSkill(@NotNull SkillHandler<?> var1, @NotNull ConfigurationSection var2) {
-      this.handler = var1;
-      this.name = Objects.requireNonNull(var2.getString("name"), "Could not fill skill name");
+   public RegisteredSkill(@NotNull SkillHandler<?> skillHandler, @NotNull ConfigurationSection section) {
+      this.handler = skillHandler;
+      this.name = Objects.requireNonNull(section.getString("name"), "Could not fill skill name");
 
-      for (String var4 : var1.getModifiers()) {
+      for (String modifier : skillHandler.getModifiers()) {
          this.parameterNames
-            .put(var4, var2.getString("modifier." + var4 + ".name", UtilityMethods.caseOnWords(var4.replace("_", " ").replace("-", " ").toLowerCase())));
-         this.defaultParameterValues.put(var4, var2.getDouble("modifier." + var4 + ".default-value"));
+            .put(modifier, section.getString("modifier." + modifier + ".name", UtilityMethods.caseOnWords(modifier.replace("_", " ").replace("-", " ").toLowerCase())));
+         this.defaultParameterValues.put(modifier, section.getDouble("modifier." + modifier + ".default-value"));
       }
    }
 
    @Deprecated
-   public RegisteredSkill(@NotNull SkillHandler var1, @NotNull String var2) {
-      this.handler = var1;
-      this.name = var2;
+   public RegisteredSkill(@NotNull SkillHandler skillHandler, @NotNull String text) {
+      this.handler = skillHandler;
+      this.name = text;
    }
 
    @NotNull
@@ -47,21 +47,21 @@ public class RegisteredSkill {
    }
 
    @Deprecated
-   public void setDefaultValue(String var1, double var2) {
-      this.defaultParameterValues.put(var1, var2);
+   public void setDefaultValue(String text, double value) {
+      this.defaultParameterValues.put(text, value);
    }
 
    @Deprecated
-   public void setName(String var1, String var2) {
-      this.parameterNames.put(var1, var2);
+   public void setName(String text, String text2) {
+      this.parameterNames.put(text, text2);
    }
 
    @Nullable
-   public String getParameterName(String var1) {
-      return this.parameterNames.get(var1);
+   public String getParameterName(String text) {
+      return this.parameterNames.get(text);
    }
 
-   public double getDefaultModifier(String var1) {
-      return this.defaultParameterValues.get(var1);
+   public double getDefaultModifier(String text) {
+      return this.defaultParameterValues.get(text);
    }
 }

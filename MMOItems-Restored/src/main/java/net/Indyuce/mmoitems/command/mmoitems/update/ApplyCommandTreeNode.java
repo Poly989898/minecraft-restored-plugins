@@ -9,32 +9,32 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class ApplyCommandTreeNode extends CommandTreeNode {
-   public ApplyCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "apply");
-      this.addParameter(new Parameter("<id>", (var0, var1x) -> MMOItems.plugin.getUpdates().getAll().forEach(var1xx -> var1x.add("" + var1xx.getId()))));
+   public ApplyCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "apply");
+      this.addParameter(new Parameter("<id>", (commandTreeExplorer, var1x) -> MMOItems.plugin.getUpdates().getAll().forEach(var1xx -> var1x.add("" + var1xx.getId()))));
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      if (var2.length < 3) {
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      if (texts.length < 3) {
          return CommandResult.THROW_USAGE;
       }
 
-      int var3;
+      int index;
       try {
-         var3 = Integer.parseInt(var2[2]);
-      } catch (NumberFormatException var5) {
-         var1.sendMessage(ChatColor.RED + "Please specify a valid number.");
+         index = Integer.parseInt(texts[2]);
+      } catch (NumberFormatException exception) {
+         sender.sendMessage(ChatColor.RED + "Please specify a valid number.");
          return CommandResult.FAILURE;
       }
 
-      if (!MMOItems.plugin.getUpdates().has(var3)) {
-         var1.sendMessage(ChatColor.RED + "Could not find any config update with ID " + var3);
+      if (!MMOItems.plugin.getUpdates().has(index)) {
+         sender.sendMessage(ChatColor.RED + "Could not find any config update with ID " + index);
          return CommandResult.FAILURE;
       } else {
-         PluginUpdate var4 = MMOItems.plugin.getUpdates().get(var3);
-         var1.sendMessage(ChatColor.YELLOW + "Applying config update " + var3 + "...");
-         var4.apply(var1);
-         var1.sendMessage(ChatColor.YELLOW + "Config update " + var3 + " was successfully applied. Check the console for potential update error logs.");
+         PluginUpdate pluginUpdate = MMOItems.plugin.getUpdates().get(index);
+         sender.sendMessage(ChatColor.YELLOW + "Applying config update " + index + "...");
+         pluginUpdate.apply(sender);
+         sender.sendMessage(ChatColor.YELLOW + "Config update " + index + " was successfully applied. Check the console for potential update error logs.");
          return CommandResult.SUCCESS;
       }
    }

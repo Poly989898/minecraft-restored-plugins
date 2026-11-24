@@ -25,24 +25,24 @@ public class MMOItemIngredient extends Ingredient<MMOItemPlayerIngredient> {
    private final QuickNumberRange level;
    private final String display;
 
-   public MMOItemIngredient(MMOLineConfig var1) {
-      super("mmoitem", var1);
-      var1.validate(new String[]{"type", "id"});
-      Type var2 = MMOItems.plugin.getTypes().getOrThrow(var1.getString("type").toUpperCase().replace("-", "_").replace(" ", "_"));
-      this.template = MMOItems.plugin.getTemplates().getTemplateOrThrow(var2, var1.getString("id"));
-      QuickNumberRange var3 = QuickNumberRange.getFromString(var1.getString("level", ".."));
-      if (var3 != null) {
-         this.level = var3;
+   public MMOItemIngredient(MMOLineConfig mmoLineConfig) {
+      super("mmoitem", mmoLineConfig);
+      mmoLineConfig.validate(new String[]{"type", "id"});
+      Type type = MMOItems.plugin.getTypes().getOrThrow(mmoLineConfig.getString("type").toUpperCase().replace("-", "_").replace(" ", "_"));
+      this.template = MMOItems.plugin.getTemplates().getTemplateOrThrow(type, mmoLineConfig.getString("id"));
+      QuickNumberRange quickNumberRange = QuickNumberRange.getFromString(mmoLineConfig.getString("level", ".."));
+      if (quickNumberRange != null) {
+         this.level = quickNumberRange;
       } else {
          this.level = new QuickNumberRange(null, null);
       }
 
-      this.display = var1.contains("display") ? var1.getString("display") : this.findName();
+      this.display = mmoLineConfig.contains("display") ? mmoLineConfig.getString("display") : this.findName();
    }
 
-   public MMOItemIngredient(ConfigMMOItem var1) {
-      super("mmoitem", var1.getAmount());
-      this.template = var1.getTemplate();
+   public MMOItemIngredient(ConfigMMOItem configMMOItem) {
+      super("mmoitem", configMMOItem.getAmount());
+      this.template = configMMOItem.getTemplate();
       this.level = new QuickNumberRange(null, null);
       this.display = this.findName();
    }
@@ -61,36 +61,36 @@ public class MMOItemIngredient extends Ingredient<MMOItemPlayerIngredient> {
    }
 
    @Override
-   public String formatDisplay(String var1) {
-      return var1.replace("#item#", this.display)
+   public String formatDisplay(String text) {
+      return text.replace("#item#", this.display)
          .replace("#level#", !this.level.hasMax() && !this.level.hasMax() ? "" : "lvl." + this.level.toString() + " ")
          .replace("#amount#", String.valueOf(this.getAmount()));
    }
 
-   public boolean matches(MMOItemPlayerIngredient var1) {
-      if (!var1.getType().equals(this.template.getType().getId())) {
+   public boolean matches(MMOItemPlayerIngredient mmoItemPlayerIngredient) {
+      if (!mmoItemPlayerIngredient.getType().equals(this.template.getType().getId())) {
          return false;
       } else {
-         return !var1.getId().equals(this.template.getId())
+         return !mmoItemPlayerIngredient.getId().equals(this.template.getId())
             ? false
-            : SilentNumbers.floor(this.level.getAsDouble(0.0)) == 0 || this.level.inRange(var1.getUpgradeLevel());
+            : SilentNumbers.floor(this.level.getAsDouble(0.0)) == 0 || this.level.inRange(mmoItemPlayerIngredient.getUpgradeLevel());
       }
    }
 
    @NotNull
    @Override
-   public ItemStack generateItemStack(@NotNull RPGPlayer var1, boolean var2) {
-      MMOItem var3 = this.template.newBuilder(var1, var2).build();
-      ItemStack var4 = var3.newBuilder().build(var2);
-      int var5 = SilentNumbers.floor(this.level.getAsDouble(0.0));
-      if (var5 != 0 && var4.getItemMeta() != null) {
-         ItemMeta var6 = var4.getItemMeta();
-         var6.setDisplayName(MythicLib.plugin.parseColors(this.findName()));
-         var4.setItemMeta(var6);
+   public ItemStack generateItemStack(@NotNull RPGPlayer rpgPlayer, boolean flag) {
+      MMOItem mmoItem = this.template.newBuilder(rpgPlayer, flag).build();
+      ItemStack item = mmoItem.newBuilder().build(flag);
+      int count = SilentNumbers.floor(this.level.getAsDouble(0.0));
+      if (count != 0 && item.getItemMeta() != null) {
+         ItemMeta itemMeta = item.getItemMeta();
+         itemMeta.setDisplayName(MythicLib.plugin.parseColors(this.findName()));
+         item.setItemMeta(itemMeta);
       }
 
-      var4.setAmount(this.getAmount());
-      return var4;
+      item.setAmount(this.getAmount());
+      return item;
    }
 
    @Override
@@ -99,9 +99,9 @@ public class MMOItemIngredient extends Ingredient<MMOItemPlayerIngredient> {
    }
 
    private String findName() {
-      String var1;
+      String text;
       if (this.template.getBaseItemData().containsKey(ItemStats.NAME)) {
-         var1 = this.template
+         text = this.template
             .getBaseItemData()
             .get(ItemStats.NAME)
             .toString()
@@ -109,15 +109,15 @@ public class MMOItemIngredient extends Ingredient<MMOItemPlayerIngredient> {
             .replace("<tier-name>", "")
             .replace("<tier-color-cleaned>", "");
       } else if (this.template.getBaseItemData().containsKey(ItemStats.MATERIAL)) {
-         var1 = UtilityMethods.caseOnWords(
+         text = UtilityMethods.caseOnWords(
             ((MaterialData)this.template.getBaseItemData().get(ItemStats.MATERIAL)).getMaterial().name().toLowerCase().replace("_", " ")
          );
       } else {
-         var1 = "Unrecognized Item";
+         text = "Unrecognized Item";
       }
 
       return SilentNumbers.floor(this.level.getAsDouble(0.0)) != 0
-         ? DisplayName.appendUpgradeLevel(var1, SilentNumbers.floor(this.level.getAsDouble(0.0)))
-         : var1;
+         ? DisplayName.appendUpgradeLevel(text, SilentNumbers.floor(this.level.getAsDouble(0.0)))
+         : text;
    }
 }

@@ -11,8 +11,8 @@ public class MMOItemTag extends SimpleTag {
    public static ObjectTagProcessor<MMOItemTag> tagProcessor = new ObjectTagProcessor();
 
    @Deprecated
-   public MMOItemTag(ItemTag var1) {
-      this.item = var1;
+   public MMOItemTag(ItemTag itemTag) {
+      this.item = itemTag;
    }
 
    public boolean isUnique() {
@@ -31,11 +31,11 @@ public class MMOItemTag extends SimpleTag {
       return this.identify();
    }
 
-   public ObjectTag getObjectAttribute(Attribute var1) {
-      return tagProcessor.getObjectAttribute(this, var1);
+   public ObjectTag getObjectAttribute(Attribute attribute) {
+      return tagProcessor.getObjectAttribute(this, attribute);
    }
 
    public static void registerTags() {
-      tagProcessor.registerTag("item", (var0, var1) -> var1.item, new String[0]);
+      tagProcessor.registerTag("item", (attribute, mmoItemTag) -> mmoItemTag.item, new String[0]);
    }
 }

@@ -40,124 +40,124 @@ import org.jetbrains.annotations.NotNull;
 
 public class PlayerListener implements Listener {
    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-   public void onDeathForUpgradeLoss(@NotNull PlayerDeathEvent var1) {
-      if (PlayerData.has(var1.getEntity())) {
-         new PlayerListener.DelayedDeathDowngrade(var1).runTaskLater(MMOItems.plugin, 3L);
+   public void onDeathForUpgradeLoss(@NotNull PlayerDeathEvent event) {
+      if (PlayerData.has(event.getEntity())) {
+         new PlayerListener.DelayedDeathDowngrade(event).runTaskLater(MMOItems.plugin, 3L);
       }
    }
 
    @EventHandler
-   public void fullSync(SynchronizedDataLoadEvent var1) {
-      if (var1.syncIsFull()) {
-         PlayerData var2 = PlayerData.get(var1.getHolder().getUniqueId());
-         var2.updateInventory();
+   public void fullSync(SynchronizedDataLoadEvent event) {
+      if (event.syncIsFull()) {
+         PlayerData playerData = PlayerData.get(event.getHolder().getUniqueId());
+         playerData.updateInventory();
       }
    }
 
    @EventHandler(priority = EventPriority.HIGH)
-   public void keepItemsOnDeath(PlayerDeathEvent var1) {
-      if (!var1.getKeepInventory()) {
-         Player var2 = var1.getEntity();
-         DeathItemsHandler var3 = new DeathItemsHandler(var2);
-         Iterator var4 = var1.getDrops().iterator();
+   public void keepItemsOnDeath(PlayerDeathEvent event) {
+      if (!event.getKeepInventory()) {
+         Player entity = event.getEntity();
+         DeathItemsHandler deathItemsHandler = new DeathItemsHandler(entity);
+         Iterator iterator = event.getDrops().iterator();
 
-         while (var4.hasNext()) {
-            ItemStack var5 = (ItemStack)var4.next();
-            NBTItem var6 = NBTItem.get(var5);
-            if (var6.getBoolean("MMOITEMS_DISABLE_DEATH_DROP") || MMOItems.plugin.getLanguage().keepSoulboundOnDeath && MMOUtils.isSoulboundTo(var6, var2)) {
-               var4.remove();
-               var3.registerItem(var5);
+         while (iterator.hasNext()) {
+            ItemStack item = (ItemStack)iterator.next();
+            NBTItem nbtItem = NBTItem.get(item);
+            if (nbtItem.getBoolean("MMOITEMS_DISABLE_DEATH_DROP") || MMOItems.plugin.getLanguage().keepSoulboundOnDeath && MMOUtils.isSoulboundTo(nbtItem, entity)) {
+               iterator.remove();
+               deathItemsHandler.registerItem(item);
             }
          }
 
-         var3.registerIfNecessary();
+         deathItemsHandler.registerIfNecessary();
       }
    }
 
    @EventHandler
-   public void onRespawn(PlayerRespawnEvent var1) {
-      DeathItemsHandler.readAndRemove(var1.getPlayer());
+   public void onRespawn(PlayerRespawnEvent event) {
+      DeathItemsHandler.readAndRemove(event.getPlayer());
    }
 
    @EventHandler
-   public void onArmorEquip(ArmorEquipEvent var1) {
-      if (var1.getNewArmorPiece() != null) {
-         if (!PlayerData.get(var1.getPlayer()).getRPG().canUse(NBTItem.get(var1.getNewArmorPiece()), true)) {
-            var1.setCancelled(true);
+   public void onArmorEquip(ArmorEquipEvent event) {
+      if (event.getNewArmorPiece() != null) {
+         if (!PlayerData.get(event.getPlayer()).getRPG().canUse(NBTItem.get(event.getNewArmorPiece()), true)) {
+            event.setCancelled(true);
          }
       }
    }
 
    @EventHandler(ignoreCancelled = true)
-   public void registerTridents(ProjectileLaunchEvent var1) {
-      if (var1.getEntity() instanceof Trident && var1.getEntity().getShooter() instanceof Player) {
-         InteractItem var2 = new InteractItem((Player)var1.getEntity().getShooter(), Material.TRIDENT);
-         if (var2.hasItem()) {
-            NBTItem var3 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var2.getItem());
-            Type var4 = Type.get(var3.getType());
-            PlayerData var5 = PlayerData.get((Player)var1.getEntity().getShooter());
-            if (var4 != null) {
-               Weapon var6 = new Weapon(var5, var3);
-               if (!var6.checkItemRequirements() || !var6.checkAndApplyWeaponCosts()) {
-                  var1.setCancelled(true);
+   public void registerTridents(ProjectileLaunchEvent event) {
+      if (event.getEntity() instanceof Trident && event.getEntity().getShooter() instanceof Player) {
+         InteractItem interactItem = new InteractItem((Player)event.getEntity().getShooter(), Material.TRIDENT);
+         if (interactItem.hasItem()) {
+            NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(interactItem.getItem());
+            Type type = Type.get(nBTItem.getType());
+            PlayerData playerData = PlayerData.get((Player)event.getEntity().getShooter());
+            if (type != null) {
+               Weapon weapon = new Weapon(playerData, nBTItem);
+               if (!weapon.checkItemRequirements() || !weapon.checkAndApplyWeaponCosts()) {
+                  event.setCancelled(true);
                   return;
                }
 
-               ProjectileMetadata var7 = ProjectileMetadata.create(
-                  var5.getMMOPlayerData(), EquipmentSlot.fromBukkit(var2.getSlot()), ProjectileType.TRIDENT, var1.getEntity()
+               ProjectileMetadata projectileMetadata = ProjectileMetadata.create(
+                  playerData.getMMOPlayerData(), EquipmentSlot.fromBukkit(interactItem.getSlot()), ProjectileType.TRIDENT, event.getEntity()
                );
-               var7.setSourceItem(var3);
-               var7.setCustomDamage(true);
+               projectileMetadata.setSourceItem(nBTItem);
+               projectileMetadata.setCustomDamage(true);
             }
          }
       }
    }
 
    @EventHandler(ignoreCancelled = true)
-   public void registerArrowSpecialEffects(PlayerAttackEvent var1) {
-      if (var1.getAttack() instanceof ProjectileAttackMetadata) {
-         ProjectileAttackMetadata var2 = (ProjectileAttackMetadata)var1.getAttack();
-         ProjectileMetadata var3 = ProjectileMetadata.get(var2.getProjectile());
-         if (var3 != null && var3.getSourceItem() != null) {
-            this.applyPotionEffects(var3, var1.getEntity());
+   public void registerArrowSpecialEffects(PlayerAttackEvent event) {
+      if (event.getAttack() instanceof ProjectileAttackMetadata) {
+         ProjectileAttackMetadata attack = (ProjectileAttackMetadata)event.getAttack();
+         ProjectileMetadata projectileMetadata = ProjectileMetadata.get(attack.getProjectile());
+         if (projectileMetadata != null && projectileMetadata.getSourceItem() != null) {
+            this.applyPotionEffects(projectileMetadata, event.getEntity());
          }
       }
    }
 
-   private void applyPotionEffects(ProjectileMetadata var1, LivingEntity var2) {
-      if (var1.getSourceItem().hasTag("MMOITEMS_ARROW_POTION_EFFECTS")) {
-         for (ArrowPotionEffectArrayItem var6 : (ArrowPotionEffectArrayItem[])MythicLib.plugin
+   private void applyPotionEffects(ProjectileMetadata projectileMetadata, LivingEntity entity) {
+      if (projectileMetadata.getSourceItem().hasTag("MMOITEMS_ARROW_POTION_EFFECTS")) {
+         for (ArrowPotionEffectArrayItem arrowPotionEffectArrayItem : (ArrowPotionEffectArrayItem[])MythicLib.plugin
             .getJson()
-            .parse(var1.getSourceItem().getString("MMOITEMS_ARROW_POTION_EFFECTS"), ArrowPotionEffectArrayItem[].class)) {
-            var2.addPotionEffect(new PotionEffectData(PotionEffectType.getByName(var6.type), var6.duration, var6.level).toEffect());
+            .parse(projectileMetadata.getSourceItem().getString("MMOITEMS_ARROW_POTION_EFFECTS"), ArrowPotionEffectArrayItem[].class)) {
+            entity.addPotionEffect(new PotionEffectData(PotionEffectType.getByName(arrowPotionEffectArrayItem.type), arrowPotionEffectArrayItem.duration, arrowPotionEffectArrayItem.level).toEffect());
          }
       }
    }
 
    @Deprecated
    @EventHandler
-   public void registerInventoryUpdates1(PlayerSwapHandItemsEvent var1) {
-      PlayerData.get(var1.getPlayer()).getInventory().scheduleUpdate();
+   public void registerInventoryUpdates1(PlayerSwapHandItemsEvent event) {
+      PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
    }
 
    @Deprecated
    @EventHandler
-   public void registerInventoryUpdates2(PlayerItemHeldEvent var1) {
-      PlayerData.get(var1.getPlayer()).getInventory().scheduleUpdate();
+   public void registerInventoryUpdates2(PlayerItemHeldEvent event) {
+      PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
    }
 
    @Deprecated
    @EventHandler
-   public void registerInventoryUpdates3(PlayerDropItemEvent var1) {
-      PlayerData.get(var1.getPlayer()).getInventory().scheduleUpdate();
+   public void registerInventoryUpdates3(PlayerDropItemEvent event) {
+      PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
    }
 
    private static class DelayedDeathDowngrade extends BukkitRunnable {
       @NotNull
       final PlayerDeathEvent event;
 
-      DelayedDeathDowngrade(@NotNull PlayerDeathEvent var1) {
-         this.event = var1;
+      DelayedDeathDowngrade(@NotNull PlayerDeathEvent event) {
+         this.event = event;
       }
 
       public void run() {

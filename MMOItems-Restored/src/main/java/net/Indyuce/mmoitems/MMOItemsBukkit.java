@@ -19,36 +19,36 @@ import net.Indyuce.mmoitems.listener.option.SoulboundNoDrop;
 import org.bukkit.Bukkit;
 
 public class MMOItemsBukkit {
-   public MMOItemsBukkit(MMOItems var1) {
-      Bukkit.getPluginManager().registerEvents(new ItemUse(), var1);
-      Bukkit.getPluginManager().registerEvents(new ItemListener(), var1);
-      Bukkit.getPluginManager().registerEvents(new PlayerListener(), var1);
-      Bukkit.getPluginManager().registerEvents(new CustomSoundListener(), var1);
-      Bukkit.getPluginManager().registerEvents(new DurabilityListener(), var1);
-      Bukkit.getPluginManager().registerEvents(new DisableInteractions(), var1);
-      Bukkit.getPluginManager().registerEvents(new GuiListener(), var1);
-      Bukkit.getPluginManager().registerEvents(new BiomeChangeListener(), var1);
-      Bukkit.getPluginManager().registerEvents(new CustomBlockListener(), var1);
+   public MMOItemsBukkit(MMOItems mmoItems) {
+      Bukkit.getPluginManager().registerEvents(new ItemUse(), mmoItems);
+      Bukkit.getPluginManager().registerEvents(new ItemListener(), mmoItems);
+      Bukkit.getPluginManager().registerEvents(new PlayerListener(), mmoItems);
+      Bukkit.getPluginManager().registerEvents(new CustomSoundListener(), mmoItems);
+      Bukkit.getPluginManager().registerEvents(new DurabilityListener(), mmoItems);
+      Bukkit.getPluginManager().registerEvents(new DisableInteractions(), mmoItems);
+      Bukkit.getPluginManager().registerEvents(new GuiListener(), mmoItems);
+      Bukkit.getPluginManager().registerEvents(new BiomeChangeListener(), mmoItems);
+      Bukkit.getPluginManager().registerEvents(new CustomBlockListener(), mmoItems);
       if (Bukkit.getPluginManager().getPlugin("PhatLoots") != null) {
-         Bukkit.getPluginManager().registerEvents(new PhatLootsHook(), var1);
+         Bukkit.getPluginManager().registerEvents(new PhatLootsHook(), mmoItems);
       }
 
-      if (var1.getConfig().getBoolean("dropped-items.tier-glow") || var1.getConfig().getBoolean("dropped-items.hints")) {
-         Bukkit.getPluginManager().registerEvents(new DroppedItems(var1.getConfig().getConfigurationSection("dropped-items")), var1);
+      if (mmoItems.getConfig().getBoolean("dropped-items.tier-glow") || mmoItems.getConfig().getBoolean("dropped-items.hints")) {
+         Bukkit.getPluginManager().registerEvents(new DroppedItems(mmoItems.getConfig().getConfigurationSection("dropped-items")), mmoItems);
       }
 
-      if (var1.getLanguage().disableRemovedItems) {
-         Bukkit.getPluginManager().registerEvents(new DisabledItemsListener(var1), var1);
+      if (mmoItems.getLanguage().disableRemovedItems) {
+         Bukkit.getPluginManager().registerEvents(new DisabledItemsListener(mmoItems), mmoItems);
       }
 
-      if (!var1.getConfig().getBoolean("soulbound.can-drop")) {
-         Bukkit.getPluginManager().registerEvents(new SoulboundNoDrop(), var1);
+      if (!mmoItems.getConfig().getBoolean("soulbound.can-drop")) {
+         Bukkit.getPluginManager().registerEvents(new SoulboundNoDrop(), mmoItems);
       }
 
       if (MythicLib.plugin.hasProfiles()) {
-         Bukkit.getPluginManager().registerEvents(new ProfileSupportListener(), var1);
+         Bukkit.getPluginManager().registerEvents(new ProfileSupportListener(), mmoItems);
       }
 
-      Bukkit.getScheduler().runTaskTimer(var1, () -> Bukkit.getOnlinePlayers().forEach(var0 -> PlayerData.get(var0).timedRunnable()), 100L, 20L);
+      Bukkit.getScheduler().runTaskTimer(mmoItems, () -> Bukkit.getOnlinePlayers().forEach(value -> PlayerData.get(value).timedRunnable()), 100L, 20L);
    }
 }

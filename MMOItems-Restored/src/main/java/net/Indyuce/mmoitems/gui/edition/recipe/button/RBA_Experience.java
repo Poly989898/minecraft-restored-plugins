@@ -19,8 +19,8 @@ public class RBA_Experience extends RBA_DoubleButton {
       .lore(SilentNumbers.chop("This recipe gives experience when crafted, how much?", 65, "§7"))
       .build();
 
-   public RBA_Experience(@NotNull RecipeEditorGUI var1) {
-      super(var1);
+   public RBA_Experience(@NotNull RecipeEditorGUI recipeEditorGUI) {
+      super(recipeEditorGUI);
    }
 
    @NotNull

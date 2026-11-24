@@ -12,22 +12,22 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class TestCommandTreeNode extends CommandTreeNode {
-   public TestCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "test");
+   public TestCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "test");
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      ItemStack var3 = new ItemStack(Material.DIAMOND);
-      ItemMeta var4 = var3.getItemMeta();
-      ArrayList var5 = new ArrayList();
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      ItemStack item = new ItemStack(Material.DIAMOND);
+      ItemMeta itemMeta = item.getItemMeta();
+      ArrayList list = new ArrayList();
 
-      for (int var6 = 0; var6 < 30; var6++) {
-         var5.add(ChatColor.WHITE + "ɴ" + UtilityMethods.getFontSpace(var6) + "ɴ -> " + var6);
+      for (int i = 0; i < 30; i++) {
+         list.add(ChatColor.WHITE + "ɴ" + UtilityMethods.getFontSpace(i) + "ɴ -> " + i);
       }
 
-      var4.setLore(var5);
-      var3.setItemMeta(var4);
-      ((Player)var1).getInventory().addItem(new ItemStack[]{var3});
+      itemMeta.setLore(list);
+      item.setItemMeta(itemMeta);
+      ((Player)sender).getInventory().addItem(new ItemStack[]{item});
       return CommandResult.SUCCESS;
    }
 }

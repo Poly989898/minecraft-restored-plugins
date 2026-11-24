@@ -16,12 +16,12 @@ public class RestoreHealth extends DoubleStat implements PlayerConsumable {
    }
 
    @Override
-   public void onConsume(@NotNull VolatileMMOItem var1, @NotNull Player var2, boolean var3) {
-      if (!var2.isDead() && !(var2.getHealth() <= 0.0)) {
-         if (var1.hasData(ItemStats.RESTORE_HEALTH)) {
-            DoubleData var4 = (DoubleData)var1.getData(ItemStats.RESTORE_HEALTH);
-            if (var4.getValue() != 0.0) {
-               MMOUtils.heal(var2, var4.getValue());
+   public void onConsume(@NotNull VolatileMMOItem volatileMMOItem, @NotNull Player player, boolean flag) {
+      if (!player.isDead() && !(player.getHealth() <= 0.0)) {
+         if (volatileMMOItem.hasData(ItemStats.RESTORE_HEALTH)) {
+            DoubleData data = (DoubleData)volatileMMOItem.getData(ItemStats.RESTORE_HEALTH);
+            if (data.getValue() != 0.0) {
+               MMOUtils.heal(player, data.getValue());
             }
          }
       }

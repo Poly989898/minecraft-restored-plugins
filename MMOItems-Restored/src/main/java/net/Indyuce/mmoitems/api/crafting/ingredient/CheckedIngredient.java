@@ -14,10 +14,10 @@ public class CheckedIngredient {
    private final List<PlayerIngredient> found;
    private final boolean isHad;
 
-   public CheckedIngredient(@NotNull Ingredient var1, @NotNull List<PlayerIngredient> var2) {
-      this.ingredient = var1;
-      this.found = var2;
-      this.isHad = this.getTotalAmount() >= var1.getAmount();
+   public CheckedIngredient(@NotNull Ingredient ingredient, @NotNull List<PlayerIngredient> playerIngredients) {
+      this.ingredient = ingredient;
+      this.found = playerIngredients;
+      this.isHad = this.getTotalAmount() >= ingredient.getAmount();
    }
 
    public boolean isHad() {
@@ -25,30 +25,30 @@ public class CheckedIngredient {
    }
 
    public int getTotalAmount() {
-      int var1 = 0;
+      int count = 0;
 
-      for (PlayerIngredient var3 : this.found) {
-         var1 += var3.getAmount();
+      for (PlayerIngredient playerIngredient : this.found) {
+         count += playerIngredient.getAmount();
       }
 
-      return var1;
+      return count;
    }
 
    public void takeAway() {
       this.reduceItem(this.ingredient.getAmount());
    }
 
-   public void reduceItem(int var1) {
-      Iterator var2 = this.found.iterator();
+   public void reduceItem(int count) {
+      Iterator iterator = this.found.iterator();
 
-      while (var2.hasNext() && var1 > 0) {
-         ItemStack var3 = ((PlayerIngredient)var2.next()).getItem();
-         if (var3.getAmount() <= 0) {
-            var2.remove();
+      while (iterator.hasNext() && count > 0) {
+         ItemStack item = ((PlayerIngredient)iterator.next()).getItem();
+         if (item.getAmount() <= 0) {
+            iterator.remove();
          } else {
-            int var4 = Math.min(var3.getAmount(), var1);
-            var1 -= var4;
-            var3.setAmount(var3.getAmount() - var4);
+            int count2 = Math.min(item.getAmount(), count);
+            count -= count2;
+            item.setAmount(item.getAmount() - count2);
          }
       }
    }

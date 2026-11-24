@@ -37,50 +37,50 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
    public AureliumSkillsHook() {
       this.aSkills = (AureliumSkills)Bukkit.getPluginManager().getPlugin("AureliumSkills");
 
-      for (Stats var4 : Stats.values()) {
-         String var5 = UtilityMethods.caseOnWords(var4.name().toLowerCase());
-         DoubleStat var6 = new DoubleStat(
-            "ADDITIONAL_" + var4.name(),
+      for (Stats stats : Stats.values()) {
+         String text = UtilityMethods.caseOnWords(stats.name().toLowerCase());
+         DoubleStat doubleStat = new DoubleStat(
+            "ADDITIONAL_" + stats.name(),
             Material.BOOK,
-            "Additional " + var5,
-            new String[]{"Additional " + var5 + " (AureliumSkills)"},
+            "Additional " + text,
+            new String[]{"Additional " + text + " (AureliumSkills)"},
             new String[]{"!miscellaneous", "!block", "all"}
          );
-         this.statExtra.put(var4, var6);
-         MMOItems.plugin.getStats().register(var6);
+         this.statExtra.put(stats, doubleStat);
+         MMOItems.plugin.getStats().register(doubleStat);
       }
 
-      for (Skills var10 : Skills.values()) {
-         MMOItems.plugin.getStats().register(new AureliumSkillsHook.RequiredProfessionStat(var10));
+      for (Skills skills : Skills.values()) {
+         MMOItems.plugin.getStats().register(new AureliumSkillsHook.RequiredProfessionStat(skills));
       }
    }
 
    @EventHandler
-   public void a(SkillLevelUpEvent var1) {
-      Player var2 = var1.getPlayer();
-      if (var2.isOnline()) {
-         PlayerData.get(var2).getInventory().scheduleUpdate();
+   public void a(SkillLevelUpEvent event) {
+      Player player = event.getPlayer();
+      if (player.isOnline()) {
+         PlayerData.get(player).getInventory().scheduleUpdate();
       }
    }
 
    @Override
-   public void refreshStats(PlayerData var1) {
+   public void refreshStats(PlayerData playerData) {
       this.statExtra
          .forEach(
-            (var1x, var2) -> AureliumAPI.addStatModifier(var1.getPlayer(), "mmoitems_" + var1x.name(), var1x, var1.getStats().getStat((ItemStat<?, ?>)var2))
+            (var1x, itemStat) -> AureliumAPI.addStatModifier(playerData.getPlayer(), "mmoitems_" + var1x.name(), var1x, playerData.getStats().getStat((ItemStat<?, ?>)itemStat))
          );
    }
 
    @Override
-   public RPGPlayer getInfo(PlayerData var1) {
-      return new EmptyRPGPlayer(var1);
+   public RPGPlayer getInfo(PlayerData playerData) {
+      return new EmptyRPGPlayer(playerData);
    }
 
    @EventHandler
-   public void a(PlayerDataLoadEvent var1) {
-      Player var2 = var1.getPlayerData().getPlayer();
-      PlayerData var3 = PlayerData.get(var2);
-      var3.setRPGPlayer(new AureliumSkillsHook.PlayerWrapper(var3, var1.getPlayerData()));
+   public void a(PlayerDataLoadEvent event) {
+      Player player = event.getPlayerData().getPlayer();
+      PlayerData playerData = PlayerData.get(player);
+      playerData.setRPGPlayer(new AureliumSkillsHook.PlayerWrapper(playerData, event.getPlayerData()));
    }
 
    public class PlayerWrapper extends RPGPlayer {
@@ -116,13 +116,13 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
       }
 
       @Override
-      public void setMana(double var1) {
-         this.info.setMana(var1);
+      public void setMana(double value) {
+         this.info.setMana(value);
       }
 
       @Override
-      public void setStamina(double var1) {
-         this.getPlayer().setFoodLevel((int)var1);
+      public void setStamina(double value) {
+         this.getPlayer().setFoodLevel((int)value);
       }
    }
 
@@ -140,17 +140,17 @@ public class AureliumSkillsHook implements RPGHandler, Listener {
       }
 
       @Override
-      public boolean canUse(RPGPlayer var1, NBTItem var2, boolean var3) {
-         int var4 = var2.getInteger(this.getNBTPath());
-         if (var4 <= 0) {
+      public boolean canUse(RPGPlayer rpgPlayer, NBTItem nbtItem, boolean flag) {
+         int count = nbtItem.getInteger(this.getNBTPath());
+         if (count <= 0) {
             return true;
          }
 
-         int var5 = AureliumAPI.getSkillLevel(var1.getPlayer(), this.skill);
-         if (var5 < var4 && !var1.getPlayer().hasPermission("mmoitems.bypass.level")) {
-            if (var3) {
-               Message.NOT_ENOUGH_PROFESSION.format(ChatColor.RED, "#profession#", this.skill.getDisplayName(Locale.getDefault())).send(var1.getPlayer());
-               var1.getPlayer().playSound(var1.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);
+         int skillLevel = AureliumAPI.getSkillLevel(rpgPlayer.getPlayer(), this.skill);
+         if (skillLevel < count && !rpgPlayer.getPlayer().hasPermission("mmoitems.bypass.level")) {
+            if (flag) {
+               Message.NOT_ENOUGH_PROFESSION.format(ChatColor.RED, "#profession#", this.skill.getDisplayName(Locale.getDefault())).send(rpgPlayer.getPlayer());
+               rpgPlayer.getPlayer().playSound(rpgPlayer.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);
             }
 
             return false;

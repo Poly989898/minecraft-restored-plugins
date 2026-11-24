@@ -14,23 +14,23 @@ public class DroppedItems implements Listener {
    private final boolean tierGlow;
    private final boolean hints;
 
-   public DroppedItems(ConfigurationSection var1) {
-      this.tierGlow = var1.getBoolean("tier-glow");
-      this.hints = var1.getBoolean("hints");
+   public DroppedItems(ConfigurationSection section) {
+      this.tierGlow = section.getBoolean("tier-glow");
+      this.hints = section.getBoolean("hints");
    }
 
    @EventHandler
-   public void applyOnSpawn(ItemSpawnEvent var1) {
-      ItemStack var2 = var1.getEntity().getItemStack();
-      ItemTier var3 = MMOItems.plugin.getTiers().get(NBTItem.get(var2).getString("MMOITEMS_TIER"));
-      if (var3 != null) {
-         if (this.hints && var3.isHintEnabled()) {
-            var1.getEntity().setCustomNameVisible(true);
-            var1.getEntity().setCustomName(var2.getItemMeta().getDisplayName());
+   public void applyOnSpawn(ItemSpawnEvent event) {
+      ItemStack itemStack = event.getEntity().getItemStack();
+      ItemTier itemTier = MMOItems.plugin.getTiers().get(NBTItem.get(itemStack).getString("MMOITEMS_TIER"));
+      if (itemTier != null) {
+         if (this.hints && itemTier.isHintEnabled()) {
+            event.getEntity().setCustomNameVisible(true);
+            event.getEntity().setCustomName(itemStack.getItemMeta().getDisplayName());
          }
 
-         if (this.tierGlow && var3.hasColor()) {
-            MythicLib.plugin.getGlowing().setGlowing(var1.getEntity(), var3.getColor());
+         if (this.tierGlow && itemTier.hasColor()) {
+            MythicLib.plugin.getGlowing().setGlowing(event.getEntity(), itemTier.getColor());
          }
       }
    }

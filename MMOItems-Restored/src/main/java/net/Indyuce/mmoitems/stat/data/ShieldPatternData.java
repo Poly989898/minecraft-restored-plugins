@@ -15,13 +15,13 @@ public class ShieldPatternData implements StatData, RandomStatData<ShieldPattern
    private DyeColor base;
    private final List<Pattern> patterns = new ArrayList<>();
 
-   public ShieldPatternData(DyeColor var1, Pattern... var2) {
-      this.base = var1;
-      this.patterns.addAll(Arrays.asList(var2));
+   public ShieldPatternData(DyeColor dyeColor, Pattern... patterns) {
+      this.base = dyeColor;
+      this.patterns.addAll(Arrays.asList(patterns));
    }
 
-   public void setBase(@Nullable DyeColor var1) {
-      this.base = var1;
+   public void setBase(@Nullable DyeColor dyeColor) {
+      this.base = dyeColor;
    }
 
    @Nullable
@@ -34,18 +34,18 @@ public class ShieldPatternData implements StatData, RandomStatData<ShieldPattern
       return this.patterns;
    }
 
-   public void add(Pattern var1) {
-      this.patterns.add(var1);
+   public void add(Pattern pattern) {
+      this.patterns.add(pattern);
    }
 
-   public void addAll(List<Pattern> var1) {
-      this.patterns.addAll(var1);
+   public void addAll(List<Pattern> patterns) {
+      this.patterns.addAll(patterns);
    }
 
    public ShieldPatternData clone() {
-      ShieldPatternData var1 = new ShieldPatternData(this.base);
-      var1.patterns.addAll(this.patterns);
-      return var1;
+      ShieldPatternData shieldPatternData = new ShieldPatternData(this.base);
+      shieldPatternData.patterns.addAll(this.patterns);
+      return shieldPatternData;
    }
 
    @Override
@@ -53,7 +53,7 @@ public class ShieldPatternData implements StatData, RandomStatData<ShieldPattern
       return this.base == null && this.patterns.isEmpty();
    }
 
-   public ShieldPatternData randomize(MMOItemBuilder var1) {
+   public ShieldPatternData randomize(MMOItemBuilder mmoItemBuilder) {
       return this;
    }
 }

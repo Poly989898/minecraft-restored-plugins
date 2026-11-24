@@ -8,12 +8,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class TypeCommandTreeNode extends CommandTreeNode {
-   public TypeCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "type");
+   public TypeCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "type");
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      var1.sendMessage(
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      sender.sendMessage(
          ChatColor.DARK_GRAY
             + ""
             + ChatColor.STRIKETHROUGH
@@ -31,8 +31,8 @@ public class TypeCommandTreeNode extends CommandTreeNode {
             + "]-----------------"
       );
 
-      for (Type var4 : MMOItems.plugin.getTypes().getAll()) {
-         var1.sendMessage("* " + ChatColor.LIGHT_PURPLE + var4.getName() + " (" + var4.getId() + ")");
+      for (Type type : MMOItems.plugin.getTypes().getAll()) {
+         sender.sendMessage("* " + ChatColor.LIGHT_PURPLE + type.getName() + " (" + type.getId() + ")");
       }
 
       return CommandResult.SUCCESS;

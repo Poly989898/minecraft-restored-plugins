@@ -38,57 +38,57 @@ public class ArrowParticles extends ItemStat<ArrowParticlesData, ArrowParticlesD
       );
    }
 
-   public ArrowParticlesData whenInitialized(Object var1) {
-      Validate.isTrue(var1 instanceof ConfigurationSection, "Must specify a valid config section");
-      ConfigurationSection var2 = (ConfigurationSection)var1;
-      Validate.isTrue(var2.contains("particle"), "Could not find arrow particle");
-      Particle var3 = Particle.valueOf(var2.getString("particle").toUpperCase().replace("-", "_").replace(" ", "_"));
-      int var4 = var2.getInt("amount");
-      double var5 = var2.getDouble("offset");
-      return MMOUtils.isColorable(var3)
-         ? new ArrowParticlesData(var3, var4, var5, var2.getInt("color.red"), var2.getInt("color.green"), var2.getInt("color.blue"))
-         : new ArrowParticlesData(var3, var4, var5, var2.getDouble("speed"));
+   public ArrowParticlesData whenInitialized(Object obj) {
+      Validate.isTrue(obj instanceof ConfigurationSection, "Must specify a valid config section");
+      ConfigurationSection section = (ConfigurationSection)obj;
+      Validate.isTrue(section.contains("particle"), "Could not find arrow particle");
+      Particle particle = Particle.valueOf(section.getString("particle").toUpperCase().replace("-", "_").replace(" ", "_"));
+      int amount = section.getInt("amount");
+      double offset = section.getDouble("offset");
+      return MMOUtils.isColorable(particle)
+         ? new ArrowParticlesData(particle, amount, offset, section.getInt("color.red"), section.getInt("color.green"), section.getInt("color.blue"))
+         : new ArrowParticlesData(particle, amount, offset, section.getDouble("speed"));
    }
 
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull ArrowParticlesData var2) {
-      var1.addItemTag(this.getAppliedNBT(var2));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull ArrowParticlesData arrowParticlesData) {
+      itemStackBuilder.addItemTag(this.getAppliedNBT(arrowParticlesData));
    }
 
    @NotNull
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull ArrowParticlesData var1) {
-      ArrayList var2 = new ArrayList();
-      var2.add(new ItemTag(this.getNBTPath(), var1.toString()));
-      return var2;
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull ArrowParticlesData arrowParticlesData) {
+      ArrayList list = new ArrayList();
+      list.add(new ItemTag(this.getNBTPath(), arrowParticlesData.toString()));
+      return list;
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      ArrayList var2 = new ArrayList();
-      if (var1.getNBT().hasTag(this.getNBTPath())) {
-         var2.add(ItemTag.getTagAtPath(this.getNBTPath(), var1.getNBT(), SupportedNBTTagValues.STRING));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      ArrayList list = new ArrayList();
+      if (readMMOItem.getNBT().hasTag(this.getNBTPath())) {
+         list.add(ItemTag.getTagAtPath(this.getNBTPath(), readMMOItem.getNBT(), SupportedNBTTagValues.STRING));
       }
 
-      ArrowParticlesData var3 = this.getLoadedNBT(var2);
-      if (var3 != null) {
-         var1.setData(this, var3);
+      ArrowParticlesData loadedNBT = this.getLoadedNBT(list);
+      if (loadedNBT != null) {
+         readMMOItem.setData(this, loadedNBT);
       }
    }
 
    @Nullable
-   public ArrowParticlesData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
-      ItemTag var2 = ItemTag.getTagAtPath(this.getNBTPath(), var1);
-      if (var2 != null) {
+   public ArrowParticlesData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
+      ItemTag tagAtPath = ItemTag.getTagAtPath(this.getNBTPath(), itemTags);
+      if (tagAtPath != null) {
          try {
-            JsonObject var3 = new JsonParser().parse((String)var2.getValue()).getAsJsonObject();
-            Particle var4 = Particle.valueOf(var3.get("Particle").getAsString());
-            int var5 = var3.get("Amount").getAsInt();
-            double var6 = var3.get("Offset").getAsDouble();
-            if (MMOUtils.isColorable(var4)) {
-               return new ArrowParticlesData(var4, var5, var6, var3.get("Red").getAsInt(), var3.get("Green").getAsInt(), var3.get("Blue").getAsInt());
+            JsonObject asJsonObject = new JsonParser().parse((String)tagAtPath.getValue()).getAsJsonObject();
+            Particle particle = Particle.valueOf(asJsonObject.get("Particle").getAsString());
+            int asInt = asJsonObject.get("Amount").getAsInt();
+            double asDouble = asJsonObject.get("Offset").getAsDouble();
+            if (MMOUtils.isColorable(particle)) {
+               return new ArrowParticlesData(particle, asInt, asDouble, asJsonObject.get("Red").getAsInt(), asJsonObject.get("Green").getAsInt(), asJsonObject.get("Blue").getAsInt());
             }
 
-            return new ArrowParticlesData(var4, var5, var6, var3.get("Speed").getAsDouble());
-         } catch (JsonSyntaxException | IllegalStateException var8) {
+            return new ArrowParticlesData(particle, asInt, asDouble, asJsonObject.get("Speed").getAsDouble());
+         } catch (JsonSyntaxException | IllegalStateException exception) {
          }
       }
 
@@ -96,60 +96,60 @@ public class ArrowParticles extends ItemStat<ArrowParticlesData, ArrowParticlesD
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      new ArrowParticlesEdition(var1.getPlayer(), var1.getEdited()).open(var1);
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      new ArrowParticlesEdition(editionInventory.getPlayer(), editionInventory.getEdited()).open(editionInventory);
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      String var4 = (String)var3[0];
-      if (var4.equals("color")) {
-         String[] var11 = var2.split(" ");
-         int var6 = Integer.parseInt(var11[0]);
-         int var7 = Integer.parseInt(var11[1]);
-         int var8 = Integer.parseInt(var11[2]);
-         var1.getEditedSection().set("arrow-particles.color.red", var6);
-         var1.getEditedSection().set("arrow-particles.color.green", var7);
-         var1.getEditedSection().set("arrow-particles.color.blue", var8);
-         var1.registerTemplateEdition();
-         var1.getPlayer()
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      String text2 = (String)objs[0];
+      if (text2.equals("color")) {
+         String[] texts = text.split(" ");
+         int count = Integer.parseInt(texts[0]);
+         int count2 = Integer.parseInt(texts[1]);
+         int count3 = Integer.parseInt(texts[2]);
+         editionInventory.getEditedSection().set("arrow-particles.color.red", count);
+         editionInventory.getEditedSection().set("arrow-particles.color.green", count2);
+         editionInventory.getEditedSection().set("arrow-particles.color.blue", count3);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer()
             .sendMessage(
                MMOItems.plugin.getPrefix()
                   + "Particle color successfully set to "
-                  + ChatColor.translateAlternateColorCodes('&', "&c&l" + var6 + "&7 - &a&l" + var7 + "&7 - &9&l" + var8)
+                  + ChatColor.translateAlternateColorCodes('&', "&c&l" + count + "&7 - &a&l" + count2 + "&7 - &9&l" + count3)
             );
-      } else if (var4.equals("particle")) {
-         Particle var10 = Particle.valueOf(var2.toUpperCase().replace("-", "_").replace(" ", "_"));
-         var1.getEditedSection().set("arrow-particles.particle", var10.name());
-         var1.registerTemplateEdition();
-         var1.getPlayer()
+      } else if (text2.equals("particle")) {
+         Particle particle = Particle.valueOf(text.toUpperCase().replace("-", "_").replace(" ", "_"));
+         editionInventory.getEditedSection().set("arrow-particles.particle", particle.name());
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer()
             .sendMessage(
                MMOItems.plugin.getPrefix()
                   + "Particle successfully set to "
                   + ChatColor.GOLD
-                  + UtilityMethods.caseOnWords(var10.name().toLowerCase().replace("_", " "))
+                  + UtilityMethods.caseOnWords(particle.name().toLowerCase().replace("_", " "))
                   + ChatColor.GRAY
                   + "."
             );
-      } else if (var4.equals("amount")) {
-         int var9 = Integer.parseInt(var2);
-         var1.getEditedSection().set("arrow-particles.amount", var9);
-         var1.registerTemplateEdition();
-         var1.getPlayer()
-            .sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + "Amount" + ChatColor.GRAY + " set to " + ChatColor.GOLD + var9 + ChatColor.GRAY + ".");
+      } else if (text2.equals("amount")) {
+         int count = Integer.parseInt(text);
+         editionInventory.getEditedSection().set("arrow-particles.amount", count);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer()
+            .sendMessage(MMOItems.plugin.getPrefix() + ChatColor.GOLD + "Amount" + ChatColor.GRAY + " set to " + ChatColor.GOLD + count + ChatColor.GRAY + ".");
       } else {
-         double var5 = MMOUtils.parseDouble(var2);
-         var1.getEditedSection().set("arrow-particles." + var4, var5);
-         var1.registerTemplateEdition();
-         var1.getPlayer()
+         double value = MMOUtils.parseDouble(text);
+         editionInventory.getEditedSection().set("arrow-particles." + text2, value);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer()
             .sendMessage(
                MMOItems.plugin.getPrefix()
                   + ChatColor.GOLD
-                  + UtilityMethods.caseOnWords(var4.replace("-", " "))
+                  + UtilityMethods.caseOnWords(text2.replace("-", " "))
                   + ChatColor.GRAY
                   + " set to "
                   + ChatColor.GOLD
-                  + var5
+                  + value
                   + ChatColor.GRAY
                   + "."
             );
@@ -157,27 +157,27 @@ public class ArrowParticles extends ItemStat<ArrowParticlesData, ArrowParticlesD
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<ArrowParticlesData> var2) {
-      if (var2.isPresent()) {
-         ArrowParticlesData var3 = (ArrowParticlesData)var2.get();
-         var1.add(ChatColor.GRAY + "Current Value:");
-         var1.add(ChatColor.GRAY + "* Particle: " + ChatColor.GOLD + UtilityMethods.caseOnWords(var3.getParticle().name().replace("_", " ").toLowerCase()));
-         var1.add(ChatColor.GRAY + "* Amount: " + ChatColor.WHITE + var3.getAmount());
-         var1.add(ChatColor.GRAY + "* Offset: " + ChatColor.WHITE + var3.getOffset());
-         var1.add("");
-         if (MMOUtils.isColorable(var3.getParticle())) {
-            var1.add(
-               ChatColor.translateAlternateColorCodes('&', "&7* Color: &c&l" + var3.getRed() + "&7 - &a&l" + var3.getGreen() + "&7 - &9&l" + var3.getBlue())
+   public void whenDisplayed(List<String> texts, Optional<ArrowParticlesData> optional) {
+      if (optional.isPresent()) {
+         ArrowParticlesData arrowParticlesData = (ArrowParticlesData)optional.get();
+         texts.add(ChatColor.GRAY + "Current Value:");
+         texts.add(ChatColor.GRAY + "* Particle: " + ChatColor.GOLD + UtilityMethods.caseOnWords(arrowParticlesData.getParticle().name().replace("_", " ").toLowerCase()));
+         texts.add(ChatColor.GRAY + "* Amount: " + ChatColor.WHITE + arrowParticlesData.getAmount());
+         texts.add(ChatColor.GRAY + "* Offset: " + ChatColor.WHITE + arrowParticlesData.getOffset());
+         texts.add("");
+         if (MMOUtils.isColorable(arrowParticlesData.getParticle())) {
+            texts.add(
+               ChatColor.translateAlternateColorCodes('&', "&7* Color: &c&l" + arrowParticlesData.getRed() + "&7 - &a&l" + arrowParticlesData.getGreen() + "&7 - &9&l" + arrowParticlesData.getBlue())
             );
          } else {
-            var1.add(ChatColor.GRAY + "* Speed: " + ChatColor.WHITE + var3.getSpeed());
+            texts.add(ChatColor.GRAY + "* Speed: " + ChatColor.WHITE + arrowParticlesData.getSpeed());
          }
       } else {
-         var1.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+         texts.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
       }
 
-      var1.add("");
-      var1.add(ChatColor.YELLOW + "►" + " Click to edit.");
+      texts.add("");
+      texts.add(ChatColor.YELLOW + "►" + " Click to edit.");
    }
 
    @NotNull

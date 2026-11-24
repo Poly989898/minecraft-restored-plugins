@@ -14,11 +14,11 @@ public class DeconstructItemEvent extends PlayerDataEvent {
    private final NBTItem deconstructed;
    private final List<ItemStack> loot;
 
-   public DeconstructItemEvent(PlayerData var1, VolatileMMOItem var2, NBTItem var3, List<ItemStack> var4) {
-      super(var1);
-      this.consumable = var2;
-      this.deconstructed = var3;
-      this.loot = var4;
+   public DeconstructItemEvent(PlayerData playerData, VolatileMMOItem volatileMMOItem, NBTItem nbtItem, List<ItemStack> items) {
+      super(playerData);
+      this.consumable = volatileMMOItem;
+      this.deconstructed = nbtItem;
+      this.loot = items;
    }
 
    public VolatileMMOItem getConsumable() {

@@ -44,14 +44,14 @@ public class MMOItemTemplate implements ItemReference, PreloadedObject {
             if (var1x.contains("option.capacity", true)) {
                try {
                   this.modifierCapacity = new NumericStatFormula(var1x.getConfigurationSection("option.capacity"));
-               } catch (RuntimeException var10) {
-                  var2x.log(FriendlyFeedbackCategory.ERROR, "Could not load modifier capacity: {0}", new String[]{var10.getMessage()});
+               } catch (RuntimeException exception) {
+                  var2x.log(FriendlyFeedbackCategory.ERROR, "Could not load modifier capacity: {0}", new String[]{exception.getMessage()});
                }
             }
 
-            for (MMOItemTemplate.TemplateOption var6 : MMOItemTemplate.TemplateOption.values()) {
-               if (var1x.getBoolean("option." + var6.name().toLowerCase().replace("_", "-"))) {
-                  this.options.add(var6);
+            for (MMOItemTemplate.TemplateOption templateOption : MMOItemTemplate.TemplateOption.values()) {
+               if (var1x.getBoolean("option." + templateOption.name().toLowerCase().replace("_", "-"))) {
+                  this.options.add(templateOption);
                }
             }
          }
@@ -61,27 +61,27 @@ public class MMOItemTemplate implements ItemReference, PreloadedObject {
             if (this.modifierGroup != null) {
                this.modifierGroup.getPostLoadAction().performAction();
             }
-         } catch (Exception var9) {
-            var2x.log(FriendlyFeedbackCategory.ERROR, "Could not load modifier group: {0}", new String[]{var9.getMessage()});
+         } catch (Exception exception) {
+            var2x.log(FriendlyFeedbackCategory.ERROR, "Could not load modifier group: {0}", new String[]{exception.getMessage()});
          }
 
          Validate.notNull(
             var1x.getConfigurationSection("base"), FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Could not find base item data", new String[0])
          );
 
-         for (String var12 : var1x.getConfigurationSection("base").getKeys(false)) {
+         for (String key : var1x.getConfigurationSection("base").getKeys(false)) {
             try {
-               String var13 = UtilityMethods.enumName(var12);
-               ItemStat var14 = MMOItems.plugin.getStats().get(var13);
+               String text = UtilityMethods.enumName(key);
+               ItemStat itemStat = MMOItems.plugin.getStats().get(text);
                Validate.notNull(
-                  var14, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Could not find stat with ID '$i{0}$b'", new String[]{var13})
+                  itemStat, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "Could not find stat with ID '$i{0}$b'", new String[]{text})
                );
-               RandomStatData var7 = var14.whenInitialized(var1x.get("base." + var12));
-               if (var7 != null) {
-                  this.base.put(var14, var7);
+               RandomStatData randomStatData = itemStat.whenInitialized(var1x.get("base." + key));
+               if (randomStatData != null) {
+                  this.base.put(itemStat, randomStatData);
                }
-            } catch (IllegalArgumentException var8) {
-               var2x.log(FriendlyFeedbackCategory.INFORMATION, "Could not load base item data '$f{0}$b': {1}", new String[]{var12, var8.getMessage()});
+            } catch (IllegalArgumentException exception) {
+               var2x.log(FriendlyFeedbackCategory.INFORMATION, "Could not load base item data '$f{0}$b': {1}", new String[]{key, exception.getMessage()});
             }
          }
 
@@ -89,18 +89,18 @@ public class MMOItemTemplate implements ItemReference, PreloadedObject {
       }
    );
 
-   public MMOItemTemplate(Type var1, String var2) {
-      this.type = var1;
-      this.id = var2;
+   public MMOItemTemplate(Type type, String text) {
+      this.type = type;
+      this.id = text;
       this.revId = 1;
    }
 
-   public MMOItemTemplate(Type var1, ConfigurationSection var2) {
-      Validate.notNull(var2, "Could not load template config");
-      this.postLoadAction.cacheConfig(var2);
-      this.type = var1;
-      this.id = var2.getName().toUpperCase().replace("-", "_").replace(" ", "_");
-      this.revId = var2.getInt("base.revision-id", 1);
+   public MMOItemTemplate(Type type, ConfigurationSection section) {
+      Validate.notNull(section, "Could not load template config");
+      this.postLoadAction.cacheConfig(section);
+      this.type = type;
+      this.id = section.getName().toUpperCase().replace("-", "_").replace(" ", "_");
+      this.revId = section.getInt("base.revision-id", 1);
    }
 
    @NotNull
@@ -134,28 +134,28 @@ public class MMOItemTemplate implements ItemReference, PreloadedObject {
    @Deprecated
    @NotNull
    public Map<String, ModifierNode> getModifiers() {
-      HashMap var1 = new HashMap();
+      HashMap map = new HashMap();
       if (this.modifierGroup != null) {
-         this.exploreMap(var1, this.modifierGroup);
+         this.exploreMap(map, this.modifierGroup);
       }
 
-      return var1;
+      return map;
    }
 
-   private void exploreMap(Map<String, ModifierNode> var1, ModifierNode var2) {
-      var2.getChildren().forEach(var2x -> this.exploreMap(var1, var2x));
-      var1.put(var2.getId(), var2);
+   private void exploreMap(Map<String, ModifierNode> map, ModifierNode modifierNode) {
+      modifierNode.getChildren().forEach(var2x -> this.exploreMap(map, var2x));
+      map.put(modifierNode.getId(), modifierNode);
    }
 
    @Deprecated
-   public boolean hasModifier(String var1) {
-      return this.getModifiers().containsKey(var1);
+   public boolean hasModifier(String text) {
+      return this.getModifiers().containsKey(text);
    }
 
    @Nullable
    @Deprecated
-   public ModifierNode getModifier(String var1) {
-      return this.getModifiers().get(var1);
+   public ModifierNode getModifier(String text) {
+      return this.getModifiers().get(text);
    }
 
    @Override
@@ -172,40 +172,40 @@ public class MMOItemTemplate implements ItemReference, PreloadedObject {
       return this.revId;
    }
 
-   public boolean hasOption(MMOItemTemplate.TemplateOption var1) {
-      return this.options.contains(var1);
+   public boolean hasOption(MMOItemTemplate.TemplateOption templateOption) {
+      return this.options.contains(templateOption);
    }
 
    public MMOItemBuilder newBuilder() {
       return this.newBuilder((RPGPlayer)null);
    }
 
-   public MMOItemBuilder newBuilder(@Nullable Player var1) {
-      return this.newBuilder(var1 == null ? null : PlayerData.get(var1).getRPG());
+   public MMOItemBuilder newBuilder(@Nullable Player player) {
+      return this.newBuilder(player == null ? null : PlayerData.get(player).getRPG());
    }
 
-   public MMOItemBuilder newBuilder(@Nullable PlayerData var1) {
-      return this.newBuilder(var1 == null ? null : var1.getRPG());
+   public MMOItemBuilder newBuilder(@Nullable PlayerData playerData) {
+      return this.newBuilder(playerData == null ? null : playerData.getRPG());
    }
 
-   public MMOItemBuilder newBuilder(@Nullable RPGPlayer var1) {
-      return this.newBuilder(var1, false);
+   public MMOItemBuilder newBuilder(@Nullable RPGPlayer rpgPlayer) {
+      return this.newBuilder(rpgPlayer, false);
    }
 
    @NotNull
-   public MMOItemBuilder newBuilder(@Nullable RPGPlayer var1, boolean var2) {
-      if (var1 == null) {
+   public MMOItemBuilder newBuilder(@Nullable RPGPlayer rpgPlayer, boolean flag) {
+      if (rpgPlayer == null) {
          return this.newBuilder(0, null);
       }
 
-      int var3 = this.hasOption(MMOItemTemplate.TemplateOption.LEVEL_ITEM) ? MMOItems.plugin.getTemplates().rollLevel(var1.getLevel()) : 0;
-      ItemTier var4 = this.hasOption(MMOItemTemplate.TemplateOption.TIERED) ? MMOItems.plugin.getTemplates().rollTier() : null;
-      return new MMOItemBuilder(this, var3, var4, var2);
+      int count = this.hasOption(MMOItemTemplate.TemplateOption.LEVEL_ITEM) ? MMOItems.plugin.getTemplates().rollLevel(rpgPlayer.getLevel()) : 0;
+      ItemTier itemTier = this.hasOption(MMOItemTemplate.TemplateOption.TIERED) ? MMOItems.plugin.getTemplates().rollTier() : null;
+      return new MMOItemBuilder(this, count, itemTier, flag);
    }
 
    @NotNull
-   public MMOItemBuilder newBuilder(int var1, @Nullable ItemTier var2) {
-      return new MMOItemBuilder(this, var1, var2);
+   public MMOItemBuilder newBuilder(int count, @Nullable ItemTier itemTier) {
+      return new MMOItemBuilder(this, count, itemTier);
    }
 
    @Deprecated

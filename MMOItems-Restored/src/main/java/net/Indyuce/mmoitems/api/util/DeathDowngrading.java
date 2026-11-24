@@ -26,132 +26,132 @@ import org.jetbrains.annotations.Nullable;
 public class DeathDowngrading {
    private static final Random RANDOM = new Random();
 
-   public static void playerDeathDowngrade(@NotNull Player var0) {
-      PlayerData var1 = PlayerData.get(var0);
-      double var2 = var1.getStats().getStat(ItemStats.DOWNGRADE_ON_DEATH_CHANCE);
-      if (!(var2 <= 0.0)) {
-         var1.updateInventory();
-         List var4 = var1.getInventory().getEquipped();
-         Iterator var5 = var4.iterator();
+   public static void playerDeathDowngrade(@NotNull Player player) {
+      PlayerData playerData = PlayerData.get(player);
+      double stat = playerData.getStats().getStat(ItemStats.DOWNGRADE_ON_DEATH_CHANCE);
+      if (!(stat <= 0.0)) {
+         playerData.updateInventory();
+         List equipped = playerData.getInventory().getEquipped();
+         Iterator iterator = equipped.iterator();
 
-         while (var5.hasNext()) {
-            EquippedItem var6 = (EquippedItem)var5.next();
-            if (var6 == null || !canDeathDowngrade(var6.getCached())) {
-               var5.remove();
+         while (iterator.hasNext()) {
+            EquippedItem equippedItem = (EquippedItem)iterator.next();
+            if (equippedItem == null || !canDeathDowngrade(equippedItem.getCached())) {
+               iterator.remove();
             }
          }
 
-         if (var4.size() != 0) {
-            while (var2 >= 100.0 && var4.size() > 0) {
-               var2 -= 100.0;
-               int var7 = RANDOM.nextInt(var4.size());
-               EquippedItem var9 = (EquippedItem)var4.get(var7);
-               var9.setItem(downgrade(new LiveMMOItem(var9.getNBT()), var0));
-               var4.remove(var7);
+         if (equipped.size() != 0) {
+            while (stat >= 100.0 && equipped.size() > 0) {
+               stat -= 100.0;
+               int index = RANDOM.nextInt(equipped.size());
+               EquippedItem equippedItem = (EquippedItem)equipped.get(index);
+               equippedItem.setItem(downgrade(new LiveMMOItem(equippedItem.getNBT()), player));
+               equipped.remove(index);
             }
 
-            if (var2 > 0.0 && var4.size() > 0 && RANDOM.nextInt(100) < var2) {
-               int var8 = RANDOM.nextInt(var4.size());
-               EquippedItem var10 = (EquippedItem)var4.get(var8);
-               var10.setItem(downgrade(new LiveMMOItem(var10.getNBT()), var0));
-               var4.remove(var8);
+            if (stat > 0.0 && equipped.size() > 0 && RANDOM.nextInt(100) < stat) {
+               int index = RANDOM.nextInt(equipped.size());
+               EquippedItem equippedItem = (EquippedItem)equipped.get(index);
+               equippedItem.setItem(downgrade(new LiveMMOItem(equippedItem.getNBT()), player));
+               equipped.remove(index);
             }
          }
       }
    }
 
    @NotNull
-   public static ArrayList<ItemStack> downgradeItems(@NotNull List<ItemStack> var0, @NotNull Player var1, double var2) {
-      ArrayList var4 = new ArrayList();
-      ArrayList var5 = new ArrayList();
+   public static ArrayList<ItemStack> downgradeItems(@NotNull List<ItemStack> items, @NotNull Player player, double value) {
+      ArrayList list = new ArrayList();
+      ArrayList list2 = new ArrayList();
 
-      for (ItemStack var7 : var0) {
-         if (!SilentNumbers.isAir(var7)) {
-            if (canDeathDowngrade(var7)) {
-               var5.add(var7);
+      for (ItemStack item : items) {
+         if (!SilentNumbers.isAir(item)) {
+            if (canDeathDowngrade(item)) {
+               list2.add(item);
             } else {
-               var4.add(var7);
+               list.add(item);
             }
          }
       }
 
-      while (var2 >= 100.0 && var5.size() > 0) {
-         var2 -= 100.0;
-         int var8 = RANDOM.nextInt(var5.size());
-         ItemStack var10 = (ItemStack)var5.get(var8);
-         var4.add(downgrade(new LiveMMOItem(var10), var1));
-         var5.remove(var8);
+      while (value >= 100.0 && list2.size() > 0) {
+         value -= 100.0;
+         int index = RANDOM.nextInt(list2.size());
+         ItemStack item = (ItemStack)list2.get(index);
+         list.add(downgrade(new LiveMMOItem(item), player));
+         list2.remove(index);
       }
 
-      if (var2 > 0.0 && var5.size() > 0 && RANDOM.nextInt(100) < var2) {
-         int var9 = RANDOM.nextInt(var5.size());
-         ItemStack var11 = (ItemStack)var5.get(var9);
-         var4.add(downgrade(new LiveMMOItem(var11), var1));
-         var5.remove(var9);
+      if (value > 0.0 && list2.size() > 0 && RANDOM.nextInt(100) < value) {
+         int index = RANDOM.nextInt(list2.size());
+         ItemStack item = (ItemStack)list2.get(index);
+         list.add(downgrade(new LiveMMOItem(item), player));
+         list2.remove(index);
       }
 
-      var4.addAll(var5);
-      return var4;
+      list.addAll(list2);
+      return list;
    }
 
    @NotNull
-   public static ItemStack downgrade(@NotNull ItemStack var0, @NotNull Player var1) {
-      if (!SilentNumbers.isAir(var0) && var0.getType().isItem()) {
-         NBTItem var2 = NBTItem.get(var0);
-         return !var2.hasType() ? var0 : downgrade(new LiveMMOItem(var2), var1);
+   public static ItemStack downgrade(@NotNull ItemStack item, @NotNull Player player) {
+      if (!SilentNumbers.isAir(item) && item.getType().isItem()) {
+         NBTItem nbtItem = NBTItem.get(item);
+         return !nbtItem.hasType() ? item : downgrade(new LiveMMOItem(nbtItem), player);
       } else {
-         return var0;
+         return item;
       }
    }
 
    @NotNull
-   public static ItemStack downgrade(@NotNull LiveMMOItem var0, @NotNull Player var1) {
-      var0.getUpgradeTemplate().upgradeTo(var0, var0.getUpgradeLevel() - 1);
-      ItemStack var2 = var0.newBuilder().build();
-      DurabilityItem var3 = new DurabilityItem(var1, var0.newBuilder().buildNBT());
-      if (var3.getDurability() != var3.getMaxDurability()) {
-         var3.addDurability(var3.getMaxDurability());
-         var2.setItemMeta(var3.toItem().getItemMeta());
+   public static ItemStack downgrade(@NotNull LiveMMOItem liveMMOItem, @NotNull Player player) {
+      liveMMOItem.getUpgradeTemplate().upgradeTo(liveMMOItem, liveMMOItem.getUpgradeLevel() - 1);
+      ItemStack item = liveMMOItem.newBuilder().build();
+      DurabilityItem durabilityItem = new DurabilityItem(player, liveMMOItem.newBuilder().buildNBT());
+      if (durabilityItem.getDurability() != durabilityItem.getMaxDurability()) {
+         durabilityItem.addDurability(durabilityItem.getMaxDurability());
+         item.setItemMeta(durabilityItem.toItem().getItemMeta());
       }
 
-      Message.DEATH_DOWNGRADING.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(var0.getNBT().getItem())).send(var1);
-      return var2;
+      Message.DEATH_DOWNGRADING.format(ChatColor.RED, "#item#", MMOUtils.getDisplayName(liveMMOItem.getNBT().getItem())).send(player);
+      return item;
    }
 
-   public static double getDeathDowngradeChance(@NotNull Player var0) {
-      PlayerData var1 = PlayerData.get(var0);
-      return var1.getStats().getStat(ItemStats.DOWNGRADE_ON_DEATH_CHANCE);
+   public static double getDeathDowngradeChance(@NotNull Player player) {
+      PlayerData playerData = PlayerData.get(player);
+      return playerData.getStats().getStat(ItemStats.DOWNGRADE_ON_DEATH_CHANCE);
    }
 
    @Contract("null->false")
-   public static boolean canDeathDowngrade(@Nullable ItemStack var0) {
-      if (!SilentNumbers.isAir(var0) && var0.getType().isItem()) {
-         NBTItem var1 = NBTItem.get(var0);
-         return !var1.hasType() ? false : canDeathDowngrade(new VolatileMMOItem(var1));
+   public static boolean canDeathDowngrade(@Nullable ItemStack item) {
+      if (!SilentNumbers.isAir(item) && item.getType().isItem()) {
+         NBTItem nbtItem = NBTItem.get(item);
+         return !nbtItem.hasType() ? false : canDeathDowngrade(new VolatileMMOItem(nbtItem));
       } else {
          return false;
       }
    }
 
    @Contract("null->false")
-   public static boolean canDeathDowngrade(@Nullable MMOItem var0) {
-      if (var0 == null) {
+   public static boolean canDeathDowngrade(@Nullable MMOItem mmoItem) {
+      if (mmoItem == null) {
          return false;
       }
 
-      if (!var0.hasData(ItemStats.DOWNGRADE_ON_DEATH)) {
+      if (!mmoItem.hasData(ItemStats.DOWNGRADE_ON_DEATH)) {
          return false;
       }
 
-      if (!var0.hasData(ItemStats.UPGRADE)) {
+      if (!mmoItem.hasData(ItemStats.UPGRADE)) {
          return false;
       }
 
-      if (!var0.hasUpgradeTemplate()) {
+      if (!mmoItem.hasUpgradeTemplate()) {
          return false;
       }
 
-      UpgradeData var1 = (UpgradeData)var0.getData(ItemStats.UPGRADE);
-      return var1.getLevel() > var1.getMin();
+      UpgradeData data = (UpgradeData)mmoItem.getData(ItemStats.UPGRADE);
+      return data.getLevel() > data.getMin();
    }
 }

@@ -25,14 +25,14 @@ public class WorldGenManager implements Reloadable {
       this.reload();
    }
 
-   public WorldGenTemplate getOrThrow(String var1) {
-      Validate.isTrue(this.templates.containsKey(var1), "Could not find gen template with ID '" + var1 + "'");
-      return this.templates.get(var1);
+   public WorldGenTemplate getOrThrow(String text) {
+      Validate.isTrue(this.templates.containsKey(text), "Could not find gen template with ID '" + text + "'");
+      return this.templates.get(text);
    }
 
-   public void assign(CustomBlock var1, WorldGenTemplate var2) {
-      Validate.notNull(var2, "Cannot assign a null template to a custom block");
-      this.assigned.put(var1, var2);
+   public void assign(CustomBlock customBlock, WorldGenTemplate worldGenTemplate) {
+      Validate.notNull(worldGenTemplate, "Cannot assign a null template to a custom block");
+      this.assigned.put(customBlock, worldGenTemplate);
    }
 
    @Override
@@ -43,14 +43,14 @@ public class WorldGenManager implements Reloadable {
 
       this.assigned.clear();
       this.templates.clear();
-      FileConfiguration var1 = new ConfigFile("gen-templates").getConfig();
+      FileConfiguration config = new ConfigFile("gen-templates").getConfig();
 
-      for (String var3 : var1.getKeys(false)) {
+      for (String key : config.getKeys(false)) {
          try {
-            WorldGenTemplate var4 = new WorldGenTemplate(var1.getConfigurationSection(var3));
-            this.templates.put(var4.getId(), var4);
-         } catch (IllegalArgumentException var5) {
-            MMOItems.plugin.getLogger().log(Level.SEVERE, "An error occurred when loading gen template '" + var3 + "': " + var5.getMessage());
+            WorldGenTemplate worldGenTemplate = new WorldGenTemplate(config.getConfigurationSection(key));
+            this.templates.put(worldGenTemplate.getId(), worldGenTemplate);
+         } catch (IllegalArgumentException exception) {
+            MMOItems.plugin.getLogger().log(Level.SEVERE, "An error occurred when loading gen template '" + key + "': " + exception.getMessage());
          }
       }
 
@@ -66,8 +66,8 @@ public class WorldGenManager implements Reloadable {
       }
    }
 
-   public MMOBlockPopulator populator(@NotNull World var1) {
-      return new MMOBlockPopulator(var1, this);
+   public MMOBlockPopulator populator(@NotNull World world) {
+      return new MMOBlockPopulator(world, this);
    }
 
    public Map<CustomBlock, WorldGenTemplate> assigned() {

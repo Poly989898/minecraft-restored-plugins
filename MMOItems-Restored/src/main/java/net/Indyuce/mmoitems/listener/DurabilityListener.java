@@ -36,85 +36,85 @@ public class DurabilityListener implements Listener {
    private static final EquipmentSlot[] ARMOR_SLOTS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
    @EventHandler(ignoreCancelled = true)
-   public void itemDamage(PlayerItemDamageEvent var1) {
-      DurabilityItem var2 = new DurabilityItem(var1.getPlayer(), var1.getItem());
-      if (var2.isValid()) {
-         var2.decreaseDurability(var1.getDamage());
-         ItemStack var3 = var2.toItem();
-         if (var3 == null) {
-            var1.setDamage(999);
+   public void itemDamage(PlayerItemDamageEvent event) {
+      DurabilityItem durabilityItem = new DurabilityItem(event.getPlayer(), event.getItem());
+      if (durabilityItem.isValid()) {
+         durabilityItem.decreaseDurability(event.getDamage());
+         ItemStack item = durabilityItem.toItem();
+         if (item == null) {
+            event.setDamage(999);
          } else {
-            var1.setCancelled(true);
-            var1.getItem().setItemMeta(var3.getItemMeta());
+            event.setCancelled(true);
+            event.getItem().setItemMeta(item.getItemMeta());
          }
       }
    }
 
    @EventHandler(ignoreCancelled = true)
-   public void playerDamage(EntityDamageEvent var1) {
-      if (var1.getEntityType() == EntityType.PLAYER && !IGNORED_CAUSES.contains(var1.getCause())) {
-         Player var2 = (Player)var1.getEntity();
-         int var3 = Math.max((int)var1.getDamage() / 4, 1);
+   public void playerDamage(EntityDamageEvent event) {
+      if (event.getEntityType() == EntityType.PLAYER && !IGNORED_CAUSES.contains(event.getCause())) {
+         Player entity = (Player)event.getEntity();
+         int count = Math.max((int)event.getDamage() / 4, 1);
 
-         for (EquipmentSlot var7 : ARMOR_SLOTS) {
-            if (this.hasItem(var2, var7)) {
-               this.handleUndamageableItem(var2.getInventory().getItem(var7), var2, var7, var3);
+         for (EquipmentSlot equipmentSlot : ARMOR_SLOTS) {
+            if (this.hasItem(entity, equipmentSlot)) {
+               this.handleUndamageableItem(entity.getInventory().getItem(equipmentSlot), entity, equipmentSlot, count);
             }
          }
       }
    }
 
    @EventHandler(ignoreCancelled = true)
-   public void playerMeleeAttack(EntityDamageByEntityEvent var1) {
-      if (var1.getDamage() != 0.0
-         && var1.getCause() == DamageCause.ENTITY_ATTACK
-         && var1.getEntity() instanceof LivingEntity
-         && var1.getDamager() instanceof Player
-         && !var1.getEntity().hasMetadata("NPC")
-         && !var1.getDamager().hasMetadata("NPC")) {
-         Player var2 = (Player)var1.getDamager();
-         ItemStack var3 = var2.getInventory().getItemInMainHand();
-         this.handleUndamageableItem(var3, var2, EquipmentSlot.HAND, 1);
+   public void playerMeleeAttack(EntityDamageByEntityEvent event) {
+      if (event.getDamage() != 0.0
+         && event.getCause() == DamageCause.ENTITY_ATTACK
+         && event.getEntity() instanceof LivingEntity
+         && event.getDamager() instanceof Player
+         && !event.getEntity().hasMetadata("NPC")
+         && !event.getDamager().hasMetadata("NPC")) {
+         Player damager = (Player)event.getDamager();
+         ItemStack itemInMainHand = damager.getInventory().getItemInMainHand();
+         this.handleUndamageableItem(itemInMainHand, damager, EquipmentSlot.HAND, 1);
       }
    }
 
    @EventHandler(ignoreCancelled = true)
-   public void playerBowAttack(EntityShootBowEvent var1) {
-      if (var1.getEntity() instanceof Player) {
-         Player var2 = (Player)var1.getEntity();
-         ItemStack var3 = var1.getBow();
-         this.handleUndamageableItem(var3, var2, EquipmentSlot.HAND, 1);
+   public void playerBowAttack(EntityShootBowEvent event) {
+      if (event.getEntity() instanceof Player) {
+         Player entity = (Player)event.getEntity();
+         ItemStack bow = event.getBow();
+         this.handleUndamageableItem(bow, entity, EquipmentSlot.HAND, 1);
       }
    }
 
    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-   public void mendEvent(PlayerItemMendEvent var1) {
-      if (var1.getRepairAmount() > 0) {
-         DurabilityItem var2 = new DurabilityItem(var1.getPlayer(), var1.getItem());
-         if (var2.isValid()) {
-            var1.getItem().setItemMeta(var2.addDurability(var1.getRepairAmount()).toItem().getItemMeta());
-            var1.setCancelled(true);
+   public void mendEvent(PlayerItemMendEvent event) {
+      if (event.getRepairAmount() > 0) {
+         DurabilityItem durabilityItem = new DurabilityItem(event.getPlayer(), event.getItem());
+         if (durabilityItem.isValid()) {
+            event.getItem().setItemMeta(durabilityItem.addDurability(event.getRepairAmount()).toItem().getItemMeta());
+            event.setCancelled(true);
          }
       }
    }
 
-   private void handleUndamageableItem(ItemStack var1, Player var2, EquipmentSlot var3, int var4) {
-      if (var1.getType().getMaxDurability() == 0) {
-         DurabilityItem var5 = new DurabilityItem(var2, var1);
-         if (var5.isValid()) {
-            var5.decreaseDurability(var4);
-            ItemStack var6 = var5.toItem();
-            if (var6 == null) {
-               var2.getInventory().setItem(var3, null);
-               var2.getWorld().playSound(var2.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0F, 1.0F);
+   private void handleUndamageableItem(ItemStack item, Player player, EquipmentSlot equipmentSlot, int count) {
+      if (item.getType().getMaxDurability() == 0) {
+         DurabilityItem durabilityItem = new DurabilityItem(player, item);
+         if (durabilityItem.isValid()) {
+            durabilityItem.decreaseDurability(count);
+            ItemStack item2 = durabilityItem.toItem();
+            if (item2 == null) {
+               player.getInventory().setItem(equipmentSlot, null);
+               player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0F, 1.0F);
             } else {
-               var2.getInventory().getItem(var3).setItemMeta(var6.getItemMeta());
+               player.getInventory().getItem(equipmentSlot).setItemMeta(item2.getItemMeta());
             }
          }
       }
    }
 
-   private boolean hasItem(Player var1, EquipmentSlot var2) {
-      return var1.getInventory().getItem(var2) != null && var1.getInventory().getItem(var2).getType() != Material.AIR;
+   private boolean hasItem(Player player, EquipmentSlot equipmentSlot) {
+      return player.getInventory().getItem(equipmentSlot) != null && player.getInventory().getItem(equipmentSlot).getType() != Material.AIR;
    }
 }

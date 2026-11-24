@@ -30,52 +30,52 @@ public class GrantedPermissions extends StringListStat implements GemStoneStat {
    }
 
    @Override
-   public StringListData whenInitialized(Object var1) {
-      Validate.isTrue(var1 instanceof List, "Must specify a string list");
-      return new StringListData((List<String>)var1);
+   public StringListData whenInitialized(Object obj) {
+      Validate.isTrue(obj instanceof List, "Must specify a string list");
+      return new StringListData((List<String>)obj);
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      if (var2.getAction() == InventoryAction.PICKUP_ALL) {
-         new StatEdition(var1, ItemStats.GRANTED_PERMISSIONS).enable("Write in the chat the permission you want to add.");
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      if (event.getAction() == InventoryAction.PICKUP_ALL) {
+         new StatEdition(editionInventory, ItemStats.GRANTED_PERMISSIONS).enable("Write in the chat the permission you want to add.");
       }
 
-      if (var2.getAction() == InventoryAction.PICKUP_HALF && var1.getEditedSection().contains(this.getPath())) {
-         List var3 = var1.getEditedSection().getStringList(this.getPath());
-         if (var3.isEmpty()) {
+      if (event.getAction() == InventoryAction.PICKUP_HALF && editionInventory.getEditedSection().contains(this.getPath())) {
+         List list = editionInventory.getEditedSection().getStringList(this.getPath());
+         if (list.isEmpty()) {
             return;
          }
 
-         String var4 = (String)var3.get(var3.size() - 1);
-         var3.remove(var4);
-         var1.getEditedSection().set(this.getPath(), var3.isEmpty() ? null : var3);
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + MythicLib.plugin.parseColors(var4) + ChatColor.GRAY + "'.");
+         String text = (String)list.get(list.size() - 1);
+         list.remove(text);
+         editionInventory.getEditedSection().set(this.getPath(), list.isEmpty() ? null : list);
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Successfully removed '" + MythicLib.plugin.parseColors(text) + ChatColor.GRAY + "'.");
       }
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      List var4 = var1.getEditedSection().contains(this.getPath()) ? var1.getEditedSection().getStringList(this.getPath()) : new ArrayList();
-      var4.add(var2);
-      var1.getEditedSection().set(this.getPath(), var4);
-      var1.registerTemplateEdition();
-      var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Permission successfully added.");
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      List list = editionInventory.getEditedSection().contains(this.getPath()) ? editionInventory.getEditedSection().getStringList(this.getPath()) : new ArrayList();
+      list.add(text);
+      editionInventory.getEditedSection().set(this.getPath(), list);
+      editionInventory.registerTemplateEdition();
+      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Permission successfully added.");
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<StringListData> var2) {
-      if (var2.isPresent()) {
-         var1.add(ChatColor.GRAY + "Current Value:");
-         StringListData var3 = (StringListData)var2.get();
-         var3.getList().forEach(var1x -> var1.add(ChatColor.GRAY + var1x));
+   public void whenDisplayed(List<String> texts, Optional<StringListData> optional) {
+      if (optional.isPresent()) {
+         texts.add(ChatColor.GRAY + "Current Value:");
+         StringListData stringListData = (StringListData)optional.get();
+         stringListData.getList().forEach(var1x -> texts.add(ChatColor.GRAY + var1x));
       } else {
-         var1.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
+         texts.add(ChatColor.GRAY + "Current Value: " + ChatColor.RED + "None");
       }
 
-      var1.add("");
-      var1.add(ChatColor.YELLOW + "►" + " Click to add a permission.");
-      var1.add(ChatColor.YELLOW + "►" + " Right click to remove the last permission.");
+      texts.add("");
+      texts.add(ChatColor.YELLOW + "►" + " Click to add a permission.");
+      texts.add(ChatColor.YELLOW + "►" + " Right click to remove the last permission.");
    }
 }

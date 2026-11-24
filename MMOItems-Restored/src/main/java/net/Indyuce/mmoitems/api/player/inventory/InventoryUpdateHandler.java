@@ -24,8 +24,8 @@ public class InventoryUpdateHandler {
    @Deprecated
    public ItemStack offhand = null;
 
-   public InventoryUpdateHandler(PlayerData var1) {
-      this.player = var1;
+   public InventoryUpdateHandler(PlayerData playerData) {
+      this.player = playerData;
    }
 
    public List<EquippedItem> getEquipped() {
@@ -33,13 +33,13 @@ public class InventoryUpdateHandler {
    }
 
    public void updateCheck() {
-      PlayerInventory var1 = this.player.getPlayer().getInventory();
-      if (this.isDifferent(this.helmet, var1.getHelmet())
-         || this.isDifferent(this.chestplate, var1.getChestplate())
-         || this.isDifferent(this.leggings, var1.getLeggings())
-         || this.isDifferent(this.boots, var1.getBoots())
-         || this.isDifferent(this.hand, var1.getItemInMainHand())
-         || this.isDifferent(this.offhand, var1.getItemInOffHand())) {
+      PlayerInventory inventory = this.player.getPlayer().getInventory();
+      if (this.isDifferent(this.helmet, inventory.getHelmet())
+         || this.isDifferent(this.chestplate, inventory.getChestplate())
+         || this.isDifferent(this.leggings, inventory.getLeggings())
+         || this.isDifferent(this.boots, inventory.getBoots())
+         || this.isDifferent(this.hand, inventory.getItemInMainHand())
+         || this.isDifferent(this.offhand, inventory.getItemInOffHand())) {
          this.player.updateInventory();
       }
    }
@@ -48,11 +48,11 @@ public class InventoryUpdateHandler {
       Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, this.player::updateInventory);
    }
 
-   private boolean isDifferent(ItemStack var1, ItemStack var2) {
-      if (var1 == null && var2 == null) {
+   private boolean isDifferent(ItemStack item, ItemStack item2) {
+      if (item == null && item2 == null) {
          return false;
       } else {
-         return (var1 != null || var2 == null) && (var1 == null || var2 != null) ? var1.hashCode() != var2.hashCode() && !var1.equals(var2) : true;
+         return (item != null || item2 == null) && (item == null || item2 != null) ? item.hashCode() != item2.hashCode() && !item.equals(item2) : true;
       }
    }
 }

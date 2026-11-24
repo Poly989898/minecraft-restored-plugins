@@ -9,24 +9,24 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CheckTagCommandTreeNode extends CommandTreeNode {
-   public CheckTagCommandTreeNode(CommandTreeNode var1) {
-      super(var1, "checktag");
+   public CheckTagCommandTreeNode(CommandTreeNode commandTreeNode) {
+      super(commandTreeNode, "checktag");
    }
 
-   public CommandResult execute(CommandSender var1, String[] var2) {
-      if (var2.length < 3) {
+   public CommandResult execute(CommandSender sender, String[] texts) {
+      if (texts.length < 3) {
          return CommandResult.THROW_USAGE;
-      } else if (!(var1 instanceof Player)) {
-         var1.sendMessage(ChatColor.RED + "This command is only for players.");
+      } else if (!(sender instanceof Player)) {
+         sender.sendMessage(ChatColor.RED + "This command is only for players.");
          return CommandResult.FAILURE;
       } else {
-         Player var3 = (Player)var1;
-         NBTItem var4 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(var3.getInventory().getItemInMainHand());
-         String var5 = var4.hasTag(var2[2]) ? var2[2] : "MMOITEMS_" + var2[2].toUpperCase().replace("-", "_");
-         var3.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "--------------------------------------------------");
-         var3.sendMessage(ChatColor.AQUA + "Boolean = " + ChatColor.RESET + var4.getBoolean(var5));
-         var3.sendMessage(ChatColor.AQUA + "Double = " + ChatColor.RESET + var4.getDouble(var5));
-         var3.sendMessage(ChatColor.AQUA + "String = " + ChatColor.RESET + var4.getString(var5));
+         Player player = (Player)sender;
+         NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(player.getInventory().getItemInMainHand());
+         String text = nBTItem.hasTag(texts[2]) ? texts[2] : "MMOITEMS_" + texts[2].toUpperCase().replace("-", "_");
+         player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "--------------------------------------------------");
+         player.sendMessage(ChatColor.AQUA + "Boolean = " + ChatColor.RESET + nBTItem.getBoolean(text));
+         player.sendMessage(ChatColor.AQUA + "Double = " + ChatColor.RESET + nBTItem.getDouble(text));
+         player.sendMessage(ChatColor.AQUA + "String = " + ChatColor.RESET + nBTItem.getString(text));
          return CommandResult.SUCCESS;
       }
    }

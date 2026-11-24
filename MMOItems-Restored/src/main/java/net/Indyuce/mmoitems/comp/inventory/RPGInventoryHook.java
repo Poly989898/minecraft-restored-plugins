@@ -15,22 +15,22 @@ import ru.endlesscode.rpginventory.api.InventoryAPI;
 
 public class RPGInventoryHook implements PlayerInventory, Listener {
    @Override
-   public List<EquippedItem> getInventory(Player var1) {
-      ArrayList var2 = new ArrayList();
+   public List<EquippedItem> getInventory(Player player) {
+      ArrayList list = new ArrayList();
 
-      for (ItemStack var4 : InventoryAPI.getPassiveItems(var1)) {
-         if (var4 != null) {
-            var2.add(new RPGInventoryHook.LegacyEquippedItem(var4));
+      for (ItemStack passiveItem : InventoryAPI.getPassiveItems(player)) {
+         if (passiveItem != null) {
+            list.add(new RPGInventoryHook.LegacyEquippedItem(passiveItem));
          }
       }
 
-      return var2;
+      return list;
    }
 
    @EventHandler
-   public void a(InventoryCloseEvent var1) {
-      if (InventoryAPI.isRPGInventory(var1.getInventory())) {
-         PlayerData.get((Player)var1.getPlayer()).updateInventory();
+   public void a(InventoryCloseEvent event) {
+      if (InventoryAPI.isRPGInventory(event.getInventory())) {
+         PlayerData.get((Player)event.getPlayer()).updateInventory();
       }
    }
 
@@ -40,11 +40,11 @@ public class RPGInventoryHook implements PlayerInventory, Listener {
       }
 
       @Override
-      public void setItem(@Nullable ItemStack var1) {
-         ItemStack var2 = this.getNBT().getItem();
-         var2.setType(var1.getType());
-         var2.setAmount(var1.getAmount());
-         var2.setItemMeta(var2.getItemMeta());
+      public void setItem(@Nullable ItemStack item) {
+         ItemStack item2 = this.getNBT().getItem();
+         item2.setType(item.getType());
+         item2.setAmount(item.getAmount());
+         item2.setItemMeta(item2.getItemMeta());
       }
    }
 }

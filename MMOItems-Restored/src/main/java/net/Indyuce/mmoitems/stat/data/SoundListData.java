@@ -18,8 +18,8 @@ public class SoundListData implements StatData, Mergeable<SoundListData>, Random
    public SoundListData() {
    }
 
-   public SoundListData(@NotNull Map<CustomSound, SoundData> var1) {
-      var1.forEach(this.sounds::put);
+   public SoundListData(@NotNull Map<CustomSound, SoundData> map) {
+      map.forEach(this.sounds::put);
    }
 
    public Set<CustomSound> getCustomSounds() {
@@ -31,36 +31,36 @@ public class SoundListData implements StatData, Mergeable<SoundListData>, Random
    }
 
    @Nullable
-   public SoundData get(CustomSound var1) {
-      return this.sounds.getOrDefault(var1, null);
+   public SoundData get(CustomSound customSound) {
+      return this.sounds.getOrDefault(customSound, null);
    }
 
-   public void set(CustomSound var1, SoundData var2) {
-      this.sounds.put(var1, var2);
+   public void set(CustomSound customSound, SoundData soundData) {
+      this.sounds.put(customSound, soundData);
    }
 
    @Override
-   public boolean equals(Object var1) {
-      if (!(var1 instanceof SoundListData)) {
+   public boolean equals(Object obj) {
+      if (!(obj instanceof SoundListData)) {
          return false;
       }
 
-      if (((SoundListData)var1).getCustomSounds().size() != this.getCustomSounds().size()) {
+      if (((SoundListData)obj).getCustomSounds().size() != this.getCustomSounds().size()) {
          return false;
       }
 
-      for (CustomSound var3 : ((SoundListData)var1).getCustomSounds()) {
-         if (var3 != null) {
-            boolean var4 = true;
+      for (CustomSound customSound : ((SoundListData)obj).getCustomSounds()) {
+         if (customSound != null) {
+            boolean flag = true;
 
-            for (CustomSound var6 : this.getCustomSounds()) {
-               if (var3.equals(var6)) {
-                  var4 = false;
+            for (CustomSound customSound2 : this.getCustomSounds()) {
+               if (customSound.equals(customSound2)) {
+                  flag = false;
                   break;
                }
             }
 
-            if (var4) {
+            if (flag) {
                return false;
             }
          }
@@ -69,8 +69,8 @@ public class SoundListData implements StatData, Mergeable<SoundListData>, Random
       return true;
    }
 
-   public void mergeWith(SoundListData var1) {
-      var1.sounds.forEach(this.sounds::put);
+   public void mergeWith(SoundListData soundListData) {
+      soundListData.sounds.forEach(this.sounds::put);
    }
 
    @NotNull
@@ -83,7 +83,7 @@ public class SoundListData implements StatData, Mergeable<SoundListData>, Random
       return this.sounds.isEmpty();
    }
 
-   public SoundListData randomize(MMOItemBuilder var1) {
+   public SoundListData randomize(MMOItemBuilder mmoItemBuilder) {
       return new SoundListData(new HashMap<>(this.sounds));
    }
 }

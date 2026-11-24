@@ -28,35 +28,35 @@ public class UpgradeTemplate {
    @NotNull
    private final Map<ItemStat, UpgradeInfo> perStatUpgradeInfos = new HashMap<>();
 
-   public UpgradeTemplate(@NotNull ConfigurationSection var1) {
-      Validate.notNull(var1, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "You must specify a config section.", new String[0]));
-      this.id = var1.getName().toLowerCase().replace("_", "-").replace(" ", "-");
-      FriendlyFeedbackProvider var2 = new FriendlyFeedbackProvider(FFPMMOItems.get());
-      var2.activatePrefix(true, "Upgrade Template $i&o" + var1.getName());
+   public UpgradeTemplate(@NotNull ConfigurationSection section) {
+      Validate.notNull(section, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), "You must specify a config section.", new String[0]));
+      this.id = section.getName().toLowerCase().replace("_", "-").replace(" ", "-");
+      FriendlyFeedbackProvider friendlyFeedbackProvider = new FriendlyFeedbackProvider(FFPMMOItems.get());
+      friendlyFeedbackProvider.activatePrefix(true, "Upgrade Template $i&o" + section.getName());
 
-      for (String var4 : var1.getKeys(false)) {
-         String var5 = var4.toUpperCase().replace("-", "_");
-         ItemStat var6 = MMOItems.plugin.getStats().get(var5);
-         if (var6 == null) {
-            var2.log(FriendlyFeedbackCategory.ERROR, "Stat '$r{0}$b' $fnot found$b.", new String[]{var5});
-         } else if (!(var6 instanceof Upgradable)) {
-            var2.log(FriendlyFeedbackCategory.ERROR, "Stat $r{0}$b is $fnot upgradeable$b.", new String[]{var6.getId()});
-         } else if (!(var6.getClearStatData() instanceof Mergeable)) {
-            var2.log(
+      for (String key : section.getKeys(false)) {
+         String text = key.toUpperCase().replace("-", "_");
+         ItemStat itemStat = MMOItems.plugin.getStats().get(text);
+         if (itemStat == null) {
+            friendlyFeedbackProvider.log(FriendlyFeedbackCategory.ERROR, "Stat '$r{0}$b' $fnot found$b.", new String[]{text});
+         } else if (!(itemStat instanceof Upgradable)) {
+            friendlyFeedbackProvider.log(FriendlyFeedbackCategory.ERROR, "Stat $r{0}$b is $fnot upgradeable$b.", new String[]{itemStat.getId()});
+         } else if (!(itemStat.getClearStatData() instanceof Mergeable)) {
+            friendlyFeedbackProvider.log(
                FriendlyFeedbackCategory.ERROR,
                "Stat Data used by $r{0}$b is $fnot mergeable$b, and thus it cannot be upgradeable. Contact the dev of this ItemStat.",
-               new String[]{var6.getId()}
+               new String[]{itemStat.getId()}
             );
          } else {
             try {
-               this.perStatUpgradeInfos.put(var6, ((Upgradable)var6).loadUpgradeInfo(var1.get(var4)));
-            } catch (IllegalArgumentException var8) {
-               var2.log(FriendlyFeedbackCategory.ERROR, var8.getMessage(), new String[0]);
+               this.perStatUpgradeInfos.put(itemStat, ((Upgradable)itemStat).loadUpgradeInfo(section.get(key)));
+            } catch (IllegalArgumentException exception) {
+               friendlyFeedbackProvider.log(FriendlyFeedbackCategory.ERROR, exception.getMessage(), new String[0]);
             }
          }
       }
 
-      var2.sendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
+      friendlyFeedbackProvider.sendTo(FriendlyFeedbackCategory.ERROR, MMOItems.getConsole());
    }
 
    @NotNull
@@ -70,32 +70,32 @@ public class UpgradeTemplate {
    }
 
    @Nullable
-   public UpgradeInfo getUpgradeInfo(@NotNull ItemStat var1) {
-      return this.perStatUpgradeInfos.get(var1);
+   public UpgradeInfo getUpgradeInfo(@NotNull ItemStat itemStat) {
+      return this.perStatUpgradeInfos.get(itemStat);
    }
 
-   public void upgrade(@NotNull MMOItem var1) {
-      this.upgradeTo(var1, var1.getUpgradeLevel() + 1);
+   public void upgrade(@NotNull MMOItem mmoItem) {
+      this.upgradeTo(mmoItem, mmoItem.getUpgradeLevel() + 1);
    }
 
-   public void upgradeTo(@NotNull MMOItem var1, int var2) {
-      Enchants.separateEnchantments(var1);
-      UpgradeData var3;
-      if (var1.hasData(ItemStats.UPGRADE)) {
-         var3 = (UpgradeData)var1.getData(ItemStats.UPGRADE);
+   public void upgradeTo(@NotNull MMOItem mmoItem, int count) {
+      Enchants.separateEnchantments(mmoItem);
+      UpgradeData upgradeData;
+      if (mmoItem.hasData(ItemStats.UPGRADE)) {
+         upgradeData = (UpgradeData)mmoItem.getData(ItemStats.UPGRADE);
       } else {
-         var3 = new UpgradeData(null, null, false, false, 0, 0, 100.0);
+         upgradeData = new UpgradeData(null, null, false, false, 0, 0, 100.0);
       }
 
-      var3.setLevel(var2);
-      var1.setData(ItemStats.UPGRADE, var3);
+      upgradeData.setLevel(count);
+      mmoItem.setData(ItemStats.UPGRADE, upgradeData);
 
-      for (ItemStat var5 : this.perStatUpgradeInfos.keySet()) {
-         ((Upgradable)var5).preprocess(var1);
-         StatHistory var6 = var1.computeStatHistory(var5);
-         ((Upgradable)var5).midprocess(var1);
-         var1.setData(var5, var6.recalculate(var2));
-         ((Upgradable)var5).postprocess(var1);
+      for (ItemStat key : this.perStatUpgradeInfos.keySet()) {
+         ((Upgradable)key).preprocess(mmoItem);
+         StatHistory statHistory = mmoItem.computeStatHistory(key);
+         ((Upgradable)key).midprocess(mmoItem);
+         mmoItem.setData(key, statHistory.recalculate(count));
+         ((Upgradable)key).postprocess(mmoItem);
       }
    }
 
@@ -104,10 +104,10 @@ public class UpgradeTemplate {
    }
 
    @NotNull
-   public static String getUpgradeChangeSuffix(@NotNull String var0, boolean var1) {
-      String var2 = Objects.requireNonNull(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-suffix", " &8(<p>#stat#&8)"));
-      String var3 = Objects.requireNonNull(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-positive", "&a"));
-      String var4 = Objects.requireNonNull(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-negative", "&c"));
-      return var1 ? var2.replace("<p>", var4).replace("#stat#", var0) : var2.replace("<p>", var3).replace("#stat#", var0);
+   public static String getUpgradeChangeSuffix(@NotNull String text, boolean flag) {
+      String text2 = Objects.requireNonNull(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-suffix", " &8(<p>#stat#&8)"));
+      String text3 = Objects.requireNonNull(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-positive", "&a"));
+      String text4 = Objects.requireNonNull(MMOItems.plugin.getConfig().getString("item-upgrading.stat-change-negative", "&c"));
+      return flag ? text2.replace("<p>", text4).replace("#stat#", text) : text2.replace("<p>", text3).replace("#stat#", text);
    }
 }

@@ -17,8 +17,8 @@ public class TemplateExplorer {
       return this.all.size();
    }
 
-   public TemplateExplorer applyFilter(Predicate<MMOItemTemplate> var1) {
-      this.all.removeIf(this.not(var1));
+   public TemplateExplorer applyFilter(Predicate<MMOItemTemplate> predicate) {
+      this.all.removeIf(this.not(predicate));
       return this;
    }
 
@@ -33,11 +33,11 @@ public class TemplateExplorer {
       }
    }
 
-   public Optional<MMOItem> rollItem(RPGPlayer var1) {
-      return this.rollLoot().map(var1x -> var1x.newBuilder(var1).build());
+   public Optional<MMOItem> rollItem(RPGPlayer rpgPlayer) {
+      return this.rollLoot().map(var1x -> var1x.newBuilder(rpgPlayer).build());
    }
 
-   private <T> Predicate<T> not(Predicate<T> var1) {
-      return var1x -> !var1.test(var1x);
+   private <T> Predicate<T> not(Predicate<T> predicate) {
+      return var1x -> !predicate.test(var1x);
    }
 }

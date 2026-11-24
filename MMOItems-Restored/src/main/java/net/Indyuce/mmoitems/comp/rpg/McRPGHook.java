@@ -9,29 +9,29 @@ import us.eunoians.mcrpg.players.PlayerManager;
 
 public class McRPGHook implements RPGHandler, Listener {
    @EventHandler
-   public void a(McRPGPlayerLevelChangeEvent var1) {
-      PlayerData.get(var1.getMcRPGPlayer().getOfflineMcRPGPlayer()).getInventory().scheduleUpdate();
+   public void a(McRPGPlayerLevelChangeEvent event) {
+      PlayerData.get(event.getMcRPGPlayer().getOfflineMcRPGPlayer()).getInventory().scheduleUpdate();
    }
 
    @Override
-   public RPGPlayer getInfo(PlayerData var1) {
-      return new McRPGHook.McRPGPlayer(var1);
+   public RPGPlayer getInfo(PlayerData playerData) {
+      return new McRPGHook.McRPGPlayer(playerData);
    }
 
    @Override
-   public void refreshStats(PlayerData var1) {
+   public void refreshStats(PlayerData playerData) {
    }
 
    public static class McRPGPlayer extends RPGPlayer {
-      public McRPGPlayer(PlayerData var1) {
-         super(var1);
+      public McRPGPlayer(PlayerData playerData) {
+         super(playerData);
       }
 
       @Override
       public int getLevel() {
          try {
             return PlayerManager.getPlayer(this.getPlayer().getUniqueId()).getPowerLevel();
-         } catch (Exception var2) {
+         } catch (Exception exception) {
             return 0;
          }
       }
@@ -52,12 +52,12 @@ public class McRPGHook implements RPGHandler, Listener {
       }
 
       @Override
-      public void setMana(double var1) {
-         this.getPlayer().setFoodLevel((int)var1);
+      public void setMana(double value) {
+         this.getPlayer().setFoodLevel((int)value);
       }
 
       @Override
-      public void setStamina(double var1) {
+      public void setStamina(double value) {
       }
    }
 }

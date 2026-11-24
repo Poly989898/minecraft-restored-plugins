@@ -42,20 +42,20 @@ public abstract class EditionInventory extends PluginInventory {
    @NotNull
    final FriendlyFeedbackProvider ffp;
 
-   public EditionInventory(@NotNull Player var1, @NotNull MMOItemTemplate var2) {
-      this(var1, var2, true);
+   public EditionInventory(@NotNull Player player, @NotNull MMOItemTemplate mmoItemTemplate) {
+      this(player, mmoItemTemplate, true);
    }
 
-   public EditionInventory(@NotNull Player var1, @NotNull MMOItemTemplate var2, boolean var3) {
-      super(var1);
-      this.displaysBack = var3;
+   public EditionInventory(@NotNull Player player, @NotNull MMOItemTemplate mmoItemTemplate, boolean flag) {
+      super(player);
+      this.displaysBack = flag;
       this.ffp = new FriendlyFeedbackProvider(FFPMMOItems.get());
       this.ffp.activatePrefix(true, "Edition");
-      this.template = var2;
-      this.configFile = var2.getType().getConfigFile();
-      VInventoryView var4 = VersionUtils.getOpen(var1);
-      if (var4.getTopInventory().getHolder() instanceof EditionInventory) {
-         this.cachedItem = ((EditionInventory)var4.getTopInventory().getHolder()).cachedItem;
+      this.template = mmoItemTemplate;
+      this.configFile = mmoItemTemplate.getType().getConfigFile();
+      VInventoryView openValue = VersionUtils.getOpen(player);
+      if (openValue.getTopInventory().getHolder() instanceof EditionInventory) {
+         this.cachedItem = ((EditionInventory)openValue.getTopInventory().getHolder()).cachedItem;
       }
    }
 
@@ -73,14 +73,14 @@ public abstract class EditionInventory extends PluginInventory {
       this.arrangeInventory();
    }
 
-   public void open(@Nullable EditionInventory var1) {
-      this.previousPage = var1 == null ? 0 : var1.previousPage;
+   public void open(@Nullable EditionInventory editionInventory) {
+      this.previousPage = editionInventory == null ? 0 : editionInventory.previousPage;
       this.open();
    }
 
    @Deprecated
-   public void open(int var1) {
-      this.previousPage = var1;
+   public void open(int count) {
+      this.previousPage = count;
       this.open();
    }
 
@@ -102,21 +102,21 @@ public abstract class EditionInventory extends PluginInventory {
    }
 
    public ConfigurationSection getEditedSection() {
-      ConfigurationSection var1 = this.configFile.getConfig().getConfigurationSection(this.template.getId());
+      ConfigurationSection section = this.configFile.getConfig().getConfigurationSection(this.template.getId());
       Validate.notNull(
-         var1,
+         section,
          "Could not find config section associated to the template '"
             + this.template.getType().getId()
             + "."
             + this.template.getId()
             + "': make sure the config section name is in capital letters"
       );
-      return var1.getConfigurationSection(this.editedModifier == null ? "base" : "modifiers." + this.editedModifier.getId() + ".stats");
+      return section.getConfigurationSection(this.editedModifier == null ? "base" : "modifiers." + this.editedModifier.getId() + ".stats");
    }
 
-   public <R extends RandomStatData<S>, S extends StatData> Optional<R> getEventualStatData(ItemStat<R, S> var1) {
-      Map var2 = this.editedModifier != null ? this.editedModifier.getItemData() : this.template.getBaseItemData();
-      return var2.containsKey(var1) ? Optional.of((R)var2.get(var1)) : Optional.empty();
+   public <R extends RandomStatData<S>, S extends StatData> Optional<R> getEventualStatData(ItemStat<R, S> itemStat) {
+      Map map = this.editedModifier != null ? this.editedModifier.getItemData() : this.template.getBaseItemData();
+      return map.containsKey(itemStat) ? Optional.of((R)map.get(itemStat)) : Optional.empty();
    }
 
    public void registerTemplateEdition() {
@@ -140,27 +140,27 @@ public abstract class EditionInventory extends PluginInventory {
    }
 
    public void addEditionItems() {
-      ItemStack var1 = new ItemStack(Material.CHEST);
-      ItemMeta var2 = var1.getItemMeta();
-      var2.addItemFlags(ItemFlag.values());
-      var2.setDisplayName(ChatColor.GREEN + "✤" + " Get the Item! " + "✤");
-      ArrayList var3 = new ArrayList();
-      var3.add(ChatColor.GRAY + "");
-      var3.add(ChatColor.GRAY + "You may also use /mi give " + this.template.getType().getId() + " " + this.template.getId());
-      var3.add(ChatColor.GRAY + "");
-      var3.add(ChatColor.YELLOW + "▸" + " Left click to get the item.");
-      var3.add(ChatColor.YELLOW + "▸" + " Right click to reroll its stats.");
-      var2.setLore(var3);
-      var1.setItemMeta(var2);
+      ItemStack item = new ItemStack(Material.CHEST);
+      ItemMeta itemMeta = item.getItemMeta();
+      itemMeta.addItemFlags(ItemFlag.values());
+      itemMeta.setDisplayName(ChatColor.GREEN + "✤" + " Get the Item! " + "✤");
+      ArrayList list = new ArrayList();
+      list.add(ChatColor.GRAY + "");
+      list.add(ChatColor.GRAY + "You may also use /mi give " + this.template.getType().getId() + " " + this.template.getId());
+      list.add(ChatColor.GRAY + "");
+      list.add(ChatColor.YELLOW + "▸" + " Left click to get the item.");
+      list.add(ChatColor.YELLOW + "▸" + " Right click to reroll its stats.");
+      itemMeta.setLore(list);
+      item.setItemMeta(itemMeta);
       if (this.displaysBack) {
-         ItemStack var4 = new ItemStack(Material.BARRIER);
-         ItemMeta var5 = var4.getItemMeta();
-         var5.setDisplayName(ChatColor.GREEN + "⇨" + " Back");
-         var4.setItemMeta(var5);
-         this.inventory.setItem(6, var4);
+         ItemStack item2 = new ItemStack(Material.BARRIER);
+         ItemMeta itemMeta2 = item2.getItemMeta();
+         itemMeta2.setDisplayName(ChatColor.GREEN + "⇨" + " Back");
+         item2.setItemMeta(itemMeta2);
+         this.inventory.setItem(6, item2);
       }
 
-      this.inventory.setItem(2, var1);
+      this.inventory.setItem(2, item);
       this.inventory.setItem(4, this.getCachedItem());
    }
 

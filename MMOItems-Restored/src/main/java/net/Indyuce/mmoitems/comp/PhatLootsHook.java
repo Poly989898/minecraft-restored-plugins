@@ -13,26 +13,26 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class PhatLootsHook implements Listener {
    @EventHandler
-   public void OnLootBeLooted(MobDropLootEvent var1) {
-      this.handle(var1);
+   public void OnLootBeLooted(MobDropLootEvent event) {
+      this.handle(event);
    }
 
    @EventHandler
-   public void OnLootBeLooted(PlayerLootEvent var1) {
-      this.handle(var1);
+   public void OnLootBeLooted(PlayerLootEvent event) {
+      this.handle(event);
    }
 
-   public void handle(LootEvent var1) {
-      for (ItemStack var3 : var1.getItemList()) {
-         if (!SilentNumbers.isAir(var3)) {
-            MMOItemReforger var4 = new MMOItemReforger(var3);
-            if (var4.reforge(MMOItems.plugin.getLanguage().phatLootsOptions) && var4.hasChanges()) {
-               ItemStack var5 = var4.toStack();
-               var5.setAmount(var3.getAmount());
-               ItemMeta var6 = var5.getItemMeta();
-               var3.setType(var5.getType());
-               var3.setItemMeta(var6);
-               var3.setData(var5.getData());
+   public void handle(LootEvent event) {
+      for (ItemStack item : event.getItemList()) {
+         if (!SilentNumbers.isAir(item)) {
+            MMOItemReforger mmoItemReforger = new MMOItemReforger(item);
+            if (mmoItemReforger.reforge(MMOItems.plugin.getLanguage().phatLootsOptions) && mmoItemReforger.hasChanges()) {
+               ItemStack item2 = mmoItemReforger.toStack();
+               item2.setAmount(item.getAmount());
+               ItemMeta itemMeta = item2.getItemMeta();
+               item.setType(item2.getType());
+               item.setItemMeta(itemMeta);
+               item.setData(item2.getData());
             }
          }
       }

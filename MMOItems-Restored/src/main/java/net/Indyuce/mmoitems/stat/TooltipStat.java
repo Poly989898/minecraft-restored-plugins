@@ -27,19 +27,19 @@ public class TooltipStat extends StringStat implements GemStoneStat {
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull StringData var2) {
-      String var3 = UtilityMethods.enumName(var2.toString());
-      TooltipTexture var4 = MMOItems.plugin.getLore().getTooltip(var3);
-      Validate.notNull(var4, "Could not find tooltip with ID '" + var3 + "'");
-      var1.addItemTag(new ItemTag("MMOITEMS_TOOLTIP", var4.getId()));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull StringData stringData) {
+      String text = UtilityMethods.enumName(stringData.toString());
+      TooltipTexture tooltip = MMOItems.plugin.getLore().getTooltip(text);
+      Validate.notNull(tooltip, "Could not find tooltip with ID '" + text + "'");
+      itemStackBuilder.addItemTag(new ItemTag("MMOITEMS_TOOLTIP", tooltip.getId()));
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      String var4 = UtilityMethods.enumName(var2);
-      Validate.isTrue(MMOItems.plugin.getLore().hasTooltip(var4), "Couldn't find tooltip with ID '" + var4 + "'");
-      var1.getEditedSection().set(this.getPath(), var4);
-      var1.registerTemplateEdition();
-      var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Tier successfully changed to " + var4 + ".");
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      String text2 = UtilityMethods.enumName(text);
+      Validate.isTrue(MMOItems.plugin.getLore().hasTooltip(text2), "Couldn't find tooltip with ID '" + text2 + "'");
+      editionInventory.getEditedSection().set(this.getPath(), text2);
+      editionInventory.registerTemplateEdition();
+      editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Tier successfully changed to " + text2 + ".");
    }
 }

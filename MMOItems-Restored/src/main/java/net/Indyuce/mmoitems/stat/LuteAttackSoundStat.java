@@ -20,7 +20,7 @@ public class LuteAttackSoundStat extends StringStat implements GemStoneStat {
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull StringData var2) {
-      var1.addItemTag(new ItemTag("MMOITEMS_LUTE_ATTACK_SOUND", var2.toString().toUpperCase().replace("-", "_").replace(" ", "_")));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull StringData stringData) {
+      itemStackBuilder.addItemTag(new ItemTag("MMOITEMS_LUTE_ATTACK_SOUND", stringData.toString().toUpperCase().replace("-", "_").replace(" ", "_")));
    }
 }

@@ -21,28 +21,28 @@ public class HideTrim extends BooleanStat {
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull BooleanData var2) {
-      if (var2.isEnabled()) {
-         var1.getMeta().addItemFlags(new ItemFlag[]{ItemFlag.HIDE_ARMOR_TRIM});
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull BooleanData booleanData) {
+      if (booleanData.isEnabled()) {
+         itemStackBuilder.getMeta().addItemFlags(new ItemFlag[]{ItemFlag.HIDE_ARMOR_TRIM});
       }
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      if (var1.getNBT().getItem().getItemMeta().hasItemFlag(ItemFlag.HIDE_ARMOR_TRIM)) {
-         var1.setData(ItemStats.HIDE_ARMOR_TRIM, new BooleanData(true));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      if (readMMOItem.getNBT().getItem().getItemMeta().hasItemFlag(ItemFlag.HIDE_ARMOR_TRIM)) {
+         readMMOItem.setData(ItemStats.HIDE_ARMOR_TRIM, new BooleanData(true));
       }
    }
 
    @NotNull
    @Override
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull BooleanData var1) {
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull BooleanData booleanData) {
       return new ArrayList<>();
    }
 
    @Nullable
    @Override
-   public BooleanData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
+   public BooleanData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
       return null;
    }
 }

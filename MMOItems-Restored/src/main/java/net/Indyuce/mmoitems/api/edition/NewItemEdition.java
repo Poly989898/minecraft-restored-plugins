@@ -11,8 +11,8 @@ public class NewItemEdition implements Edition {
    private final ItemBrowser inv;
    private boolean successful;
 
-   public NewItemEdition(ItemBrowser var1) {
-      this.inv = var1;
+   public NewItemEdition(ItemBrowser itemBrowser) {
+      this.inv = itemBrowser;
    }
 
    @Override
@@ -21,7 +21,7 @@ public class NewItemEdition implements Edition {
    }
 
    @Override
-   public void enable(String... var1) {
+   public void enable(String... texts) {
       this.inv.getPlayer().closeInventory();
       this.inv.getPlayer().sendMessage(ChatColor.YELLOW + "" + ChatColor.STRIKETHROUGH + "-----------------------------------------------------");
       this.inv.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Write in the chat the ID of the new item.");
@@ -31,9 +31,9 @@ public class NewItemEdition implements Edition {
    }
 
    @Override
-   public boolean processInput(String var1) {
+   public boolean processInput(String text) {
       return this.successful = Bukkit.dispatchCommand(
-         this.inv.getPlayer(), "mmoitems create " + this.inv.getType().getId() + " " + var1.toUpperCase().replace(" ", "_").replace("-", "_")
+         this.inv.getPlayer(), "mmoitems create " + this.inv.getType().getId() + " " + text.toUpperCase().replace(" ", "_").replace("-", "_")
       );
    }
 

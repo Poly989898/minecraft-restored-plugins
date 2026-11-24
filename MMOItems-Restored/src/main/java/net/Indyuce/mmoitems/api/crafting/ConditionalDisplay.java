@@ -6,21 +6,21 @@ public class ConditionalDisplay {
    private final String positive;
    private final String negative;
 
-   public ConditionalDisplay(String var1, String var2) {
-      this.positive = var1;
-      this.negative = var2;
+   public ConditionalDisplay(String text, String text2) {
+      this.positive = text;
+      this.negative = text2;
    }
 
-   public ConditionalDisplay(ConfigurationSection var1) {
-      this(var1.getString("positive"), var1.getString("negative"));
+   public ConditionalDisplay(ConfigurationSection section) {
+      this(section.getString("positive"), section.getString("negative"));
    }
 
-   public String format(boolean var1) {
-      return var1 ? this.positive : this.negative;
+   public String format(boolean flag) {
+      return flag ? this.positive : this.negative;
    }
 
-   public void setup(ConfigurationSection var1) {
-      var1.set("positive", this.positive);
-      var1.set("negative", this.negative);
+   public void setup(ConfigurationSection section) {
+      section.set("positive", this.positive);
+      section.set("negative", this.negative);
    }
 }

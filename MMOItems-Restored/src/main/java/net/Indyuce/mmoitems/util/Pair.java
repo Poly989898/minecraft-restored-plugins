@@ -7,13 +7,13 @@ public class Pair<K, V> {
    private final K key;
    private final V value;
 
-   public Pair(@NotNull K var1, @NotNull V var2) {
-      this.key = (K)var1;
-      this.value = (V)var2;
+   public Pair(@NotNull K value, @NotNull V value2) {
+      this.key = (K)value;
+      this.value = (V)value2;
    }
 
-   public static <K, V> Pair<K, V> of(@NotNull K var0, @NotNull V var1) {
-      return new Pair<>((K)var0, (V)var1);
+   public static <K, V> Pair<K, V> of(@NotNull K value, @NotNull V value2) {
+      return new Pair<>((K)value, (V)value2);
    }
 
    public K getKey() {
@@ -25,12 +25,12 @@ public class Pair<K, V> {
    }
 
    @Override
-   public boolean equals(Object var1) {
-      if (this == var1) {
+   public boolean equals(Object obj) {
+      if (this == obj) {
          return true;
-      } else if (var1 != null && this.getClass() == var1.getClass()) {
-         Pair var2 = (Pair)var1;
-         return this.key.equals(var2.key) && this.value.equals(var2.value);
+      } else if (obj != null && this.getClass() == obj.getClass()) {
+         Pair pair = (Pair)obj;
+         return this.key.equals(pair.key) && this.value.equals(pair.value);
       } else {
          return false;
       }

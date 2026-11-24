@@ -12,23 +12,23 @@ import org.apache.commons.lang.Validate;
 public class MythicMobsSkillTrigger extends Trigger {
    private final Skill skill;
 
-   public MythicMobsSkillTrigger(MMOLineConfig var1) {
+   public MythicMobsSkillTrigger(MMOLineConfig mmoLineConfig) {
       super("mmskill");
-      var1.validate(new String[]{"id"});
-      String var2 = var1.getString("id");
-      Optional var3 = MythicBukkit.inst().getSkillManager().getSkill(var2);
-      Validate.isTrue(var3.isPresent(), "Could not find MM skill " + var2);
-      this.skill = (Skill)var3.get();
+      mmoLineConfig.validate(new String[]{"id"});
+      String id = mmoLineConfig.getString("id");
+      Optional skill = MythicBukkit.inst().getSkillManager().getSkill(id);
+      Validate.isTrue(skill.isPresent(), "Could not find MM skill " + id);
+      this.skill = (Skill)skill.get();
    }
 
    @Override
-   public void whenCrafting(PlayerData var1) {
-      if (var1.isOnline()) {
-         ArrayList var2 = new ArrayList();
-         var2.add(var1.getPlayer());
+   public void whenCrafting(PlayerData playerData) {
+      if (playerData.isOnline()) {
+         ArrayList list = new ArrayList();
+         list.add(playerData.getPlayer());
          MythicBukkit.inst()
             .getAPIHelper()
-            .castSkill(var1.getPlayer(), this.skill.getInternalName(), var1.getPlayer(), var1.getPlayer().getEyeLocation(), var2, null, 1.0F);
+            .castSkill(playerData.getPlayer(), this.skill.getInternalName(), playerData.getPlayer(), playerData.getPlayer().getEyeLocation(), list, null, 1.0F);
       }
    }
 }

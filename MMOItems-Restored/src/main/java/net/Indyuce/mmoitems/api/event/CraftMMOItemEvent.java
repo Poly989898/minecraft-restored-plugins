@@ -9,17 +9,17 @@ public class CraftMMOItemEvent extends PlayerDataEvent {
    private static final HandlerList handlers = new HandlerList();
    private ItemStack result;
 
-   public CraftMMOItemEvent(PlayerData var1, ItemStack var2) {
-      super(var1);
-      this.result = var2;
+   public CraftMMOItemEvent(PlayerData playerData, ItemStack item) {
+      super(playerData);
+      this.result = item;
    }
 
    public ItemStack getResult() {
       return this.result;
    }
 
-   public void setResult(ItemStack var1) {
-      this.result = var1;
+   public void setResult(ItemStack item) {
+      this.result = item;
    }
 
    public HandlerList getHandlers() {

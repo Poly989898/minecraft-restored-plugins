@@ -16,26 +16,26 @@ public class ArrowParticlesData implements StatData, RandomStatData<ArrowParticl
    private final double offset;
    private final boolean colored;
 
-   public ArrowParticlesData(Particle var1, int var2, double var3, double var5) {
-      this.particle = var1;
-      this.amount = var2;
-      this.offset = var3;
-      this.speed = var5;
+   public ArrowParticlesData(Particle particle, int count, double value, double value2) {
+      this.particle = particle;
+      this.amount = count;
+      this.offset = value;
+      this.speed = value2;
       this.colored = false;
       this.red = 0;
       this.blue = 0;
       this.green = 0;
    }
 
-   public ArrowParticlesData(Particle var1, int var2, double var3, int var5, int var6, int var7) {
-      this.particle = var1;
-      this.amount = var2;
-      this.offset = var3;
+   public ArrowParticlesData(Particle particle, int count, double value, int count2, int count3, int count4) {
+      this.particle = particle;
+      this.amount = count;
+      this.offset = value;
       this.speed = 0.0;
       this.colored = true;
-      this.red = var5;
-      this.green = var6;
-      this.blue = var7;
+      this.red = count2;
+      this.green = count3;
+      this.blue = count4;
    }
 
    public Particle getParticle() {
@@ -77,23 +77,23 @@ public class ArrowParticlesData implements StatData, RandomStatData<ArrowParticl
 
    @Override
    public String toString() {
-      JsonObject var1 = new JsonObject();
-      var1.addProperty("Particle", this.particle.name());
-      var1.addProperty("Amount", this.amount);
-      var1.addProperty("Offset", this.offset);
-      var1.addProperty("Colored", this.colored);
+      JsonObject jsonObject = new JsonObject();
+      jsonObject.addProperty("Particle", this.particle.name());
+      jsonObject.addProperty("Amount", this.amount);
+      jsonObject.addProperty("Offset", this.offset);
+      jsonObject.addProperty("Colored", this.colored);
       if (this.colored) {
-         var1.addProperty("Red", this.red);
-         var1.addProperty("Green", this.green);
-         var1.addProperty("Blue", this.blue);
+         jsonObject.addProperty("Red", this.red);
+         jsonObject.addProperty("Green", this.green);
+         jsonObject.addProperty("Blue", this.blue);
       } else {
-         var1.addProperty("Speed", this.speed);
+         jsonObject.addProperty("Speed", this.speed);
       }
 
-      return var1.toString();
+      return jsonObject.toString();
    }
 
-   public ArrowParticlesData randomize(MMOItemBuilder var1) {
+   public ArrowParticlesData randomize(MMOItemBuilder mmoItemBuilder) {
       return this;
    }
 }

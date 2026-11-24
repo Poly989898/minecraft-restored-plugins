@@ -11,20 +11,20 @@ import org.jetbrains.annotations.NotNull;
 public class AbilityListData implements StatData, Mergeable<AbilityListData> {
    private final List<AbilityData> abilities = new ArrayList<>();
 
-   public AbilityListData(@NotNull AbilityData... var1) {
-      this.add(var1);
+   public AbilityListData(@NotNull AbilityData... abilityDatas) {
+      this.add(abilityDatas);
    }
 
-   public AbilityListData(@NotNull Collection<AbilityData> var1) {
-      this.add(var1);
+   public AbilityListData(@NotNull Collection<AbilityData> abilityDatas) {
+      this.add(abilityDatas);
    }
 
-   public void add(@NotNull AbilityData... var1) {
-      Collections.addAll(this.abilities, var1);
+   public void add(@NotNull AbilityData... abilityDatas) {
+      Collections.addAll(this.abilities, abilityDatas);
    }
 
-   public void add(@NotNull Collection<AbilityData> var1) {
-      this.abilities.addAll(var1);
+   public void add(@NotNull Collection<AbilityData> abilityDatas) {
+      this.abilities.addAll(abilityDatas);
    }
 
    @NotNull
@@ -32,8 +32,8 @@ public class AbilityListData implements StatData, Mergeable<AbilityListData> {
       return this.abilities;
    }
 
-   public void mergeWith(@NotNull AbilityListData var1) {
-      this.abilities.addAll(var1.abilities);
+   public void mergeWith(@NotNull AbilityListData abilityListData) {
+      this.abilities.addAll(abilityListData.abilities);
    }
 
    @NotNull
@@ -42,27 +42,27 @@ public class AbilityListData implements StatData, Mergeable<AbilityListData> {
    }
 
    @Override
-   public boolean equals(Object var1) {
-      if (!(var1 instanceof AbilityListData)) {
+   public boolean equals(Object obj) {
+      if (!(obj instanceof AbilityListData)) {
          return false;
       }
 
-      if (this.getAbilities().size() != ((AbilityListData)var1).getAbilities().size()) {
+      if (this.getAbilities().size() != ((AbilityListData)obj).getAbilities().size()) {
          return false;
       }
 
-      for (AbilityData var3 : ((AbilityListData)var1).getAbilities()) {
-         if (var3 != null) {
-            boolean var4 = true;
+      for (AbilityData ability : ((AbilityListData)obj).getAbilities()) {
+         if (ability != null) {
+            boolean flag = true;
 
-            for (AbilityData var6 : this.getAbilities()) {
-               if (var3.equals(var6)) {
-                  var4 = false;
+            for (AbilityData ability2 : this.getAbilities()) {
+               if (ability.equals(ability2)) {
+                  flag = false;
                   break;
                }
             }
 
-            if (var4) {
+            if (flag) {
                return false;
             }
          }

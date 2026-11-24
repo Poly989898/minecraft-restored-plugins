@@ -14,32 +14,32 @@ import org.bukkit.Sound;
 public class RequiredProfession extends RequiredLevelStat {
    private final Profession profession;
 
-   public RequiredProfession(Profession var1) {
+   public RequiredProfession(Profession profession) {
       super(
          true,
-         "PROFESSION_" + UtilityMethods.enumName(var1.getId()),
+         "PROFESSION_" + UtilityMethods.enumName(profession.getId()),
          Material.PINK_DYE,
-         var1.getName() + " Level (MMOCore)",
-         new String[]{"Amount of " + var1.getName() + " levels the", "player needs to use the item."}
+         profession.getName() + " Level (MMOCore)",
+         new String[]{"Amount of " + profession.getName() + " levels the", "player needs to use the item."}
       );
-      this.profession = var1;
+      this.profession = profession;
    }
 
    @Override
-   public boolean canUse(RPGPlayer var1, NBTItem var2, boolean var3) {
-      int var4 = var2.getInteger(this.getNBTPath());
-      if (var4 <= 0) {
+   public boolean canUse(RPGPlayer rpgPlayer, NBTItem nbtItem, boolean flag) {
+      int count = nbtItem.getInteger(this.getNBTPath());
+      if (count <= 0) {
          return true;
       }
 
-      PlayerData var5 = PlayerData.get(var1.getPlayer());
-      if (var5.getCollectionSkills().getLevel(this.profession) >= var4) {
+      PlayerData playerData = PlayerData.get(rpgPlayer.getPlayer());
+      if (playerData.getCollectionSkills().getLevel(this.profession) >= count) {
          return true;
       }
 
-      if (var3) {
-         Message.NOT_ENOUGH_PROFESSION.format(ChatColor.RED, "#profession#", this.profession.getName()).send(var1.getPlayer());
-         var1.getPlayer().playSound(var1.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);
+      if (flag) {
+         Message.NOT_ENOUGH_PROFESSION.format(ChatColor.RED, "#profession#", this.profession.getName()).send(rpgPlayer.getPlayer());
+         rpgPlayer.getPlayer().playSound(rpgPlayer.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);
       }
 
       return false;

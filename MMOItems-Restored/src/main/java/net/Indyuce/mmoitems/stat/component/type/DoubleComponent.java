@@ -7,11 +7,11 @@ import net.Indyuce.mmoitems.stat.component.StatComponent;
 public class DoubleComponent extends StatComponent implements Mergeable<DoubleComponent> {
    private double value;
 
-   public DoubleComponent(String var1) {
-      super(var1);
+   public DoubleComponent(String text) {
+      super(text);
    }
 
-   public void merge(DoubleComponent var1) {
-      this.value = this.value + var1.value;
+   public void merge(DoubleComponent doubleComponent) {
+      this.value = this.value + doubleComponent.value;
    }
 }

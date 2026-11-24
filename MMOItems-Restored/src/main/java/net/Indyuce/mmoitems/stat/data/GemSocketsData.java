@@ -22,24 +22,24 @@ public class GemSocketsData implements StatData, Mergeable<GemSocketsData>, Rand
    @NotNull
    private final List<String> emptySlots;
 
-   public GemSocketsData(@NotNull List<String> var1) {
-      this.emptySlots = var1;
+   public GemSocketsData(@NotNull List<String> texts) {
+      this.emptySlots = texts;
    }
 
-   public GemSocketsData(@NotNull JsonArray var1) {
+   public GemSocketsData(@NotNull JsonArray jsonArray) {
       this.emptySlots = new ArrayList<>();
-      var1.forEach(var1x -> this.emptySlots.add(var1x.getAsString()));
+      jsonArray.forEach(var1x -> this.emptySlots.add(var1x.getAsString()));
    }
 
-   public boolean canReceive(@NotNull String var1) {
-      return this.getEmptySocket(var1) != null;
+   public boolean canReceive(@NotNull String text) {
+      return this.getEmptySocket(text) != null;
    }
 
    @Nullable
-   public String getEmptySocket(@NotNull String var1) {
-      for (String var3 : this.emptySlots) {
-         if (var1.isEmpty() || var3.equals(getUncoloredGemSlot()) || var1.equals(var3)) {
-            return var3;
+   public String getEmptySocket(@NotNull String text) {
+      for (String emptySlot : this.emptySlots) {
+         if (text.isEmpty() || emptySlot.equals(getUncoloredGemSlot()) || text.equals(emptySlot)) {
+            return emptySlot;
          }
       }
 
@@ -48,27 +48,27 @@ public class GemSocketsData implements StatData, Mergeable<GemSocketsData>, Rand
 
    @NotNull
    public static String getUncoloredGemSlot() {
-      String var0 = MMOItems.plugin.getConfig().getString("gem-sockets.uncolored");
-      return var0 == null ? "Uncolored" : var0;
+      String gemSocketsUncolored = MMOItems.plugin.getConfig().getString("gem-sockets.uncolored");
+      return gemSocketsUncolored == null ? "Uncolored" : gemSocketsUncolored;
    }
 
-   public void add(GemstoneData var1) {
-      this.gems.add(var1);
+   public void add(GemstoneData gemstoneData) {
+      this.gems.add(gemstoneData);
    }
 
-   public boolean apply(String var1, GemstoneData var2) {
-      String var3 = this.getEmptySocket(var1);
-      if (var3 == null) {
+   public boolean apply(String text, GemstoneData gemstoneData) {
+      String emptySocket = this.getEmptySocket(text);
+      if (emptySocket == null) {
          return false;
       }
 
-      this.emptySlots.remove(var3);
-      this.gems.add(var2);
+      this.emptySlots.remove(emptySocket);
+      this.gems.add(gemstoneData);
       return true;
    }
 
-   public void addEmptySlot(@NotNull String var1) {
-      this.emptySlots.add(var1);
+   public void addEmptySlot(@NotNull String text) {
+      this.emptySlots.add(text);
    }
 
    @NotNull
@@ -86,14 +86,14 @@ public class GemSocketsData implements StatData, Mergeable<GemSocketsData>, Rand
       return this.gems;
    }
 
-   public boolean removeGem(@NotNull UUID var1, @Nullable String var2) {
-      for (GemstoneData var4 : this.getGemstones()) {
-         if (var4.getHistoricUUID().equals(var1)) {
-            if (var2 != null) {
-               this.addEmptySlot(var2);
+   public boolean removeGem(@NotNull UUID uuid, @Nullable String text) {
+      for (GemstoneData gemstone : this.getGemstones()) {
+         if (gemstone.getHistoricUUID().equals(uuid)) {
+            if (text != null) {
+               this.addEmptySlot(text);
             }
 
-            this.gems.remove(var4);
+            this.gems.remove(gemstone);
             return true;
          }
       }
@@ -102,29 +102,29 @@ public class GemSocketsData implements StatData, Mergeable<GemSocketsData>, Rand
    }
 
    public JsonObject toJson() {
-      JsonObject var1 = new JsonObject();
-      JsonArray var2 = new JsonArray();
-      this.getEmptySlots().forEach(var2::add);
-      var1.add("EmptySlots", var2);
-      JsonArray var3 = new JsonArray();
-      this.gems.forEach(var1x -> var3.add(var1x.toJson()));
-      var1.add("Gemstones", var3);
-      return var1;
+      JsonObject jsonObject = new JsonObject();
+      JsonArray jsonArray = new JsonArray();
+      this.getEmptySlots().forEach(jsonArray::add);
+      jsonObject.add("EmptySlots", jsonArray);
+      JsonArray jsonArray2 = new JsonArray();
+      this.gems.forEach(var1x -> jsonArray2.add(var1x.toJson()));
+      jsonObject.add("Gemstones", jsonArray2);
+      return jsonObject;
    }
 
-   public void mergeWith(GemSocketsData var1) {
-      this.emptySlots.addAll(var1.emptySlots);
-      this.gems.addAll(var1.gems);
+   public void mergeWith(GemSocketsData gemSocketsData) {
+      this.emptySlots.addAll(gemSocketsData.emptySlots);
+      this.gems.addAll(gemSocketsData.gems);
    }
 
    public GemSocketsData clone() {
-      GemSocketsData var1 = new GemSocketsData(new ArrayList<>(this.emptySlots));
+      GemSocketsData gemSocketsData = new GemSocketsData(new ArrayList<>(this.emptySlots));
 
-      for (GemstoneData var3 : this.getGemstones()) {
-         var1.add(var3.cloneGem());
+      for (GemstoneData gemstone : this.getGemstones()) {
+         gemSocketsData.add(gemstone.cloneGem());
       }
 
-      return var1;
+      return gemSocketsData;
    }
 
    @Override
@@ -132,7 +132,7 @@ public class GemSocketsData implements StatData, Mergeable<GemSocketsData>, Rand
       return this.gems.isEmpty() && this.emptySlots.isEmpty();
    }
 
-   public GemSocketsData randomize(MMOItemBuilder var1) {
+   public GemSocketsData randomize(MMOItemBuilder mmoItemBuilder) {
       return new GemSocketsData(new ArrayList<>(this.emptySlots));
    }
 
@@ -142,35 +142,35 @@ public class GemSocketsData implements StatData, Mergeable<GemSocketsData>, Rand
    }
 
    @Override
-   public boolean equals(Object var1) {
-      if (!(var1 instanceof GemSocketsData)) {
+   public boolean equals(Object obj) {
+      if (!(obj instanceof GemSocketsData)) {
          return false;
       }
 
-      if (((GemSocketsData)var1).getEmptySlots().size() != this.getEmptySlots().size()) {
+      if (((GemSocketsData)obj).getEmptySlots().size() != this.getEmptySlots().size()) {
          return false;
       }
 
-      if (((GemSocketsData)var1).getGemstones().size() != this.getGemstones().size()) {
+      if (((GemSocketsData)obj).getGemstones().size() != this.getGemstones().size()) {
          return false;
       }
 
-      if (!SilentNumbers.hasAll(((GemSocketsData)var1).getEmptySlots(), this.getEmptySlots())) {
+      if (!SilentNumbers.hasAll(((GemSocketsData)obj).getEmptySlots(), this.getEmptySlots())) {
          return false;
       }
 
-      for (GemstoneData var3 : ((GemSocketsData)var1).getGemstones()) {
-         if (var3 != null) {
-            boolean var4 = true;
+      for (GemstoneData gemstone : ((GemSocketsData)obj).getGemstones()) {
+         if (gemstone != null) {
+            boolean flag = true;
 
-            for (GemstoneData var6 : this.getGemstones()) {
-               if (var3.equals(var6)) {
-                  var4 = false;
+            for (GemstoneData gemstone2 : this.getGemstones()) {
+               if (gemstone.equals(gemstone2)) {
+                  flag = false;
                   break;
                }
             }
 
-            if (var4) {
+            if (flag) {
                return false;
             }
          }

@@ -7,9 +7,9 @@ import org.bukkit.inventory.ItemStack;
 public class BlockDropItem extends DropItem {
    private final int blockId;
 
-   public BlockDropItem(int var1, String var2) {
-      super(var2);
-      this.blockId = var1;
+   public BlockDropItem(int count, String text) {
+      super(text);
+      this.blockId = count;
    }
 
    public int getBlockId() {
@@ -17,7 +17,7 @@ public class BlockDropItem extends DropItem {
    }
 
    @Override
-   public ItemStack getItem(PlayerData var1, int var2) {
+   public ItemStack getItem(PlayerData playerData, int count) {
       return MMOItems.plugin.getCustomBlocks().getBlock(this.blockId).getItem();
    }
 

@@ -13,37 +13,37 @@ public class DenizenHook {
    public DenizenHook() {
       ObjectFetcher.registerWithObjectFetcher(MMOItemTemplateTag.class, MMOItemTemplateTag.tagProcessor);
       PropertyParser.registerProperty(MMOItemsItemProperty.class, ItemTag.class);
-      TagManager.registerTagHandler("mmoitem_template", var0 -> {
-         if (!var0.hasContext(1)) {
-            var0.echoError("Please provide an item type and ID.");
+      TagManager.registerTagHandler("mmoitem_template", attribute -> {
+         if (!attribute.hasContext(1)) {
+            attribute.echoError("Please provide an item type and ID.");
             return null;
          }
 
-         MapTag var1 = (MapTag)var0.contextAsType(1, MapTag.class);
-         if (var1 == null) {
-            var0.echoError("Invalid MapTag input");
+         MapTag mapTag = (MapTag)attribute.contextAsType(1, MapTag.class);
+         if (mapTag == null) {
+            attribute.echoError("Invalid MapTag input");
             return null;
          }
 
-         ObjectTag var2 = var1.getObject("type");
-         ObjectTag var3 = var1.getObject("id");
-         if (var2 != null && var3 != null) {
-            String var4 = var2.toString().replace("-", "_").toUpperCase();
-            Type var5 = MMOItems.plugin.getTypes().get(var4);
-            if (var5 == null) {
-               var0.echoError("Invalid type - cannot find type with name '" + var4 + "'");
+         ObjectTag type = mapTag.getObject("type");
+         ObjectTag id = mapTag.getObject("id");
+         if (type != null && id != null) {
+            String text = type.toString().replace("-", "_").toUpperCase();
+            Type type2 = MMOItems.plugin.getTypes().get(text);
+            if (type2 == null) {
+               attribute.echoError("Invalid type - cannot find type with name '" + text + "'");
                return null;
             } else {
-               String var6 = var3.toString().replace("-", "_").toUpperCase();
-               if (!MMOItems.plugin.getTemplates().hasTemplate(var5, var6)) {
-                  var0.echoError("Invalid template ID - cannot find template with name '" + var6 + "'");
+               String text2 = id.toString().replace("-", "_").toUpperCase();
+               if (!MMOItems.plugin.getTemplates().hasTemplate(type2, text2)) {
+                  attribute.echoError("Invalid template ID - cannot find template with name '" + text2 + "'");
                   return null;
                } else {
-                  return new MMOItemTemplateTag(var5, var6);
+                  return new MMOItemTemplateTag(type2, text2);
                }
             }
          } else {
-            var0.echoError("Invalid MapTag input - missing 'type' or 'id'");
+            attribute.echoError("Invalid MapTag input - missing 'type' or 'id'");
             return null;
          }
       });

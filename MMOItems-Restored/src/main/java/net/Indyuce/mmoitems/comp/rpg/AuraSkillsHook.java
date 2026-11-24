@@ -39,67 +39,67 @@ public class AuraSkillsHook implements RPGHandler, Listener {
    public AuraSkillsHook() {
       this.aSkills = AuraSkillsApi.get();
 
-      for (Stats var4 : Stats.values()) {
-         String var5 = UtilityMethods.caseOnWords(var4.name().toLowerCase());
-         DoubleStat var6 = new DoubleStat(
-            "ADDITIONAL_" + var4.name(),
+      for (Stats stats : Stats.values()) {
+         String text = UtilityMethods.caseOnWords(stats.name().toLowerCase());
+         DoubleStat doubleStat = new DoubleStat(
+            "ADDITIONAL_" + stats.name(),
             Material.BOOK,
-            "Additional " + var5,
-            new String[]{"Additional " + var5 + " (AuraSkills)"},
+            "Additional " + text,
+            new String[]{"Additional " + text + " (AuraSkills)"},
             new String[]{"!miscellaneous", "!block", "all"}
          );
-         this.statExtra.put(var4, var6);
-         MMOItems.plugin.getStats().register(var6);
+         this.statExtra.put(stats, doubleStat);
+         MMOItems.plugin.getStats().register(doubleStat);
       }
 
-      for (Skills var10 : Skills.values()) {
-         MMOItems.plugin.getStats().register(new AuraSkillsHook.RequiredProfessionStat(var10));
+      for (Skills skills : Skills.values()) {
+         MMOItems.plugin.getStats().register(new AuraSkillsHook.RequiredProfessionStat(skills));
       }
    }
 
    @EventHandler
-   public void a(SkillLevelUpEvent var1) {
-      Player var2 = var1.getPlayer();
-      if (var2.isOnline()) {
-         PlayerData.get(var2).getInventory().scheduleUpdate();
+   public void a(SkillLevelUpEvent event) {
+      Player player = event.getPlayer();
+      if (player.isOnline()) {
+         PlayerData.get(player).getInventory().scheduleUpdate();
       }
    }
 
    @Override
-   public void refreshStats(PlayerData var1) {
-      SkillsUser var2 = this.aSkills.getUser(var1.getPlayer().getUniqueId());
-      var2.addTraitModifier(new TraitModifier("mmoitems_max_mana", Traits.MAX_MANA, var1.getStats().getStat(ItemStats.MAX_MANA)));
-      double var3 = var2.getMaxMana();
-      if (var2.getMana() > var3) {
-         var2.setMana(var3);
+   public void refreshStats(PlayerData playerData) {
+      SkillsUser user = this.aSkills.getUser(playerData.getPlayer().getUniqueId());
+      user.addTraitModifier(new TraitModifier("mmoitems_max_mana", Traits.MAX_MANA, playerData.getStats().getStat(ItemStats.MAX_MANA)));
+      double maxMana = user.getMaxMana();
+      if (user.getMana() > maxMana) {
+         user.setMana(maxMana);
       }
 
       this.statExtra
          .forEach(
             (var2x, var3x) -> this.aSkills
-               .getUser(var1.getPlayer().getUniqueId())
-               .addStatModifier(new StatModifier("mmoitems_" + var2x.name(), var2x, var1.getStats().getStat((ItemStat<?, ?>)var3x)))
+               .getUser(playerData.getPlayer().getUniqueId())
+               .addStatModifier(new StatModifier("mmoitems_" + var2x.name(), var2x, playerData.getStats().getStat((ItemStat<?, ?>)var3x)))
          );
    }
 
    @Override
-   public RPGPlayer getInfo(PlayerData var1) {
-      return new EmptyRPGPlayer(var1);
+   public RPGPlayer getInfo(PlayerData playerData) {
+      return new EmptyRPGPlayer(playerData);
    }
 
    @EventHandler
-   public void a(UserLoadEvent var1) {
-      Player var2 = var1.getPlayer();
-      PlayerData var3 = PlayerData.get(var2);
-      var3.setRPGPlayer(new AuraSkillsHook.PlayerWrapper(var3, var1.getUser()));
+   public void a(UserLoadEvent event) {
+      Player player = event.getPlayer();
+      PlayerData playerData = PlayerData.get(player);
+      playerData.setRPGPlayer(new AuraSkillsHook.PlayerWrapper(playerData, event.getUser()));
    }
 
    private static class PlayerWrapper extends RPGPlayer {
       private final SkillsUser info;
 
-      public PlayerWrapper(PlayerData var1, SkillsUser var2) {
-         super(var1);
-         this.info = var2;
+      public PlayerWrapper(PlayerData playerData, SkillsUser skillsUser) {
+         super(playerData);
+         this.info = skillsUser;
       }
 
       @Override
@@ -123,13 +123,13 @@ public class AuraSkillsHook implements RPGHandler, Listener {
       }
 
       @Override
-      public void setMana(double var1) {
-         this.info.setMana(var1);
+      public void setMana(double value) {
+         this.info.setMana(value);
       }
 
       @Override
-      public void setStamina(double var1) {
-         this.getPlayer().setFoodLevel((int)var1);
+      public void setStamina(double value) {
+         this.getPlayer().setFoodLevel((int)value);
       }
    }
 
@@ -147,17 +147,17 @@ public class AuraSkillsHook implements RPGHandler, Listener {
       }
 
       @Override
-      public boolean canUse(RPGPlayer var1, NBTItem var2, boolean var3) {
-         int var4 = var2.getInteger(this.getNBTPath());
-         if (var4 <= 0) {
+      public boolean canUse(RPGPlayer rpgPlayer, NBTItem nbtItem, boolean flag) {
+         int count = nbtItem.getInteger(this.getNBTPath());
+         if (count <= 0) {
             return true;
          }
 
-         int var5 = AuraSkillsHook.this.aSkills.getUser(var1.getPlayer().getUniqueId()).getSkillLevel(this.skill);
-         if (var5 < var4 && !var1.getPlayer().hasPermission("mmoitems.bypass.level")) {
-            if (var3) {
-               Message.NOT_ENOUGH_PROFESSION.format(ChatColor.RED, "#profession#", this.skill.getDisplayName(Locale.getDefault())).send(var1.getPlayer());
-               var1.getPlayer().playSound(var1.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);
+         int skillLevel = AuraSkillsHook.this.aSkills.getUser(rpgPlayer.getPlayer().getUniqueId()).getSkillLevel(this.skill);
+         if (skillLevel < count && !rpgPlayer.getPlayer().hasPermission("mmoitems.bypass.level")) {
+            if (flag) {
+               Message.NOT_ENOUGH_PROFESSION.format(ChatColor.RED, "#profession#", this.skill.getDisplayName(Locale.getDefault())).send(rpgPlayer.getPlayer());
+               rpgPlayer.getPlayer().playSound(rpgPlayer.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0F, 1.5F);
             }
 
             return false;

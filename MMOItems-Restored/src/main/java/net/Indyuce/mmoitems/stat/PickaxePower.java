@@ -21,35 +21,35 @@ public class PickaxePower extends DoubleStat {
    }
 
    @Override
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2) {
-      int var3 = (int)var2.getValue();
-      var1.addItemTag(new ItemTag("MMOITEMS_PICKAXE_POWER", var3));
-      var1.getLore().insert("pickaxe-power", DoubleStat.formatPath(this.getPath(), this.getGeneralStatFormat(), true, false, var3));
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData) {
+      int count = (int)doubleData.getValue();
+      itemStackBuilder.addItemTag(new ItemTag("MMOITEMS_PICKAXE_POWER", count));
+      itemStackBuilder.getLore().insert("pickaxe-power", DoubleStat.formatPath(this.getPath(), this.getGeneralStatFormat(), true, false, count));
    }
 
    @Override
-   public void whenPreviewed(@NotNull ItemStackBuilder var1, @NotNull DoubleData var2, @NotNull NumericStatFormula var3) {
-      Validate.isTrue(var2 instanceof DoubleData, "Current Data is not Double Data");
-      Validate.isTrue(var3 instanceof NumericStatFormula, "Template Data is not Numeric Stat Formula");
-      double var4 = var3.calculate(0.0, NumericStatFormula.FormulaInputType.LOWER_BOUND);
-      double var6 = var3.calculate(0.0, NumericStatFormula.FormulaInputType.UPPER_BOUND);
-      if (!(var6 < 0.0) || this.handleNegativeStats()) {
-         if (var4 < 0.0 && !this.handleNegativeStats()) {
-            var4 = 0.0;
+   public void whenPreviewed(@NotNull ItemStackBuilder itemStackBuilder, @NotNull DoubleData doubleData, @NotNull NumericStatFormula numericStatFormula) {
+      Validate.isTrue(doubleData instanceof DoubleData, "Current Data is not Double Data");
+      Validate.isTrue(numericStatFormula instanceof NumericStatFormula, "Template Data is not Numeric Stat Formula");
+      double value = numericStatFormula.calculate(0.0, NumericStatFormula.FormulaInputType.LOWER_BOUND);
+      double value2 = numericStatFormula.calculate(0.0, NumericStatFormula.FormulaInputType.UPPER_BOUND);
+      if (!(value2 < 0.0) || this.handleNegativeStats()) {
+         if (value < 0.0 && !this.handleNegativeStats()) {
+            value = 0.0;
          }
 
-         if (var4 < var3.getBase() - var3.getMaxSpread()) {
-            var4 = var3.getBase() - var3.getMaxSpread();
+         if (value < numericStatFormula.getBase() - numericStatFormula.getMaxSpread()) {
+            value = numericStatFormula.getBase() - numericStatFormula.getMaxSpread();
          }
 
-         if (var6 > var3.getBase() + var3.getMaxSpread()) {
-            var6 = var3.getBase() + var3.getMaxSpread();
+         if (value2 > numericStatFormula.getBase() + numericStatFormula.getMaxSpread()) {
+            value2 = numericStatFormula.getBase() + numericStatFormula.getMaxSpread();
          }
 
-         var1.addItemTag(new ItemTag("MMOITEMS_PICKAXE_POWER", var2.getValue()));
-         if (var4 != 0.0 || var6 != 0.0) {
-            String var8 = DoubleStat.formatPath(this.getPath(), this.getGeneralStatFormat(), true, false, Math.floor(var4), Math.floor(var6));
-            var1.getLore().insert("pickaxe-power", var8);
+         itemStackBuilder.addItemTag(new ItemTag("MMOITEMS_PICKAXE_POWER", doubleData.getValue()));
+         if (value != 0.0 || value2 != 0.0) {
+            String text = DoubleStat.formatPath(this.getPath(), this.getGeneralStatFormat(), true, false, Math.floor(value), Math.floor(value2));
+            itemStackBuilder.getLore().insert("pickaxe-power", text);
          }
       }
    }

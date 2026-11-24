@@ -30,25 +30,25 @@ public class MaterialStat extends ItemStat<MaterialData, MaterialData> {
       super("MATERIAL", VMaterial.GRASS_BLOCK.get(), "Material", new String[]{"Your item material."}, new String[0]);
    }
 
-   public MaterialData whenInitialized(Object var1) {
-      Validate.isTrue(var1 instanceof String, "Must specify material name as string");
-      return new MaterialData(Material.valueOf(((String)var1).toUpperCase().replace("-", "_").replace(" ", "_")));
+   public MaterialData whenInitialized(Object obj) {
+      Validate.isTrue(obj instanceof String, "Must specify material name as string");
+      return new MaterialData(Material.valueOf(((String)obj).toUpperCase().replace("-", "_").replace(" ", "_")));
    }
 
    @Override
-   public void whenClicked(@NotNull EditionInventory var1, @NotNull InventoryClickEvent var2) {
-      new StatEdition(var1, ItemStats.MATERIAL).enable("Write in the chat the material you want.");
+   public void whenClicked(@NotNull EditionInventory editionInventory, @NotNull InventoryClickEvent event) {
+      new StatEdition(editionInventory, ItemStats.MATERIAL).enable("Write in the chat the material you want.");
    }
 
    @Override
-   public void whenInput(@NotNull EditionInventory var1, @NotNull String var2, Object... var3) {
-      Optional var4 = EnumUtils.getIfPresent(Material.class, var2.toUpperCase().replace("-", "_").replace(" ", "_"));
-      if (var4.isPresent()) {
-         var1.getEditedSection().set("material", ((Material)var4.get()).name());
-         var1.registerTemplateEdition();
-         var1.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Material successfully changed to " + ((Material)var4.get()).name() + ".");
+   public void whenInput(@NotNull EditionInventory editionInventory, @NotNull String text, Object... objs) {
+      Optional ifPresent = EnumUtils.getIfPresent(Material.class, text.toUpperCase().replace("-", "_").replace(" ", "_"));
+      if (ifPresent.isPresent()) {
+         editionInventory.getEditedSection().set("material", ((Material)ifPresent.get()).name());
+         editionInventory.registerTemplateEdition();
+         editionInventory.getPlayer().sendMessage(MMOItems.plugin.getPrefix() + "Material successfully changed to " + ((Material)ifPresent.get()).name() + ".");
       } else {
-         var1.getPlayer()
+         editionInventory.getPlayer()
             .spigot()
             .sendMessage(
                new ComponentBuilder("Invalid material! (Click for a list of valid materials)")
@@ -59,28 +59,28 @@ public class MaterialStat extends ItemStat<MaterialData, MaterialData> {
       }
    }
 
-   public void whenApplied(@NotNull ItemStackBuilder var1, @NotNull MaterialData var2) {
+   public void whenApplied(@NotNull ItemStackBuilder itemStackBuilder, @NotNull MaterialData materialData) {
    }
 
    @Override
-   public void whenLoaded(@NotNull ReadMMOItem var1) {
-      var1.setData(this, new MaterialData(var1.getNBT().getItem().getType()));
+   public void whenLoaded(@NotNull ReadMMOItem readMMOItem) {
+      readMMOItem.setData(this, new MaterialData(readMMOItem.getNBT().getItem().getType()));
    }
 
    @Override
-   public void whenDisplayed(List<String> var1, Optional<MaterialData> var2) {
-      var1.add(
+   public void whenDisplayed(List<String> texts, Optional<MaterialData> optional) {
+      texts.add(
          ChatColor.GRAY
             + "Current Value: "
             + (
-               var2.isPresent()
-                  ? ChatColor.GREEN + UtilityMethods.caseOnWords(((MaterialData)var2.get()).getMaterial().name().toLowerCase().replace("_", " "))
+               optional.isPresent()
+                  ? ChatColor.GREEN + UtilityMethods.caseOnWords(((MaterialData)optional.get()).getMaterial().name().toLowerCase().replace("_", " "))
                   : ChatColor.RED + "None"
             )
       );
-      var1.add("");
-      var1.add(ChatColor.YELLOW + "►" + " Left click to change this value.");
-      var1.add(ChatColor.YELLOW + "►" + " Right click to remove this value.");
+      texts.add("");
+      texts.add(ChatColor.YELLOW + "►" + " Left click to change this value.");
+      texts.add(ChatColor.YELLOW + "►" + " Right click to remove this value.");
    }
 
    @NotNull
@@ -89,12 +89,12 @@ public class MaterialStat extends ItemStat<MaterialData, MaterialData> {
    }
 
    @NotNull
-   public ArrayList<ItemTag> getAppliedNBT(@NotNull MaterialData var1) {
+   public ArrayList<ItemTag> getAppliedNBT(@NotNull MaterialData materialData) {
       return new ArrayList<>();
    }
 
    @Nullable
-   public MaterialData getLoadedNBT(@NotNull ArrayList<ItemTag> var1) {
+   public MaterialData getLoadedNBT(@NotNull ArrayList<ItemTag> itemTags) {
       return null;
    }
 }

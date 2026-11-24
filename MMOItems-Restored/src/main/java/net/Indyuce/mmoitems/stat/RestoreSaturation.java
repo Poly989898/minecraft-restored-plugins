@@ -18,22 +18,22 @@ public class RestoreSaturation extends DoubleStat implements PlayerConsumable {
    }
 
    @Override
-   public void onConsume(@NotNull VolatileMMOItem var1, @NotNull Player var2, boolean var3) {
-      double var4 = this.getSaturationRestored(var1.getNBT().getItem());
-      double var6 = var1.hasData(ItemStats.RESTORE_SATURATION) ? ((DoubleData)var1.getData(ItemStats.RESTORE_SATURATION)).getValue() : var4;
-      if (var3) {
-         var6 -= var4;
+   public void onConsume(@NotNull VolatileMMOItem volatileMMOItem, @NotNull Player player, boolean flag) {
+      double saturationRestored = this.getSaturationRestored(volatileMMOItem.getNBT().getItem());
+      double value = volatileMMOItem.hasData(ItemStats.RESTORE_SATURATION) ? ((DoubleData)volatileMMOItem.getData(ItemStats.RESTORE_SATURATION)).getValue() : saturationRestored;
+      if (flag) {
+         value -= saturationRestored;
       }
 
-      if (var6 != 0.0) {
-         MMOUtils.saturate(var2, var6);
+      if (value != 0.0) {
+         MMOUtils.saturate(player, value);
       }
    }
 
-   private float getSaturationRestored(ItemStack var1) {
+   private float getSaturationRestored(ItemStack item) {
       try {
-         return MythicLib.plugin.getVersion().getWrapper().getSaturationRestored(var1);
-      } catch (Exception var3) {
+         return MythicLib.plugin.getVersion().getWrapper().getSaturationRestored(item);
+      } catch (Exception exception) {
          return 0.0F;
       }
    }

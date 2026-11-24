@@ -11,9 +11,9 @@ public interface EnchantPlugin<T> {
    String getNamespace();
 
    @Nullable
-   T transfer(@NotNull Enchantment var1);
+   T transfer(@NotNull Enchantment enchantment);
 
-   void handleEnchant(@NotNull ItemStackBuilder var1, @NotNull T var2, int var3);
+   void handleEnchant(@NotNull ItemStackBuilder itemStackBuilder, @NotNull T value, int count);
 
    @NotNull
    default NamespacedKey getNamespacedKey(@NotNull String key) {

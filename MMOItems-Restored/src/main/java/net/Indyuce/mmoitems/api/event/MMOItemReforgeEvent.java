@@ -30,9 +30,9 @@ public class MMOItemReforgeEvent extends Event implements Cancellable {
       return this.options;
    }
 
-   public MMOItemReforgeEvent(@NotNull MMOItemReforger var1, @NotNull ReforgeOptions var2) {
-      this.reforger = var1;
-      this.options = var2;
+   public MMOItemReforgeEvent(@NotNull MMOItemReforger mmoItemReforger, @NotNull ReforgeOptions reforgeOptions) {
+      this.reforger = mmoItemReforger;
+      this.options = reforgeOptions;
    }
 
    @Nullable
@@ -78,7 +78,7 @@ public class MMOItemReforgeEvent extends Event implements Cancellable {
       return this.cancelled;
    }
 
-   public void setCancelled(boolean var1) {
-      this.cancelled = var1;
+   public void setCancelled(boolean flag) {
+      this.cancelled = flag;
    }
 }

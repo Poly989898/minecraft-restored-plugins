@@ -6,28 +6,28 @@ import net.Indyuce.mmoitems.stat.data.type.StatData;
 public class DoubleData implements StatData, Mergeable<DoubleData> {
    private double value;
 
-   public DoubleData(double var1) {
-      this.value = var1;
+   public DoubleData(double value) {
+      this.value = value;
    }
 
    public double getValue() {
       return this.value;
    }
 
-   public void setValue(double var1) {
-      this.value = var1;
+   public void setValue(double value) {
+      this.value = value;
    }
 
-   public void add(double var1) {
-      this.value += var1;
+   public void add(double value) {
+      this.value += value;
    }
 
-   public void addRelative(double var1) {
-      this.value *= 1.0 + var1;
+   public void addRelative(double value) {
+      this.value *= 1.0 + value;
    }
 
-   public void mergeWith(DoubleData var1) {
-      this.value = this.value + var1.value;
+   public void mergeWith(DoubleData doubleData) {
+      this.value = this.value + doubleData.value;
    }
 
    public DoubleData clone() {
@@ -45,7 +45,7 @@ public class DoubleData implements StatData, Mergeable<DoubleData> {
    }
 
    @Override
-   public boolean equals(Object var1) {
-      return !(var1 instanceof DoubleData) ? false : ((DoubleData)var1).getValue() == this.getValue();
+   public boolean equals(Object obj) {
+      return !(obj instanceof DoubleData) ? false : ((DoubleData)obj).getValue() == this.getValue();
    }
 }

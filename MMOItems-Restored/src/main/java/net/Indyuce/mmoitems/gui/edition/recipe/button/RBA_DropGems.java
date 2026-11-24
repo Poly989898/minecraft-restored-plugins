@@ -16,8 +16,8 @@ public class RBA_DropGems extends RBA_BooleanButton {
       .lore(SilentNumbers.chop("Usually, gemstones that dont fit the new item are lost. Enable this to make them drop (and be recovered) instead.", 65, "§7"))
       .build();
 
-   public RBA_DropGems(@NotNull RecipeEditorGUI var1) {
-      super(var1);
+   public RBA_DropGems(@NotNull RecipeEditorGUI recipeEditorGUI) {
+      super(recipeEditorGUI);
    }
 
    @NotNull

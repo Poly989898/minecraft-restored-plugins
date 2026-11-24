@@ -4,9 +4,9 @@ public class CheckedCondition {
    private final Condition condition;
    private final boolean met;
 
-   public CheckedCondition(Condition var1, boolean var2) {
-      this.condition = var1;
-      this.met = var2;
+   public CheckedCondition(Condition condition, boolean flag) {
+      this.condition = condition;
+      this.met = flag;
    }
 
    public boolean isMet() {

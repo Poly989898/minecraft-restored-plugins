@@ -9,40 +9,40 @@ import studio.magemonkey.fabled.api.event.PlayerLevelUpEvent;
 
 public class FabledHook implements RPGHandler, Listener {
    @Override
-   public RPGPlayer getInfo(PlayerData var1) {
-      return new FabledHook.PlayerWrapper(var1);
+   public RPGPlayer getInfo(PlayerData playerData) {
+      return new FabledHook.PlayerWrapper(playerData);
    }
 
    @EventHandler
-   public void b(PlayerLevelUpEvent var1) {
-      PlayerData.get(var1.getPlayerData().getPlayer()).getInventory().scheduleUpdate();
+   public void b(PlayerLevelUpEvent event) {
+      PlayerData.get(event.getPlayerData().getPlayer()).getInventory().scheduleUpdate();
    }
 
    @Override
-   public void refreshStats(PlayerData var1) {
+   public void refreshStats(PlayerData playerData) {
    }
 
    private static class PlayerWrapper extends RPGPlayer {
-      public PlayerWrapper(PlayerData var1) {
-         super(var1);
+      public PlayerWrapper(PlayerData playerData) {
+         super(playerData);
       }
 
       @Override
       public int getLevel() {
-         studio.magemonkey.fabled.api.player.PlayerData var1 = Fabled.getData(this.getPlayer());
-         return var1.hasClass() ? var1.getMainClass().getLevel() : 0;
+         studio.magemonkey.fabled.api.player.PlayerData data = Fabled.getData(this.getPlayer());
+         return data.hasClass() ? data.getMainClass().getLevel() : 0;
       }
 
       @Override
       public String getClassName() {
-         studio.magemonkey.fabled.api.player.PlayerData var1 = Fabled.getData(this.getPlayer());
-         return var1.hasClass() ? var1.getMainClass().getData().getName() : "";
+         studio.magemonkey.fabled.api.player.PlayerData data = Fabled.getData(this.getPlayer());
+         return data.hasClass() ? data.getMainClass().getData().getName() : "";
       }
 
       @Override
       public double getMana() {
-         studio.magemonkey.fabled.api.player.PlayerData var1 = Fabled.getData(this.getPlayer());
-         return var1.hasClass() ? var1.getMana() : 0.0;
+         studio.magemonkey.fabled.api.player.PlayerData data = Fabled.getData(this.getPlayer());
+         return data.hasClass() ? data.getMana() : 0.0;
       }
 
       @Override
@@ -51,16 +51,16 @@ public class FabledHook implements RPGHandler, Listener {
       }
 
       @Override
-      public void setMana(double var1) {
-         studio.magemonkey.fabled.api.player.PlayerData var3 = Fabled.getData(this.getPlayer());
-         if (var3.hasClass()) {
-            var3.setMana(var1);
+      public void setMana(double value) {
+         studio.magemonkey.fabled.api.player.PlayerData data = Fabled.getData(this.getPlayer());
+         if (data.hasClass()) {
+            data.setMana(value);
          }
       }
 
       @Override
-      public void setStamina(double var1) {
-         this.getPlayer().setFoodLevel((int)var1);
+      public void setStamina(double value) {
+         this.getPlayer().setFoodLevel((int)value);
       }
    }
 }

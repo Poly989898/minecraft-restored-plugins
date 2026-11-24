@@ -11,16 +11,16 @@ public class PluginUtils {
       throw new IllegalStateException("Utility class");
    }
 
-   public static void isDependencyPresent(@NotNull String var0, @NotNull Consumer<Void> var1) {
-      if (Bukkit.getPluginManager().getPlugin(var0) != null) {
-         var1.accept(null);
+   public static void isDependencyPresent(@NotNull String text, @NotNull Consumer<Void> consumer) {
+      if (Bukkit.getPluginManager().getPlugin(text) != null) {
+         consumer.accept(null);
       }
    }
 
-   public static void hookDependencyIfPresent(@NotNull String var0, @NotNull Consumer<Void> var1) {
-      if (Bukkit.getPluginManager().getPlugin(var0) != null) {
-         var1.accept(null);
-         MMOItems.plugin.getLogger().log(Level.INFO, String.format("Hooked onto %s", var0));
+   public static void hookDependencyIfPresent(@NotNull String text, @NotNull Consumer<Void> consumer) {
+      if (Bukkit.getPluginManager().getPlugin(text) != null) {
+         consumer.accept(null);
+         MMOItems.plugin.getLogger().log(Level.INFO, String.format("Hooked onto %s", text));
       }
    }
 }

@@ -13,17 +13,17 @@ public class WorldGenerationListener implements Listener {
    private final WorldGenManager manager;
    private final Map<String, MMOBlockPopulator> populatorMap = new HashMap<>();
 
-   public WorldGenerationListener(WorldGenManager var1) {
-      this.manager = var1;
+   public WorldGenerationListener(WorldGenManager worldGenManager) {
+      this.manager = worldGenManager;
    }
 
    @EventHandler
-   public void onChunkLoad(ChunkLoadEvent var1) {
-      World var2 = var1.getWorld();
-      if (var1.isNewChunk() && !this.populatorMap.containsKey(var2.getName())) {
-         MMOBlockPopulator var3 = this.manager.populator(var2);
-         var2.getPopulators().add(var3);
-         this.populatorMap.put(var2.getName(), var3);
+   public void onChunkLoad(ChunkLoadEvent event) {
+      World world = event.getWorld();
+      if (event.isNewChunk() && !this.populatorMap.containsKey(world.getName())) {
+         MMOBlockPopulator mmoBlockPopulator = this.manager.populator(world);
+         world.getPopulators().add(mmoBlockPopulator);
+         this.populatorMap.put(world.getName(), mmoBlockPopulator);
       }
    }
 }
