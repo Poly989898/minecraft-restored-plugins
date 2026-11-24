@@ -8,6 +8,7 @@ version = "1.13.1"
 
 repositories {
     mavenCentral()
+    maven("https://maven.citizensnpcs.co/repo")
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://maven.enginehub.org/repo/")
@@ -49,7 +50,7 @@ dependencies {
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0") { isTransitive = false }
     compileOnly("com.gmail.nossr50.mcMMO:mcMMO:2.2.043") { isTransitive = false }
     compileOnly("com.github.MilkBowl:VaultAPI:1.7") { isTransitive = false }
-    compileOnly("net.citizensnpcs:citizensapi:2.0.35-SNAPSHOT") { isTransitive = false }
+    compileOnly("net.citizensnpcs:citizensapi:2.0.35-20241020.091027-30") { isTransitive = false }
 
     add(stubs.compileOnlyConfigurationName, "io.papermc.paper:paper-api:26.3.build.254-stable")
     add(stubs.compileOnlyConfigurationName, "org.jetbrains:annotations:24.1.0")

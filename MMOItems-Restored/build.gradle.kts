@@ -8,6 +8,7 @@ version = "6.10"
 
 repositories {
     mavenCentral()
+    maven("https://maven.citizensnpcs.co/repo")
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://maven.enginehub.org/repo/")
@@ -37,7 +38,7 @@ dependencies {
     compileOnly("com.google.code.gson:gson:2.8.9")
     compileOnly("io.lumine:Mythic-Dist:5.7.2") { isTransitive = false }
     compileOnly(mythicLibClasses)
-    compileOnly("net.citizensnpcs:citizensapi:2.0.35-SNAPSHOT") { isTransitive = false }
+    compileOnly("net.citizensnpcs:citizensapi:2.0.35-20241020.091027-30") { isTransitive = false }
     compileOnly("com.github.MilkBowl:VaultAPI:1.7") { isTransitive = false }
     compileOnly("com.gmail.nossr50.mcMMO:mcMMO:2.2.043") { isTransitive = false }
 }
@@ -55,7 +56,7 @@ dependencies {
     add(stubs.compileOnlyConfigurationName, "com.google.code.gson:gson:2.8.9")
     add(stubs.compileOnlyConfigurationName, "com.mojang:authlib:6.0.54")
     add(stubs.compileOnlyConfigurationName, mythicLibClasses)
-    add(stubs.compileOnlyConfigurationName, "net.citizensnpcs:citizensapi:2.0.35-SNAPSHOT") { isTransitive = false }
+    add(stubs.compileOnlyConfigurationName, "net.citizensnpcs:citizensapi:2.0.35-20241020.091027-30") { isTransitive = false }
 }
 
 java { toolchain { languageVersion.set(JavaLanguageVersion.of(25)) } }

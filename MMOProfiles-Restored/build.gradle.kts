@@ -30,7 +30,7 @@ sourceSets.main { compileClasspath += stubs.output }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.3.build.254-stable")
-    compileOnly("com.velocitypowered:velocity-api:3.3.0-SNAPSHOT")
+    compileOnly("com.velocitypowered:velocity-api:3.4.0")
     compileOnly("org.jetbrains:annotations:24.1.0")
     compileOnly("com.google.code.findbugs:jsr305:3.0.2")
     compileOnly("commons-lang:commons-lang:2.6")
