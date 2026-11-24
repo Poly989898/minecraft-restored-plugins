@@ -74,13 +74,13 @@ public abstract class SkillTree implements RegisteredObject {
          ConfigurationSection section = config.getConfigurationSection("nodes." + from);
          if (section.contains("paths")) {
             for (String to : section.getConfigurationSection("paths").getKeys(false)) {
-               SkillTreeNode node1 = this.nodes.get(to);
-               if (node1 == null) {
+               SkillTreeNode toNode = this.nodes.get(to);
+               if (toNode == null) {
                   MMOCore.log("Couldn't find node " + to + " for path in node " + from + ".");
                } else {
                   for (String pathKey : section.getConfigurationSection("paths." + to).getKeys(false)) {
                      IntegerCoordinates coordinates = IntegerCoordinates.from(section.get("paths." + to + "." + pathKey));
-                     this.coordPaths.put(coordinates, new SkillTreePath(this, coordinates, this.nodes.get(from), node1));
+                     this.coordPaths.put(coordinates, new SkillTreePath(this, coordinates, this.nodes.get(from), toNode));
                   }
                }
             }

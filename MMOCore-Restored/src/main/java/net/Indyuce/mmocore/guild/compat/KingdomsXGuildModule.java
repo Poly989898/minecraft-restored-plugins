@@ -25,23 +25,23 @@ public class KingdomsXGuildModule implements GuildModule {
 
    @Override
    public Relationship getRelationship(Player player, Player target) {
-      KingdomPlayer player1 = KingdomPlayer.getKingdomPlayer(player);
-      if (player1 == null) {
+      KingdomPlayer kingdomPlayer = KingdomPlayer.getKingdomPlayer(player);
+      if (kingdomPlayer == null) {
          return Relationship.GUILD_NEUTRAL;
       }
 
-      Kingdom kingdom1 = player1.getKingdom();
-      if (kingdom1 == null) {
+      Kingdom playerKingdom = kingdomPlayer.getKingdom();
+      if (playerKingdom == null) {
          return Relationship.GUILD_NEUTRAL;
       }
 
-      KingdomPlayer player2 = KingdomPlayer.getKingdomPlayer(target.getPlayer());
-      if (player2 == null) {
+      KingdomPlayer targetKingdomPlayer = KingdomPlayer.getKingdomPlayer(target.getPlayer());
+      if (targetKingdomPlayer == null) {
          return Relationship.GUILD_NEUTRAL;
       }
 
-      Kingdom kingdom2 = player2.getKingdom();
-      return kingdom2 == null ? Relationship.GUILD_NEUTRAL : this.adapt(kingdom1.getRelationWith(kingdom2));
+      Kingdom targetKingdom = targetKingdomPlayer.getKingdom();
+      return targetKingdom == null ? Relationship.GUILD_NEUTRAL : this.adapt(playerKingdom.getRelationWith(targetKingdom));
    }
 
    private Relationship adapt(KingdomRelation rel) {

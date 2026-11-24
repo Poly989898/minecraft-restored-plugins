@@ -101,11 +101,11 @@ public class YAMLPlayerDataHandler extends YAMLSynchronizedDataHandler<PlayerDat
             for (String key : config.getConfigurationSection("times-claimed").getKeys(false)) {
                ConfigurationSection section = config.getConfigurationSection("times-claimed." + key);
                if (section != null) {
-                  for (String key1 : section.getKeys(false)) {
-                     ConfigurationSection section1 = section.getConfigurationSection(key1);
-                     if (section1 != null) {
-                        for (String key2 : config.getConfigurationSection("times-claimed." + key + "." + key1).getKeys(false)) {
-                           data.getItemClaims().put(key + "." + key1 + "." + key2, config.getInt("times-claimed." + key + "." + key1 + "." + key2));
+                  for (String subKey : section.getKeys(false)) {
+                     ConfigurationSection subSection = section.getConfigurationSection(subKey);
+                     if (subSection != null) {
+                        for (String claimKey : config.getConfigurationSection("times-claimed." + key + "." + subKey).getKeys(false)) {
+                           data.getItemClaims().put(key + "." + subKey + "." + claimKey, config.getInt("times-claimed." + key + "." + subKey + "." + claimKey));
                         }
                      }
                   }
@@ -159,11 +159,11 @@ public class YAMLPlayerDataHandler extends YAMLSynchronizedDataHandler<PlayerDat
       config.set("stamina", data.getStamina());
       config.set("unlocked-items", new ArrayList<>(data.getUnlockedItems()));
       config.set("skill-tree-points", null);
-      data.mapSkillTreePoints().forEach((key1, value) -> config.set("skill-tree-points." + key1, value));
+      data.mapSkillTreePoints().forEach((treeId, value) -> config.set("skill-tree-points." + treeId, value));
       config.set("skill-tree-level", null);
       MMOCore.plugin.skillTreeManager.getAllNodes().forEach(node -> config.set("skill-tree-level." + node.getFullId(), data.getNodeLevel(node)));
       config.set("skill", null);
-      data.mapSkillLevels().forEach((key1, value) -> config.set("skill." + key1, value));
+      data.mapSkillLevels().forEach((skillId, value) -> config.set("skill." + skillId, value));
       config.set("times-claimed", null);
       data.getItemClaims().forEach((keyx, times) -> config.set("times-claimed." + keyx, times));
       config.set("bound-skills", null);

@@ -45,9 +45,9 @@ public class Quest implements PreloadedObject {
          for (String key : config.getConfigurationSection("level-req").getKeys(false)) {
             if (!key.equals("main")) {
                try {
-                  String id1 = key.toLowerCase().replace("_", "-");
-                  Validate.isTrue(MMOCore.plugin.professionManager.has(id1), "Could not find profession called '" + id1 + "'");
-                  this.levelRestrictions.put(MMOCore.plugin.professionManager.get(id1), config.getInt("level-req." + key));
+                  String professionId = key.toLowerCase().replace("_", "-");
+                  Validate.isTrue(MMOCore.plugin.professionManager.has(professionId), "Could not find profession called '" + professionId + "'");
+                  this.levelRestrictions.put(MMOCore.plugin.professionManager.get(professionId), config.getInt("level-req." + key));
                } catch (IllegalArgumentException exception) {
                   MMOCore.plugin
                      .getLogger()

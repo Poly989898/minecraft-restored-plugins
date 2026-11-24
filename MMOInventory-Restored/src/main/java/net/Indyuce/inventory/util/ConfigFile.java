@@ -36,7 +36,7 @@ public class ConfigFile {
    public void save() {
       try {
          this.config.save(this.file);
-      } catch (IOException e2) {
+      } catch (IOException exception) {
          MMOInventory.plugin.getLogger().log(Level.SEVERE, "Could not save " + this.file.getName() + ".yml!");
       }
    }

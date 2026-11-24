@@ -31,7 +31,7 @@ public class PaperLib {
          try {
             Class.forName("org.spigotmc.SpigotConfig");
             return new SpigotEnvironment();
-         } catch (ClassNotFoundException e1) {
+         } catch (ClassNotFoundException exception) {
             return new CraftBukkitEnvironment();
          }
       }

@@ -35,11 +35,11 @@ public class UltimateClansGuildModule implements GuildModule {
          return Relationship.GUILD_NEUTRAL;
       }
 
-      ClanRivalAlly allies1 = _clan1.get().getRivalAlly();
-      UUID uuid2 = _clan2.get().getId();
-      return allies1.getAlly().contains(uuid2)
+      ClanRivalAlly playerAllies = _clan1.get().getRivalAlly();
+      UUID targetClanId = _clan2.get().getId();
+      return playerAllies.getAlly().contains(targetClanId)
          ? Relationship.GUILD_ALLY
-         : (allies1.getRival().contains(uuid2) ? Relationship.GUILD_ENEMY : Relationship.GUILD_NEUTRAL);
+         : (playerAllies.getRival().contains(targetClanId) ? Relationship.GUILD_ENEMY : Relationship.GUILD_NEUTRAL);
    }
 
    class CustomGuild implements AbstractGuild {

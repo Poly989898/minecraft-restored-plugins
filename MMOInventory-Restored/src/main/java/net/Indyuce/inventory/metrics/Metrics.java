@@ -498,8 +498,8 @@ public class Metrics {
          } catch (Throwable exception) {
             try {
                outputStream.close();
-            } catch (Throwable exception2) {
-               exception.addSuppressed(exception2);
+            } catch (Throwable suppressed) {
+               exception.addSuppressed(suppressed);
             }
 
             throw exception;
@@ -517,8 +517,8 @@ public class Metrics {
          } catch (Throwable exception) {
             try {
                bufferedReader.close();
-            } catch (Throwable exception2) {
-               exception.addSuppressed(exception2);
+            } catch (Throwable suppressed) {
+               exception.addSuppressed(suppressed);
             }
 
             throw exception;
@@ -554,8 +554,8 @@ public class Metrics {
          } catch (Throwable exception) {
             try {
                gzip.close();
-            } catch (Throwable exception2) {
-               exception.addSuppressed(exception2);
+            } catch (Throwable suppressed) {
+               exception.addSuppressed(suppressed);
             }
 
             throw exception;

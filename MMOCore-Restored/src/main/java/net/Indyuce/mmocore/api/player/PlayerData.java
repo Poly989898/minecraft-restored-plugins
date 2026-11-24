@@ -365,7 +365,7 @@ public class PlayerData extends SynchronizedDataHolder implements OfflinePlayerD
       this.nodeLevels.compute(node, (ignored, currentLevelInteger) -> {
          int currentLevel = currentLevelInteger == null ? 0 : currentLevelInteger;
          int delta = (nodeLevel - currentLevel) * node.getPointConsumption();
-         this.skillTreePointsSpent.merge(node.getTree(), delta, (level, ignored2) -> level + delta);
+         this.skillTreePointsSpent.merge(node.getTree(), delta, (level, newValue) -> level + delta);
          return nodeLevel;
       });
    }

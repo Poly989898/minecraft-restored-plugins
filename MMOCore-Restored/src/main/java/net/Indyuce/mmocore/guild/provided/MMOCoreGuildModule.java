@@ -14,15 +14,15 @@ public class MMOCoreGuildModule implements GuildModule {
 
    @Override
    public Relationship getRelationship(Player player, Player target) {
-      Guild guild1 = PlayerData.get(player).getGuild();
-      if (guild1 == null) {
+      Guild playerGuild = PlayerData.get(player).getGuild();
+      if (playerGuild == null) {
          return Relationship.GUILD_NEUTRAL;
       } else {
-         Guild guild2 = PlayerData.get(target).getGuild();
-         if (guild2 == null) {
+         Guild targetGuild = PlayerData.get(target).getGuild();
+         if (targetGuild == null) {
             return Relationship.GUILD_NEUTRAL;
          } else {
-            return guild1.equals(guild2) ? Relationship.GUILD_ALLY : Relationship.GUILD_ENEMY;
+            return playerGuild.equals(targetGuild) ? Relationship.GUILD_ALLY : Relationship.GUILD_ENEMY;
          }
       }
    }

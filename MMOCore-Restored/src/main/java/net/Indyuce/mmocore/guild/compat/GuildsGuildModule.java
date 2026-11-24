@@ -19,15 +19,15 @@ public class GuildsGuildModule implements GuildModule {
 
    @Override
    public Relationship getRelationship(Player player, Player target) {
-      Guild guild1 = Guilds.getApi().getGuild(player);
-      if (guild1 == null) {
+      Guild playerGuild = Guilds.getApi().getGuild(player);
+      if (playerGuild == null) {
          return Relationship.GUILD_NEUTRAL;
       } else {
-         Guild guild2 = Guilds.getApi().getGuild(target);
-         if (guild2 == null) {
+         Guild targetGuild = Guilds.getApi().getGuild(target);
+         if (targetGuild == null) {
             return Relationship.GUILD_NEUTRAL;
          } else {
-            return !guild1.getId().equals(guild2.getId()) && !guild1.getAllies().contains(guild2.getId()) ? Relationship.GUILD_ENEMY : Relationship.GUILD_ALLY;
+            return !playerGuild.getId().equals(targetGuild.getId()) && !playerGuild.getAllies().contains(targetGuild.getId()) ? Relationship.GUILD_ENEMY : Relationship.GUILD_ALLY;
          }
       }
    }

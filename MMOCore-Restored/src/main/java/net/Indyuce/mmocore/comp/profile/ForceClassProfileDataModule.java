@@ -57,11 +57,11 @@ public class ForceClassProfileDataModule implements ProfileDataModule {
             return;
          }
 
-         ProfileSelectEvent event1 = (ProfileSelectEvent)event.getProfileEvent();
+         ProfileSelectEvent selectEvent = (ProfileSelectEvent)event.getProfileEvent();
          if (playerData.getProfess().equals(MMOCore.plugin.classManager.getDefaultClass())) {
-            InventoryManager.CLASS_SELECT.newInventory(playerData, () -> event1.validate(this)).open();
+            InventoryManager.CLASS_SELECT.newInventory(playerData, () -> selectEvent.validate(this)).open();
          } else {
-            event1.validate(this);
+            selectEvent.validate(this);
          }
       }
    }

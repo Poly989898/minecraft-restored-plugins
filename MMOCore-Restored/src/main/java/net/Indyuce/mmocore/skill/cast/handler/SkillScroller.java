@@ -194,12 +194,12 @@ public class SkillScroller extends SkillCastingHandler {
                      event.setCancelled(true);
                      int previous = event.getPreviousSlot();
                      int current = event.getNewSlot();
-                     int dist1 = 9 + current - previous;
-                     int dist2 = current - previous;
-                     int dist3 = current - previous - 9;
-                     int change = Math.abs(dist1) < Math.abs(dist2)
-                        ? (Math.abs(dist1) < Math.abs(dist3) ? dist1 : dist3)
-                        : (Math.abs(dist3) < Math.abs(dist2) ? dist3 : dist2);
+                     int forwardDist = 9 + current - previous;
+                     int directDist = current - previous;
+                     int backwardDist = current - previous - 9;
+                     int change = Math.abs(forwardDist) < Math.abs(directDist)
+                        ? (Math.abs(forwardDist) < Math.abs(backwardDist) ? forwardDist : backwardDist)
+                        : (Math.abs(backwardDist) < Math.abs(directDist) ? backwardDist : directDist);
                      this.scrollOf(change);
                   }
                }
