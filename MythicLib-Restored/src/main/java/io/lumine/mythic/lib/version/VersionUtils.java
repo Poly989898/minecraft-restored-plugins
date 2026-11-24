@@ -53,4 +53,24 @@ public class VersionUtils {
    ) {
       return MythicLib.plugin.getVersion().getWrapper().newInventoryClickEvent(view, type, slot, click, action);
    }
+
+   @NotNull
+   public static String name(@NotNull org.bukkit.block.Biome biome) {
+      return biome.getKey().getKey().toUpperCase(java.util.Locale.ROOT);
+   }
+
+   @NotNull
+   public static String name(@NotNull org.bukkit.Sound sound) {
+      return sound.getKey().getKey().toUpperCase(java.util.Locale.ROOT).replace('.', '_');
+   }
+
+   @org.jetbrains.annotations.Nullable
+   public static AttributeModifier getModifier(@NotNull org.bukkit.attribute.AttributeInstance instance, @NotNull NamespacedKey key) {
+      for (AttributeModifier modifier : instance.getModifiers()) {
+         if (modifier.getKey().equals(key)) {
+            return modifier;
+         }
+      }
+      return null;
+   }
 }

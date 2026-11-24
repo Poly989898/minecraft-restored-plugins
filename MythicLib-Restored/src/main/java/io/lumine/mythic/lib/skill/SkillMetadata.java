@@ -361,4 +361,10 @@ public class SkillMetadata {
    public AttackMetadata attack(@NotNull LivingEntity target, double damage, DamageType... types) {
       return this.caster.attack(target, damage, types);
    }
+
+   /** Metadata of a cast that does not belong to a skill, for scripts run on behalf of a player. */
+   @NotNull
+   public static SkillMetadata of(@NotNull MMOPlayerData caster) {
+      return new SkillMetadata(null, caster);
+   }
 }

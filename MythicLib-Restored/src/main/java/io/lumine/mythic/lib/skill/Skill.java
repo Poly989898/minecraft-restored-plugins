@@ -15,9 +15,28 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class Skill implements CooldownObject {
    private final TriggerType trigger;
+   private final SkillHandler<?> handler;
 
    public Skill(@NotNull TriggerType trigger) {
       this.trigger = Objects.requireNonNull(trigger, "Trigger cannot be null");
+      this.handler = null;
+   }
+
+   /** A skill that runs the given handler; its trigger is {@link TriggerType#API} unless {@link #getTrigger()} is overridden. */
+   public Skill(@NotNull SkillHandler<?> handler) {
+      this.trigger = TriggerType.API;
+      this.handler = Objects.requireNonNull(handler, "Skill handler cannot be null");
+   }
+
+   /** For subclasses which override both {@link #getHandler()} and {@link #getTrigger()}. */
+   public Skill() {
+      this.trigger = TriggerType.API;
+      this.handler = null;
+   }
+
+   @NotNull
+   public SkillResult cast(@NotNull MMOPlayerData caster, @NotNull TriggerType trigger) {
+      return this.cast(new TriggerMetadata(caster, trigger));
    }
 
    @NotNull
@@ -76,7 +95,13 @@ public abstract class Skill implements CooldownObject {
    public abstract void whenCast(@NotNull SkillMetadata var1);
 
    @NotNull
-   public abstract SkillHandler<?> getHandler();
+   public SkillHandler<?> getHandler() {
+      if (this.handler == null) {
+         throw new UnsupportedOperationException("This skill does not provide a skill handler");
+      }
+
+      return this.handler;
+   }
 
    @NotNull
    public TriggerType getTrigger() {

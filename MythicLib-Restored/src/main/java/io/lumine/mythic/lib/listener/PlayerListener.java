@@ -30,11 +30,4 @@ public class PlayerListener implements Listener {
             .log(Level.SEVERE, "Player data of " + event.getPlayer().getName() + " not loaded on logout. Were they kicked when joining the server?");
       }
    }
-
-   @EventHandler
-   public void handleCustomInventoryClicks(InventoryClickEvent event) {
-      if (event.getInventory().getHolder() != null && event.getInventory().getHolder() instanceof PluginInventory) {
-         ((PluginInventory)event.getInventory().getHolder()).whenClicked(event);
-      }
-   }
 }

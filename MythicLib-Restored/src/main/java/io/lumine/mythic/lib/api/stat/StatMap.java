@@ -71,4 +71,33 @@ public class StatMap implements PlayerStatProvider {
          ins.update();
       }
    }
+
+   private final java.util.concurrent.atomic.AtomicInteger updatesBuffered = new java.util.concurrent.atomic.AtomicInteger();
+
+   /** Equipment slot the player acts with when no other slot is given. */
+   @NotNull
+   public EquipmentSlot getActionHand() {
+      return EquipmentSlot.MAIN_HAND;
+   }
+
+   public boolean isBufferingUpdates() {
+      return this.updatesBuffered.get() > 0;
+   }
+
+   /** Runs a batch of stat modifier changes; all the stats are recomputed once the (outermost) batch is over. */
+   public void bufferUpdates(@NotNull Runnable runnable) {
+      this.updatesBuffered.incrementAndGet();
+      try {
+         runnable.run();
+      } finally {
+         if (this.updatesBuffered.decrementAndGet() == 0) {
+            this.updateAll();
+         }
+      }
+   }
+
+   /** Drops the cached values, e.g. when the player data is invalidated. */
+   public void invalidateReferences() {
+      this.flushCache();
+   }
 }

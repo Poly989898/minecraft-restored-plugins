@@ -549,4 +549,23 @@ public class UtilityMethods {
       DEBUG_COLOR_PREFIX.put("MMOCore", "§6");
       DEBUG_COLOR_PREFIX.put("RPGInventory", "§e");
    }
+
+   /** Applies a parser to a string, turning any failure into an exception that uses the given message (with %s for the value). */
+   public static <T> T prettyValueOf(java.util.function.Function<String, T> parser, String input, String errorFormat) {
+      try {
+         return parser.apply(input);
+      } catch (RuntimeException exception) {
+         throw new IllegalArgumentException(String.format(errorFormat, input), exception);
+      }
+   }
+
+   public static <T> java.util.function.Consumer<T> dummyConsume() {
+      return t -> {
+      };
+   }
+
+   /** Holder of an inventory without creating a block state snapshot. */
+   public static org.bukkit.inventory.InventoryHolder getHolder(org.bukkit.inventory.Inventory inventory) {
+      return inventory.getHolder(false);
+   }
 }

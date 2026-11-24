@@ -101,4 +101,13 @@ public class Tasks {
    public static <T> Consumer<T> sync(@NotNull Plugin plugin, @NotNull Consumer<T> syncTask) {
       return t -> Bukkit.getScheduler().runTask(plugin, () -> syncTask.accept((T)t));
    }
+
+   /** Runs the task right away on the main thread, or schedules it for the next tick from any other thread. */
+   public static void runSync(@NotNull Plugin plugin, @NotNull Runnable runnable) {
+      if (Bukkit.isPrimaryThread()) {
+         runnable.run();
+      } else {
+         Bukkit.getScheduler().runTask(plugin, runnable);
+      }
+   }
 }
