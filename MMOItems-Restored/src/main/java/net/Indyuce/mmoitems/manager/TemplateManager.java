@@ -199,7 +199,7 @@ public class TemplateManager implements Reloadable {
          }
       }
 
-      var1.sendAllTo(MMOItems.getConsole());
+      var1.sendAllTo((org.bukkit.command.CommandSender) MMOItems.getConsole());
    }
 
    public void postloadObjects() {
@@ -225,7 +225,7 @@ public class TemplateManager implements Reloadable {
             var1.log(FriendlyFeedbackCategory.INFORMATION, "Could not post-load item template '" + var1x.getId() + "': " + var3x.getMessage(), new String[0]);
          }
       });
-      var1.sendAllTo(MMOItems.getConsole());
+      var1.sendAllTo((org.bukkit.command.CommandSender) MMOItems.getConsole());
    }
 
    @Override

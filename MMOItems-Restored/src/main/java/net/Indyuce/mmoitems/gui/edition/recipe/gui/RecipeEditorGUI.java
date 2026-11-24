@@ -421,7 +421,7 @@ public abstract class RecipeEditorGUI extends EditionInventory {
                   return var6;
                }
 
-               var1.sendAllTo(MMOItems.getConsole());
+               var1.sendAllTo((org.bukkit.command.CommandSender) MMOItems.getConsole());
                throw new IllegalArgumentException("Invalid Ingredient $u" + var0);
             }
          }
@@ -431,7 +431,7 @@ public abstract class RecipeEditorGUI extends EditionInventory {
             return var8;
          }
 
-         var1.sendAllTo(MMOItems.getConsole());
+         var1.sendAllTo((org.bukkit.command.CommandSender) MMOItems.getConsole());
          throw new IllegalArgumentException("Invalid Ingredient $u" + var0);
       }
    }

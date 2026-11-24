@@ -4,8 +4,10 @@
 *.class
 *.hprof
 # Build outputs and caches
-build/
-dist/
+/*/build/
+/*/*/build/
+/*/*/*/build/
+/dist/
 .gradle/
 .work/
 __pycache__/
