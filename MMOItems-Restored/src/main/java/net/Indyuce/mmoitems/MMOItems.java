@@ -459,8 +459,8 @@ public class MMOItems extends MMOPlugin {
    }
 
    @Nullable
-   public ItemStack getItem(@Nullable String text, @Nullable String text2) {
-      return text != null && text2 != null ? this.getItem(this.getTypes().get(text), text2) : null;
+   public ItemStack getItem(@Nullable String text, @Nullable String itemId) {
+      return text != null && itemId != null ? this.getItem(this.getTypes().get(text), itemId) : null;
    }
 
    @Nullable
@@ -507,7 +507,7 @@ public class MMOItems extends MMOPlugin {
       return nbtItem == null ? null : nbtItem.getString("MMOITEMS_ITEM_ID");
    }
 
-   public static void print(@Nullable Level level, @Nullable String text, @Nullable String text2, @NotNull String... texts) {
+   public static void print(@Nullable Level level, @Nullable String text, @Nullable String prefix, @NotNull String... texts) {
       if (text == null) {
          text = "< null >";
       }
@@ -515,9 +515,9 @@ public class MMOItems extends MMOPlugin {
       if (level != null) {
          plugin.getLogger().log(level, FriendlyFeedbackProvider.quickForConsole(FFPMMOItems.get(), text, texts));
       } else {
-         FriendlyFeedbackMessage friendlyFeedbackMessage = new FriendlyFeedbackMessage("", text2);
-         FriendlyFeedbackMessage friendlyFeedbackMessage2 = FriendlyFeedbackProvider.generateMessage(friendlyFeedbackMessage, text, texts);
-         getConsole().sendMessage(friendlyFeedbackMessage2.forConsole(FFPMMOItems.get()));
+         FriendlyFeedbackMessage friendlyFeedbackMessage = new FriendlyFeedbackMessage("", prefix);
+         FriendlyFeedbackMessage generatedMessage = FriendlyFeedbackProvider.generateMessage(friendlyFeedbackMessage, text, texts);
+         getConsole().sendMessage(generatedMessage.forConsole(FFPMMOItems.get()));
       }
    }
 

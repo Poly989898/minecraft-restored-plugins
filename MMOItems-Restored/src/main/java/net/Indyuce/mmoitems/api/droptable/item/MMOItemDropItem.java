@@ -13,22 +13,22 @@ public class MMOItemDropItem extends DropItem {
    private final String id;
    private final double unidentification;
 
-   public MMOItemDropItem(Type type, String text, double value, double value2, RandomAmount randomAmount) {
-      this(type, text, value, value2, randomAmount.getMin(), randomAmount.getMax());
+   public MMOItemDropItem(Type type, String text, double value, double unidentifiedChance, RandomAmount randomAmount) {
+      this(type, text, value, unidentifiedChance, randomAmount.getMin(), randomAmount.getMax());
    }
 
-   public MMOItemDropItem(Type type, String text, double value, double value2, int count, int count2) {
-      super(value, count, count2);
+   public MMOItemDropItem(Type type, String text, double value, double unidentifiedChance, int count, int maxAmount) {
+      super(value, count, maxAmount);
       this.type = type;
       this.id = text;
-      this.unidentification = value2;
+      this.unidentification = unidentifiedChance;
    }
 
-   public MMOItemDropItem(Type type, String text, String text2) {
-      super(text2);
+   public MMOItemDropItem(Type type, String text, String config) {
+      super(config);
       this.type = type;
       this.id = text;
-      String[] texts = text2.split(",");
+      String[] texts = config.split(",");
       this.unidentification = Double.parseDouble(texts[2]) / 100.0;
    }
 

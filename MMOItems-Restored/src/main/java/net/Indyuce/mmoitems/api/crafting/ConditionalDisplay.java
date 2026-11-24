@@ -6,9 +6,9 @@ public class ConditionalDisplay {
    private final String positive;
    private final String negative;
 
-   public ConditionalDisplay(String text, String text2) {
+   public ConditionalDisplay(String text, String negativeText) {
       this.positive = text;
-      this.negative = text2;
+      this.negative = negativeText;
    }
 
    public ConditionalDisplay(ConfigurationSection section) {

@@ -9,8 +9,8 @@ public class RandomRequiredLevelData extends NumericStatFormula {
       super(obj);
    }
 
-   public RandomRequiredLevelData(double value, double value2, double value3, double value4) {
-      super(value, value2, value3, value4);
+   public RandomRequiredLevelData(double value, double scale, double spread, double maxSpread) {
+      super(value, scale, spread, maxSpread);
    }
 
    public RequiredLevelData randomize(MMOItemBuilder mmoItemBuilder) {

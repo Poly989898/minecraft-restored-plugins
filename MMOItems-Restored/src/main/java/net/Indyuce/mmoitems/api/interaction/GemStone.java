@@ -43,7 +43,7 @@ public class GemStone extends UseItem {
    }
 
    @NotNull
-   public GemStone.ApplyResult applyOntoItem(@NotNull MMOItem mmoItem, @NotNull Type type, @NotNull String text, boolean flag, boolean flag2) {
+   public GemStone.ApplyResult applyOntoItem(@NotNull MMOItem mmoItem, @NotNull Type type, @NotNull String text, boolean flag, boolean dryRun) {
       if (!mmoItem.hasData(ItemStats.GEM_SOCKETS)) {
          return new GemStone.ApplyResult(GemStone.ResultType.NONE);
       }
@@ -71,7 +71,7 @@ public class GemStone extends UseItem {
       Bukkit.getPluginManager().callEvent(event);
       if (!event.isCancelled() && event.getResult() != GemStone.ResultType.NONE) {
          if (event.getResult() == GemStone.ResultType.FAILURE) {
-            if (!flag2) {
+            if (!dryRun) {
                this.player.playSound(this.player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0F, 1.0F);
                Message.GEM_STONE_BROKE.format(ChatColor.RED, "#gem#", MMOUtils.getDisplayName(this.getItem()), "#item#", text).send(this.player);
             }
@@ -107,7 +107,7 @@ public class GemStone extends UseItem {
                }
             }
 
-            if (!flag2) {
+            if (!dryRun) {
                this.player.playSound(this.player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 2.0F);
                Message.GEM_STONE_APPLIED.format(ChatColor.YELLOW, "#gem#", MMOUtils.getDisplayName(this.getItem()), "#item#", text).send(this.player);
             }

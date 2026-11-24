@@ -137,15 +137,15 @@ public class MMOUtils {
    }
 
    @NotNull
-   public static String requireNonEmptyElse(@Nullable String text, @NotNull String text2) {
-      return isNonEmpty(text) ? text : Objects.requireNonNull(text2);
+   public static String requireNonEmptyElse(@Nullable String text, @NotNull String fallback) {
+      return isNonEmpty(text) ? text : Objects.requireNonNull(fallback);
    }
 
-   public static boolean checkReference(@Nullable String text, @Nullable String text2) {
+   public static boolean checkReference(@Nullable String text, @Nullable String otherReference) {
       if (text != null && text.equals("all")) {
          return true;
       } else {
-         return text2 != null && text2.equals("all") ? true : Objects.equals(text, text2);
+         return otherReference != null && otherReference.equals("all") ? true : Objects.equals(text, otherReference);
       }
    }
 
@@ -202,7 +202,7 @@ public class MMOUtils {
       }
    }
 
-   public static boolean isMMOItem(@Nullable ItemStack item, @NotNull String text, @NotNull String text2) {
+   public static boolean isMMOItem(@Nullable ItemStack item, @NotNull String text, @NotNull String id) {
       if (item == null) {
          return false;
       } else {
@@ -211,7 +211,7 @@ public class MMOUtils {
          if (iD == null) {
             return false;
          } else {
-            return !iD.equals(text2) ? false : nbtItem.getType().equals(text);
+            return !iD.equals(id) ? false : nbtItem.getType().equals(text);
          }
       }
    }

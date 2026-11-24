@@ -23,12 +23,12 @@ public class CommandTrigger extends Trigger {
       }
    }
 
-   private void dispatchCommand(Player player, boolean flag, boolean flag2) {
+   private void dispatchCommand(Player player, boolean flag, boolean asOp) {
       String text = this.command.replaceAll("(?i)%player%", player.getName());
       if (flag) {
          Bukkit.dispatchCommand(Bukkit.getConsoleSender(), text);
       } else {
-         if (flag2 && !player.isOp()) {
+         if (asOp && !player.isOp()) {
             player.setOp(true);
 
             try {

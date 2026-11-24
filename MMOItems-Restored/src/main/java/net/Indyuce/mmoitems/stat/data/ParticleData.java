@@ -91,11 +91,11 @@ public class ParticleData implements StatData, RandomStatData<ParticleData> {
       this.display(location, 1, 0.0F, 0.0F, 0.0F, value);
    }
 
-   public void display(Location location, int count, float value, float value2, float value3, float value4) {
+   public void display(Location location, int count, float value, float offsetY, float offsetZ, float speed) {
       if (this.particle == VParticle.REDSTONE.get()) {
-         location.getWorld().spawnParticle(this.particle, location, count, value, value2, value3, new DustOptions(this.color, 1.0F));
+         location.getWorld().spawnParticle(this.particle, location, count, value, offsetY, offsetZ, new DustOptions(this.color, 1.0F));
       } else if (this.particle != VParticle.ENTITY_EFFECT.get() && this.particle != VParticle.ENTITY_EFFECT_AMBIENT.get()) {
-         location.getWorld().spawnParticle(this.particle, location, count, value, value2, value3, value4);
+         location.getWorld().spawnParticle(this.particle, location, count, value, offsetY, offsetZ, speed);
       } else {
          for (int i = 0; i < count; i++) {
             location.getWorld()
@@ -137,6 +137,6 @@ public class ParticleData implements StatData, RandomStatData<ParticleData> {
       return this;
    }
 
-   public void spawn(Location location, Particle particle, int count, double value, double value2, double value3, double value4) {
+   public void spawn(Location location, Particle particle, int count, double value, double offsetY, double offsetZ, double speed) {
    }
 }

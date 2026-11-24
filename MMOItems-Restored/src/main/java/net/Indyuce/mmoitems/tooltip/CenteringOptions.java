@@ -76,7 +76,7 @@ public class CenteringOptions {
    }
 
    @NotNull
-   private String center(@NotNull String text, @NotNull String text2, double value, int count) {
+   private String center(@NotNull String text, @NotNull String prefix, double value, int count) {
       Matcher matcher = this.regex.matcher(text);
       if (!matcher.find()) {
          return text;
@@ -90,7 +90,7 @@ public class CenteringOptions {
       }
 
       int padding = (count - matchWidth) / 2;
-      return text.substring(0, matchStart) + UtilityMethods.getFontSpace(padding) + text2 + text.substring(matchStart);
+      return text.substring(0, matchStart) + UtilityMethods.getFontSpace(padding) + prefix + text.substring(matchStart);
    }
 
    private int countSeparators(@NotNull String text) {

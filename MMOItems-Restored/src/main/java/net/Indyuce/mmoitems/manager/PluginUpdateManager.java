@@ -323,11 +323,11 @@ public class PluginUpdateManager {
       return this.updates.values();
    }
 
-   private void rename(ConfigurationSection section, String text, String text2) {
+   private void rename(ConfigurationSection section, String text, String newPath) {
       if (section.contains(text)) {
          Object obj = section.get(text);
          section.set(text, null);
-         section.set(text2, obj);
+         section.set(newPath, obj);
       }
    }
 }

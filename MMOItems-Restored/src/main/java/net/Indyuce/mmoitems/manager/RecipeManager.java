@@ -151,8 +151,8 @@ public class RecipeManager implements Reloadable {
    }
 
    @NotNull
-   public NamespacedKey getRecipeKey(@NotNull Type type, @NotNull String text, @NotNull String text2, @NotNull String text3) {
-      return new NamespacedKey(MMOItems.plugin, text2 + "_" + type.getId() + "_" + text + "_" + text3);
+   public NamespacedKey getRecipeKey(@NotNull Type type, @NotNull String text, @NotNull String recipeType, @NotNull String recipeKey) {
+      return new NamespacedKey(MMOItems.plugin, recipeType + "_" + type.getId() + "_" + text + "_" + recipeKey);
    }
 
    @Override

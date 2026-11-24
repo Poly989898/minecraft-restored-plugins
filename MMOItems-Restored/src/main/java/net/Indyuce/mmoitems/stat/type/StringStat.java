@@ -20,8 +20,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class StringStat extends ItemStat<StringData, StringData> {
-   public StringStat(String text, Material material, String text2, String[] texts, String[] texts2, Material... materials) {
-      super(text, material, text2, texts, texts2, materials);
+   public StringStat(String text, Material material, String name, String[] texts, String[] compatibleTypes, Material... materials) {
+      super(text, material, name, texts, compatibleTypes, materials);
    }
 
    public StringData whenInitialized(Object obj) {

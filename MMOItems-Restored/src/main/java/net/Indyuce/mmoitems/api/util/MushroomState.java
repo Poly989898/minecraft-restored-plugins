@@ -14,14 +14,14 @@ public class MushroomState {
    private final boolean south;
    private final boolean north;
 
-   public MushroomState(Material material, boolean flag, boolean flag2, boolean flag3, boolean flag4, boolean flag5, boolean flag6) {
+   public MushroomState(Material material, boolean flag, boolean down, boolean west, boolean east, boolean south, boolean north) {
       this.material = material;
       this.up = flag;
-      this.down = flag2;
-      this.west = flag3;
-      this.east = flag4;
-      this.south = flag5;
-      this.north = flag6;
+      this.down = down;
+      this.west = west;
+      this.east = east;
+      this.south = south;
+      this.north = north;
    }
 
    public int getUniqueId() {

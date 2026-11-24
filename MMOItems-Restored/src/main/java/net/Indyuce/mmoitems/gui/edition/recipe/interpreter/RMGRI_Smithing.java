@@ -20,8 +20,8 @@ public class RMGRI_Smithing implements RMG_RecipeInterpreter {
    public static final String emptyIngredients = "v AIR -|v AIR -";
 
    @NotNull
-   String toYML(@NotNull ProvidedUIFilter providedUIFilter, @NotNull ProvidedUIFilter providedUIFilter2) {
-      return providedUIFilter + "|" + providedUIFilter2;
+   String toYML(@NotNull ProvidedUIFilter providedUIFilter, @NotNull ProvidedUIFilter ingot) {
+      return providedUIFilter + "|" + ingot;
    }
 
    @NotNull

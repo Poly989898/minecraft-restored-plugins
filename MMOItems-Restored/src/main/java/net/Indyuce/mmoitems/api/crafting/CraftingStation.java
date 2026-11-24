@@ -62,12 +62,12 @@ public class CraftingStation implements PreloadedObject {
       this.maxQueueSize = Math.max(1, Math.min(config.getInt("max-queue-size"), 64));
    }
 
-   public CraftingStation(String text, String text2, Layout layout, Sound sound, StationItemOptions stationItemOptions, int count, CraftingStation craftingStation) {
+   public CraftingStation(String text, String displayName, Layout layout, Sound sound, StationItemOptions stationItemOptions, int count, CraftingStation craftingStation) {
       Validate.notNull(text, "Crafting station ID must not be null");
-      Validate.notNull(text2, "Crafting station name must not be null");
+      Validate.notNull(displayName, "Crafting station name must not be null");
       Validate.notNull(sound, "Crafting station sound must not be null");
       this.id = text.toLowerCase().replace("_", "-").replace(" ", "-");
-      this.name = text2;
+      this.name = displayName;
       this.layout = layout;
       this.sound = sound;
       this.itemOptions = stationItemOptions;

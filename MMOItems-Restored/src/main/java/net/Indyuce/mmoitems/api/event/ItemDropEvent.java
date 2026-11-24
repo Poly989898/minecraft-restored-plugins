@@ -29,8 +29,8 @@ public class ItemDropEvent extends Event implements Cancellable {
       this(entity, items, ItemDropEvent.DropCause.NORMAL_BLOCK, block, null, null, null);
    }
 
-   public ItemDropEvent(LivingEntity entity, List<ItemStack> items, Entity entity2) {
-      this(entity, items, ItemDropEvent.DropCause.NORMAL_MONSTER, null, entity2, null, null);
+   public ItemDropEvent(LivingEntity entity, List<ItemStack> items, Entity sourceEntity) {
+      this(entity, items, ItemDropEvent.DropCause.NORMAL_MONSTER, null, sourceEntity, null, null);
    }
 
    @Deprecated
@@ -38,12 +38,12 @@ public class ItemDropEvent extends Event implements Cancellable {
       this(entity, items, ItemDropEvent.DropCause.MYTHIC_MOB, null, null, text, null);
    }
 
-   private ItemDropEvent(LivingEntity entity, List<ItemStack> items, ItemDropEvent.DropCause dropCause, Block block, Entity entity2, String text, CustomBlock customBlock) {
+   private ItemDropEvent(LivingEntity entity, List<ItemStack> items, ItemDropEvent.DropCause dropCause, Block block, Entity sourceEntity, String text, CustomBlock customBlock) {
       this.player = entity;
       this.cause = dropCause;
       this.drops = items;
       this.block = block;
-      this.entity = entity2;
+      this.entity = sourceEntity;
       this.mythicMobName = text;
       this.customBlock = customBlock;
    }

@@ -14,10 +14,10 @@ public class GenerateLoreEvent extends Event {
    private final List<String> parsed;
    private final LoreBuilder builder;
 
-   public GenerateLoreEvent(MMOItem mmoItem, LoreBuilder loreBuilder, List<String> texts, List<String> texts2) {
+   public GenerateLoreEvent(MMOItem mmoItem, LoreBuilder loreBuilder, List<String> texts, List<String> parsedLore) {
       this.item = mmoItem;
       this.lore = texts;
-      this.parsed = texts2;
+      this.parsed = parsedLore;
       this.builder = loreBuilder;
    }
 

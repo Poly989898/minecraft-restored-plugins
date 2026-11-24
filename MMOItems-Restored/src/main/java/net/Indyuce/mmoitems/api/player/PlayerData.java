@@ -91,12 +91,12 @@ public class PlayerData extends SynchronizedDataHolder implements Closeable {
 
    public boolean isEncumbered() {
       NBTItem nBTItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(this.getPlayer().getInventory().getItemInMainHand());
-      NBTItem nBTItem2 = MythicLib.plugin.getVersion().getWrapper().getNBTItem(this.getPlayer().getInventory().getItemInOffHand());
+      NBTItem offHandItem = MythicLib.plugin.getVersion().getWrapper().getNBTItem(this.getPlayer().getInventory().getItemInOffHand());
       boolean flag = nBTItem.getBoolean(ItemStats.TWO_HANDED.getNBTPath());
-      boolean flag2 = nBTItem2.getBoolean(ItemStats.TWO_HANDED.getNBTPath());
-      boolean flag3 = nBTItem.getItem() != null && nBTItem.getItem().getType() != Material.AIR && !nBTItem.getBoolean(ItemStats.HANDWORN.getNBTPath());
-      boolean flag4 = nBTItem2.getItem() != null && nBTItem2.getItem().getType() != Material.AIR && !nBTItem2.getBoolean(ItemStats.HANDWORN.getNBTPath());
-      return flag && flag4 || flag3 && flag2;
+      boolean offHandTwoHanded = offHandItem.getBoolean(ItemStats.TWO_HANDED.getNBTPath());
+      boolean mainHandOccupied = nBTItem.getItem() != null && nBTItem.getItem().getType() != Material.AIR && !nBTItem.getBoolean(ItemStats.HANDWORN.getNBTPath());
+      boolean offHandOccupied = offHandItem.getItem() != null && offHandItem.getItem().getType() != Material.AIR && !offHandItem.getBoolean(ItemStats.HANDWORN.getNBTPath());
+      return flag && offHandOccupied || mainHandOccupied && offHandTwoHanded;
    }
 
    public void setRPGPlayer(RPGPlayer rpgPlayer) {

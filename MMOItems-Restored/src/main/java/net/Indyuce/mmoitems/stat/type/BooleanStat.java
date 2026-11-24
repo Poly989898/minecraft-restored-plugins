@@ -23,8 +23,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class BooleanStat extends ItemStat<RandomBooleanData, BooleanData> {
-   public BooleanStat(String text, Material material, String text2, String[] texts, String[] texts2, Material... materials) {
-      super(text, material, text2, texts, texts2, materials);
+   public BooleanStat(String text, Material material, String name, String[] texts, String[] compatibleTypes, Material... materials) {
+      super(text, material, name, texts, compatibleTypes, materials);
    }
 
    public RandomBooleanData whenInitialized(Object obj) {

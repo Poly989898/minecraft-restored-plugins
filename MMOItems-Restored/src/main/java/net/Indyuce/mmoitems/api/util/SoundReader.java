@@ -46,11 +46,11 @@ public class SoundReader {
       this.play(player, 1.0F, 1.0F);
    }
 
-   public void play(@NotNull Player player, float value, float value2) {
+   public void play(@NotNull Player player, float value, float pitch) {
       if (this.sound != null) {
-         player.playSound(player.getLocation(), this.sound, value, value2);
+         player.playSound(player.getLocation(), this.sound, value, pitch);
       } else {
-         player.playSound(player.getLocation(), this.soundKey, value, value2);
+         player.playSound(player.getLocation(), this.soundKey, value, pitch);
       }
    }
 
@@ -58,11 +58,11 @@ public class SoundReader {
       this.play(location, 1.0F, 1.0F);
    }
 
-   public void play(@NotNull Location location, float value, float value2) {
+   public void play(@NotNull Location location, float value, float pitch) {
       if (this.sound != null) {
-         location.getWorld().playSound(location, this.sound, value, value2);
+         location.getWorld().playSound(location, this.sound, value, pitch);
       } else {
-         location.getWorld().playSound(location, this.soundKey, value, value2);
+         location.getWorld().playSound(location, this.soundKey, value, pitch);
       }
    }
 }

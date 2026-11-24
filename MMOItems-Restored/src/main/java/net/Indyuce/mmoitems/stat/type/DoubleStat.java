@@ -38,20 +38,20 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
    private final boolean moreIsBetter;
    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.####");
 
-   public DoubleStat(String text, Material material, String text2, String[] texts) {
-      this(text, material, text2, texts, new String[]{"!miscellaneous", "!block", "all"}, true);
+   public DoubleStat(String text, Material material, String name, String[] texts) {
+      this(text, material, name, texts, new String[]{"!miscellaneous", "!block", "all"}, true);
    }
 
-   public DoubleStat(String text, Material material, String text2, String text3) {
-      this(text, material, text2, MMOUtils.trimString(50, text3), new String[]{"!miscellaneous", "!block", "all"}, true);
+   public DoubleStat(String text, Material material, String name, String description) {
+      this(text, material, name, MMOUtils.trimString(50, description), new String[]{"!miscellaneous", "!block", "all"}, true);
    }
 
-   public DoubleStat(String text, Material material, String text2, String[] texts, String[] texts2, Material... materials) {
-      this(text, material, text2, texts, texts2, true, materials);
+   public DoubleStat(String text, Material material, String name, String[] texts, String[] compatibleTypes, Material... materials) {
+      this(text, material, name, texts, compatibleTypes, true, materials);
    }
 
-   public DoubleStat(String text, Material material, String text2, String[] texts, String[] texts2, boolean flag, Material... materials) {
-      super(text, material, text2, texts, texts2, materials);
+   public DoubleStat(String text, Material material, String name, String[] texts, String[] compatibleTypes, boolean flag, Material... materials) {
+      super(text, material, name, texts, compatibleTypes, materials);
       this.moreIsBetter = flag;
    }
 
@@ -114,38 +114,38 @@ public class DoubleStat extends ItemStat<NumericStatFormula, DoubleData> impleme
    }
 
    @Deprecated
-   public static String formatPath(@NotNull String text, boolean flag, double value, double value2) {
-      return formatPath("ATTACK_DAMAGE", text, flag, value, value2);
+   public static String formatPath(@NotNull String text, boolean flag, double value, double newValue) {
+      return formatPath("ATTACK_DAMAGE", text, flag, value, newValue);
    }
 
    @NotNull
-   public static String formatPath(@NotNull String text, @NotNull String text2, boolean flag, double value) {
-      return formatPath(text, text2, flag, true, value);
+   public static String formatPath(@NotNull String text, @NotNull String format, boolean flag, double value) {
+      return formatPath(text, format, flag, true, value);
    }
 
    @NotNull
-   public static String formatPath(@NotNull String text, @NotNull String text2, boolean flag, boolean flag2, double value) {
+   public static String formatPath(@NotNull String text, @NotNull String format, boolean flag, boolean showPlus, double value) {
       String formattedValue = StatManager.format(text, value);
       String colorPrefix = getColorPrefix(value < 0.0 && flag);
-      return text2.replace("{value}", colorPrefix + formattedValue).replace("<plus>", colorPrefix + plus(flag2, value));
+      return format.replace("{value}", colorPrefix + formattedValue).replace("<plus>", colorPrefix + plus(showPlus, value));
    }
 
    @NotNull
-   public static String formatPath(@NotNull String text, @NotNull String text2, boolean flag, double value, double value2) {
-      return formatPath(text, text2, flag, true, value, value2);
+   public static String formatPath(@NotNull String text, @NotNull String format, boolean flag, double value, double newValue) {
+      return formatPath(text, format, flag, true, value, newValue);
    }
 
    @NotNull
-   public static String formatPath(@NotNull String text, @NotNull String text2, boolean flag, boolean flag2, double value, double value2) {
-      if (SilentNumbers.round(value, 2) == SilentNumbers.round(value2, 2)) {
-         return formatPath(text, text2, flag, flag2, value);
+   public static String formatPath(@NotNull String text, @NotNull String format, boolean flag, boolean showPlus, double value, double newValue) {
+      if (SilentNumbers.round(value, 2) == SilentNumbers.round(newValue, 2)) {
+         return formatPath(text, format, flag, showPlus, value);
       }
 
-      String formattedOld = plus(flag2, value) + StatManager.format(text, value);
-      String formattedNew = (flag2 && value < 0.0 && value2 > 0.0 ? "+" : "") + StatManager.format(text, value2);
+      String formattedOld = plus(showPlus, value) + StatManager.format(text, value);
+      String formattedNew = (showPlus && value < 0.0 && newValue > 0.0 ? "+" : "") + StatManager.format(text, newValue);
       String colorPrefix = getColorPrefix(value < 0.0 && flag);
-      String deltaPrefix = getColorPrefix(value2 < 0.0 && flag);
-      return text2.replace("<plus>", "")
+      String deltaPrefix = getColorPrefix(newValue < 0.0 && flag);
+      return format.replace("<plus>", "")
          .replace("{value}", colorPrefix + formattedOld + MMOItems.plugin.getConfig().getString("stats-displaying.range-dash", "⎓") + deltaPrefix + formattedNew);
    }
 

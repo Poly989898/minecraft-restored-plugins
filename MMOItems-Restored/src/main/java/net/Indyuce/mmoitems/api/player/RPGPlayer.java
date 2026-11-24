@@ -56,7 +56,7 @@ public abstract class RPGPlayer {
       return this.canUse(nbtItem, flag, false);
    }
 
-   public boolean canUse(@NotNull NBTItem nbtItem, boolean flag, boolean flag2) {
+   public boolean canUse(@NotNull NBTItem nbtItem, boolean flag, boolean ignoreDynamic) {
       if (nbtItem.hasTag("MMOITEMS_UNIDENTIFIED_ITEM")) {
          if (flag) {
             Message.UNIDENTIFIED_ITEM.format(ChatColor.RED).send(this.player.getPlayer());
@@ -70,7 +70,7 @@ public abstract class RPGPlayer {
          }
 
          for (ItemRestriction itemRestrictionStat : MMOItems.plugin.getStats().getItemRestrictionStats()) {
-            if ((!itemRestrictionStat.isDynamic() || !flag2) && !itemRestrictionStat.canUse(this, nbtItem, flag)) {
+            if ((!itemRestrictionStat.isDynamic() || !ignoreDynamic) && !itemRestrictionStat.canUse(this, nbtItem, flag)) {
                return false;
             }
          }

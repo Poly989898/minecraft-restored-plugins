@@ -7,9 +7,9 @@ public class RandomAmount {
    private final int max;
    private static final Random RANDOM = new Random();
 
-   public RandomAmount(int count, int count2) {
+   public RandomAmount(int count, int max) {
       this.min = count;
-      this.max = count2;
+      this.max = max;
    }
 
    public RandomAmount(String text) {

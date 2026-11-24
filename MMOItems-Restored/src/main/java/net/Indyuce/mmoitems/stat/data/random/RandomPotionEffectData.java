@@ -25,10 +25,10 @@ public class RandomPotionEffectData {
       this(potionEffectType, new NumericStatFormula(MMOUtils.getEffectDuration(potionEffectType) / 20.0, 0.0, 0.0, 0.0), numericStatFormula);
    }
 
-   public RandomPotionEffectData(PotionEffectType potionEffectType, NumericStatFormula numericStatFormula, NumericStatFormula numericStatFormula2) {
+   public RandomPotionEffectData(PotionEffectType potionEffectType, NumericStatFormula numericStatFormula, NumericStatFormula amplifier) {
       this.type = potionEffectType;
       this.duration = numericStatFormula;
-      this.amplifier = numericStatFormula2;
+      this.amplifier = amplifier;
    }
 
    public PotionEffectType getType() {

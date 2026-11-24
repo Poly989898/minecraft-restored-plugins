@@ -16,26 +16,26 @@ public class ArrowParticlesData implements StatData, RandomStatData<ArrowParticl
    private final double offset;
    private final boolean colored;
 
-   public ArrowParticlesData(Particle particle, int count, double value, double value2) {
+   public ArrowParticlesData(Particle particle, int count, double value, double speed) {
       this.particle = particle;
       this.amount = count;
       this.offset = value;
-      this.speed = value2;
+      this.speed = speed;
       this.colored = false;
       this.red = 0;
       this.blue = 0;
       this.green = 0;
    }
 
-   public ArrowParticlesData(Particle particle, int count, double value, int count2, int count3, int count4) {
+   public ArrowParticlesData(Particle particle, int count, double value, int red, int green, int blue) {
       this.particle = particle;
       this.amount = count;
       this.offset = value;
       this.speed = 0.0;
       this.colored = true;
-      this.red = count2;
-      this.green = count3;
-      this.blue = count4;
+      this.red = red;
+      this.green = green;
+      this.blue = blue;
    }
 
    public Particle getParticle() {

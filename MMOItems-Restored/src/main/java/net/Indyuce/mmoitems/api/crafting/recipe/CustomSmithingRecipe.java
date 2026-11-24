@@ -55,12 +55,12 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
    final SmithingCombinationType upgradeTreatment;
 
    public CustomSmithingRecipe(
-      @NotNull MMOItemTemplate mmoItemTemplate, boolean flag, @NotNull SmithingCombinationType smithingCombinationType, @NotNull SmithingCombinationType smithingCombinationType2, int count
+      @NotNull MMOItemTemplate mmoItemTemplate, boolean flag, @NotNull SmithingCombinationType smithingCombinationType, @NotNull SmithingCombinationType upgradeCombinationType, int count
    ) {
       this.outputItem = mmoItemTemplate;
       this.dropGemstones = flag;
       this.enchantmentTreatment = smithingCombinationType;
-      this.upgradeTreatment = smithingCombinationType2;
+      this.upgradeTreatment = upgradeCombinationType;
       this.outputAmount = count;
    }
 
@@ -325,9 +325,9 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
    }
 
    @NotNull
-   MMOItem fromCombinationWith(@Nullable ItemStack item, @Nullable ItemStack item2, @NotNull Player player, @Nullable Ref<ArrayList<ItemStack>> ref) {
+   MMOItem fromCombinationWith(@Nullable ItemStack item, @Nullable ItemStack inputItem, @NotNull Player player, @Nullable Ref<ArrayList<ItemStack>> ref) {
       MMOItem mmoItem = this.fromStack(item);
-      MMOItem inputMMOItem = this.fromStack(item2);
+      MMOItem inputMMOItem = this.fromStack(inputItem);
       MMOItem outputMMOItem = this.getOutputItem().newBuilder(0, null).build();
       ArrayList<MMOItem> mmoItems = new ArrayList();
       if (mmoItem != null) {
@@ -363,7 +363,7 @@ public class CustomSmithingRecipe extends MythicRecipeOutput {
          }
 
          EnchantListData enchantListData = mmoItem != null ? (EnchantListData)mmoItem.getData(ItemStats.ENCHANTS) : Enchants.fromVanilla(item);
-         EnchantListData outputEnchants = inputMMOItem != null ? (EnchantListData)inputMMOItem.getData(ItemStats.ENCHANTS) : Enchants.fromVanilla(item2);
+         EnchantListData outputEnchants = inputMMOItem != null ? (EnchantListData)inputMMOItem.getData(ItemStats.ENCHANTS) : Enchants.fromVanilla(inputItem);
 
          for (Enchantment enchantment : Enchantment.values()) {
             int level = data.getLevel(enchantment);

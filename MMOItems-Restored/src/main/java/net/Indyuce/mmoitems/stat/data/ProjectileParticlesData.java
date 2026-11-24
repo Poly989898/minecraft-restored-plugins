@@ -31,11 +31,11 @@ public class ProjectileParticlesData implements StatData, RandomStatData<Project
       this.colored = false;
    }
 
-   public ProjectileParticlesData(Particle particle, int count, int count2, int count3) {
+   public ProjectileParticlesData(Particle particle, int count, int green, int blue) {
       this.particle = particle;
       this.red = count;
-      this.green = count2;
-      this.blue = count3;
+      this.green = green;
+      this.blue = blue;
       this.colored = true;
    }
 

@@ -11,9 +11,9 @@ public class StatChoice {
       this(text, null);
    }
 
-   public StatChoice(String text, @Nullable String text2) {
+   public StatChoice(String text, @Nullable String hint) {
       this.id = text;
-      this.hint = text2;
+      this.hint = hint;
    }
 
    public String getId() {

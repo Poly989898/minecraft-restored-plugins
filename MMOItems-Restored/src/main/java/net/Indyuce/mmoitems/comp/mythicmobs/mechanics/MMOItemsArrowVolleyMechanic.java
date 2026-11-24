@@ -161,9 +161,9 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
       @NotNull AbstractLocation abstractLocation,
       int count,
       float value,
-      float value2,
-      int count2,
-      int count3,
+      float spread,
+      int fireTicks,
+      int lifetimeTicks,
       @NotNull PlaceholderFloat placeholderFloat
    ) {
       if (!syncEventBlock) {
@@ -186,7 +186,7 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
             ArrayList<Arrow> arrows = new ArrayList();
 
             for (int i = 0; i < count; i++) {
-               Arrow arrow = bukkitEntity.getWorld().spawnArrow(spawnLocation, direction, value, value2 / 10.0F);
+               Arrow arrow = bukkitEntity.getWorld().spawnArrow(spawnLocation, direction, value, spread / 10.0F);
                arrow.setVelocity(arrow.getVelocity());
                if (this.allowPickup) {
                   arrow.setPickupStatus(PickupStatus.ALLOWED);
@@ -207,8 +207,8 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
                if (event.isCancelled()) {
                   arrow.remove();
                } else {
-                  if (count2 > 0) {
-                     arrow.setFireTicks(count2);
+                  if (fireTicks > 0) {
+                     arrow.setFireTicks(fireTicks);
                   }
 
                   arrows.add(arrow);
@@ -224,7 +224,7 @@ public class MMOItemsArrowVolleyMechanic extends SkillMechanic implements ITarge
                }
 
                arrows.clear();
-            }, count3);
+            }, lifetimeTicks);
          }
       }
    }

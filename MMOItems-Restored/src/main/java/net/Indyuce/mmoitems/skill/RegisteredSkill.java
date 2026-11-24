@@ -52,8 +52,8 @@ public class RegisteredSkill {
    }
 
    @Deprecated
-   public void setName(String text, String text2) {
-      this.parameterNames.put(text, text2);
+   public void setName(String text, String name) {
+      this.parameterNames.put(text, name);
    }
 
    @Nullable

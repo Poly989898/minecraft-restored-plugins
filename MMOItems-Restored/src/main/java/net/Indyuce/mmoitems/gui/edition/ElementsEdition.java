@@ -68,9 +68,9 @@ public class ElementsEdition extends EditionInventory {
          int elementIndex = 0;
 
          for (ElementStatType elementStatType : ElementStatType.values()) {
-            ItemStack item3 = new ItemStack(element.getIcon());
-            ItemMeta itemMeta3 = item3.getItemMeta();
-            itemMeta3.setDisplayName(ChatColor.GREEN + element.getName() + " " + elementStatType.getName());
+            ItemStack icon = new ItemStack(element.getIcon());
+            ItemMeta iconMeta = icon.getItemMeta();
+            iconMeta.setDisplayName(ChatColor.GREEN + element.getName() + " " + elementStatType.getName());
             ArrayList list = new ArrayList();
             list.add(
                ChatColor.GRAY
@@ -85,10 +85,10 @@ public class ElementsEdition extends EditionInventory {
             list.add("");
             list.add(ChatColor.YELLOW + "►" + " Click to change this value.");
             list.add(ChatColor.YELLOW + "►" + " Right click to remove this value.");
-            itemMeta3.setLore(list);
-            item3.setItemMeta(itemMeta3);
+            iconMeta.setLore(list);
+            icon.setItemMeta(iconMeta);
             int slot = INIT_SLOTS[i] + elementIndex;
-            this.inventory.setItem(slot, item3);
+            this.inventory.setItem(slot, icon);
             this.editableStats.put(slot, Pair.of(element, elementStatType));
             elementIndex++;
          }

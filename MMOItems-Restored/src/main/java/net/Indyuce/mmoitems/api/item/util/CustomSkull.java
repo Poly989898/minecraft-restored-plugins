@@ -14,13 +14,13 @@ import org.bukkit.inventory.meta.SkullMeta;
 public class CustomSkull extends ConfigItem {
    private final String textureValue;
 
-   public CustomSkull(String text, String text2) {
-      this(text, text2, null);
+   public CustomSkull(String text, String textureValue) {
+      this(text, textureValue, null);
    }
 
-   public CustomSkull(String text, String text2, String text3, String... texts) {
-      super(text, Material.PLAYER_HEAD, text3, texts);
-      this.textureValue = text2;
+   public CustomSkull(String text, String textureValue, String name, String... texts) {
+      super(text, Material.PLAYER_HEAD, name, texts);
+      this.textureValue = textureValue;
    }
 
    @Override

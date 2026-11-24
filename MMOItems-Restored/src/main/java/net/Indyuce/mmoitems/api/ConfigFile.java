@@ -25,15 +25,15 @@ public class ConfigFile {
       this(plugin, "", text);
    }
 
-   public ConfigFile(String text, String text2) {
-      this(MMOItems.plugin, text, text2);
+   public ConfigFile(String text, String fileName) {
+      this(MMOItems.plugin, text, fileName);
    }
 
-   public ConfigFile(Plugin plugin, String text, String text2) {
+   public ConfigFile(Plugin plugin, String text, String fileName) {
       this.plugin = plugin;
       this.path = text;
-      this.name = text2;
-      File file = new File(plugin.getDataFolder() + text, text2 + ".yml");
+      this.name = fileName;
+      File file = new File(plugin.getDataFolder() + text, fileName + ".yml");
       this.exists = file.exists();
       this.config = YamlConfiguration.loadConfiguration(file);
    }

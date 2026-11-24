@@ -23,10 +23,10 @@ public class ColorData implements StatData, RandomStatData<ColorData> {
       this(color.getRed(), color.getGreen(), color.getBlue());
    }
 
-   public ColorData(int count, int count2, int count3) {
+   public ColorData(int count, int green, int blue) {
       this.red = count;
-      this.green = count2;
-      this.blue = count3;
+      this.green = green;
+      this.blue = blue;
    }
 
    public int getRed() {

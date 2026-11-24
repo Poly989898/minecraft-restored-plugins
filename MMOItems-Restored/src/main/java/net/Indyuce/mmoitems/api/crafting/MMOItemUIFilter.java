@@ -32,10 +32,10 @@ public class MMOItemUIFilter implements UIFilter {
       return "m";
    }
 
-   public boolean matches(@NotNull ItemStack item, @NotNull String text, @NotNull String text2, @Nullable FriendlyFeedbackProvider friendlyFeedbackProvider) {
+   public boolean matches(@NotNull ItemStack item, @NotNull String text, @NotNull String itemId, @Nullable FriendlyFeedbackProvider friendlyFeedbackProvider) {
       text = text.replace(" ", "_").replace("-", "_").toUpperCase();
-      text2 = text2.replace(" ", "_").replace("-", "_").toUpperCase();
-      if (!this.isValid(text, text2, friendlyFeedbackProvider)) {
+      itemId = itemId.replace(" ", "_").replace("-", "_").toUpperCase();
+      if (!this.isValid(text, itemId, friendlyFeedbackProvider)) {
          return false;
       }
 
@@ -53,15 +53,15 @@ public class MMOItemUIFilter implements UIFilter {
       }
 
       String filterData = "";
-      if (text2.contains("{")) {
-         filterData = text2.substring(text2.indexOf(123) + 1);
-         text2 = text2.substring(0, text2.indexOf(123));
+      if (itemId.contains("{")) {
+         filterData = itemId.substring(itemId.indexOf(123) + 1);
+         itemId = itemId.substring(0, itemId.indexOf(123));
          if (filterData.endsWith("}")) {
             filterData = filterData.substring(0, filterData.length() - 1);
          }
       }
 
-      if (template.getType().getId().equals(text) && template.getId().equals(text2)) {
+      if (template.getType().getId().equals(text) && template.getId().equals(itemId)) {
          if (!filterData.isEmpty()) {
             VolatileMMOItem volatileMMOItem = new VolatileMMOItem(nbtItem);
             QuickNumberRange quickNumberRange = SilentNumbers.rangeFromBracketsTab(filterData, "LEVEL");
@@ -88,36 +88,36 @@ public class MMOItemUIFilter implements UIFilter {
             friendlyFeedbackProvider,
             FriendlyFeedbackCategory.FAILURE,
             "MMOItem $r{0} {1}$b is not the expected $r{2} {3}$b. $fNo Match. ",
-            new String[]{template.getType().getId(), template.getId(), text, text2}
+            new String[]{template.getType().getId(), template.getId(), text, itemId}
          );
          return false;
       }
    }
 
-   public boolean isValid(@NotNull String text, @NotNull String text2, @Nullable FriendlyFeedbackProvider friendlyFeedbackProvider) {
+   public boolean isValid(@NotNull String text, @NotNull String itemId, @Nullable FriendlyFeedbackProvider friendlyFeedbackProvider) {
       if (reg) {
          return true;
       }
 
       text = text.replace(" ", "_").replace("-", "_").toUpperCase();
-      text2 = text2.replace(" ", "_").replace("-", "_").toUpperCase();
+      itemId = itemId.replace(" ", "_").replace("-", "_").toUpperCase();
       Type type = MMOItems.plugin.getTypes().get(text);
       if (type == null) {
          FriendlyFeedbackProvider.log(friendlyFeedbackProvider, FriendlyFeedbackCategory.ERROR, "$fInvalid MMOItem Type $r{0}$f. ", new String[]{text});
          return false;
       }
 
-      if (text2.contains("{") && text2.contains("}")) {
-         text2 = text2.substring(0, text2.indexOf(123));
+      if (itemId.contains("{") && itemId.contains("}")) {
+         itemId = itemId.substring(0, itemId.indexOf(123));
       }
 
-      if (MMOItems.plugin.getMMOItem(type, text2) == null) {
+      if (MMOItems.plugin.getMMOItem(type, itemId) == null) {
          FriendlyFeedbackProvider.log(
-            friendlyFeedbackProvider, FriendlyFeedbackCategory.ERROR, "$fInvalid MMOItem $r{0} {1}$f: $bNo such MMOItem for Type $e{0}$b. ", new String[]{text, text2}
+            friendlyFeedbackProvider, FriendlyFeedbackCategory.ERROR, "$fInvalid MMOItem $r{0} {1}$f: $bNo such MMOItem for Type $e{0}$b. ", new String[]{text, itemId}
          );
          return false;
       } else {
-         FriendlyFeedbackProvider.log(friendlyFeedbackProvider, FriendlyFeedbackCategory.SUCCESS, "Valid MMOItem $r{0} {1}$b. $snice. ", new String[]{text, text2});
+         FriendlyFeedbackProvider.log(friendlyFeedbackProvider, FriendlyFeedbackCategory.SUCCESS, "Valid MMOItem $r{0} {1}$b. $snice. ", new String[]{text, itemId});
          return true;
       }
    }
@@ -128,14 +128,14 @@ public class MMOItemUIFilter implements UIFilter {
    }
 
    @NotNull
-   public ArrayList<String> tabCompleteData(@NotNull String text, @NotNull String text2) {
+   public ArrayList<String> tabCompleteData(@NotNull String text, @NotNull String itemId) {
       Type type = MMOItems.plugin.getTypes().get(text);
       if (type != null) {
          String completedData = "";
          String currentData = "";
-         if (text2.contains("{")) {
-            completedData = text2.substring(text2.indexOf(123) + 1);
-            text2 = text2.substring(0, text2.indexOf(123));
+         if (itemId.contains("{")) {
+            completedData = itemId.substring(itemId.indexOf(123) + 1);
+            itemId = itemId.substring(0, itemId.indexOf(123));
             int count = 0;
             if (completedData.contains(",")) {
                count = completedData.lastIndexOf(44) + 1;
@@ -145,7 +145,7 @@ public class MMOItemUIFilter implements UIFilter {
             completedData = completedData.substring(0, count);
          }
 
-         ArrayList<String> texts = SilentNumbers.smartFilter(MMOItems.plugin.getTemplates().getTemplateNames(type), text2, true);
+         ArrayList<String> texts = SilentNumbers.smartFilter(MMOItems.plugin.getTemplates().getTemplateNames(type), itemId, true);
          ArrayList list = texts;
          if (!currentData.isEmpty()) {
             ArrayList<String> dataSuggestions = new ArrayList();
@@ -190,34 +190,34 @@ public class MMOItemUIFilter implements UIFilter {
    }
 
    @Nullable
-   public ItemStack getItemStack(@NotNull String text, @NotNull String text2, @Nullable FriendlyFeedbackProvider friendlyFeedbackProvider) {
-      if (!this.isValid(text, text2, friendlyFeedbackProvider)) {
+   public ItemStack getItemStack(@NotNull String text, @NotNull String itemId, @Nullable FriendlyFeedbackProvider friendlyFeedbackProvider) {
+      if (!this.isValid(text, itemId, friendlyFeedbackProvider)) {
          return null;
       }
 
       text = text.replace(" ", "_").replace("-", "_").toUpperCase();
-      text2 = text2.replace(" ", "_").replace("-", "_").toUpperCase();
-      return MMOItems.plugin.getItem(text, text2);
+      itemId = itemId.replace(" ", "_").replace("-", "_").toUpperCase();
+      return MMOItems.plugin.getItem(text, itemId);
    }
 
    @NotNull
-   public ItemStack getDisplayStack(@NotNull String text, @NotNull String text2, @Nullable FriendlyFeedbackProvider friendlyFeedbackProvider) {
-      if (!this.isValid(text, text2, friendlyFeedbackProvider)) {
-         return ItemFactory.of(Material.STRUCTURE_VOID).name("§cInvalid MMOItem §e" + text + " " + text2).build();
+   public ItemStack getDisplayStack(@NotNull String text, @NotNull String itemId, @Nullable FriendlyFeedbackProvider friendlyFeedbackProvider) {
+      if (!this.isValid(text, itemId, friendlyFeedbackProvider)) {
+         return ItemFactory.of(Material.STRUCTURE_VOID).name("§cInvalid MMOItem §e" + text + " " + itemId).build();
       }
 
       text = text.replace(" ", "_").replace("-", "_").toUpperCase();
       String filterData = "";
-      if (text2.contains("{")) {
-         filterData = text2.substring(text2.indexOf(123) + 1);
-         text2 = text2.substring(0, text2.indexOf(123));
+      if (itemId.contains("{")) {
+         filterData = itemId.substring(itemId.indexOf(123) + 1);
+         itemId = itemId.substring(0, itemId.indexOf(123));
          if (filterData.endsWith("}")) {
             filterData = filterData.substring(0, filterData.length() - 1);
          }
       }
 
-      text2 = text2.replace(" ", "_").replace("-", "_").toUpperCase();
-      MMOItem mmoItem = new MMOItemBuilder(MMOItems.plugin.getTemplates().getTemplate(MMOItems.plugin.getTypes().get(text), text2), 0, null, true).build();
+      itemId = itemId.replace(" ", "_").replace("-", "_").toUpperCase();
+      MMOItem mmoItem = new MMOItemBuilder(MMOItems.plugin.getTemplates().getTemplate(MMOItems.plugin.getTypes().get(text), itemId), 0, null, true).build();
       if (!filterData.isEmpty() && mmoItem.hasUpgradeTemplate()) {
          QuickNumberRange quickNumberRange = SilentNumbers.rangeFromBracketsTab(filterData, "level");
          if (quickNumberRange != null) {
@@ -231,22 +231,22 @@ public class MMOItemUIFilter implements UIFilter {
    }
 
    @NotNull
-   public ArrayList<String> getDescription(@NotNull String text, @NotNull String text2) {
-      if (!this.isValid(text, text2, null)) {
+   public ArrayList<String> getDescription(@NotNull String text, @NotNull String itemId) {
+      if (!this.isValid(text, itemId, null)) {
          return SilentNumbers.toArrayList(new String[]{"This MMOItem is $finvalid$b."});
       }
 
       text = text.replace(" ", "_").replace("-", "_").toUpperCase();
-      text2 = text2.replace(" ", "_").replace("-", "_").toUpperCase();
-      return SilentNumbers.toArrayList(new String[]{SilentNumbers.getItemName(MMOItems.plugin.getItem(text, text2))});
+      itemId = itemId.replace(" ", "_").replace("-", "_").toUpperCase();
+      return SilentNumbers.toArrayList(new String[]{SilentNumbers.getItemName(MMOItems.plugin.getItem(text, itemId))});
    }
 
    public boolean determinateGeneration() {
       return false;
    }
 
-   public boolean partialDeterminateGeneration(@NotNull String text, @NotNull String text2) {
-      return !this.isValid(text, text2, null);
+   public boolean partialDeterminateGeneration(@NotNull String text, @NotNull String itemId) {
+      return !this.isValid(text, itemId, null);
    }
 
    @NotNull

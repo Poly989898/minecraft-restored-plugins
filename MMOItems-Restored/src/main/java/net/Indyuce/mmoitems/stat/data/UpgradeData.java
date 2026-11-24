@@ -45,17 +45,17 @@ public class UpgradeData implements StatData, RandomStatData<UpgradeData> {
       return this.min;
    }
 
-   public UpgradeData(@Nullable String text, @Nullable String text2, boolean flag, boolean flag2, int count, double value) {
-      this(text, text2, flag, flag2, count, 0, value);
+   public UpgradeData(@Nullable String text, @Nullable String templateId, boolean flag, boolean destroy, int count, double value) {
+      this(text, templateId, flag, destroy, count, 0, value);
    }
 
-   public UpgradeData(@Nullable String text, @Nullable String text2, boolean flag, boolean flag2, int count, int count2, double value) {
+   public UpgradeData(@Nullable String text, @Nullable String templateId, boolean flag, boolean destroy, int count, int min, double value) {
       this.reference = text;
-      this.template = text2;
+      this.template = templateId;
       this.workbench = flag;
-      this.destroy = flag2;
+      this.destroy = destroy;
       this.max = count;
-      this.min = count2;
+      this.min = min;
       this.success = value;
    }
 

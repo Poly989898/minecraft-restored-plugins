@@ -216,7 +216,7 @@ public class Weapon extends UseItem {
       return location;
    }
 
-   protected double requireNonZero(double value, double value2) {
-      return value <= 0.0 ? value2 : value;
+   protected double requireNonZero(double value, double fallback) {
+      return value <= 0.0 ? fallback : value;
    }
 }

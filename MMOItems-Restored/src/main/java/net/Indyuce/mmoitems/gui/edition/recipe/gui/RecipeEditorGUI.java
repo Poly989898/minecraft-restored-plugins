@@ -333,12 +333,12 @@ public abstract class RecipeEditorGUI extends EditionInventory {
       ConfigurationSection recipeSection;
       if (section.isConfigurationSection(text)) {
          recipeSection = getSection(section, text);
-         String input1 = recipeSection.getString("input1");
+         String firstInput = recipeSection.getString("input1");
          String secondInput = recipeSection.getString("input2");
-         if (input1 != null && secondInput != null) {
+         if (firstInput != null && secondInput != null) {
             recipeSection.set("input1", null);
             recipeSection.set("input2", null);
-            recipeSection.set("input", poofFromLegacy(input1) + "|" + poofFromLegacy(secondInput));
+            recipeSection.set("input", poofFromLegacy(firstInput) + "|" + poofFromLegacy(secondInput));
             recipeSection.set("output", "v AIR 0|v AIR 0");
          }
       } else {

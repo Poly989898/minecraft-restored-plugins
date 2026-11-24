@@ -24,8 +24,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class StringListStat extends ItemStat<StringListData, StringListData> {
-   public StringListStat(String text, Material material, String text2, String[] texts, String[] texts2, Material... materials) {
-      super(text, material, text2, texts, texts2, materials);
+   public StringListStat(String text, Material material, String name, String[] texts, String[] compatibleTypes, Material... materials) {
+      super(text, material, name, texts, compatibleTypes, materials);
    }
 
    public StringListData whenInitialized(Object obj) {

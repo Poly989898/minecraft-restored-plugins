@@ -24,7 +24,7 @@ public class CircularLuteAttack implements LuteAttackHandler {
       final PlayerMetadata playerMetadata,
       final double value,
       NBTItem nbtItem,
-      final double value2,
+      final double duration,
       @NotNull final Vector vector,
       @NotNull final SoundReader soundReader,
       @NotNull final ProjectileParticlesData projectileParticlesData
@@ -35,7 +35,7 @@ public class CircularLuteAttack implements LuteAttackHandler {
          int ti = 0;
 
          public void run() {
-            if (this.ti++ > value2) {
+            if (this.ti++ > duration) {
                this.cancel();
             }
 
@@ -53,7 +53,7 @@ public class CircularLuteAttack implements LuteAttackHandler {
                projectileParticlesData.shootParticle(this.loc.clone().add(var5x));
                projectileParticlesData.shootParticle(this.loc.clone().add(var5x.multiply(-1)));
                if (var2x == 0) {
-                  soundReader.play(this.loc, 2.0F, (float)(0.5 + this.ti / value2));
+                  soundReader.play(this.loc, 2.0F, (float)(0.5 + this.ti / duration));
                }
 
                for (Entity var7x : var1x) {

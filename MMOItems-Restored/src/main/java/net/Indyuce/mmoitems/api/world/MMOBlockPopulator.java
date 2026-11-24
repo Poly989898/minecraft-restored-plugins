@@ -24,7 +24,7 @@ public class MMOBlockPopulator extends BlockPopulator {
       this.world = world;
    }
 
-   public void populate(@NotNull WorldInfo worldInfo, @NotNull Random random, int count, int count2, @NotNull LimitedRegion limitedRegion) {
+   public void populate(@NotNull WorldInfo worldInfo, @NotNull Random random, int count, int chunkZ, @NotNull LimitedRegion limitedRegion) {
       Map<CustomBlock, WorldGenTemplate> map = this.manager.assigned();
       map.entrySet()
          .stream()
@@ -38,7 +38,7 @@ public class MMOBlockPopulator extends BlockPopulator {
                for (int i = 0; i < worldGenTemplate.getVeinCount(); i++) {
                   int worldX = count * 16 + random.nextInt(16);
                   int worldY = random.nextInt(worldGenTemplate.getMaxDepth() - worldGenTemplate.getMinDepth() + 1) + worldGenTemplate.getMinDepth();
-                  int worldZ = count2 * 16 + random.nextInt(16);
+                  int worldZ = chunkZ * 16 + random.nextInt(16);
                   Location location = new Location(this.world, worldX, worldY, worldZ);
                   if (worldGenTemplate.canGenerate(location) && location.getWorld() != null) {
                      Block blockAt = location.getWorld().getBlockAt(location);

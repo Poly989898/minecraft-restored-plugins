@@ -37,12 +37,12 @@ public class ConfigItem {
       this(text, material, null);
    }
 
-   public ConfigItem(String text, Material material, String text2, String... texts) {
+   public ConfigItem(String text, Material material, String name, String... texts) {
       Validate.notNull(text, "ID cannot be null");
       Validate.notNull(material, "Material cannot be null");
       this.id = text;
       this.icon = new ItemStack(material);
-      this.name = text2;
+      this.name = name;
       this.lore = Arrays.asList(texts);
    }
 

@@ -66,9 +66,9 @@ public class ConfigManager implements Reloadable {
          ConfigManager.DefaultFile.EXAMPLE_MODIFIERS.checkFile();
       }
 
-      File file2 = new File(MMOItems.plugin.getDataFolder() + "/crafting-stations");
-      if (!file2.exists()) {
-         if (file2.mkdir()) {
+      File stationsFolder = new File(MMOItems.plugin.getDataFolder() + "/crafting-stations");
+      if (!stationsFolder.exists()) {
+         if (stationsFolder.mkdir()) {
             try {
                JarFile jarFile = new JarFile(MMOItems.plugin.getJarFile());
                Enumeration enumeration = jarFile.entries();
@@ -129,35 +129,35 @@ public class ConfigManager implements Reloadable {
       FileConfiguration config = new ConfigFile("/language", "stats").getConfig();
       this.itemTypeLoreTag = config.getString("item-type", "");
       this.gemStoneLoreTag = config.getString("gem-stone-lore", "");
-      LanguageFile languageFile2 = new LanguageFile("potion-effects");
+      LanguageFile potionEffectsFile = new LanguageFile("potion-effects");
 
       for (PotionEffectType potionEffectType : PotionEffectType.values()) {
          this.potionNames
             .put(
                potionEffectType,
-               languageFile2.computeTranslation(
+               potionEffectsFile.computeTranslation(
                   potionEffectType.getName().toLowerCase().replace("_", "-"), () -> UtilityMethods.caseOnWords(potionEffectType.getName().toLowerCase().replace("_", " "))
                )
             );
       }
 
-      languageFile2.save();
-      LanguageFile languageFile3 = new LanguageFile("attack-effects");
+      potionEffectsFile.save();
+      LanguageFile attackEffectsFile = new LanguageFile("attack-effects");
 
       for (LuteAttackEffectStat.LuteAttackEffect luteAttackEffect : LuteAttackEffectStat.LuteAttackEffect.values()) {
          luteAttackEffect.setName(
-            languageFile3.computeTranslation(
+            attackEffectsFile.computeTranslation(
                "lute-attack." + luteAttackEffect.name().toLowerCase().replace("_", "-"), () -> UtilityMethods.caseOnWords(luteAttackEffect.name().toLowerCase().replace("_", " "))
             )
          );
       }
 
-      languageFile3.save();
+      attackEffectsFile.save();
       this.triggerTypeNames.clear();
-      FileConfiguration config2 = new ConfigFile("/language", "abilities").getConfig();
+      FileConfiguration abilitiesConfig = new ConfigFile("/language", "abilities").getConfig();
 
       for (TriggerType triggerType : TriggerType.values()) {
-         this.triggerTypeNames.put(triggerType, config2.getString("cast-mode." + triggerType.getLowerCaseId(), triggerType.getName()));
+         this.triggerTypeNames.put(triggerType, abilitiesConfig.getString("cast-mode." + triggerType.getLowerCaseId(), triggerType.getName()));
       }
    }
 
@@ -187,12 +187,12 @@ public class ConfigManager implements Reloadable {
       }
 
       ConfigurationSection section = MMOItems.plugin.getConfig().getConfigurationSection("item-revision.keep-data");
-      ConfigurationSection section2 = MMOItems.plugin.getConfig().getConfigurationSection("item-revision.phat-loots");
-      ConfigurationSection section3 = MMOItems.plugin.getConfig().getConfigurationSection("item-revision.keep-gem-data");
+      ConfigurationSection phatLootsSection = MMOItems.plugin.getConfig().getConfigurationSection("item-revision.phat-loots");
+      ConfigurationSection keepGemDataSection = MMOItems.plugin.getConfig().getConfigurationSection("item-revision.keep-gem-data");
       ReforgeOptions.dropRestoredGems = MMOItems.plugin.getConfig().getBoolean("item-revision.drop-extra-gems", true);
       this.revisionOptions = section != null ? new ReforgeOptions(section) : new ReforgeOptions();
-      this.gemRevisionOptions = section3 != null ? new ReforgeOptions(section3) : new ReforgeOptions();
-      this.phatLootsOptions = section2 != null ? new ReforgeOptions(section2) : new ReforgeOptions();
+      this.gemRevisionOptions = keepGemDataSection != null ? new ReforgeOptions(keepGemDataSection) : new ReforgeOptions();
+      this.phatLootsOptions = phatLootsSection != null ? new ReforgeOptions(phatLootsSection) : new ReforgeOptions();
 
       for (String text : MMOItems.plugin.getConfig().getStringList("item-revision.disable-phat-loot")) {
          this.phatLootsOptions.addToBlacklist(text);
@@ -222,8 +222,8 @@ public class ConfigManager implements Reloadable {
    @NotNull
    public String getStatFormat(String text) {
       FileConfiguration config = new ConfigFile("/language", "stats").getConfig();
-      String text2 = config.getString(text);
-      return text2 == null ? "<TranslationNotFound:" + text + ">" : text2;
+      String translation = config.getString(text);
+      return translation == null ? "<TranslationNotFound:" + text + ">" : translation;
    }
 
    @Deprecated
@@ -412,9 +412,9 @@ public class ConfigManager implements Reloadable {
                section.set("material", "STONE");
                section.set("block-id", Integer.parseInt(key));
 
-               for (String key2 : section.getKeys(false)) {
-                  Object obj = section.get(key2);
-                  if (key2.equalsIgnoreCase("display-name")) {
+               for (String subKey : section.getKeys(false)) {
+                  Object obj = section.get(subKey);
+                  if (subKey.equalsIgnoreCase("display-name")) {
                      section.set("display-name", null);
                      section.set("name", obj);
                   }

@@ -13,11 +13,11 @@ public class IngredientType extends LoadedCraftingObject<Ingredient> {
    private final Function<NBTItem, PlayerIngredient> readIngredient;
 
    public IngredientType(
-      String text, Function<MMOLineConfig, Ingredient> function, ConditionalDisplay conditionalDisplay, Predicate<NBTItem> predicate, Function<NBTItem, PlayerIngredient> function2
+      String text, Function<MMOLineConfig, Ingredient> function, ConditionalDisplay conditionalDisplay, Predicate<NBTItem> predicate, Function<NBTItem, PlayerIngredient> readIngredientFunction
    ) {
       super(text, function, conditionalDisplay);
       this.check = predicate;
-      this.readIngredient = function2;
+      this.readIngredient = readIngredientFunction;
    }
 
    public boolean check(NBTItem nbtItem) {

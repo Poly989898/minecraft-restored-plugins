@@ -85,24 +85,24 @@ public class NumericStatFormula implements RandomStatData<DoubleData>, Updatable
       Validate.isTrue(this.maxSpread >= 0.0, "Max spread must be positive");
    }
 
-   public NumericStatFormula(double value, double value2, double value3, double value4) {
-      this(value, value2, value3, value4, false, false, 0.0, false, 0.0);
+   public NumericStatFormula(double value, double scale, double spread, double maxSpread) {
+      this(value, scale, spread, maxSpread, false, false, 0.0, false, 0.0);
    }
 
-   public NumericStatFormula(double value, double value2, double value3, double value4, double value5) {
-      this(value, value2, value3, 100.0, false, true, value4, true, value5);
+   public NumericStatFormula(double value, double scale, double spread, double min, double max) {
+      this(value, scale, spread, 100.0, false, true, min, true, max);
    }
 
-   public NumericStatFormula(double value, double value2, double value3, double value4, boolean flag, boolean flag2, double value5, boolean flag3, double value6) {
+   public NumericStatFormula(double value, double scale, double spread, double maxSpread, boolean flag, boolean hasMinimum, double min, boolean hasMaximum, double max) {
       this.base = value;
-      this.scale = value2;
-      this.spread = value3;
-      this.maxSpread = value4;
+      this.scale = scale;
+      this.spread = spread;
+      this.maxSpread = maxSpread;
       this.uniform = flag;
-      this.hasMin = flag2;
-      this.hasMax = flag3;
-      this.min = value5;
-      this.max = value6;
+      this.hasMin = hasMinimum;
+      this.hasMax = hasMaximum;
+      this.min = min;
+      this.max = max;
    }
 
    public double getBase() {
@@ -158,13 +158,13 @@ public class NumericStatFormula implements RandomStatData<DoubleData>, Updatable
       );
    }
 
-   public double calculate(double value, double value2) {
+   public double calculate(double value, double randomFactor) {
       if (this.uniform) {
-         return value * this.scale + this.min + (this.max - this.min) * value2;
+         return value * this.scale + this.min + (this.max - this.min) * randomFactor;
       }
 
       double baseValue = this.base + this.scale * value;
-      double spreadValue = Math.min(Math.max(value2 * this.spread, -this.maxSpread), this.maxSpread);
+      double spreadValue = Math.min(Math.max(randomFactor * this.spread, -this.maxSpread), this.maxSpread);
       double resultValue = RELATIVE_SPREAD ? baseValue * (1.0 + spreadValue) : baseValue + spreadValue;
       if (this.hasMin) {
          resultValue = Math.max(this.min, resultValue);

@@ -44,12 +44,12 @@ public abstract class ItemStat<R extends RandomStatData<S>, S extends StatData> 
    protected static final int LORE_LINE_WIDTH = 50;
    protected String generalStatFormat;
 
-   public ItemStat(@NotNull String text, @NotNull Material material, @NotNull String text2, @Nullable String[] texts, @Nullable String[] texts2, Material... materials) {
+   public ItemStat(@NotNull String text, @NotNull Material material, @NotNull String name, @Nullable String[] texts, @Nullable String[] compatibleTypes, Material... materials) {
       this.id = text;
       this.material = material;
       this.lore = texts == null ? new String[0] : texts;
-      this.compatibleTypes = texts2 == null ? new ArrayList<>() : Arrays.asList(texts2);
-      this.name = text2;
+      this.compatibleTypes = compatibleTypes == null ? new ArrayList<>() : Arrays.asList(compatibleTypes);
+      this.name = name;
       this.compatibleMaterials = Arrays.asList(materials);
       this.configPath = text.toLowerCase().replace("_", "-");
       this.nbtPath = "MMOITEMS_" + text;

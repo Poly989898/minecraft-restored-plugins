@@ -23,7 +23,7 @@ public class SlashLuteAttack implements LuteAttackHandler {
       final PlayerMetadata playerMetadata,
       double value,
       NBTItem nbtItem,
-      final double value2,
+      final double duration,
       @NotNull Vector vector,
       @NotNull final SoundReader soundReader,
       @NotNull final ProjectileParticlesData projectileParticlesData
@@ -38,7 +38,7 @@ public class SlashLuteAttack implements LuteAttackHandler {
                this.cancel();
             }
 
-            soundReader.play(this.loc, 2.0F, (float)(0.5 + this.ti / value2));
+            soundReader.play(this.loc, 2.0F, (float)(0.5 + this.ti / duration));
 
             for (byte var1x = -30; var1x < 30; var1x += 3) {
                if (LuteAttackHandler.RANDOM.nextBoolean()) {

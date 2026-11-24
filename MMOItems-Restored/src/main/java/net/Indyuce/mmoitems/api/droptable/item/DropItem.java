@@ -11,10 +11,10 @@ public abstract class DropItem {
    private final int max;
    protected static final Random random = new Random();
 
-   public DropItem(double value, int count, int count2) {
+   public DropItem(double value, int count, int maxAmount) {
       this.drop = value;
       this.min = count;
-      this.max = count2;
+      this.max = maxAmount;
    }
 
    public DropItem(String text) {

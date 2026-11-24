@@ -74,11 +74,11 @@ public class UseItem {
       }
    }
 
-   private void dispatchCommand(String text, boolean flag, boolean flag2) {
+   private void dispatchCommand(String text, boolean flag, boolean asOp) {
       if (flag) {
          Bukkit.dispatchCommand(Bukkit.getConsoleSender(), text);
       } else {
-         if (flag2 && !this.player.isOp()) {
+         if (asOp && !this.player.isOp()) {
             this.player.setOp(true);
 
             try {

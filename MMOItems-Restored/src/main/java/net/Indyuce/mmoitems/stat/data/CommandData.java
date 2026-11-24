@@ -8,12 +8,12 @@ public class CommandData {
    private final boolean console;
    private final boolean op;
 
-   public CommandData(String text, double value, boolean flag, boolean flag2) {
+   public CommandData(String text, double value, boolean flag, boolean op) {
       Validate.notNull(text, "Command cannot be null");
       this.command = text;
       this.delay = value;
       this.console = flag;
-      this.op = flag2;
+      this.op = op;
    }
 
    public String getCommand() {

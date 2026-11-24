@@ -15,12 +15,12 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class RequiredLevelStat extends DoubleStat implements ItemRestriction, GemStoneStat {
    @Deprecated
-   public RequiredLevelStat(boolean flag, String text, Material material, String text2, String[] texts) {
-      super(text, material, "Required " + text2, texts, new String[]{"!block", "all"});
+   public RequiredLevelStat(boolean flag, String text, Material material, String name, String[] texts) {
+      super(text, material, "Required " + name, texts, new String[]{"!block", "all"});
    }
 
-   public RequiredLevelStat(String text, Material material, String text2, String[] texts) {
-      super("REQUIRED_" + text, material, "Required " + text2, texts, new String[]{"!block", "all"});
+   public RequiredLevelStat(String text, Material material, String name, String[] texts) {
+      super("REQUIRED_" + text, material, "Required " + name, texts, new String[]{"!block", "all"});
    }
 
    @Override

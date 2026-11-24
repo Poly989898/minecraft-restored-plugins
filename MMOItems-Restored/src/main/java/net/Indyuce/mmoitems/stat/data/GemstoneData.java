@@ -160,19 +160,19 @@ public class GemstoneData {
       return this.levelPut != null;
    }
 
-   public GemstoneData(@NotNull String text, @Nullable String text2, @Nullable String text3, @Nullable String text4) {
+   public GemstoneData(@NotNull String text, @Nullable String mmoitemType, @Nullable String mmoitemId, @Nullable String socketColor) {
       this.name = text;
-      this.mmoitemID = text3;
-      this.mmoitemType = text2;
-      this.socketColor = text4;
+      this.mmoitemID = mmoitemId;
+      this.mmoitemType = mmoitemType;
+      this.socketColor = socketColor;
       this.historicUUID = UUID.randomUUID();
    }
 
-   public GemstoneData(@NotNull String text, @Nullable String text2, @Nullable String text3, @Nullable String text4, @NotNull UUID uuid) {
+   public GemstoneData(@NotNull String text, @Nullable String mmoitemType, @Nullable String mmoitemId, @Nullable String socketColor, @NotNull UUID uuid) {
       this.name = text;
-      this.mmoitemID = text3;
-      this.mmoitemType = text2;
-      this.socketColor = text4;
+      this.mmoitemID = mmoitemId;
+      this.mmoitemType = mmoitemType;
+      this.socketColor = socketColor;
       this.historicUUID = uuid;
    }
 

@@ -7,13 +7,13 @@ public class Pair<K, V> {
    private final K key;
    private final V value;
 
-   public Pair(@NotNull K value, @NotNull V value2) {
+   public Pair(@NotNull K value, @NotNull V secondValue) {
       this.key = (K)value;
-      this.value = (V)value2;
+      this.value = (V)secondValue;
    }
 
-   public static <K, V> Pair<K, V> of(@NotNull K value, @NotNull V value2) {
-      return new Pair<>((K)value, (V)value2);
+   public static <K, V> Pair<K, V> of(@NotNull K value, @NotNull V secondValue) {
+      return new Pair<>((K)value, (V)secondValue);
    }
 
    public K getKey() {

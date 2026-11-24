@@ -9,10 +9,10 @@ public class RestoreData implements StatData, Mergeable<RestoreData> {
    private double food;
    private double saturation;
 
-   public RestoreData(double value, double value2, double value3) {
+   public RestoreData(double value, double food, double saturation) {
       this.health = value;
-      this.food = value2;
-      this.saturation = value3;
+      this.food = food;
+      this.saturation = saturation;
    }
 
    public double getHealth() {

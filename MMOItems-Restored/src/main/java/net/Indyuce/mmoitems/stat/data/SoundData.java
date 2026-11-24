@@ -7,10 +7,10 @@ public class SoundData {
    private final double volume;
    private final double pitch;
 
-   public SoundData(String text, double value, double value2) {
+   public SoundData(String text, double value, double pitch) {
       this.sound = text;
       this.volume = value;
-      this.pitch = value2;
+      this.pitch = pitch;
    }
 
    public SoundData(Object obj) {

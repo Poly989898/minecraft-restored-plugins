@@ -139,9 +139,9 @@ public class ItemTier {
          this(section.getString("name", "Unidentified Item"), section.getString("prefix", "Unknown"), section.getInt("range"));
       }
 
-      public UnidentificationInfo(@NotNull String text, @NotNull String text2, int count) {
+      public UnidentificationInfo(@NotNull String text, @NotNull String prefix, int count) {
          this.name = text;
-         this.prefix = text2;
+         this.prefix = prefix;
          this.range = count;
       }
 

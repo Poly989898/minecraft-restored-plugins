@@ -139,8 +139,8 @@ public class CraftingStatus {
          this.add(craftingRecipe, System.currentTimeMillis(), value);
       }
 
-      private void add(CraftingRecipe craftingRecipe, long value, long value2) {
-         this.crafts.add(new CraftingStatus.CraftingQueue.QueueItem(craftingRecipe, value, value2));
+      private void add(CraftingRecipe craftingRecipe, long value, long completion) {
+         this.crafts.add(new CraftingStatus.CraftingQueue.QueueItem(craftingRecipe, value, completion));
       }
 
       public CraftingStation getStation() {

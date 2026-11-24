@@ -11,10 +11,10 @@ public class LoreUpdate {
    private final String replace;
    private final List<String> lore;
 
-   public LoreUpdate(ItemStack item, String text, String text2) {
+   public LoreUpdate(ItemStack item, String text, String replacement) {
       this.item = item;
       this.old = text;
-      this.replace = text2;
+      this.replace = replacement;
       this.lore = item.getItemMeta().getLore();
    }
 

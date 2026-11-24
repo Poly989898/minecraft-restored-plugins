@@ -48,11 +48,11 @@ public class InventoryUpdateHandler {
       Bukkit.getScheduler().scheduleSyncDelayedTask(MMOItems.plugin, this.player::updateInventory);
    }
 
-   private boolean isDifferent(ItemStack item, ItemStack item2) {
-      if (item == null && item2 == null) {
+   private boolean isDifferent(ItemStack item, ItemStack currentItem) {
+      if (item == null && currentItem == null) {
          return false;
       } else {
-         return (item != null || item2 == null) && (item == null || item2 != null) ? item.hashCode() != item2.hashCode() && !item.equals(item2) : true;
+         return (item != null || currentItem == null) && (item == null || currentItem != null) ? item.hashCode() != currentItem.hashCode() && !item.equals(currentItem) : true;
       }
    }
 }

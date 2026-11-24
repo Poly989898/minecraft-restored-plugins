@@ -63,34 +63,34 @@ public class DeathDowngrading {
    @NotNull
    public static ArrayList<ItemStack> downgradeItems(@NotNull List<ItemStack> items, @NotNull Player player, double value) {
       ArrayList list = new ArrayList();
-      ArrayList list2 = new ArrayList();
+      ArrayList downgradable = new ArrayList();
 
       for (ItemStack item : items) {
          if (!SilentNumbers.isAir(item)) {
             if (canDeathDowngrade(item)) {
-               list2.add(item);
+               downgradable.add(item);
             } else {
                list.add(item);
             }
          }
       }
 
-      while (value >= 100.0 && list2.size() > 0) {
+      while (value >= 100.0 && downgradable.size() > 0) {
          value -= 100.0;
-         int index = RANDOM.nextInt(list2.size());
-         ItemStack item = (ItemStack)list2.get(index);
+         int index = RANDOM.nextInt(downgradable.size());
+         ItemStack item = (ItemStack)downgradable.get(index);
          list.add(downgrade(new LiveMMOItem(item), player));
-         list2.remove(index);
+         downgradable.remove(index);
       }
 
-      if (value > 0.0 && list2.size() > 0 && RANDOM.nextInt(100) < value) {
-         int index = RANDOM.nextInt(list2.size());
-         ItemStack item = (ItemStack)list2.get(index);
+      if (value > 0.0 && downgradable.size() > 0 && RANDOM.nextInt(100) < value) {
+         int index = RANDOM.nextInt(downgradable.size());
+         ItemStack item = (ItemStack)downgradable.get(index);
          list.add(downgrade(new LiveMMOItem(item), player));
-         list2.remove(index);
+         downgradable.remove(index);
       }
 
-      list.addAll(list2);
+      list.addAll(downgradable);
       return list;
    }
 

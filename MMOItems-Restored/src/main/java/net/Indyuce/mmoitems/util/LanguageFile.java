@@ -15,14 +15,14 @@ public class LanguageFile extends ConfigFile {
 
    @NotNull
    public String computeTranslation(String text, Supplier<String> supplier) {
-      String text2 = this.getConfig().getString(text);
-      if (text2 == null) {
+      String translation = this.getConfig().getString(text);
+      if (translation == null) {
          this.change = true;
-         this.getConfig().set(text, text2 = (String)supplier.get());
+         this.getConfig().set(text, translation = (String)supplier.get());
          MMOItems.plugin.getLogger().log(Level.SEVERE, "Could not find translation for '" + text + "', generating it");
       }
 
-      return text2;
+      return translation;
    }
 
    @Override

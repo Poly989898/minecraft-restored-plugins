@@ -24,7 +24,7 @@ public class WaveLuteAttack implements LuteAttackHandler {
       final PlayerMetadata playerMetadata,
       final double value,
       NBTItem nbtItem,
-      final double value2,
+      final double duration,
       @NotNull final Vector vector,
       @NotNull final SoundReader soundReader,
       @NotNull final ProjectileParticlesData projectileParticlesData
@@ -35,7 +35,7 @@ public class WaveLuteAttack implements LuteAttackHandler {
          int ti = 0;
 
          public void run() {
-            if (this.ti++ > value2) {
+            if (this.ti++ > duration) {
                this.cancel();
             }
 
@@ -52,7 +52,7 @@ public class WaveLuteAttack implements LuteAttackHandler {
                projectileParticlesData.shootParticle(this.loc.clone().add(rotatedOffset.clone().multiply(Math.sin(this.ti / 2.0))));
                projectileParticlesData.shootParticle(this.loc.clone().add(rotatedOffset.clone().multiply(-1)));
                if (var2x == 0) {
-                  soundReader.play(this.loc, 2.0F, (float)(0.5 + this.ti / value2));
+                  soundReader.play(this.loc, 2.0F, (float)(0.5 + this.ti / duration));
                }
 
                for (Entity var5x : var1x) {
