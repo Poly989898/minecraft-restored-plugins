@@ -5,6 +5,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.Sound;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /** Sound constants whose name changed over the Minecraft versions, resolved through the sound registry. */
 public class Sounds {
@@ -63,6 +64,12 @@ public class Sounds {
       return sound;
    }
 
+   /** Resolves a sound by enum-style name, dotted name or namespaced key; null if unknown. */
+   @Nullable
+   public static Sound find(@NotNull String name) {
+      return lookup(name.trim());
+   }
+
    /** Like {@link #fromName(String...)} but returns null when no candidate exists on this server version. */
    private static Sound lookup(String... candidates) {
       for (String candidate : candidates) {
@@ -74,10 +81,15 @@ public class Sounds {
          } catch (ReflectiveOperationException | RuntimeException ignored) {
             // not a constant of this version, try the registry key below
          }
-         NamespacedKey namespaced = NamespacedKey.fromString(candidate.toLowerCase(Locale.ROOT).replace('_', '.'));
-         Sound sound = namespaced == null ? null : Registry.SOUNDS.get(namespaced);
-         if (sound != null) {
-            return sound;
+         String lower = candidate.toLowerCase(Locale.ROOT);
+         // dotted keys keep their underscores (block.note_block.pling); enum-style names map '_' to '.'
+         String[] keys = lower.indexOf('.') >= 0 || lower.indexOf(':') >= 0 ? new String[]{lower} : new String[]{lower.replace('_', '.')};
+         for (String key : keys) {
+            NamespacedKey namespaced = NamespacedKey.fromString(key);
+            Sound sound = namespaced == null ? null : Registry.SOUNDS.get(namespaced);
+            if (sound != null) {
+               return sound;
+            }
          }
       }
       return null;

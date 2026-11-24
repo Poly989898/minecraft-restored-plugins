@@ -115,7 +115,7 @@ public class UtilityMethods {
       @NotNull Plugin plugin,
       boolean ignoreCancelled
    ) {
-      Bukkit.getPluginManager().registerEvent(eventClass, listener, priority, (listener2, event) -> executor.accept((T)event), plugin, ignoreCancelled);
+      Bukkit.getPluginManager().registerEvent(eventClass, listener, priority, (registeredListener, event) -> executor.accept((T)event), plugin, ignoreCancelled);
    }
 
    public static MMOCondition getCondition(String input) {

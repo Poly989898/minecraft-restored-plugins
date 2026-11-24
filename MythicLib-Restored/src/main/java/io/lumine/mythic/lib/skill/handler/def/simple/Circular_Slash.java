@@ -35,11 +35,11 @@ public class Circular_Slash extends SkillHandler<SimpleSkillResult> {
       for (Entity entity : caster.getNearbyEntities(radius, radius, radius)) {
          if (UtilityMethods.canTarget(caster, entity)) {
             skillMeta.getCaster().attack((LivingEntity)entity, damage, DamageType.SKILL, DamageType.PHYSICAL);
-            Vector v1 = entity.getLocation().toVector();
-            Vector v2 = caster.getLocation().toVector();
+            Vector entityPos = entity.getLocation().toVector();
+            Vector casterPos = caster.getLocation().toVector();
             double y = 0.5;
-            Vector v3 = v1.subtract(v2).multiply(0.5 * knockback).setY(knockback == 0.0 ? 0.0 : y);
-            entity.setVelocity(v3);
+            Vector knockbackVelocity = entityPos.subtract(casterPos).multiply(0.5 * knockback).setY(knockback == 0.0 ? 0.0 : y);
+            entity.setVelocity(knockbackVelocity);
          }
       }
 

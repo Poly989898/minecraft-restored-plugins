@@ -102,7 +102,7 @@ public class ServerVersion {
                String candidate = this.craftBukkitVersion(revNumber);
                Class.forName("org.bukkit.craftbukkit." + candidate + "." + "CraftServer");
                return revNumber;
-            } catch (Throwable exception2) {
+            } catch (Throwable probeException) {
             }
          }
 

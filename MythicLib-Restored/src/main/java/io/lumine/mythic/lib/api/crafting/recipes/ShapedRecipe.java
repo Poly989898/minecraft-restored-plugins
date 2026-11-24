@@ -329,13 +329,13 @@ public class ShapedRecipe extends MythicRecipe implements VanillaBookableRecipe 
 
          String row = rowString.toString();
          boolean notBlanc = false;
-         char[] chars2 = row.toCharArray();
-         int length = chars2.length;
+         char[] rowChars = row.toCharArray();
+         int length = rowChars.length;
          int index = 0;
 
          while (true) {
             if (index < length) {
-               char c = chars2[index];
+               char c = rowChars[index];
                if (c == ' ') {
                   index++;
                   continue;

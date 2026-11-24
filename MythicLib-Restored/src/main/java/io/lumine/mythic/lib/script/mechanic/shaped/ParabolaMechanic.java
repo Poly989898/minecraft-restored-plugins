@@ -83,10 +83,10 @@ public class ParabolaMechanic extends Mechanic {
       return a * x * (x - b);
    }
 
-   private double getLength(double a, double b, double x1, double x2) {
-      double u1 = a * (2.0 * x1 - b);
-      double u2 = a * (2.0 * x2 - b);
-      return (this.primitive(u2) - this.primitive(u1)) / (2.0 * a);
+   private double getLength(double a, double b, double xStart, double xEnd) {
+      double uStart = a * (2.0 * xStart - b);
+      double uEnd = a * (2.0 * xEnd - b);
+      return (this.primitive(uEnd) - this.primitive(uStart)) / (2.0 * a);
    }
 
    private double primitive(double x) {

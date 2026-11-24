@@ -26,10 +26,10 @@ public class CuboidCondition extends LocationCondition {
    public boolean isMet(SkillMetadata meta, Location loc) {
       Variable var1x = meta.getVariable(this.varName1);
       Validate.isTrue(var1x instanceof PositionVariable, "Variable '" + this.varName1 + "' is not a vector");
-      Vector vec1 = ((Position)var1x.getStored()).toVector();
+      Vector cornerA = ((Position)var1x.getStored()).toVector();
       Variable var2x = meta.getVariable(this.varName1);
       Validate.isTrue(var2x instanceof PositionVariable, "Variable '" + this.varName2 + "' is not a vector");
-      Vector vec2 = ((Position)var2x.getStored()).toVector();
-      return BoundingBox.of(vec1, vec2).contains(loc.toVector());
+      Vector cornerB = ((Position)var2x.getStored()).toVector();
+      return BoundingBox.of(cornerA, cornerB).contains(loc.toVector());
    }
 }

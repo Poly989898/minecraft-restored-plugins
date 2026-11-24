@@ -160,8 +160,8 @@ public class Validate {
       notNull(array);
       for (int i = 0; i < array.length; i++) {
          if (array[i] == null) {
-            Object[] values2 = ArrayUtils__addAll(values, i);
-            throw new IllegalArgumentException(fmt(message, values2));
+            Object[] formatArgs = ArrayUtils__addAll(values, i);
+            throw new IllegalArgumentException(fmt(message, formatArgs));
          }
       }
       return array;
@@ -176,8 +176,8 @@ public class Validate {
       int i = 0;
       for (java.util.Iterator<?> it = iterable.iterator(); it.hasNext(); i++) {
          if (it.next() == null) {
-            Object[] values2 = ArrayUtils__addAll(values, i);
-            throw new IllegalArgumentException(fmt(message, values2));
+            Object[] formatArgs = ArrayUtils__addAll(values, i);
+            throw new IllegalArgumentException(fmt(message, formatArgs));
          }
       }
       return iterable;

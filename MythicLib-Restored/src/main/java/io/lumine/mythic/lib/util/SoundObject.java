@@ -20,9 +20,8 @@ public class SoundObject {
       Sound sound = null;
       String key = null;
 
-      try {
-         sound = Sound.valueOf(UtilityMethods.enumName(split[0]));
-      } catch (Exception ignored) {
+      sound = io.lumine.mythic.lib.version.Sounds.find(split[0]);
+      if (sound == null) {
          key = split[0];
       }
 
@@ -37,9 +36,8 @@ public class SoundObject {
       Sound sound = null;
       String key = null;
 
-      try {
-         sound = Sound.valueOf(UtilityMethods.enumName(input));
-      } catch (Exception ignored) {
+      sound = io.lumine.mythic.lib.version.Sounds.find(input);
+      if (sound == null) {
          key = input;
       }
 

@@ -21,9 +21,7 @@ public class SoundMechanic extends LocationMechanic {
       super(config);
       config.validateKeys("sound");
       this.soundString = config.getString("sound");
-      if (Arrays.stream(Sound.values()).map(Sound::name).anyMatch(name -> UtilityMethods.enumName(this.soundString).equals(name))) {
-         this.sound = Sound.valueOf(UtilityMethods.enumName(this.soundString));
-      }
+      this.sound = io.lumine.mythic.lib.version.Sounds.find(this.soundString);
 
       this.vol = config.getDoubleFormula("volume", DoubleFormula.constant(1.0));
       this.pitch = config.getDoubleFormula("pitch", DoubleFormula.constant(1.0));

@@ -164,15 +164,15 @@ public class Position {
       double x = this.getX();
       double y = this.getY();
       double z = this.getZ();
-      double x2 = axis.getX();
-      double y2 = axis.getY();
-      double z2 = axis.getZ();
+      double axisX = axis.getX();
+      double axisY = axis.getY();
+      double axisZ = axis.getZ();
       double cosTheta = Math.cos(angle);
       double sinTheta = Math.sin(angle);
       double dotProduct = this.dot(axis);
-      double xPrime = x2 * dotProduct * (1.0 - cosTheta) + x * cosTheta + (-z2 * y + y2 * z) * sinTheta;
-      double yPrime = y2 * dotProduct * (1.0 - cosTheta) + y * cosTheta + (z2 * x - x2 * z) * sinTheta;
-      double zPrime = z2 * dotProduct * (1.0 - cosTheta) + z * cosTheta + (-y2 * x + x2 * y) * sinTheta;
+      double xPrime = axisX * dotProduct * (1.0 - cosTheta) + x * cosTheta + (-axisZ * y + axisY * z) * sinTheta;
+      double yPrime = axisY * dotProduct * (1.0 - cosTheta) + y * cosTheta + (axisZ * x - axisX * z) * sinTheta;
+      double zPrime = axisZ * dotProduct * (1.0 - cosTheta) + z * cosTheta + (-axisY * x + axisX * y) * sinTheta;
       return this.setX(xPrime).setY(yPrime).setZ(zPrime);
    }
 

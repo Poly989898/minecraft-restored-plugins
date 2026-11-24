@@ -316,7 +316,7 @@ public abstract class LightInjector {
       } catch (Exception exception) {
          try {
             return getField(serverConnectionClass, List.class, 3);
-         } catch (Exception exception2) {
+         } catch (Exception fallbackException) {
             return null;
          }
       }

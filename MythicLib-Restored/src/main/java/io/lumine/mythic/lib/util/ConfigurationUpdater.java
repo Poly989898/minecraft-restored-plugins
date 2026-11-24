@@ -44,8 +44,8 @@ public class ConfigurationUpdater {
             } catch (Throwable exception) {
                try {
                   reader.close();
-               } catch (Throwable exception2) {
-                  exception.addSuppressed(exception2);
+               } catch (Throwable closeException) {
+                  exception.addSuppressed(closeException);
                }
 
                throw exception;
@@ -59,8 +59,8 @@ public class ConfigurationUpdater {
             if (inputStream != null) {
                try {
                   inputStream.close();
-               } catch (Throwable exception2) {
-                  exception.addSuppressed(exception2);
+               } catch (Throwable closeException) {
+                  exception.addSuppressed(closeException);
                }
             }
 

@@ -44,9 +44,9 @@ public class BooleanExpression<C> {
    private static final Operator LOWER_OR_EQUAL = new Operator("<=", 2, false, 300) {
       @Override
       public double apply(double... doubles) {
-         double d1 = doubles[0];
-         double d2 = doubles[1];
-         return !(d1 <= d2) && !(Math.abs(d1 - d2) < 1.0E-10) ? 0.0 : 1.0;
+         double left = doubles[0];
+         double right = doubles[1];
+         return !(left <= right) && !(Math.abs(left - right) < 1.0E-10) ? 0.0 : 1.0;
       }
    };
    private static final Operator LOWER_THAN = new Operator("<", 2, false, 300) {
@@ -58,9 +58,9 @@ public class BooleanExpression<C> {
    private static final Operator GREATER_OR_EQUAL = new Operator(">=", 2, false, 300) {
       @Override
       public double apply(double... doubles) {
-         double d1 = doubles[0];
-         double d2 = doubles[1];
-         return !(d1 >= d2) && !(Math.abs(d1 - d2) < 1.0E-10) ? 0.0 : 1.0;
+         double left = doubles[0];
+         double right = doubles[1];
+         return !(left >= right) && !(Math.abs(left - right) < 1.0E-10) ? 0.0 : 1.0;
       }
    };
    private static final Operator GREATER_THAN = new Operator(">", 2, false, 300) {

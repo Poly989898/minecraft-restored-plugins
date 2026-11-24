@@ -39,8 +39,8 @@ public class MclogsAPI {
          if (os != null) {
             try {
                os.close();
-            } catch (Throwable exception2) {
-               exception.addSuppressed(exception2);
+            } catch (Throwable closeException) {
+               exception.addSuppressed(closeException);
             }
          }
 

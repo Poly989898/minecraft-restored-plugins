@@ -25,10 +25,10 @@ public class CrossProductMechanic extends VariableMechanic {
    public void cast(SkillMetadata meta) {
       Variable var1x = meta.getVariable(this.varName1);
       Validate.isTrue(var1x instanceof PositionVariable, "Variable '" + this.varName1 + "' is not a vector");
-      Position pos1 = (Position)var1x.getStored();
+      Position first = (Position)var1x.getStored();
       Variable variable = meta.getVariable(this.varName2);
       Validate.isTrue(variable instanceof PositionVariable, "Variable '" + this.varName2 + "' is not a vector");
-      Position pos2 = (Position)variable.getStored();
-      this.getTargetVariableList(meta).registerVariable(new PositionVariable(this.getVariableName(), pos1.getCrossProduct(pos2)));
+      Position second = (Position)variable.getStored();
+      this.getTargetVariableList(meta).registerVariable(new PositionVariable(this.getVariableName(), first.getCrossProduct(second)));
    }
 }
