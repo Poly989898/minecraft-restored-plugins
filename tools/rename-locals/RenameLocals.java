@@ -76,6 +76,7 @@ public class RenameLocals {
                 case "--pattern" -> pattern = Pattern.compile(args[++i]);
                 case "--dry-run" -> apply = false;
                 case "--map" -> mapOut = Paths.get(args[++i]);
+                case "--rename" -> { for (String l : Files.readAllLines(Paths.get(args[++i]))) { l = l.trim(); if (l.isEmpty()) continue; String[] a = l.split(" "); overrides.put(a[0] + " " + a[1], a[2]); renameOnly = true; } }
                 case "--opt" -> extraOpts.add(args[++i]);
                 default -> { System.err.println("unknown option " + args[i]); System.exit(2); }
             }
@@ -271,17 +272,26 @@ public class RenameLocals {
     }
 
     // ------------------------------------------------------------------ assignment
+    static final Map<String, String> overrides = new HashMap<>();
+    static boolean renameOnly = false;
+
     static void assign(FileData fd) {
         fd.decls.sort(Comparator.comparingInt(d -> d.pos));
         List<Decl> done = new ArrayList<>();
         for (Decl d : fd.decls) {
             List<String> cands = candidates(d);
+            if (renameOnly) {
+                String ov = overrides.get(fd.path.getFileName() + ":" + line(fd.text, d.pos) + " " + d.oldName);
+                if (ov == null) { d.newName = d.oldName; done.add(d); continue; }
+                cands = new ArrayList<>(List.of(ov));
+            }
             Set<String> forbidden = new HashSet<>();
             for (String n : fd.points.subMap(d.start, d.end).values()) forbidden.add(n);
             for (Scoped s : fd.scoped) if (s.start < d.end && s.end > d.start) forbidden.add(s.name);
             for (Decl o : done) if (o.start < d.end && o.end > d.start) forbidden.add(o.newName);
             String chosen = null;
             for (String c : cands) if (!forbidden.contains(c)) { chosen = c; break; }
+            if (chosen == null && renameOnly) { System.err.println("CLASH " + fd.path.getFileName() + ":" + line(fd.text, d.pos) + " " + d.oldName + " -> " + cands.get(0)); chosen = d.oldName; }
             if (chosen == null) {
                 String base = cands.get(0);
                 for (int n = 2; ; n++) {
