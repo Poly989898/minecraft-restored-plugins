@@ -302,9 +302,9 @@ public class SilentNumbers {
       return value == gr8st ? romanNumeralValues.get(gr8st) : romanNumeralValues.get(gr8st) + toRomanNumerals(value - gr8st);
    }
 
-   public static <S> boolean hasAll(@NotNull List<S> list1, @NotNull List<S> list2) {
-      for (S str : list2) {
-         if (!list1.contains(str)) {
+   public static <S> boolean hasAll(@NotNull List<S> source, @NotNull List<S> required) {
+      for (S str : required) {
+         if (!source.contains(str)) {
             return false;
          }
       }

@@ -31,8 +31,8 @@ public class Burn extends SkillHandler<TargetSkillResult> {
 
                for (int j = 0; j < 2; j++) {
                   double xz = this.y * Math.PI * 1.3 + j * Math.PI;
-                  Location loc1 = this.loc.clone().add(Math.cos(xz), this.y, Math.sin(xz));
-                  this.loc.getWorld().spawnParticle(Particle.FLAME, loc1, 0);
+                  Location flameLoc = this.loc.clone().add(Math.cos(xz), this.y, Math.sin(xz));
+                  this.loc.getWorld().spawnParticle(Particle.FLAME, flameLoc, 0);
                }
             }
 

@@ -33,9 +33,9 @@ public class MMOCoreAPI {
       return PlayerData.get(player);
    }
 
-   public boolean isInSameParty(@NotNull Player player1, @NotNull Player player2) {
-      AbstractParty party = MMOCore.plugin.partyModule.getParty(PlayerData.get(player1));
-      return party != null && party.hasMember(player2);
+   public boolean isInSameParty(@NotNull Player player, @NotNull Player other) {
+      AbstractParty party = MMOCore.plugin.partyModule.getParty(PlayerData.get(player));
+      return party != null && party.hasMember(other);
    }
 
    public SkillResult cast(PlayerData playerData, String skillId, int level) {

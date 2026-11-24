@@ -33,5 +33,5 @@ public interface Interpolator {
       return results;
    };
 
-   double[] interpolate(double value, double value2, int count);
+   double[] interpolate(double start, double end, int steps);
 }

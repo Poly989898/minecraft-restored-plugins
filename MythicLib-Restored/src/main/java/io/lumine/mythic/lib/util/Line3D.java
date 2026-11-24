@@ -8,9 +8,9 @@ public class Line3D {
    private final Vector direction;
    private final Vector point;
 
-   public Line3D(Vector loc1, Vector loc2) {
-      this.point = loc1.clone();
-      this.direction = loc1.clone().subtract(loc2);
+   public Line3D(Vector from, Vector to) {
+      this.point = from.clone();
+      this.direction = from.clone().subtract(to);
    }
 
    public Line3D(double a, double b, double c, double e, double f, double g) {

@@ -11,5 +11,5 @@ public interface GuildModule {
    AbstractGuild getGuild(PlayerData playerData);
 
    @NotNull
-   Relationship getRelationship(Player player, Player player2);
+   Relationship getRelationship(Player player, Player target);
 }

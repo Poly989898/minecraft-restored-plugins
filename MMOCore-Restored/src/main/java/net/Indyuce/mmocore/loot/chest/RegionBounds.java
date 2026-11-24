@@ -27,13 +27,13 @@ public class RegionBounds {
       this.z2 = Math.max(config.getInt("z1"), config.getInt("z2"));
    }
 
-   public RegionBounds(Location loc1, Location loc2) {
-      Validate.isTrue(loc1.getWorld().equals(loc2.getWorld()), "Locations must be in the same world");
-      this.world = loc1.getWorld();
-      this.x1 = Math.min(loc1.getBlockX(), loc2.getBlockX());
-      this.x2 = Math.max(loc1.getBlockX(), loc2.getBlockX());
-      this.z1 = Math.min(loc1.getBlockZ(), loc2.getBlockZ());
-      this.z2 = Math.max(loc1.getBlockZ(), loc2.getBlockZ());
+   public RegionBounds(Location from, Location to) {
+      Validate.isTrue(from.getWorld().equals(to.getWorld()), "Locations must be in the same world");
+      this.world = from.getWorld();
+      this.x1 = Math.min(from.getBlockX(), to.getBlockX());
+      this.x2 = Math.max(from.getBlockX(), to.getBlockX());
+      this.z1 = Math.min(from.getBlockZ(), to.getBlockZ());
+      this.z2 = Math.max(from.getBlockZ(), to.getBlockZ());
    }
 
    public Stream<PlayerData> getPlayers() {

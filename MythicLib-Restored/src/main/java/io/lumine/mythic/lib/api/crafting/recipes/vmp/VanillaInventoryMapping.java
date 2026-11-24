@@ -24,7 +24,7 @@ public abstract class VanillaInventoryMapping {
 
    public abstract int getMainHeight(int count) throws IllegalArgumentException;
 
-   public abstract int getMainSlot(int count, int count2) throws IllegalArgumentException;
+   public abstract int getMainSlot(int width, int height) throws IllegalArgumentException;
 
    public abstract int getMainInventoryStart();
 
@@ -57,7 +57,7 @@ public abstract class VanillaInventoryMapping {
 
    public abstract int getResultHeight(int count) throws IllegalArgumentException;
 
-   public abstract int getResultSlot(int count, int count2) throws IllegalArgumentException;
+   public abstract int getResultSlot(int width, int height) throws IllegalArgumentException;
 
    public int getResultInventorySize() {
       return this.getResultInventoryHeight() * this.getResultInventoryWidth();
@@ -90,7 +90,7 @@ public abstract class VanillaInventoryMapping {
 
    public abstract int getSideHeight(@NotNull String text, int count) throws IllegalArgumentException;
 
-   public abstract int getSideSlot(@NotNull String text, int count, int count2) throws IllegalArgumentException;
+   public abstract int getSideSlot(@NotNull String side, int width, int height) throws IllegalArgumentException;
 
    public abstract int getSideInventoryStart(@NotNull String text) throws IllegalArgumentException;
 

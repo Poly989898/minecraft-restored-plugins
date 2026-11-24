@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 public interface ConfigObject {
    String getString(String text);
 
-   String getString(String text, String text2);
+   String getString(String path, String defaultValue);
 
    double getDouble(String text);
 

@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 @FunctionalInterface
 public interface ContextTagResolver extends AdventureTagResolver {
    @Nullable
-   String resolve(@NotNull String text, @NotNull AdventureArgumentQueue adventureArgumentQueue, @NotNull String text2, @NotNull List<String> texts);
+   String resolve(@NotNull String src, @NotNull AdventureArgumentQueue adventureArgumentQueue, @NotNull String argument, @NotNull List<String> texts);
 
    @Nullable
    @Override

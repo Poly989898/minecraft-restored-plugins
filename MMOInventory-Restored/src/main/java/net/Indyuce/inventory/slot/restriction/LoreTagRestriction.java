@@ -55,6 +55,6 @@ public class LoreTagRestriction extends SlotRestriction {
 
    @FunctionalInterface
    interface Operation {
-      boolean check(String text, String text2);
+      boolean check(String key, String value);
    }
 }
