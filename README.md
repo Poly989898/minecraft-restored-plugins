@@ -18,6 +18,7 @@ Readable, rebuildable Java sources for Paper plugins. The sources were recovered
 | [`MMOItems-Restored`](MMOItems-Restored) | MMOItems 6.10 | Indyuce | Paper 1.21+ | Builds; starts on Paper 26.3 with MythicLib; console commands checked; gameplay not tested |
 | [`MMOInventory-Restored`](MMOInventory-Restored) | MMOInventory 1.9.1 | Indyuce | Paper 1.21+ | Builds; starts on Paper 26.3 with MythicLib; GUI not tested |
 | [`MMOProfiles-Restored`](MMOProfiles-Restored) | MMOProfiles 1.1.1 | Phoenix Development | Paper 1.21+ | Builds; starts on Paper 26.3; GUI classes missing from MythicLib 1.7 are implemented in the plugin; GUI not tested with a player |
+| [`UltraPermissions-Restored`](UltraPermissions-Restored) | UltraPermissions 5.6.8 | Tech (TechsCode) | Paper 26.3 | Builds from source with upstream libraries relocated as in the original; console commands, permission checks, GUI and MariaDB storage checked on Paper 26.3; server-version check fixed for 26.x; hooks and proxy mode not tested |
 
 What "verified" means for each plugin, what was **not** tested, and the exact build commands are in the README inside each folder.
 
@@ -57,6 +58,7 @@ Short version per plugin (details in each README):
 | LiteBans | `gradle compileJava jar` |
 | LPX | `tools/build.sh && tools/package.sh` |
 | CMILib | `gradle jar` |
+| UltraPermissions | `gradle shadowJar` in the plugin folder; JDK 25 |
 | CMI | `(cd ../CMILib-Restored && gradle jar)`, then `(cd nms/v26_3 && gradle compileJava)`, then `gradle jar` |
 | MythicLib, MMOCore, MMOItems, MMOInventory, MMOProfiles | `gradle shadowJar` in the plugin folder (offline: `gradle --offline shadowJar`); all but MythicLib build `../MythicLib-Restored` first; no original jars; JDK 25 |
 
@@ -67,6 +69,7 @@ Most work is renaming and cleanup that does not change behaviour. The changes th
 - Obfuscator and distributor leftovers are removed: decoy methods, buyer-ID watermarks, re-uploader prints, build-flag checks, phone-home and update checks.
 - Kotlin runtime null checks (`Intrinsics.checkNotNull*`) are removed in Nexo; checked exceptions in LiteBans are rethrown with a sneaky-throw helper to match Kotlin semantics.
 - MythicMobs: code that upstream gated behind its separate premium module is enabled, bStats metrics are not started.
+- UltraPermissions: the buyer check call is not restored, and the server-version check accepts 26.x.
 - LPX: the bundled Adventure library is relocated so the plugin starts on Paper 26.3.
 
 ## Not included
