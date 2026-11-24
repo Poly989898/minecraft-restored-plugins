@@ -1,0 +1,20 @@
+package net.Indyuce.mmocore.command.rpg.debug;
+
+import io.lumine.mythic.lib.command.api.CommandTreeNode;
+import io.lumine.mythic.lib.command.api.CommandTreeNode.CommandResult;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+
+public class DebugCommandTreeNode extends CommandTreeNode {
+   public static final String commandPrefix = ChatColor.YELLOW + "[" + ChatColor.RED + "DEBUG" + ChatColor.GOLD + "] " + ChatColor.RESET;
+
+   public DebugCommandTreeNode(CommandTreeNode parent) {
+      super(parent, "debug");
+      this.addChild(new StatValueCommandTreeNode(this));
+      this.addChild(new StatModifiersCommandTreeNode(this));
+   }
+
+   public CommandResult execute(CommandSender sender, String[] args) {
+      return CommandResult.THROW_USAGE;
+   }
+}

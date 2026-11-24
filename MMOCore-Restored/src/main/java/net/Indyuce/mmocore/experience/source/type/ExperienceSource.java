@@ -1,0 +1,25 @@
+package net.Indyuce.mmocore.experience.source.type;
+
+import net.Indyuce.mmocore.api.player.PlayerData;
+import net.Indyuce.mmocore.experience.dispenser.ExperienceDispenser;
+import net.Indyuce.mmocore.manager.profession.ExperienceSourceManager;
+
+public abstract class ExperienceSource<T> {
+   private final ExperienceDispenser dispenser;
+
+   public ExperienceSource(ExperienceDispenser dispenser) {
+      this.dispenser = dispenser;
+   }
+
+   public ExperienceDispenser getDispenser() {
+      return this.dispenser;
+   }
+
+   public abstract ExperienceSourceManager<?> newManager();
+
+   public boolean matches(PlayerData player, T obj) {
+      return this.getDispenser().shouldHandle(player) && this.matchesParameter(player, obj);
+   }
+
+   public abstract boolean matchesParameter(PlayerData var1, T var2);
+}

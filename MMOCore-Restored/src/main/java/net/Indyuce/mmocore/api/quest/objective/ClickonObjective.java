@@ -1,0 +1,58 @@
+package net.Indyuce.mmocore.api.quest.objective;
+
+import io.lumine.mythic.lib.api.MMOLineConfig;
+import net.Indyuce.mmocore.api.quest.ObjectiveProgress;
+import net.Indyuce.mmocore.api.quest.QuestProgress;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
+
+public class ClickonObjective extends Objective {
+   private final Location loc;
+   private final int rangeSquared;
+
+   public ClickonObjective(ConfigurationSection section, MMOLineConfig config) {
+      super(section);
+      config.validate(new String[]{"range", "world", "x", "y", "z"});
+      this.rangeSquared = config.getInt("range") ^ 2;
+      World world = Bukkit.getWorld(config.getString("world"));
+      Validate.notNull(world, "Could not find world " + config.getString("world"));
+      this.loc = new Location(world, config.getInt("x"), config.getInt("y"), config.getInt("z"));
+   }
+
+   @Override
+   public ObjectiveProgress newProgress(QuestProgress questProgress) {
+      return new ClickonObjective.GotoProgress(questProgress, this);
+   }
+
+   public class GotoProgress extends ObjectiveProgress implements Listener {
+      public GotoProgress(QuestProgress questProgress, Objective objective) {
+         super(questProgress, objective);
+      }
+
+      @EventHandler
+      public void a(PlayerInteractEvent event) {
+         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            Player player = event.getPlayer();
+            if (this.getPlayer().isOnline()
+               && player.equals(this.getPlayer().getPlayer())
+               && player.getWorld().equals(ClickonObjective.this.loc.getWorld())
+               && event.getClickedBlock().getLocation().distanceSquared(ClickonObjective.this.loc) < ClickonObjective.this.rangeSquared) {
+               this.getQuestProgress().completeObjective();
+            }
+         }
+      }
+
+      @Override
+      public String formatLore(String lore) {
+         return lore;
+      }
+   }
+}

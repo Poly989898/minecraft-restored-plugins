@@ -1,0 +1,33 @@
+package net.Indyuce.mmocore.command.rpg.admin;
+
+import io.lumine.mythic.lib.command.api.CommandTreeNode;
+import io.lumine.mythic.lib.command.api.Parameter;
+import io.lumine.mythic.lib.command.api.CommandTreeNode.CommandResult;
+import net.Indyuce.mmocore.MMOCore;
+import net.Indyuce.mmocore.api.player.PlayerData;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+public class SaveDataTreeNode extends CommandTreeNode {
+   public SaveDataTreeNode(CommandTreeNode parent) {
+      super(parent, "savedata");
+      this.addParameter(Parameter.PLAYER);
+   }
+
+   public CommandResult execute(CommandSender sender, String[] args) {
+      if (args.length < 3) {
+         return CommandResult.THROW_USAGE;
+      } else {
+         Player player = Bukkit.getPlayer(args[2]);
+         if (player == null) {
+            sender.sendMessage(ChatColor.RED + "Could not find the player called " + args[2] + ".");
+            return CommandResult.FAILURE;
+         } else {
+            MMOCore.plugin.playerDataManager.getDataHandler().saveData(PlayerData.get(player), false);
+            return CommandResult.SUCCESS;
+         }
+      }
+   }
+}

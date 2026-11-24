@@ -1,0 +1,37 @@
+package net.Indyuce.mmocore.api.event;
+
+import net.Indyuce.mmocore.api.player.PlayerData;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
+
+@Deprecated
+public class MMOCommandEvent extends PlayerDataEvent implements Cancellable {
+   private static final HandlerList handlers = new HandlerList();
+   private boolean cancelled;
+   private final String command;
+
+   public MMOCommandEvent(PlayerData player, String command) {
+      super(player);
+      this.command = command;
+   }
+
+   public String getCommand() {
+      return this.command;
+   }
+
+   public HandlerList getHandlers() {
+      return handlers;
+   }
+
+   public static HandlerList getHandlerList() {
+      return handlers;
+   }
+
+   public boolean isCancelled() {
+      return this.cancelled;
+   }
+
+   public void setCancelled(boolean b) {
+      this.cancelled = b;
+   }
+}

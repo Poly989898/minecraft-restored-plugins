@@ -1,0 +1,7 @@
+package com.herocraftonline.heroes.characters;
+
+import org.bukkit.entity.Player;
+
+public class CharacterManager {
+    public Hero getHero(Player player) { throw new UnsupportedOperationException("compile-only stub"); }
+}

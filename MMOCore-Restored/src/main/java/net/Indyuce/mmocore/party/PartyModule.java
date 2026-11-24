@@ -1,0 +1,20 @@
+package net.Indyuce.mmocore.party;
+
+import net.Indyuce.mmocore.api.player.PlayerData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public interface PartyModule {
+   @Nullable
+   AbstractParty getParty(@NotNull PlayerData var1);
+
+   @Deprecated
+   default void applyStatBonuses(PlayerData player, int memberCount) {
+      PartyUtils.applyStatBonuses(player, memberCount);
+   }
+
+   @Deprecated
+   default void clearStatBonuses(PlayerData player) {
+      PartyUtils.clearStatBonuses(player);
+   }
+}
