@@ -75,3 +75,13 @@ Every plugin in this repository is an unofficial, modified version of the origin
   - The Spigot license check (`loadConfig0`, a phone-home request) is removed.
   - Version-specific NMS code is moved behind the `NMS` interface. The Paper 26.3 adapter is in `nms/v26_3`. Adapters for other versions are not included yet.
   - Decompiler artifacts (numbered locals, labels, GOTO, synthetic accessors) are rewritten by meaning.
+
+## MythicLib 1.7, MMOCore 1.13.1, MMOItems 6.10, MMOInventory 1.9.1, MMOProfiles 1.1.1
+
+- Original: Indyuce (MythicLib, MMOCore, MMOItems, MMOInventory) and Phoenix Development (MMOProfiles).
+- Source: decompiled from the release jars (Vineflower). Class, field and method names are original; local variable names are decompiler names.
+- Changes:
+  - Decompiler defects are repaired so the sources compile; resources come from the original jars.
+  - Builds use only the sources and public Maven artifacts; compile-only stubs for optional integrations are in `stubs/` and are not packaged.
+  - MMOProfiles: the GUI framework that MythicLib 1.7 lacks (`gui.editable`, `Navigator`, `Attributes`, `Sounds`) is implemented inside the plugin; `PlayerSpawnLocationEvent` is replaced by `AsyncPlayerSpawnLocationEvent`.
+  - MMOCore: the mcMMO party lookup uses `mcMMO.p.getPartyManager()` (mcMMO 2.2.x).
