@@ -1,5 +1,5 @@
 package com.comphenix.protocol.wrappers;
+import com.comphenix.protocol.reflect.EquivalentConverter;
 public class Converters {
-    public interface Converter<T> {}
-    public static <T> Converter<T> passthrough(Class<T> type) { return null; }
+    public static <T> EquivalentConverter<T> passthrough(Class<T> type) { return null; }
 }

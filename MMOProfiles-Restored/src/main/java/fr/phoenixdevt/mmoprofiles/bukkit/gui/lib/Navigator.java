@@ -66,7 +66,7 @@ public class Navigator {
    public void popOpen() {
       this.stack.poll();
       if (this.stack.isEmpty()) {
-         Player player = this.playerData.getPlayer();
+         Player player = this.playerData.isOnline() ? this.playerData.getPlayer() : null;
          this.lastOpened = null;
          if (player != null) {
             player.closeInventory();
@@ -91,7 +91,7 @@ public class Navigator {
       this.reopenScheduled = true;
       Bukkit.getScheduler().runTaskLater(MMOProfiles.plugin, () -> {
          this.reopenScheduled = false;
-         Player player = this.playerData.getPlayer();
+         Player player = this.playerData.isOnline() ? this.playerData.getPlayer() : null;
          if (this.closingBlocked && this.lastOpened == null && player != null && player.isOnline() && this.stack.peek() == top) {
             top.open();
          }
