@@ -155,9 +155,9 @@ public class ItemUse implements Listener {
                if (useItem.checkItemRequirements()) {
                   SkillHandler skillHandler = useItem.getMMOItem().getType().onEntityInteract();
                   if (skillHandler != null) {
-                     SpecialWeaponAttackEvent event2 = new SpecialWeaponAttackEvent(useItem.getPlayerData(), (Weapon)useItem, rightClicked);
-                     Bukkit.getPluginManager().callEvent(event2);
-                     if (!event2.isCancelled()) {
+                     SpecialWeaponAttackEvent attackEvent = new SpecialWeaponAttackEvent(useItem.getPlayerData(), (Weapon)useItem, rightClicked);
+                     Bukkit.getPluginManager().callEvent(attackEvent);
+                     if (!attackEvent.isCancelled()) {
                         new SimpleSkill(skillHandler).cast(new TriggerMetadata(useItem.getPlayerData().getMMOPlayerData(), TriggerType.API, rightClicked));
                      }
                   }

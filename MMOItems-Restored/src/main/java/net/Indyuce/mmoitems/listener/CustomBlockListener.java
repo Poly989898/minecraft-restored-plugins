@@ -85,10 +85,10 @@ public class CustomBlockListener implements Listener {
          Block blockPlaced = event.getBlockPlaced();
          blockPlaced.setType(block.getState().getType(), false);
          blockPlaced.setBlockData(block.getState().getBlockData(), false);
-         BlockPlaceEvent event2 = new BlockPlaceEvent(
+         BlockPlaceEvent placeEvent = new BlockPlaceEvent(
             blockPlaced, blockPlaced.getState(), event.getBlockAgainst(), event.getItemInHand(), event.getPlayer(), true, EquipmentSlot.HAND
          );
-         Bukkit.getServer().getPluginManager().callEvent(event2);
+         Bukkit.getServer().getPluginManager().callEvent(placeEvent);
       }
    }
 

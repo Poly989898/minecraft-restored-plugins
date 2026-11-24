@@ -76,9 +76,9 @@ public class RandomUnsocket extends DoubleStat implements ConsumableItemInteract
             count = SilentNumbers.floor(data2.getValue());
          }
 
-         UnsocketGemStoneEvent event2 = new UnsocketGemStoneEvent(playerData, mMOItem, liveMMOItem);
-         Bukkit.getServer().getPluginManager().callEvent(event2);
-         if (event2.isCancelled()) {
+         UnsocketGemStoneEvent unsocketEvent = new UnsocketGemStoneEvent(playerData, mMOItem, liveMMOItem);
+         Bukkit.getServer().getPluginManager().callEvent(unsocketEvent);
+         if (unsocketEvent.isCancelled()) {
             return false;
          }
 

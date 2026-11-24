@@ -44,9 +44,9 @@ public class CanIdentify extends BooleanStat implements ConsumableItemInteractio
             return false;
          }
 
-         IdentifyItemEvent event2 = new IdentifyItemEvent(playerData, consumable.getMMOItem(), nbtItem);
-         Bukkit.getPluginManager().callEvent(event2);
-         if (event2.isCancelled()) {
+         IdentifyItemEvent identifyEvent = new IdentifyItemEvent(playerData, consumable.getMMOItem(), nbtItem);
+         Bukkit.getPluginManager().callEvent(identifyEvent);
+         if (identifyEvent.isCancelled()) {
             return false;
          }
 

@@ -65,9 +65,9 @@ public class SoulbindingChance extends DoubleStat implements ConsumableItemInter
       }
 
       if (random.nextDouble() < stat / 100.0) {
-         ApplySoulboundEvent event2 = new ApplySoulboundEvent(playerData, consumable.getMMOItem(), nbtItem);
-         Bukkit.getPluginManager().callEvent(event2);
-         if (event2.isCancelled()) {
+         ApplySoulboundEvent applyEvent = new ApplySoulboundEvent(playerData, consumable.getMMOItem(), nbtItem);
+         Bukkit.getPluginManager().callEvent(applyEvent);
+         if (applyEvent.isCancelled()) {
             return false;
          }
 

@@ -14,8 +14,8 @@ public class BiomeChangeListener implements Listener {
          && PlayerData.has(event.getPlayer())
          && (event.getFrom().getBlockX() != event.getTo().getBlockX() || event.getFrom().getBlockZ() != event.getTo().getBlockZ())) {
          Biome biome = event.getFrom().getBlock().getBiome();
-         Biome biome2 = event.getTo().getBlock().getBiome();
-         if (biome2 != biome) {
+         Biome toBiome = event.getTo().getBlock().getBiome();
+         if (toBiome != biome) {
             PlayerData.get(event.getPlayer()).getInventory().scheduleUpdate();
          }
       }

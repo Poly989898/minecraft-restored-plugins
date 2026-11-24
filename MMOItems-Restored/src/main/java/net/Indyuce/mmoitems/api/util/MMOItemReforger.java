@@ -186,10 +186,10 @@ public class MMOItemReforger {
       }
 
       this.result = this.getFreshMMOItem().newBuilder().build();
-      MMOItemReforgeFinishEvent event2 = new MMOItemReforgeFinishEvent(this.result, this, reforgeOptions);
-      Bukkit.getPluginManager().callEvent(event2);
-      this.setResult(event2.getFinishedItem());
-      return !event2.isCancelled();
+      MMOItemReforgeFinishEvent finishEvent = new MMOItemReforgeFinishEvent(this.result, this, reforgeOptions);
+      Bukkit.getPluginManager().callEvent(finishEvent);
+      this.setResult(finishEvent.getFinishedItem());
+      return !finishEvent.isCancelled();
    }
 
    public static void reload() {

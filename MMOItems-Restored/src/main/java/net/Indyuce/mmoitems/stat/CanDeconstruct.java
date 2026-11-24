@@ -44,9 +44,9 @@ public class CanDeconstruct extends BooleanStat implements ConsumableItemInterac
             return false;
          }
 
-         DeconstructItemEvent event2 = new DeconstructItemEvent(playerData, consumable.getMMOItem(), nbtItem, deconstructedLoot);
-         Bukkit.getPluginManager().callEvent(event2);
-         if (event2.isCancelled()) {
+         DeconstructItemEvent deconstructEvent = new DeconstructItemEvent(playerData, consumable.getMMOItem(), nbtItem, deconstructedLoot);
+         Bukkit.getPluginManager().callEvent(deconstructEvent);
+         if (deconstructEvent.isCancelled()) {
             return false;
          }
 

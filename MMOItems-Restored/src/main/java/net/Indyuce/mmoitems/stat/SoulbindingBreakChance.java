@@ -63,9 +63,9 @@ public class SoulbindingBreakChance extends DoubleStat implements ConsumableItem
       }
 
       if (RANDOM.nextDouble() < stat / 100.0) {
-         BreakSoulboundEvent event2 = new BreakSoulboundEvent(playerData, consumable.getMMOItem(), nbtItem);
-         Bukkit.getPluginManager().callEvent(event2);
-         if (event2.isCancelled()) {
+         BreakSoulboundEvent breakEvent = new BreakSoulboundEvent(playerData, consumable.getMMOItem(), nbtItem);
+         Bukkit.getPluginManager().callEvent(breakEvent);
+         if (breakEvent.isCancelled()) {
             return false;
          }
 

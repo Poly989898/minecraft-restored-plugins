@@ -72,8 +72,8 @@ public class Weapon extends UseItem {
             Message.NOT_ENOUGH_MANA.format(ChatColor.RED).send(this.getPlayer());
             return false;
          } else {
-            double stat2 = this.getNBTItem().getStat("STAMINA_COST");
-            if (stat2 > 0.0 && this.playerData.getRPG().getStamina() < stat2) {
+            double staminaCost = this.getNBTItem().getStat("STAMINA_COST");
+            if (staminaCost > 0.0 && this.playerData.getRPG().getStamina() < staminaCost) {
                Message.NOT_ENOUGH_STAMINA.format(ChatColor.RED).send(this.getPlayer());
                return false;
             } else {
@@ -89,9 +89,9 @@ public class Weapon extends UseItem {
          this.playerData.getRPG().giveMana(-stat);
       }
 
-      double stat2 = this.getNBTItem().getStat("STAMINA_COST");
-      if (stat2 > 0.0) {
-         this.playerData.getRPG().giveStamina(-stat2);
+      double staminaCost = this.getNBTItem().getStat("STAMINA_COST");
+      if (staminaCost > 0.0) {
+         this.playerData.getRPG().giveStamina(-staminaCost);
       }
 
       if (value != null) {

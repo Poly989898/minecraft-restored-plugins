@@ -73,14 +73,14 @@ public class Consumable extends UseItem {
          nBTItem.addTag(new ItemTag[]{new ItemTag(ItemStats.MAX_CONSUME.getNBTPath(), --count)});
          String colors = MythicLib.inst().parseColors(ItemStats.MAX_CONSUME.getGeneralStatFormat());
          String text = colors.replace("{value}", String.valueOf(count + 1));
-         String text2 = colors.replace("{value}", String.valueOf(count));
-         ItemStack item = new LoreUpdate(nBTItem.toItem(), text, text2).updateLore();
-         ItemStack item2 = nBTItem.getItem();
-         if (item2.getAmount() > 1) {
+         String newLore = colors.replace("{value}", String.valueOf(count));
+         ItemStack item = new LoreUpdate(nBTItem.toItem(), text, newLore).updateLore();
+         ItemStack remainingItem = nBTItem.getItem();
+         if (remainingItem.getAmount() > 1) {
             item.setAmount(1);
             this.player.getInventory().setItem(equipmentSlot, item);
-            item2.setAmount(item2.getAmount() - 1);
-            new SmartGive(this.player).give(new ItemStack[]{item2});
+            remainingItem.setAmount(remainingItem.getAmount() - 1);
+            new SmartGive(this.player).give(new ItemStack[]{remainingItem});
          } else {
             this.player.getInventory().setItem(equipmentSlot, item);
          }
