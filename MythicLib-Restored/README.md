@@ -8,7 +8,6 @@ Readable sources of MythicLib 1.7 (`io.lumine.mythic.lib`), recovered from the o
 - The original jar is not an input of the build: `build.gradle.kts` only uses public Maven artifacts, the `stubs/` sources and the paperweight module `nms-v26`.
 - Verified: on a scratch Paper 26.3 server (build 253) the plugin loads and enables without exceptions ("Detected Bukkit Version: v26_3_R0", TextDisplays hologram hook), `/ml reload` prints "MythicLib reloaded!", and it disables cleanly.
 - Verified together with MMOCore (see below and `../MMOCore-Restored/README.md`) on a scratch Paper 26.3 server with a headless test client: the GUI framework, `Navigator`, `PluginInventory` and the debug `AttributeExplorer` GUI open, render and react to clicks without exceptions.
-- Not verified: gameplay behaviour (stats, skills, damage, crafting, GUIs, SQL, integrations with WorldGuard, PlaceholderAPI, MythicMobs and others), and any server other than Paper 26.3.
 
 ## Changes against the decompiled code
 
@@ -19,7 +18,7 @@ Readable sources of MythicLib 1.7 (`io.lumine.mythic.lib`), recovered from the o
 - Compile-only API stubs of optional integrations and of the MMOProfiles API live in `stubs/` and are not packaged.
 - Bundled libraries are relocated into `io.lumine.mythic.lib.*`: commons-math3, gson, exp4j, HikariCP.
 
-## API added for MMOCore 1.13 (and the other MMO plugins)
+### API added for MMOCore 1.13 (and the other MMO plugins)
 
 MMOCore 1.13.1 was written against a MythicLib development build that is newer than the original 1.7 jar. The missing API was implemented here from scratch (no code from the public `MythicLib-dist` artifact is used or packaged), in the same package names, from the compile-time shapes MMOCore uses; behaviour was reconstructed from how the callers use it, so it is a compatible implementation, not a byte-for-byte copy. Existing classes keep their public signatures; the changes to them are additive except where noted.
 
@@ -44,4 +43,10 @@ Other restored plugins can use this project as a composite build (`includeBuild(
 gradle shadowJar
 ```
 
-JDK 25 is required (Gradle toolchain). `tools/testserver.sh` starts a throw-away Paper server in a scratch directory with the built jar (`PORT` selects the port, `SERVER_DIR` a Paper directory with `paper-26.3-*.jar`).
+JDK 25 is required (Gradle toolchain); the output is `build/libs/MythicLib-1.7-restored.jar`. `tools/testserver.sh` starts a throw-away Paper server in a scratch directory with the built jar (`PORT` selects the port, `SERVER_DIR` a Paper directory with `paper-26.3-*.jar`).
+
+## Not verified
+
+- Gameplay behaviour: stats, skills, damage, crafting, SQL, and the integrations with WorldGuard, PlaceholderAPI, MythicMobs and others.
+- GUIs other than the ones opened together with MMOCore.
+- Any server other than Paper 26.3.

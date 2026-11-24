@@ -76,12 +76,60 @@ Every plugin in this repository is an unofficial, modified version of the origin
   - Version-specific NMS code is moved behind the `NMS` interface. The Paper 26.3 adapter is in `nms/v26_3`. Adapters for other versions are not included yet.
   - Decompiler artifacts (numbered locals, labels, GOTO, synthetic accessors) are rewritten by meaning.
 
-## MythicLib 1.7, MMOCore 1.13.1, MMOItems 6.10, MMOInventory 1.9.1, MMOProfiles 1.1.1
+## MythicLib 1.7
 
-- Original: Indyuce (MythicLib, MMOCore, MMOItems, MMOInventory) and Phoenix Development (MMOProfiles).
-- Source: decompiled from the release jars (Vineflower). Class, field and method names are original; local variable names are decompiler names.
+- Original: MythicLib by Indyuce.
+- Source: decompiled from the 1.7 jar (Vineflower). Class, field and method names are original; local variable names are decompiler names. The build uses only the sources, `stubs/` and public Maven artifacts.
 - Changes:
-  - Decompiler defects are repaired so the sources compile; resources come from the original jars.
-  - Builds use only the sources and public Maven artifacts; compile-only stubs for optional integrations are in `stubs/` and are not packaged.
-  - MMOProfiles: the GUI framework that MythicLib 1.7 lacks (`gui.editable`, `Navigator`, `Attributes`, `Sounds`) is implemented inside the plugin; `PlayerSpawnLocationEvent` is replaced by `AsyncPlayerSpawnLocationEvent`.
-  - MMOCore: the mcMMO party lookup uses `mcMMO.p.getPartyManager()` (mcMMO 2.2.x).
+  - Decompiler defects are repaired so the sources compile; resources come from the original jar.
+  - Paper 26.x wrapper `nms-v26` (paperweight module) is merged into the plugin jar. The decompiled wrappers for 1.14 - 1.21 are kept in `nms-legacy/` and are not built.
+  - API that MMOCore, MMOItems, MMOInventory and MMOProfiles need and the 1.7 jar lacks is implemented from scratch: `gui.editable.*`, `gui.Navigator`, `gui.util.IconOptions`, `version.Attributes`, `version.Sounds`, `Skill` constructors, `StatMap.bufferUpdates`, `PlayerModifier.registerPlayerModifierType` and related helpers. `gui.PluginInventory` is reworked to belong to a `Navigator`; the global click dispatch in `PlayerListener` is removed.
+  - Compile-only stubs of optional integrations are in `stubs/` and are not packaged.
+- Tested: startup and `/ml reload` on Paper 26.3; GUI framework opened and clicked through together with MMOCore using a headless test client.
+- Not tested: gameplay behaviour (stats, skills, damage, crafting, SQL) and integrations.
+
+## MMOCore 1.13.1
+
+- Original: MMOCore by Indyuce.
+- Source: decompiled from the 1.13.1 jar (Vineflower). Class, field and method names are original; local variable names are decompiler names.
+- Changes:
+  - Decompiler defects are repaired so the sources compile; resources come from the original jar. The jar has the same classes as the original; the `META-INF/maven` pom files are not included.
+  - `SmallParticleEffect` passes `Particle.Spell` data for particles that require it on Paper 26.3.
+  - The mcMMO party lookup uses `mcMMO.p.getPartyManager()` (mcMMO 2.2.x).
+  - `PlayerClass`: the obfuscator annotation `@InsnComment` is removed.
+  - Compile-only stubs of optional integrations are in `stubs/` and are not packaged.
+  - The plugin compiles against the restored MythicLib, which implements the MythicLib API that MMOCore needs.
+- Tested: startup, reload, admin commands, player data save and load, and the main GUIs on Paper 26.3 with a headless test client.
+- Not tested: real client input, skill casting and combat, professions, loot, quest objectives, the SQL backend and integrations.
+
+## MMOItems 6.10
+
+- Original: MMOItems by Indyuce.
+- Source: decompiled from the 6.10 jar (Vineflower). Class, field and method names are original; local variable names are decompiler names.
+- Changes:
+  - Decompiler defects are repaired so the sources compile (restored generic types, lost locals, field-initializer lambdas, sneaky-throw helper for rethrown checked exceptions). Resources come from the original jar.
+  - The set of top-level classes equals the original jar. The anonymous class `TemplateMap$1`, the unreferenced blob `MMOItems20.txt` and the `META-INF/maven` pom files are not included.
+  - Compile-only stubs of optional integrations and of the MMOCore API (MMOCore depends on MMOItems) are in `stubs/` and are not packaged.
+- Tested: startup, reload and console commands on Paper 26.3 with MythicLib (see the plugin README).
+- Not tested: play with a real client and the integrations with other plugins.
+
+## MMOInventory 1.9.1
+
+- Original: MMOInventory by Indyuce.
+- Source: decompiled from the 1.9.1 jar (Vineflower). Class, field and method names are original; local variable names were restored by a rename tool (bytecode unchanged).
+- Changes:
+  - The decompiled sources compile without repairs; resources come from the original jar.
+  - Compile-only stubs of optional integrations, of the used part of MMOItems and of MMOCore are in `stubs/` and are not packaged.
+- Tested: startup and `/mmoinventory reload` on Paper 26.3 with MythicLib.
+- Not tested: opening the inventory, equipping, death drops, player data, and the MMOItems and MMOCore integrations.
+
+## MMOProfiles 1.1.1
+
+- Original: MMOProfiles by Phoenix Development.
+- Source: decompiled from the 1.1.1 jar (Vineflower). Local variable names were restored by a rename tool (bytecode unchanged). Bundled third-party libraries are not part of the sources.
+- Changes:
+  - The GUI framework that MythicLib 1.7 lacks (`gui.editable`, `Navigator`, `Attributes`, `Sounds`) is implemented inside the plugin.
+  - `PlayerSpawnLocationEvent` is replaced by `AsyncPlayerSpawnLocationEvent`.
+  - Small decompiler repairs in `ProxyBasedProfiles`, `ConfigManager` and `ProfileListViewer`.
+- Tested: startup, GUI config loading and `/mmoprofiles reload` on Paper 26.3 with MythicLib.
+- Not tested: the profile GUI with a player, proxy mode and database modes.

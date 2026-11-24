@@ -14,8 +14,8 @@ Readable, rebuildable Java sources for Paper plugins. The sources were recovered
 | [`CMILib-Restored`](CMILib-Restored) | CMILib 1.6.1.3 | Zrips | Paper 26.3 | Builds from source; starts with CMI on Paper 26.3 |
 | [`CMI-Restored`](CMI-Restored) | CMI 9.8.7.5 | Zrips | Paper 26.3 | Core builds from source; starts on Paper 26.3; adapters for other versions not included yet |
 | [`MythicLib-Restored`](MythicLib-Restored) | MythicLib 1.7 | Indyuce | Paper 1.21+ | Builds from source and public Maven artifacts; starts on Paper 26.3; gameplay not tested |
-| [`MMOCore-Restored`](MMOCore-Restored) | MMOCore 1.13.1 | Indyuce | Paper 1.21+ | Compiles and builds; needs a MythicLib API newer than MythicLib 1.7; not started on a server |
-| [`MMOItems-Restored`](MMOItems-Restored) | MMOItems 6.10 | Indyuce | Paper 1.21+ | Compiles and builds; not started on a server |
+| [`MMOCore-Restored`](MMOCore-Restored) | MMOCore 1.13.1 | Indyuce | Paper 1.21+ | Builds against the restored MythicLib (which implements the API MMOCore needs); starts on Paper 26.3; admin commands and main GUIs checked with a headless client; gameplay not tested |
+| [`MMOItems-Restored`](MMOItems-Restored) | MMOItems 6.10 | Indyuce | Paper 1.21+ | Builds; starts on Paper 26.3 with MythicLib; console commands checked; gameplay not tested |
 | [`MMOInventory-Restored`](MMOInventory-Restored) | MMOInventory 1.9.1 | Indyuce | Paper 1.21+ | Builds; starts on Paper 26.3 with MythicLib; GUI not tested |
 | [`MMOProfiles-Restored`](MMOProfiles-Restored) | MMOProfiles 1.1.1 | Phoenix Development | Paper 1.21+ | Builds; starts on Paper 26.3; GUI classes missing from MythicLib 1.7 are implemented in the plugin; GUI not tested with a player |
 
@@ -58,7 +58,7 @@ Short version per plugin (details in each README):
 | LPX | `tools/build.sh && tools/package.sh` |
 | CMILib | `gradle jar` |
 | CMI | `(cd ../CMILib-Restored && gradle jar)`, then `(cd nms/v26_3 && gradle compileJava)`, then `gradle jar` |
-| MythicLib, MMOCore, MMOItems, MMOInventory, MMOProfiles | `gradle --offline shadowJar` in the plugin folder (MythicLib is built from `../MythicLib-Restored` automatically; no original jars) |
+| MythicLib, MMOCore, MMOItems, MMOInventory, MMOProfiles | `gradle shadowJar` in the plugin folder (offline: `gradle --offline shadowJar`); all but MythicLib build `../MythicLib-Restored` first; no original jars; JDK 25 |
 
 ## Changes from the originals
 
