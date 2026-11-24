@@ -1,0 +1,7 @@
+package io.lumine.mythic.lib.script.variable;
+
+public enum VariableScope {
+   SERVER,
+   PLAYER,
+   SKILL;
+}

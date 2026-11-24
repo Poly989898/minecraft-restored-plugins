@@ -1,0 +1,13 @@
+package io.lumine.mythic.lib.api.condition.type;
+
+import org.bukkit.Location;
+import org.bukkit.World;
+
+public interface WorldCondition extends LocationCondition {
+   boolean check(World var1);
+
+   @Override
+   default boolean check(Location location) {
+      return this.check(location.getWorld());
+   }
+}
