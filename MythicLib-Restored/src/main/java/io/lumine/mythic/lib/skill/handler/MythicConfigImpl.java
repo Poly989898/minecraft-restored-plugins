@@ -228,8 +228,8 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
       String node = this.getNode(field);
       String key = node + field;
       ConfigurationSection fc = this.fc;
-      String node2 = this.getNode(field);
-      return fc.getBoolean(node2 + field);
+      String fieldNode = this.getNode(field);
+      return fc.getBoolean(fieldNode + field);
    }
 
    public boolean getBoolean(String field, boolean def) {
@@ -359,8 +359,8 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
       String node = this.getNode(field);
       String key = node + field;
       ConfigurationSection fc = this.fc;
-      String node2 = this.getNode(field);
-      return fc.getInt(node2 + field);
+      String fieldNode = this.getNode(field);
+      return fc.getInt(fieldNode + field);
    }
 
    @Deprecated
@@ -382,8 +382,8 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
       String node = this.getNode(field);
       String key = node + field;
       ConfigurationSection fc = this.fc;
-      String node2 = this.getNode(field);
-      return fc.getDouble(node2 + field);
+      String fieldNode = this.getNode(field);
+      return fc.getDouble(fieldNode + field);
    }
 
    public double getDouble(String field, double def) {
@@ -396,19 +396,19 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
       String node = this.getNode(field);
       String key = node + field;
       ConfigurationSection fc = this.fc;
-      String node2 = this.getNode(field);
-      return fc.getStringList(node2 + field);
+      String fieldNode = this.getNode(field);
+      return fc.getStringList(fieldNode + field);
    }
 
    public List<String> getStringList(String field, List<String> def) {
       String node = this.getNode(field);
       String key = node + field;
       ConfigurationSection fc = this.fc;
-      String node2 = this.getNode(field);
-      if (fc.isSet(node2 + field)) {
+      String fieldNode = this.getNode(field);
+      if (fc.isSet(fieldNode + field)) {
          fc = this.fc;
-         node2 = this.getNode(field);
-         return fc.getStringList(node2 + field);
+         fieldNode = this.getNode(field);
+         return fc.getStringList(fieldNode + field);
       } else {
          return def;
       }
@@ -418,8 +418,8 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
       String node = this.getNode(field);
       String key = node + field;
       ConfigurationSection fc = this.fc;
-      String node2 = this.getNode(field);
-      List<String> list = fc.getStringList(node2 + field);
+      String fieldNode = this.getNode(field);
+      List<String> list = fc.getStringList(fieldNode + field);
       List<String> parsed = new ArrayList<>();
       if (list != null) {
          for (String str : list) {
@@ -434,8 +434,8 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
       String node = this.getNode(field);
       String key = node + field;
       ConfigurationSection fc = this.fc;
-      String node2 = this.getNode(field);
-      List<String> list = fc.getStringList(node2 + field);
+      String fieldNode = this.getNode(field);
+      List<String> list = fc.getStringList(fieldNode + field);
       List<PlaceholderString> parsed = new ArrayList<>();
       if (list != null) {
          for (String str : list) {
@@ -482,8 +482,8 @@ public class MythicConfigImpl implements GenericConfig, Cloneable, MythicConfig 
       String node = this.getNode(field);
       String key = node + field;
       ConfigurationSection fc = this.fc;
-      String node2 = this.getNode(field);
-      return fc.getMapList(node2 + field);
+      String fieldNode = this.getNode(field);
+      return fc.getMapList(fieldNode + field);
    }
 
    public List<?> getList(String field) {
