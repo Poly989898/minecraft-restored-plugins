@@ -36,7 +36,7 @@ public abstract class InventoryHandler extends SynchronizedDataHolder {
       return items;
    }
 
-   protected abstract void insertItemAtSlot(@NotNull CustomSlot var1, @Nullable ItemStack var2);
+   protected abstract void insertItemAtSlot(@NotNull CustomSlot customSlot, @Nullable ItemStack item);
 
    protected abstract Collection<InventoryItem> retrieveItems();
 }

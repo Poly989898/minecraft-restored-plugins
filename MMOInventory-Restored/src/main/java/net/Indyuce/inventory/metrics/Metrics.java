@@ -57,7 +57,7 @@ public class Metrics {
 
          try {
             config.save(configFile);
-         } catch (IOException var11) {
+         } catch (IOException exception) {
          }
       }
 
@@ -495,38 +495,38 @@ public class Metrics {
 
          try {
             outputStream.write(compressedData);
-         } catch (Throwable var11) {
+         } catch (Throwable exception) {
             try {
                outputStream.close();
-            } catch (Throwable var10) {
-               var11.addSuppressed(var10);
+            } catch (Throwable exception2) {
+               exception.addSuppressed(exception2);
             }
 
-            throw var11;
+            throw exception;
          }
 
          outputStream.close();
-         StringBuilder var13 = new StringBuilder();
+         StringBuilder builder = new StringBuilder();
          BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
          String line;
          try {
             while ((line = bufferedReader.readLine()) != null) {
-               var13.append(line);
+               builder.append(line);
             }
-         } catch (Throwable var12) {
+         } catch (Throwable exception) {
             try {
                bufferedReader.close();
-            } catch (Throwable var9) {
-               var12.addSuppressed(var9);
+            } catch (Throwable exception2) {
+               exception.addSuppressed(exception2);
             }
 
-            throw var12;
+            throw exception;
          }
 
          bufferedReader.close();
          if (this.logResponseStatusText) {
-            this.infoLogger.accept("Sent data to bStats and received response: " + var13);
+            this.infoLogger.accept("Sent data to bStats and received response: " + builder);
          }
       }
 
@@ -551,14 +551,14 @@ public class Metrics {
 
          try {
             gzip.write(str.getBytes(StandardCharsets.UTF_8));
-         } catch (Throwable var6) {
+         } catch (Throwable exception) {
             try {
                gzip.close();
-            } catch (Throwable var5) {
-               var6.addSuppressed(var5);
+            } catch (Throwable exception2) {
+               exception.addSuppressed(exception2);
             }
 
-            throw var6;
+            throw exception;
          }
 
          gzip.close();

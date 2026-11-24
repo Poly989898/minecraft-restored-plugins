@@ -16,7 +16,7 @@ public interface PlaceholderRequest {
    @NotNull
    PlayerProfile getProfile();
 
-   void addPlaceholder(@NotNull String var1, @Nullable Object var2);
+   void addPlaceholder(@NotNull String text, @Nullable Object obj);
 
    void validate();
 }

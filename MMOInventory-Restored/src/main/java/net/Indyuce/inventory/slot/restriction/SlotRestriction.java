@@ -5,5 +5,5 @@ import net.Indyuce.inventory.slot.CustomSlot;
 import org.bukkit.inventory.ItemStack;
 
 public abstract class SlotRestriction {
-   public abstract boolean isVerified(InventoryHandler var1, CustomSlot var2, ItemStack var3);
+   public abstract boolean isVerified(InventoryHandler inventoryHandler, CustomSlot customSlot, ItemStack item);
 }

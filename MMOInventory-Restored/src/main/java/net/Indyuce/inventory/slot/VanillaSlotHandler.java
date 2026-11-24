@@ -4,11 +4,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public interface VanillaSlotHandler {
-   void equip(Player var1, ItemStack var2);
+   void equip(Player player, ItemStack item);
 
-   boolean canEquip(ItemStack var1);
+   boolean canEquip(ItemStack item);
 
-   ItemStack retrieveItem(Player var1);
+   ItemStack retrieveItem(Player player);
 
    boolean supportsShiftClick();
 }

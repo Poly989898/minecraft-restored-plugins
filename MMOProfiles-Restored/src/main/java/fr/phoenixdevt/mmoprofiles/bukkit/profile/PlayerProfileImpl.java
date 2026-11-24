@@ -283,7 +283,7 @@ public class PlayerProfileImpl implements Jsonable, PlayerProfile<ProfileListImp
          if (found != null) {
             return found;
          }
-      } catch (InvalidLocationException var4) {
+      } catch (InvalidLocationException exception) {
       }
 
       try {

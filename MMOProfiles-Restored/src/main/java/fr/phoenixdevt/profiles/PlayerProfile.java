@@ -76,7 +76,7 @@ public interface PlayerProfile<D extends ProfileList> {
    @NotNull
    PlaceholderCache getPlaceholderCache();
 
-   void applyToPlayer(D var1);
+   void applyToPlayer(D value);
 
-   void validateApplication(D var1);
+   void validateApplication(D value);
 }

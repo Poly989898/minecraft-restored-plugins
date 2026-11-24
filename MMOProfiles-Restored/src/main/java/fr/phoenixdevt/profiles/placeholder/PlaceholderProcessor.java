@@ -7,5 +7,5 @@ public interface PlaceholderProcessor {
    @NotNull
    ProfileDataModule getDataModule();
 
-   void processPlaceholderRequest(@NotNull PlaceholderRequest var1);
+   void processPlaceholderRequest(@NotNull PlaceholderRequest placeholderRequest);
 }

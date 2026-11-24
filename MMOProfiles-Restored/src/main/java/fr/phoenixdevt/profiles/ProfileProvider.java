@@ -6,9 +6,9 @@ import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
 
 public interface ProfileProvider<P extends ProfileList> {
-   void registerModule(@NotNull ProfileDataModule var1);
+   void registerModule(@NotNull ProfileDataModule profileDataModule);
 
-   void registerPlaceholders(@NotNull PlaceholderProcessor var1);
+   void registerPlaceholders(@NotNull PlaceholderProcessor placeholderProcessor);
 
    @NotNull
    Collection<ProfileDataModule> getModules();
@@ -17,5 +17,5 @@ public interface ProfileProvider<P extends ProfileList> {
    Collection<PlaceholderProcessor> getPlaceholders();
 
    @NotNull
-   P getPlayerData(UUID var1);
+   P getPlayerData(UUID uuid);
 }

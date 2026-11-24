@@ -7,7 +7,7 @@ import net.Indyuce.inventory.inventory.InventoryHandler;
 public class RPGPlayerLevelingHook implements LevelModule {
    @Override
    public int getLevel(InventoryHandler player) {
-      PlayerList var2 = PlayerList.getByName(player.getPlayer().getName());
-      return var2 == null ? 0 : var2.getPlayerLevel();
+      PlayerList playerList = PlayerList.getByName(player.getPlayer().getName());
+      return playerList == null ? 0 : playerList.getPlayerLevel();
    }
 }

@@ -14,7 +14,7 @@ public abstract class Request {
    @NotNull
    public abstract RequestType getType();
 
-   protected abstract void fillJsonObject(@NotNull JsonObject var1);
+   protected abstract void fillJsonObject(@NotNull JsonObject jsonObject);
 
    @NotNull
    public JsonObject toJson() {

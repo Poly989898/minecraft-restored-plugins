@@ -19,5 +19,5 @@ public interface ProfileList<P extends PlayerProfile> {
    P getCurrent();
 
    @Nullable
-   P getProfile(UUID var1);
+   P getProfile(UUID uuid);
 }

@@ -7,8 +7,8 @@ import org.jetbrains.annotations.Nullable;
 
 public interface PermissionModule {
    @Nullable
-   ProfilePermissible getPermissible(@NotNull ProfileListImpl var1);
+   ProfilePermissible getPermissible(@NotNull ProfileListImpl profileListImpl);
 
    @NotNull
-   CompletableFuture<ProfilePermissible> loadPermissible(@NotNull ProfileListImpl var1);
+   CompletableFuture<ProfilePermissible> loadPermissible(@NotNull ProfileListImpl profileListImpl);
 }

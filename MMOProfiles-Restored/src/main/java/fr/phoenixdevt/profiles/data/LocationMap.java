@@ -16,7 +16,7 @@ public interface LocationMap {
 
    boolean hasCurrent();
 
-   void setCurrent(@NotNull Location var1);
+   void setCurrent(@NotNull Location location);
 
    @NotNull
    String getIdentifier();
