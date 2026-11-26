@@ -1,4 +1,4 @@
-#version 330
+#version 460
 #extension GL_ARB_separate_shader_objects : require
 
 #if defined(PER_FACE_LIGHTING) || !defined(NO_CARDINAL_LIGHTING)
@@ -161,14 +161,12 @@ void main() {
             // vec4 samp2 = texture(Sampler0, SLIMCHECK1);
             bool slim = partId == 2 || partId == 3; //samp1.a == 0.0 || (((samp1.r + samp1.g + samp1.b) == 0.0) && ((samp2.r + samp2.g + samp2.b) == 0.0) && samp1.a == 1.0 && samp2.a == 1.0);
             int partIdMod = partId % 7;
-            int outerLayer = (gl_VertexIndex / 24) % 2;
-            int vertexId = gl_VertexIndex % 4;
-            int faceId = (gl_VertexIndex % 24) / 4;
+            // 26.3 packs many meshes into one vertex buffer and draws each batch with a base vertex,
+            // which gl_VertexIndex includes: count from the start of the batch.
+            int localVertex = gl_VertexIndex - gl_BaseVertex;
+            int vertexId = localVertex % 4;
+            int faceId = (localVertex % 24) / 4;
             ivec2 faceIdTmp = ivec2(round(UV0 * SKINRES));
-
-            // find the desired part UV origin
-            vec2 UVout = origins[2 * partIdMod + outerLayer];
-            vec2 UVout2 = origins[2 * partIdMod];
 
             // find the player head face UV origin
             if ((faceId != 1 && vertexId >= 2) || (faceId == 1 && vertexId <= 1)) {
@@ -180,6 +178,12 @@ void main() {
 
             // calculate a faceId based on face UV origin
             faceIdTmp /= FACERES;
+
+            // find the desired part UV origin; the hat cube of the head uses the right half of the texture
+            int outerLayer = faceIdTmp.x / 4;
+            vec2 UVout = origins[2 * partIdMod + outerLayer];
+            vec2 UVout2 = origins[2 * partIdMod];
+
             faceId = (faceIdTmp.x % 4) + 4 * faceIdTmp.y;
             faceId = faceremap[faceId];
             int subuvIndex = faceId;
