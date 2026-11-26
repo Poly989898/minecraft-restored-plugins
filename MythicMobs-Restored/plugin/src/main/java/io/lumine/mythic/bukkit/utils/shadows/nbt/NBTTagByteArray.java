@@ -1,11 +1,11 @@
 package io.lumine.mythic.bukkit.utils.shadows.nbt;
 
-import io.lumine.shadow.Shadow;
-import io.lumine.shadow.ShadowFactory;
-import io.lumine.shadow.bukkit.Mapping;
-import io.lumine.shadow.bukkit.NmsClassTarget;
-import io.lumine.shadow.bukkit.ObfuscatedTarget;
-import io.lumine.shadow.bukkit.PackageVersion;
+import me.lucko.shadow.Shadow;
+import me.lucko.shadow.ShadowFactory;
+import me.lucko.shadow.bukkit.Mapping;
+import me.lucko.shadow.bukkit.NmsClassTarget;
+import me.lucko.shadow.bukkit.ObfuscatedTarget;
+import me.lucko.shadow.bukkit.PackageVersion;
 import java.util.List;
 
 @NmsClassTarget("NBTTagByteArray")

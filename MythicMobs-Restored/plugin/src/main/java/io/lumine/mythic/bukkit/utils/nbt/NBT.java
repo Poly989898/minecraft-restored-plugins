@@ -3,7 +3,7 @@ package io.lumine.mythic.bukkit.utils.nbt;
 import io.lumine.mythic.bukkit.utils.shadows.nbt.MojangsonParser;
 import io.lumine.mythic.bukkit.utils.shadows.nbt.NBTBase;
 import io.lumine.mythic.bukkit.utils.shadows.nbt.NBTTagCompound;
-import io.lumine.shadow.ShadowFactory;
+import me.lucko.shadow.ShadowFactory;
 
 public final class NBT {
    private static MojangsonParser parser = null;

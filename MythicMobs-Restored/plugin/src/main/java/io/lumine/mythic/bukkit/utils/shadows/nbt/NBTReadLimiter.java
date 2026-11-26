@@ -1,13 +1,13 @@
 package io.lumine.mythic.bukkit.utils.shadows.nbt;
 
-import io.lumine.shadow.Field;
-import io.lumine.shadow.Shadow;
-import io.lumine.shadow.ShadowFactory;
-import io.lumine.shadow.Static;
-import io.lumine.shadow.bukkit.Mapping;
-import io.lumine.shadow.bukkit.NmsClassTarget;
-import io.lumine.shadow.bukkit.ObfuscatedTarget;
-import io.lumine.shadow.bukkit.PackageVersion;
+import me.lucko.shadow.Field;
+import me.lucko.shadow.Shadow;
+import me.lucko.shadow.ShadowFactory;
+import me.lucko.shadow.Static;
+import me.lucko.shadow.bukkit.Mapping;
+import me.lucko.shadow.bukkit.NmsClassTarget;
+import me.lucko.shadow.bukkit.ObfuscatedTarget;
+import me.lucko.shadow.bukkit.PackageVersion;
 
 @NmsClassTarget("NBTReadLimiter")
 public interface NBTReadLimiter extends Shadow {

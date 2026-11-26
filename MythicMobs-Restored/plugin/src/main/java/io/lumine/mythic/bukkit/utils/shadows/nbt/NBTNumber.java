@@ -1,8 +1,8 @@
 package io.lumine.mythic.bukkit.utils.shadows.nbt;
 
-import io.lumine.shadow.bukkit.Mapping;
-import io.lumine.shadow.bukkit.ObfuscatedTarget;
-import io.lumine.shadow.bukkit.PackageVersion;
+import me.lucko.shadow.bukkit.Mapping;
+import me.lucko.shadow.bukkit.ObfuscatedTarget;
+import me.lucko.shadow.bukkit.PackageVersion;
 
 public interface NBTNumber {
    @ObfuscatedTarget({@Mapping(

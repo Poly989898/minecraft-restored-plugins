@@ -35,6 +35,8 @@ dependencies {
     implementation 'org.bstats:bstats-bukkit:3.2.1'
     implementation 'com.github.roklenarcic:aho-corasick:1.2'
     implementation 'net.objecthunter:exp4j:0.4.8'
+    implementation 'me.lucko:shadow:1.3'          // reflection proxies used by bukkit/utils/shadows
+    implementation 'me.lucko:shadow-bukkit:1.20.1'
     compileOnly 'org.projectlombok:lombok:1.18.42'
     annotationProcessor 'org.projectlombok:lombok:1.18.42'   // sources use Lombok annotations again (1.18.34 does not support JDK 25)
     compileOnly 'org.jetbrains:annotations:24.1.0'

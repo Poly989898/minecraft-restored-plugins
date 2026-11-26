@@ -1,8 +1,8 @@
 package io.lumine.mythic.bukkit.utils.shadows.nbt;
 
-import io.lumine.shadow.Shadow;
-import io.lumine.shadow.ShadowFactory;
-import io.lumine.shadow.bukkit.NmsClassTarget;
+import me.lucko.shadow.Shadow;
+import me.lucko.shadow.ShadowFactory;
+import me.lucko.shadow.bukkit.NmsClassTarget;
 
 @NmsClassTarget("NBTTagDouble")
 public interface NBTTagDouble extends Shadow, NBTBase, NBTNumber {
