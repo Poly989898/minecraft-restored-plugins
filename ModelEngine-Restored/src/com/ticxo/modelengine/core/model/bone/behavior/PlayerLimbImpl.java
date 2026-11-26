@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.profile.PlayerTextures.SkinModel;
 import org.jetbrains.annotations.Nullable;
 
 public class PlayerLimbImpl extends AbstractBoneBehavior<PlayerLimbImpl> implements PlayerLimb {
@@ -55,7 +56,7 @@ public class PlayerLimbImpl extends AbstractBoneBehavior<PlayerLimbImpl> impleme
          ItemMeta meta = playerHead.getItemMeta();
          ((SkullMeta)meta).setPlayerProfile(profile);
 
-         meta.setCustomModelData(switch (profile.getTextures().getSkinModel()) {
+         meta.setCustomModelData(switch (shownSkinModel(profile)) {
             case CLASSIC -> {
                this.isSlim = false;
                yield this.limbType.defaultId;
@@ -70,5 +71,17 @@ public class PlayerLimbImpl extends AbstractBoneBehavior<PlayerLimbImpl> impleme
          ModelEngineAPI.getNMSHandler().applyPlayerHeadItemModel(playerHead);
          this.bone.setModel(playerHead);
       }
+   }
+
+   /**
+    * Arm width the client will actually draw. A profile without a skin reports CLASSIC, but the client then picks one of
+    * the 18 default skins by UUID, and the first 9 of them are slim: wide limbs on a slim texture leave see-through pixels.
+    */
+   private static SkinModel shownSkinModel(PlayerProfile profile) {
+      if (profile.getTextures().getSkin() == null && profile.getUniqueId() != null) {
+         return Math.floorMod(profile.getUniqueId().hashCode(), 18) < 9 ? SkinModel.SLIM : SkinModel.CLASSIC;
+      }
+
+      return profile.getTextures().getSkinModel();
    }
 }
