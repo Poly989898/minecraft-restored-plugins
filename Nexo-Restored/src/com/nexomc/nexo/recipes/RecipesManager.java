@@ -301,6 +301,11 @@ public final class RecipesManager {
    }
 
    private final List<Map<String, Object>> collectTagSlots(Object value, List<Map<String, Object>> out) {
+      // the Kotlin default argument (an empty list) was lost in recovery: without it no custom recipe loads
+      if (out == null) {
+         out = new ArrayList<>();
+      }
+
       if (TypeIntrinsics.isMutableMap(value)) {
          if (value == null) {
             throw new NullPointerException("null cannot be cast to non-null type kotlin.collections.MutableMap<kotlin.String, kotlin.Any?>");
